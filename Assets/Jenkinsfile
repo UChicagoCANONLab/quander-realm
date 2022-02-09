@@ -1,0 +1,508 @@
+/*
+ * unity-jenkins project configuration
+ *
+ * Copied from unity-jenkins@2.0.16
+ */
+
+ /*
+  * Import the shared pipeline. The part after the @ is a git reference.
+  * If you want to pin the library to a specific version, use it's tag (e.g. @v2.0.1).
+  * If you want to automatically follow a stable release track that is compatible with your current
+  * version of unity-jenkins, use the release branch name (e.g. @releases/v2.0.x).
+  * Following a stable track is recommneded to automatically defend against changes to the Jenkins
+  * environment that break pipelines.
+  * @see https://jenkins.io/doc/book/pipeline/shared-libraries/
+  */
+@Library('unity-jenkins-lib@dev')
+def config = [:]
+
+/**
+ * Default configuration parameters. These apply unless overriden by specific branch configs.
+ * To see the resultant config, view the log output of the build's Configure stage.
+ */
+config.__default__ = [
+
+	/**
+	 * A string of numbers to prepend to the jenkins build number to use for the version code.
+	 * This is useful if you are deploying a previously released app that used a manual scheme
+	 * for the version code.
+	 */
+	VERSION_CODE_PREFIX: '',
+
+	/**
+	 * The path to the unity project relative to the root of the jenkins workspace (repository root)
+	 */
+	UNITY_PROJECT_PATH: '.',
+
+	/**
+	 * The name of the version number parameter to use when passing to the Unity build.
+	 * Newer versions of unity consume the "version" parameter which is what we used to use.
+	 */
+	VERSION_PARAM: "versionNumber",
+
+	/**
+	 * This is used to trigger the build from remote systems such as Gitlab.
+	 * Set this to a long, random, and unique string for each project.
+	 */
+	TRIGGER_TOKEN: "unityjenkins3bnuyrgf7a86876378a6d",
+
+	/**
+	 * The human-readable name for your project. Avoid special characters; but you may use spaces.
+	 */
+	PRODUCT_NAME: "Unity Jenkins",
+	/**
+	 * A url that takes you to either a product webpage or the company webpage that owns the product.
+	 * Right now this is only used in windows app signing.
+	 */
+	PRODUCT_WEBSITE: "https://www.filamentgames.com",
+
+	/**
+	 * The file name prefix for build artifacts. This name must be safe to use in a windows, mac, or linux file path.
+	 * Stick to A-Za-z0-9 character set.
+	 */
+	FILE_NAME: "UnityJenkins",
+
+	/**
+	 * For Android, this corresponds to the Package Name in AndroidManifest.xml and the Application ID in build.gradle.
+	 * For iOS, this corresponds to the app's Bundle ID.
+	 *
+	 * IDs should be in reverse dns style, all lower case. Please ignore the title case in the example app identifier.
+	 * This was an accident when setting up unit testing of Unity Jenkins.
+	 */
+	APP_IDENTIFIER: "com.FilamentGames.UnityJenkins",
+
+	/**
+	 * This corresponds to the Scripting Define Symbols option in Unity player settings.
+	 * Separate your symbol defines with ;
+	 */
+	DEFINES: "",
+
+	/**
+	 * Whether to make a development build. Corresponds to the Development Build option in Unity Build Settings.
+	 */
+	DEBUG: false,
+
+	/**
+	 * This is the user-facing version number of the app. This corresponds to Bundle Version in iOS and versionName in Android.
+	 */
+	VERSION: "1.0.0",
+
+	/**
+	 * Whether to send a Slack notification when the job starts
+	 */
+	SLACK_NOTIFY_START: true,
+
+	/**
+	 * Whether to send a Slack notification when the job succeeds
+	 */
+	SLACK_NOTIFY_SUCCESS: true,
+
+	/**
+	 * Whether to send a Slack notification when the job fails, is aborted, or is unstable
+	 */
+	SLACK_NOTIFY_FAILURE: true,
+
+	/**
+	 * This is the channel that notifications will be sent to.
+	 */
+	SLACK_CHANNEL: "#unity-jenkins-test",
+
+	/**
+	 * This is the Jenkins credential ID that contains the Slack API token.
+	 * Use the Secret Text credential type.
+	 * Add configurations to the Jenkins CI slack integration at https://filamentgames.slack.com/apps/A0F7VRFKN-jenkins-ci.
+	 */
+	SLACK_TOKEN_CREDENTIAL_ID: "filament-slack-unity-jenkins-test-token",
+
+	/**
+	 * User handles added to the end of success and failure notification messages to make sure appropriate users get notified.
+	 */
+	SLACK_MENTIONS: "@USER1 @USER2",
+
+	/**
+	 * Whether to make Android builds
+	 */
+	ANDROID_BUILD: true,
+
+	/**
+	 * If the android app identifier must be different than the APP_IDENTIFIER for some reason,
+	 * you can override it here. If set to null, this takes the value of APP_IDENTIFER.
+	 */
+	ANDROID_APP_IDENTIFER: null,
+
+	/**
+	 * Whether to build an Android App Bundle (Google Play). If this is false, a regular APK is built.
+	 */
+	ANDROID_APP_BUNDLE: true,
+
+	/**
+	 * Whether to build platform-specific APKs and an OBB file.
+	 * This is ignored if ANDROID_APP_BUNDLE = true.
+	 */
+	ANDROID_SPLIT_APK: false,
+
+	/**
+	 * Whether to also build an APK in addition to the app bundle.
+	 * This is ignored if ANDROID_APP_BUNDLE = false.
+	 */
+	ANDROID_BUILD_ADDTL_APK: false,
+
+	/**
+	 * Whether the android signing keystore file (.keystore) is located in the Jenkins credential manager.
+	 */
+	ANDROID_KEYSTORE_FILE_USE_CREDENTIALS: false,
+
+	/**
+	 * The relative path from the root of the repository to the Android signing keystore.
+	 * This is used only if ANDROID_STORE_KEYSTORE_IN_JENKINS: false.
+	 */
+	ANDROID_KEYSTORE_PATH: "android.keystore",
+
+	/**
+	 * The Jenkins credential ID that contains the Android signing keystore file.
+	 * This is used only if ANDROID_STORE_KEYSTORE_IN_JENKINS: true.
+	 * Use the Secret File credential type.
+	 */
+	ANDROID_KEYSTORE_FILE_CREDENTIAL_ID: "filament-unity-jenkins-android-keystore-file",
+
+	/**
+	 * The Jenkins credential ID that contains the password for the Android signing keystore.
+	 * Use the Secret Text credential type.
+	 */
+	ANDROID_KEYSTORE_CREDENTIAL_ID: "filament-unity-jenkins-android-keystore-pass",
+
+	/**
+	 * The Jenkins credential ID that contains the password for the Android signing key inside the keystore.
+	 * Use the Secret Text credential type.
+	 * If this is the same password as the keystore password, you can use the same credential ID.
+	 */
+	ANDROID_KEY_CREDENTIAL_ID: "filament-unity-jenkins-android-keystore-pass",
+
+	/**
+	 * The name of the Android signing key in the keystore.
+	 */
+	ANDROID_KEY_ALIAS: "dist",
+
+	/**
+	 * Whether to archive debug symbols to symbolicate stack traces on Android builds
+	 */
+	ANDROID_ARCHIVE_SYMBOLS: false,
+
+	/**
+	 * Whether or not to upload the Android build to Google Play automatically.
+	 */
+	ANDROID_GOOGLE_PLAY_DEPLOY: true,
+
+	/**
+	 * The Jenkins credential ID for Google Play API credentials.
+	 * Required if ANDROID_GOOGLE_PLAY_DEPLOY = true.
+	 * Use the Secret File credential type.
+	 */
+	ANDROID_GOOGLE_PLAY_JSON_KEY_CREDENTIAL_ID: "filament-google-play-jenkins-key",
+
+	/**
+	 * Whether to upload the Android build using Internal App Sharing.
+	 * If this is false, then it will upload to a specific track instead.
+	 * In order to use Internal App Sharing, there must have been at least one previous build
+	 * uploaded to a track and published.
+	 */
+	ANDROID_GOOGLE_PLAY_INTERNAL_APP_SHARING: false,
+
+	/**
+	 * The track in Google Play to upload the Android build to if ANDROID_GOOGLE_PLAY_INTERNAL_APP_SHARING = false
+	 */
+	ANDROID_GOOGLE_PLAY_TRACK: "internal",
+
+	/**
+	 * The URL that is used for testers to opt in to access builds on the track
+	 * specified in ANDROID_GOOGLE_PLAY_TRACK. This URL is different for each app and each track.
+	 * This is only used when ANDROID_GOOGLE_PLAY_INTERNAL_APP_SHARING = false.
+	 * You can find this URL in Google Play -> Release maangement -> App releases -> Manage [track] -> Manage testers -> Opt-in URL.
+	 */
+	ANDROID_GOOGLE_PLAY_OPTIN_URL: "https://play.google.com/apps/internaltest/4698389644207985807",
+
+	/**
+	 * An optional script to run right after the unity build completes for the Android platform.
+	 */
+	ANDROID_POST_UNITY_BUILD: null  /* {  inConfig, inEnv, inParams ->  echo('Hello world!') } */,
+
+	/**
+	 * Whether to make WebGL builds
+	 */
+	WEBGL_BUILD: true,
+
+	/**
+	 * Whether to deply WebGL builds over scp to a remote web server
+	 */
+	WEBGL_DEPLOY: true,
+
+	/**
+	 * The base url where deployed WebGL builds can be accessed from.
+	 * The full URL of a build will be [WEBGL_DEPLOY_BASE_URL][JOB_NAME]/[BUILD_NUMBER].
+	 * This should always end with a /.
+	 */
+	WEBGL_DEPLOY_BASE_URL: "https://dev.filamentgames.com/project_files/",
+
+	/**
+	 * Whether the path that the files are deployed to including the job name and build number get appended
+	 * to the WEBGL_DEPLOY_BASE_URL when generating build links in the logs and slack notifications.
+	 * If you have a static URL link that is used for a specific environment that doesn't change
+	 * based on the build number, then set this to false and make sure WEBGL_DEPLOY_BASE_URL
+	 * is set to the complete URL you want to show up in slack notifications.
+	 */
+	WEBGL_DEPLOY_URL_DYNAMIC: true,
+
+	/**
+	 * The base file path where deployed WebGL builds are uploadted to.
+	 * The full file path of a build will be [WEBGL_DEPLOY_BASE_DIR][JOB_NAME]/[BUILD_NUMBER]
+	 * This should always end with a /.
+	 */
+	WEBGL_DEPLOY_BASE_DIR: "/data/www/dev.filamentgames.com/project_files/",
+
+	/**
+	 * The Jenkins Publish over SSH configuration name.
+	 * Configurations can be added in Jenkins -> Manage Jenkins -> Configure System -> Publish over SSH -> SSH Servers.
+	 */
+	WEBGL_DEPLOY_SSH_CONFIG_NAME: "dev.filamentgames.com",
+
+	/**
+	 * If you need to break up the deployment and deploy certain files in certain locations on the server,
+	 * you can implement your own custom sshTransfer generator. You can pass a reference to a function or implement
+	 * the function inline below.See
+	 */
+	WEBGL_DEPLOY_CUSTOM_TRANSFER_GEN: null /* {  inConfig, inEnv, inParams ->  return [] } */,
+
+	/**
+	 * Whether to make the build accessible to anyone with the link, instead of requiring a username and password.
+	 * Note this only applies to builds deployed to webservers running Apache, mainly dev.filamentgames.com.
+	 * Only builds meant for playtesting / wider distribution should have this enabled.
+	 */
+	WEBGL_OPEN_ACCESS: false,
+
+	/**
+	 * An optional script to run right after the unity build completes for the WebGL platform.
+	 */
+	WEBGL_POST_UNITY_BUILD: null  /* {  inConfig, inEnv, inParams ->  echo('Hello world!') } */,
+
+	/**
+	 * Whether to make iOS builds
+	 */
+	IOS_BUILD: true,
+
+	/**
+	 * If the ios bundle id must be different than the APP_IDENTIFIER for some reason,
+	 * you can override it here. If set to null, this takes the value of APP_IDENTIFER.
+	 */
+	IOS_APP_IDENTIFER: null,
+
+	/**
+	 * Whether to upload the build to the app store
+	 */
+	IOS_TESTFLIGHT_DEPLOY: true,
+
+	/**
+	 * Whether to archive debug symbols to symbolicate stack traces on iOS builds.
+	 * Note that the builtin crash reporting system in XCode can symbolicate most crashes
+	 * without this archive.
+	 */
+	IOS_ARCHIVE_SYMBOLS: false,
+
+	/**
+	 * The Jenkins credential ID for the Apple Developer Account used to upload builds to App Store Connect.
+	 * This must point to a Fastlane API Key Json file.
+	 * Format is documented here: https://docs.fastlane.tools/app-store-connect-api/#using-fastlane-api-key-json-file
+	 * Secret type: Secret File.
+	 */
+	IOS_TESTFLIGHT_CREDENTIAL_ID: "filament-apple-appstoreconnect-api-key",
+
+	/**
+	 * The shortname of the App Store Connect team to upload builds to. This usually is the same as IOS_TEAM_ID, but could be different for older developer accounts.
+	 */
+	TESTFLIGHT_ASC_PROVIDER: "9M5FF268WX",
+
+	/**
+	 * Whether the iOS build contains an XCode workspace.
+	 * Set this to true when you are using Firebase or anything that uses CocoaPods.
+	 */
+	IOS_WORKSPACE: false,
+
+	/**
+	 * The name of the Apple Developer team used to sign and deploy iOS builds.
+	 * This will likely be different based on the branch.
+	 * To find this ID:
+	 *  1) Go to https://developer.apple.com/account.
+	 *  2) Select your correct Team in the top right.
+	 *  3) Go to the Membership page.
+	 *  4) Copy the Team Name.
+	 */
+	IOS_TEAM_NAME: "Filament Games",
+
+	/**
+	 * The id of the Apple Developer team used to sign and deploy iOS builds.
+	 * This will likely be different based on the branch.
+	 * To find this ID:
+	 *  1) Go to https://developer.apple.com/account.
+	 *  2) Select your correct Team in the top right.
+	 *  3) Go to the Membership page.
+	 *  4) Copy the Team ID.
+	 */
+	IOS_TEAM_ID: "9M5FF268WX",
+
+	/**
+	 * An optional script to run right after the unity build completes for the IOS platform.
+	 */
+	IOS_POST_UNITY_BUILD: null  /* {  inConfig, inEnv, inParams ->  echo('Hello world!') } */,
+
+	/**
+	 * If set, overrides the UIRequiredDeviceCapabilities key in the Info.plist to the specified set of values.
+	 * Separate each value by a comma inside of a json-style array.
+	 * @see https://developer.apple.com/support/required-device-capabilities/ for a list of valid values.
+	 */
+	IOS_REQUIRED_CAPABILITIES: null /*'["armv7","metal"]'*/,
+
+	/**
+	 * Whether to make native Windows builds
+	 */
+	WINDOWS_BUILD: true,
+
+	/**
+	 * Whether to sign native Windows builds.
+	 * This is important to avoid the annoying Windows SmartScreen prompts.
+	 */
+	WINDOWS_SIGN: true,
+
+	/**
+	 * Whether to create an installer executable.
+	 * The installer bundled with unity-jenkins is minimal and just installs to program files with a desktop shortcut
+	 * and a start menu shortcut.
+	 */
+	WINDOWS_INSTALLER: true,
+
+	/**
+	 * The Jenkins credential id for the Windows authenticode private key file.
+	 * Use the Secret File credential type.
+	 * Make sure to use a unique Authenticode certificate for each client.
+	 * This is required if WINDOWS_SIGN = true or WINDOWS_INSTALLER = true.
+	 */
+	WINDOWS_AUTHENTICODE_KEY_CREDENTIAL_ID: "filament-unity-jenkins-authenticode-key",
+
+	/**
+	 * The Jenkins credential id for the Windows authenticode private key password.
+	 * Use the Secret Text credential type.
+	 * This is required if WINDOWS_SIGN = true or WINDOWS_INSTALLER = true.
+	 */
+	WINDOWS_AUTHENTICODE_KEY_PASS_CREDENTIAL_ID: "filament-unity-jenkins-authenticode-key-pass",
+
+	/**
+	 * An optional script to run right after the unity build completes for the Windows platform.
+	 */
+	WINDOWS_POST_UNITY_BUILD: null  /* {  inConfig, inEnv, inParams ->  echo('Hello world!') } */,
+
+	/**
+	 * Whether to use the IL2CPP scripting backend.
+	 * TODO: This currently has no effect other than switching the jenkins agent label to select the appropriate build node.
+	 */
+	WINDOWS_USE_IL2CPP: false,
+
+	/**
+	 * Whether to make native MacOS builds
+	 */
+	MACOS_BUILD: true,
+
+	/**
+	 * Whether to sign the MacOS build. This is important to prevent Gatekeeper from denying launch.
+	 */
+	MACOS_SIGN: true,
+
+	/**
+	 * Whether to make a MacOS installer (pkg file).
+	 */
+	MACOS_INSTALLER: true,
+
+	/**
+	 * Whether to upload the app to AppStore Connect.
+	 */
+	MACOS_APP_STORE_DEPLOY: false,
+
+	/**
+	 * The app store category associated with the app.
+	 * @see https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/TP40009250-SW8.
+	 */
+	MACOS_APP_STORE_CATEGORY: "",
+
+	/**
+	 * An entitlements file to use when signing the MacOS app. Use the special string "app-store"
+	 * to use an entitlements file that is compatible with Apple App Store distribution.
+	 */
+	MACOS_ENTITLEMENTS: null,
+
+	/**
+	 * The certificate to use for signing the app
+	 */
+	MACOS_CODESIGN_IDENTITY: "Developer ID Application: Filament Games (9M5FF268WX)",
+
+	/**
+	 * The certificate to use for signing the installer.
+	 * There are two types of installer identities:
+	 * * Mac Installer: package for upload to the Mac App Store
+	 * * Developer ID Installer: Package for distribution outside of the Mac App Store
+	 */
+	MACOS_INSTALLER_IDENTITY: "Developer ID Installer: Filament Games (9M5FF268WX)",
+
+	/**
+	 * An optional script to run right after the unity build completes for the MacOS platform.
+	 */
+	MACOS_POST_UNITY_BUILD: null  /* {  inConfig, inEnv, inParams ->  echo('Hello world!') } */,
+
+	/**
+	 * Whether to use the IL2CPP scripting backend.
+	 * TODO: This currently has no effect other than switching the jenkins agent label to select the appropriate build node.
+	 */
+	MACOS_USE_IL2CPP: false,
+	
+	/**
+	 * Whether to make native MacOS builds
+	 */
+	LINUX_BUILD: true,
+	
+	/**
+	 * An optional script to run right after the unity build completes for the MacOS platform.
+	 */
+	LINUX_POST_UNITY_BUILD: null  /* {  inConfig, inEnv, inParams ->  echo('Hello world!') } */,
+
+	/**
+	 * Whether to use the IL2CPP scripting backend.
+	 * TODO: This currently has no effect other than switching the jenkins agent label to select the appropriate build node.
+	 */
+	LINUX_USE_IL2CPP: false,
+	
+]
+
+/**
+ * develop branch config overrides
+ */
+config.develop = [:]
+
+/**
+ * staging branch config overrides
+ */
+config.staging = [
+	WEBGL_OPEN_ACCESS: true
+]
+
+/**
+ * production branch config overrides
+ */
+config.production = [
+	ANDROID_ARCHIVE_SYMBOLS: true,
+	IOS_ARCHIVE_SYMBOLS: true,
+	WEBGL_OPEN_ACCESS: true
+]
+
+/**
+ * custom branch config overrides
+ */
+ //config.yourbranch = [:]
+
+//Load the shared library pipeline
+unityJenkinsPipeline(config)
