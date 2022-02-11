@@ -112,7 +112,7 @@ config.__default__ = [
 	 * Use the Secret Text credential type.
 	 * Add configurations to the Jenkins CI slack integration at https://filamentgames.slack.com/apps/A0F7VRFKN-jenkins-ci.
 	 */
-	SLACK_TOKEN_CREDENTIAL_ID: "filament-slack-unity-jenkins-test-token",
+	SLACK_TOKEN_CREDENTIAL_ID: "filament-slack-QuantumZombiesQZ-token",
 
 	/**
 	 * User handles added to the end of success and failure notification messages to make sure appropriate users get notified.
@@ -363,7 +363,7 @@ config.__default__ = [
 	/**
 	 * Whether to make native Windows builds
 	 */
-	WINDOWS_BUILD: true,
+	WINDOWS_BUILD: false,
 
 	/**
 	 * Whether to sign native Windows builds.
@@ -407,7 +407,7 @@ config.__default__ = [
 	/**
 	 * Whether to make native MacOS builds
 	 */
-	MACOS_BUILD: true,
+	MACOS_BUILD: false,
 
 	/**
 	 * Whether to sign the MacOS build. This is important to prevent Gatekeeper from denying launch.
@@ -463,7 +463,7 @@ config.__default__ = [
 	/**
 	 * Whether to make native MacOS builds
 	 */
-	LINUX_BUILD: true,
+	LINUX_BUILD: false,
 	
 	/**
 	 * An optional script to run right after the unity build completes for the MacOS platform.
