@@ -44,12 +44,12 @@ config.__default__ = [
 	 * This is used to trigger the build from remote systems such as Gitlab.
 	 * Set this to a long, random, and unique string for each project.
 	 */
-	TRIGGER_TOKEN: "unityjenkins3bnuyrgf7a86876378a6d",
+	TRIGGER_TOKEN: "M11K-Cti6-a1ot-VfM4-Px3R",
 
 	/**
 	 * The human-readable name for your project. Avoid special characters; but you may use spaces.
 	 */
-	PRODUCT_NAME: "Unity Jenkins",
+	PRODUCT_NAME: "Quantum Zombies",
 	/**
 	 * A url that takes you to either a product webpage or the company webpage that owns the product.
 	 * Right now this is only used in windows app signing.
@@ -60,7 +60,7 @@ config.__default__ = [
 	 * The file name prefix for build artifacts. This name must be safe to use in a windows, mac, or linux file path.
 	 * Stick to A-Za-z0-9 character set.
 	 */
-	FILE_NAME: "UnityJenkins",
+	FILE_NAME: "QuantumZombies",
 
 	/**
 	 * For Android, this corresponds to the Package Name in AndroidManifest.xml and the Application ID in build.gradle.
@@ -69,7 +69,7 @@ config.__default__ = [
 	 * IDs should be in reverse dns style, all lower case. Please ignore the title case in the example app identifier.
 	 * This was an accident when setting up unit testing of Unity Jenkins.
 	 */
-	APP_IDENTIFIER: "com.FilamentGames.UnityJenkins",
+	APP_IDENTIFIER: "com.filamentgames.uchicago.quantumzombies",
 
 	/**
 	 * This corresponds to the Scripting Define Symbols option in Unity player settings.
@@ -85,7 +85,7 @@ config.__default__ = [
 	/**
 	 * This is the user-facing version number of the app. This corresponds to Bundle Version in iOS and versionName in Android.
 	 */
-	VERSION: "1.0.0",
+	VERSION: "0.1.0",
 
 	/**
 	 * Whether to send a Slack notification when the job starts
@@ -105,7 +105,7 @@ config.__default__ = [
 	/**
 	 * This is the channel that notifications will be sent to.
 	 */
-	SLACK_CHANNEL: "#unity-jenkins-test",
+	SLACK_CHANNEL: "#quantum-builds",
 
 	/**
 	 * This is the Jenkins credential ID that contains the Slack API token.
@@ -117,7 +117,7 @@ config.__default__ = [
 	/**
 	 * User handles added to the end of success and failure notification messages to make sure appropriate users get notified.
 	 */
-	SLACK_MENTIONS: "@USER1 @USER2",
+	SLACK_MENTIONS: "@Srivathsan Prakash",
 
 	/**
 	 * Whether to make Android builds
