@@ -150,7 +150,7 @@ config.__default__ = [
 	/**
 	 * Whether the android signing keystore file (.keystore) is located in the Jenkins credential manager.
 	 */
-	ANDROID_KEYSTORE_FILE_USE_CREDENTIALS: false,
+	ANDROID_KEYSTORE_FILE_USE_CREDENTIALS: true,
 
 	/**
 	 * The relative path from the root of the repository to the Android signing keystore.
@@ -494,6 +494,7 @@ config.staging = [
  * production branch config overrides
  */
 config.production = [
+	ANDROID_KEYSTORE_FILE_USE_CREDENTIALS: false, /* ToDo: Make Keystore for production */
 	ANDROID_ARCHIVE_SYMBOLS: true,
 	IOS_ARCHIVE_SYMBOLS: true,
 	WEBGL_OPEN_ACCESS: true
