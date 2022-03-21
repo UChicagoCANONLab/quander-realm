@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Shared
+namespace Wrapper
 {
     [CreateAssetMenu(fileName = "Minigame", menuName = "Minigame")]
     public class Minigame : ScriptableObject

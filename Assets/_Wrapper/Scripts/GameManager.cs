@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Shared
+namespace Wrapper
 {
     public class GameManager : MonoBehaviour
     {
