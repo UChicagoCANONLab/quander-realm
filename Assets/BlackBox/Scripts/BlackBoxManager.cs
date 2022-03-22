@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
 
 namespace BlackBox
 {
-    public class GameManager : MonoBehaviour
+    public class BlackBoxManager : MonoBehaviour
     {
         public int gridSize;
         public float cellSize;
@@ -33,7 +32,7 @@ namespace BlackBox
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))
-                Application.Quit();
+                Wrapper.Events.BackToMain?.Invoke();
 
             if (Input.GetKeyDown(KeyCode.Alpha5))
                 CreateGrids(5);
