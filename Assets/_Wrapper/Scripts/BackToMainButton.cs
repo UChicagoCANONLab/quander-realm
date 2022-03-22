@@ -8,7 +8,7 @@ namespace Wrapper
     {
         private void Awake()
         {
-            gameObject.GetComponent<Button>().onClick.AddListener(() => SceneManager.LoadScene("S_MainScene"));
+            gameObject.GetComponent<Button>().onClick.AddListener(() => Events.BackToMain?.Invoke());
         }
     }
 }

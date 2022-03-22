@@ -7,7 +7,8 @@ namespace Wrapper
     {
         private void Awake()
         {
-            GameEvents.testEvent.AddListener(OpenMinigame);    
+            Events.OpenMinigame.AddListener(OpenMinigame);
+            Events.BackToMain.AddListener(() => SceneManager.LoadScene(0));
         }
 
         private void OpenMinigame(Minigame minigame)
