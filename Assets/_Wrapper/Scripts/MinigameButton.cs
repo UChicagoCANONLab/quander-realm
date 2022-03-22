@@ -9,7 +9,7 @@ namespace Wrapper
 
         private void Start()
         {
-            gameObject.GetComponent<Button>().onClick.AddListener(() => GameEvents.testEvent.Invoke(minigame));
+            gameObject.GetComponent<Button>().onClick.AddListener(() => Events.OpenMinigame.Invoke(minigame));
         }
     }
 }
