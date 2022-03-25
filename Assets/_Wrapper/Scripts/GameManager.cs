@@ -22,10 +22,12 @@ namespace Wrapper
 
             Events.OpenMinigame.AddListener(OpenMinigame);
             backButton.onClick.AddListener(() => 
-            { 
-                Debug.Log("PressedBack"); 
-                if (SceneManager.GetActiveScene().buildIndex != 0)
-                    SceneManager.LoadScene(0); 
+            {
+                if (SceneManager.GetActiveScene().buildIndex == 0)
+                    return;
+
+                Debug.Log("Back To Main");
+                SceneManager.LoadScene(0); 
             });
         }
 
