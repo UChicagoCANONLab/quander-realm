@@ -34,13 +34,13 @@ namespace BlackBox
                     Cell cell = cellobject.GetComponent<Cell>().CreateCell(x, y, cellSize, origin, cellType, direction);
                     gridArray[x, y] = cell;
 
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 3f);
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 3f);
+                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 3f);
+                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 3f);
                 }
             }
 
-            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 3f);
-            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 3f);
+            //Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 3f);
+            //Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 3f);
         }
 
         private void SetupListeners()
@@ -111,7 +111,7 @@ namespace BlackBox
 
             //Check if nodes exist and update position accordingly
             if (HasNode(frontMid)) //Hit
-                ray.Flip(true);
+                ray.Kill(width); // since the main board is a square, gridLength = width = height
             else if (HasNode(frontRight) && HasNode(frontLeft)) //Reflect
                 ray.Flip(false);
             else if (HasNode(frontRight)) //Detour Left

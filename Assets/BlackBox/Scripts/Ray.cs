@@ -172,5 +172,21 @@ namespace BlackBox
             rayTurned = true;
             numDetours++;
         }
+
+        public void Kill(int gridLength) //todo: better fix
+        {
+            direction = originDirection;
+            position = origin;
+            numDetours = 0;
+
+            switch(direction)
+            {
+                case Dir.Right: position.x = gridLength - 1; break;
+                case Dir.Top: position.y = gridLength - 1; break;
+                default: break;
+            }
+
+            Flip(true);
+        }
     }
 }
