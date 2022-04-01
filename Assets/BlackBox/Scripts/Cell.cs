@@ -14,6 +14,7 @@ namespace BlackBox
 
         private float cellSize;
         private Vector3 origin;
+        private static bool flip = true;
 
         public Cell CreateCell(int xPos, int yPos, float cellSize, Vector3 origin, CellType cellType = CellType.Node, Dir direction = Dir.None)
         {
@@ -22,6 +23,12 @@ namespace BlackBox
             this.cellType = cellType;
             this.direction = direction;
             gridPosition = new Vector3Int(xPos, yPos);
+
+            if (cellType == CellType.Node) // todo: fix for even sized grids(e.g. 6x6)
+            {
+                spriteBG.SetActive(flip);
+                flip = !flip;
+            }
 
             return this;
         }

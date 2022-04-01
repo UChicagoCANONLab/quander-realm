@@ -6,6 +6,7 @@ namespace BlackBox
     public class BGrid : MonoBehaviour
     {
         public GameObject cellPrefab;
+        public float debugLineDuration = 3f;
 
         private int width;
         private int height;
@@ -17,6 +18,8 @@ namespace BlackBox
 
         public void CreateGrid(int width, int height, float cellSize, Vector3 origin, CellType cellType, Dir direction = Dir.None)
         {
+            SetupListeners();
+
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
@@ -24,23 +27,21 @@ namespace BlackBox
             this.direction = direction;
             gridArray = new Cell[width, height];
 
-            SetupListeners();
-
             for (int x = 0; x < gridArray.GetLength(0); x++)
             {
                 for (int y = 0; y < gridArray.GetLength(1); y++)
                 {
-                    GameObject cellobject = Instantiate(cellPrefab, GetWorldPosition(x, y) + new Vector3(cellSize / 2, cellSize / 2), gameObject.transform.rotation, gameObject.transform);
+                    GameObject cellobject = Instantiate(cellPrefab, GetWorldPosition(x, y) + new Vector3(cellSize / 2, cellSize / 2), Quaternion.identity, gameObject.transform);
                     Cell cell = cellobject.GetComponent<Cell>().CreateCell(x, y, cellSize, origin, cellType, direction);
                     gridArray[x, y] = cell;
 
-                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 3f);
-                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 3f);
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, debugLineDuration);
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, debugLineDuration);
                 }
             }
 
-            //Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 3f);
-            //Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 3f);
+            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, debugLineDuration);
+            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, debugLineDuration);
         }
 
         private void SetupListeners()
@@ -79,6 +80,8 @@ namespace BlackBox
 
             return result;
         }
+
+        #region Node and Ray Behaviour
 
         public void Interact(Vector3 worldPosition)
         {
@@ -182,5 +185,7 @@ namespace BlackBox
 
             return result;
         }
+
+        #endregion
     }
 }
