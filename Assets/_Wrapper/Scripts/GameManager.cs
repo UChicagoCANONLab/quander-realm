@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Firebase;
 
 namespace Wrapper
 {
@@ -11,7 +12,8 @@ namespace Wrapper
 
         public Button backButton;
 
-        private Firebase.FirebaseApp app;
+        private FirebaseApp app;
+        private readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
 
         private void Awake()
         {
@@ -43,23 +45,33 @@ namespace Wrapper
 
         private void FirebaseInit()
         {
-            Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
-                var dependencyStatus = task.Result;
-                if (dependencyStatus == Firebase.DependencyStatus.Available)
+            AppOptions secondaryAppOptions = new AppOptions
+            {
+                ApiKey = "<API_KEY>",
+                AppId = "<GOOGLE_APP_ID>",
+                ProjectId = "<PROJECT_ID>"
+            };
+
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => 
+            {
+                DependencyStatus dependencyStatus = task.Result;
+                if (dependencyStatus == DependencyStatus.Available)
                 {
                     // Create and hold a reference to your FirebaseApp,
                     // where app is a Firebase.FirebaseApp property of your application class.
-                    app = Firebase.FirebaseApp.DefaultInstance;
+                    app = FirebaseApp.DefaultInstance;
+                    app.Options.DatabaseUrl = new System.Uri(firebaseURL);
 
                     // Set a flag here to indicate whether Firebase is ready to use by your app.
                 }
                 else
                 {
-                    UnityEngine.Debug.LogError(System.String.Format(
+                    Debug.LogError(System.String.Format(
                       "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
                     // Firebase Unity SDK is not safe to use here.
                 }
             });
+
         }
     }
 }
