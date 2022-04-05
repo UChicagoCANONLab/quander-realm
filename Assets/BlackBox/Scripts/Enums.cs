@@ -23,4 +23,11 @@ namespace BlackBox
         EdgeNode,
         Unit
     };
+
+    public enum GridSize
+    {
+        Small,
+        Medium,
+        Large
+    }
 }

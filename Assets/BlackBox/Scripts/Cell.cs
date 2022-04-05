@@ -6,6 +6,7 @@ namespace BlackBox
     public class Cell : MonoBehaviour
     {
         public bool hasNode = false;
+        public GameObject container;
         public GameObject spriteBG;
         public GameObject spriteNode;
         public TextMeshProUGUI markerText;
@@ -25,6 +26,8 @@ namespace BlackBox
             this.cellType = cellType;
             this.direction = direction;
             gridPosition = new Vector3Int(xPos, yPos);
+
+            container.GetComponent<RectTransform>().sizeDelta = new Vector2(cellSize, cellSize);
 
             //if (cellType == CellType.Node) // todo: fix for even sized grids(e.g. 6x6)
             //{

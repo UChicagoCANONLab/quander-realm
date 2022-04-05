@@ -30,8 +30,8 @@ namespace BlackBox
             {
                 for (int y = 0; y < gridArray.GetLength(1); y++)
                 {
-                    GameObject cellobject = Instantiate(cellPrefab, GetWorldPosition(x, y) + new Vector3(cellSize / 2, cellSize / 2), Quaternion.identity, gameObject.transform);
-                    Cell cell = cellobject.GetComponent<Cell>().CreateCell(x, y, cellSize, origin, cellType, direction);
+                    GameObject cellObj = Instantiate(cellPrefab, GetWorldPosition(x, y) + new Vector3(cellSize / 2, cellSize / 2), Quaternion.identity, gameObject.transform);
+                    Cell cell = cellObj.GetComponent<Cell>().CreateCell(x, y, cellSize, origin, cellType, direction);
                     gridArray[x, y] = cell;
 
                     Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, debugLineDuration);
