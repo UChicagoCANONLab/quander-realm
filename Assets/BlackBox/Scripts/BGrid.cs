@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace BlackBox
@@ -18,14 +17,14 @@ namespace BlackBox
 
         public void CreateGrid(int width, int height, float cellSize, Vector3 origin, CellType cellType, Dir direction = Dir.None)
         {
-            SetupListeners();
-
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
             this.origin = origin;
             this.direction = direction;
             gridArray = new Cell[width, height];
+
+            SetupListeners();
 
             for (int x = 0; x < gridArray.GetLength(0); x++)
             {

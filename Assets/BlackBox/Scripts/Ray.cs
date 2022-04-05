@@ -128,7 +128,7 @@ namespace BlackBox
                 case Dir.Top: position.y--; break;
             }
 
-            Debug.Log(position);
+            //Debug.Log(position);
         }
 
         public void Flip(bool directHit)
