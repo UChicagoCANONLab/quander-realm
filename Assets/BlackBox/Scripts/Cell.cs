@@ -6,9 +6,8 @@ namespace BlackBox
     public class Cell : MonoBehaviour
     {
         public bool hasNode = false;
-        public GameObject container;
-        public GameObject spriteBG;
-        public GameObject spriteNode;
+        public GameObject background;
+        public GameObject nodeObj;
         public TextMeshProUGUI markerText;
         public Vector3Int gridPosition;
 
@@ -19,7 +18,7 @@ namespace BlackBox
         private Vector3 origin;
         //private static bool flip = true;
 
-        public Cell CreateCell(int xPos, int yPos, float cellSize, Vector3 origin, CellType cellType = CellType.Node, Dir direction = Dir.None)
+        public Cell Create(int xPos, int yPos, float cellSize, Vector3 origin, CellType cellType = CellType.Node, Dir direction = Dir.None)
         {
             this.cellSize = cellSize;
             this.origin = origin;
@@ -27,7 +26,7 @@ namespace BlackBox
             this.direction = direction;
             gridPosition = new Vector3Int(xPos, yPos);
 
-            container.GetComponent<RectTransform>().sizeDelta = new Vector2(cellSize, cellSize);
+            gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(cellSize, cellSize);
 
             //if (cellType == CellType.Node) // todo: fix for even sized grids(e.g. 6x6)
             //{
@@ -60,7 +59,7 @@ namespace BlackBox
         private void ToggleNode()
         {
             hasNode = !(hasNode);
-            spriteNode.SetActive(hasNode);
+            nodeObj.SetActive(hasNode);
         }
     }
 }
