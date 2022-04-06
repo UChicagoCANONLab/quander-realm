@@ -4,7 +4,6 @@ namespace BlackBox
 {
     public class BGrid : MonoBehaviour
     {
-        public GameObject cellPrefab;
         public float debugLineDuration = 3f;
 
         private int width;
@@ -15,7 +14,7 @@ namespace BlackBox
         private Cell[,] gridArray;
         private Ray ray;
 
-        public void CreateGrid(int width, int height, float cellSize, Vector3 origin, CellType cellType, Dir direction = Dir.None)
+        public void Create(int width, int height, float cellSize, Vector3 origin, GameObject cellPrefab, CellType cellType, Dir direction = Dir.None)
         {
             this.width = width;
             this.height = height;
@@ -30,8 +29,8 @@ namespace BlackBox
             {
                 for (int y = 0; y < gridArray.GetLength(1); y++)
                 {
-                    GameObject cellObj = Instantiate(cellPrefab, GetWorldPosition(x, y) + new Vector3(cellSize / 2, cellSize / 2), Quaternion.identity, gameObject.transform);
-                    Cell cell = cellObj.GetComponent<Cell>().CreateCell(x, y, cellSize, origin, cellType, direction);
+                    GameObject cellObj = Instantiate(cellPrefab, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) / 2, Quaternion.identity, gameObject.transform);
+                    Cell cell = cellObj.GetComponent<Cell>().Create(x, y, cellSize, origin, cellType, direction);
                     gridArray[x, y] = cell;
 
                     Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, debugLineDuration);
@@ -51,17 +50,10 @@ namespace BlackBox
                 GameEvents.MarkUnit.AddListener((text, gridDirection, destPosition) => MarkUnits(text, gridDirection, destPosition));
         }
 
-        private void MarkUnits(string text, Dir gridDirection, Vector3Int destPosition)
-        {
-            if (direction != gridDirection)
-                return;
-
-            gridArray[destPosition.x, destPosition.y].SetText(text);
-        }
-
         private Vector3 GetWorldPosition(int x, int y)
         {
-            return new Vector3(x, y) * cellSize + origin; 
+            Vector3 result = new Vector3(x, y) * cellSize + origin;
+            return result; 
         }
 
         private Vector3 GetWorldPosition(Vector3 gridPosition)
@@ -69,7 +61,7 @@ namespace BlackBox
             return new Vector3(gridPosition.x, gridPosition.y) * cellSize + origin;
         }
 
-        public Vector3Int GetCellPosition(Vector3 worldPosition)
+        public Vector3Int GetCellGridPosition(Vector3 worldPosition)
         {
             Vector3Int result = new Vector3Int
             {
@@ -84,7 +76,7 @@ namespace BlackBox
 
         public void Interact(Vector3 worldPosition)
         {
-            Vector3Int cellPosition = GetCellPosition(worldPosition);
+            Vector3Int cellPosition = GetCellGridPosition(worldPosition);
 
             if (cellPosition.x < 0 || cellPosition.x >= width || cellPosition.y < 0 || cellPosition.y >= height)
                 return;
@@ -126,8 +118,8 @@ namespace BlackBox
 
             //draw debug line
             Debug.DrawLine(
-                GetWorldPosition(oldPosition) + new Vector3(cellSize / 2, cellSize / 2), 
-                GetWorldPosition(ray.position) + new Vector3(cellSize / 2, cellSize / 2), 
+                GetWorldPosition(oldPosition) + new Vector3(cellSize, cellSize) / 2, 
+                GetWorldPosition(ray.position) + new Vector3(cellSize, cellSize) / 2, 
                 Color.white, 
                 3f);
         }
@@ -174,6 +166,14 @@ namespace BlackBox
                     return true;
 
             return false;
+        }
+
+        private void MarkUnits(string text, Dir gridDirection, Vector3Int destPosition)
+        {
+            if (direction != gridDirection)
+                return;
+
+            gridArray[destPosition.x, destPosition.y].SetText(text);
         }
 
         private bool RayInPlay()
