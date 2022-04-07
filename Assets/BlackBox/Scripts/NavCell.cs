@@ -1,26 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using TMPro;
 
 namespace BlackBox
 {
     public class NavCell : Cell
     {
-
-
-        public override bool HasNode()
-        {
-            throw new System.NotImplementedException();
-        }
+        public TextMeshProUGUI markerText;
 
         public override void Interact()
         {
-            throw new System.NotImplementedException();
+            GameEvents.FireRay?.Invoke(gridPosition, direction);
         }
 
         public override void SetValue(string value)
         {
-            throw new System.NotImplementedException();
+            markerText.gameObject.SetActive(true);
+            markerText.text = value;
+        }
+
+        public override bool HasNode()
+        {
+            return false;
         }
     }
 }

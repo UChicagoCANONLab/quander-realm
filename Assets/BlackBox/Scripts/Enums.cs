@@ -21,7 +21,7 @@ namespace BlackBox
     {
         Node,
         EdgeNode,
-        Unit
+        Nav
     };
 
     public enum GridSize
