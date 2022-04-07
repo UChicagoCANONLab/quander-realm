@@ -33,20 +33,25 @@ namespace BlackBox
             CreateAllGrids();
         }
 
+        //todo: Delete Update() later
+#if UNITY_EDITOR
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Alpha5))
                 CreateAllGrids();
 
-            //if (Input.GetKeyDown(KeyCode.Alpha6))
-            //    CreateGrids(6);
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+                CreateAllGrids(GridSize.Medium);
 
-            //if (Input.GetKeyDown(KeyCode.Alpha7))
-            //    CreateGrids(7);
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+                CreateAllGrids(GridSize.Large);
         }
+#endif
 
-        private void CreateAllGrids()
+        private void CreateAllGrids(GridSize newGridSize = GridSize.Small)
         {
+            gridSize = newGridSize;
+
             CreateGrid(mainGridGO, Dir.None);
             CreateGrid(leftGridGO, Dir.Left);
             CreateGrid(botGridGO, Dir.Bot);
