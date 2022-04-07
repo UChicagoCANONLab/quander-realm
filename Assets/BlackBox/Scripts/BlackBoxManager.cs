@@ -69,7 +69,7 @@ namespace BlackBox
         {
             ClearChildren(parent);
 
-            GetGridArray(parent).Create(size, size, cellSize, parent.transform.position, cellPrefab, CellType.Node);
+            GetGridArray(parent).Create(size, size, cellSize, parent.transform.position, CellType.Node);
             GetGLG(parent).cellSize = new Vector2(cellSize, cellSize);
             //leftGrid.Create(1, size, cellSize, leftGrid.gameObject.transform.position, cellPrefab, CellType.Unit, Dir.Left);
             //botGrid.Create(size, 1, cellSize, botGrid.gameObject.transform.position, cellPrefab, CellType.Unit, Dir.Bot);

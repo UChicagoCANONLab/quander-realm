@@ -5,6 +5,7 @@ namespace BlackBox
     public class GridArray : MonoBehaviour
     {
         public float debugLineDuration = 3f;
+        public GameObject cellPrefab;
 
         private int width;
         private int height;
@@ -14,7 +15,7 @@ namespace BlackBox
         private Ray ray;
         private Cell[,] gridArray;
 
-        public void Create(int width, int height, float cellSize, Vector3 origin, GameObject cellPrefab, CellType cellType, Dir direction = Dir.None)
+        public void Create(int width, int height, float cellSize, Vector3 origin, CellType cellType, Dir direction = Dir.None)
         {
             this.width = width;
             this.height = height;
@@ -23,7 +24,7 @@ namespace BlackBox
             this.direction = direction;
             gridArray = new Cell[width, height];
 
-            SetupListeners();
+            //SetupListeners();
 
             for (int y = 0; y < gridArray.GetLength(1); y++)
             {
@@ -42,13 +43,13 @@ namespace BlackBox
             //Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, debugLineDuration);
         }
 
-        private void SetupListeners()
-        {
-            if (direction == Dir.None)
-                GameEvents.FireRay.AddListener((rayOrigin, rayDirection) => FireRay(rayOrigin, rayDirection));
-            else
-                GameEvents.MarkUnit.AddListener((text, gridDirection, destPosition) => MarkUnits(text, gridDirection, destPosition));
-        }
+        //private void SetupListeners()
+        //{
+        //    if (direction == Dir.None)
+        //        GameEvents.FireRay.AddListener((rayOrigin, rayDirection) => FireRay(rayOrigin, rayDirection));
+        //    else
+        //        GameEvents.MarkUnit.AddListener((text, gridDirection, destPosition) => MarkUnits(text, gridDirection, destPosition));
+        //}
 
         //private Vector3 GetWorldPosition(int x, int y)
         //{
@@ -118,9 +119,9 @@ namespace BlackBox
 
             //draw debug line
             Debug.DrawLine(
-                GetWorldPosition(oldPosition) + new Vector3(cellSize, cellSize) / 2, 
-                GetWorldPosition(ray.position) + new Vector3(cellSize, cellSize) / 2, 
-                Color.white, 
+                GetWorldPosition(oldPosition) + new Vector3(cellSize, cellSize) / 2,
+                GetWorldPosition(ray.position) + new Vector3(cellSize, cellSize) / 2,
+                Color.white,
                 3f);
         }
 
@@ -162,7 +163,7 @@ namespace BlackBox
 
             Cell cell = gridArray[gridPosition.x, gridPosition.y];
             if (cell != null)
-                if (cell.hasNode)
+                if (cell.HasNode())
                     return true;
 
             return false;
@@ -173,7 +174,7 @@ namespace BlackBox
             if (direction != gridDirection)
                 return;
 
-            gridArray[destPosition.x, destPosition.y].SetText(text);
+            gridArray[destPosition.x, destPosition.y].SetValue(text);
         }
 
         private bool RayInPlay()
