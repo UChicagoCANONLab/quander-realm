@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace BlackBox
 {
@@ -11,11 +12,12 @@ namespace BlackBox
         public GameObject gridPrefab;
 
         [Header("Grid Objects")]
-        public BGrid mainGrid;
-        public BGrid leftGrid;
-        public BGrid botGrid;
-        public BGrid rightGrid;
-        public BGrid topGrid;
+        //public GridArray mainGrid;
+        public GameObject mainGridGO;
+        //public GridArray leftGrid;
+        //public GridArray botGrid;
+        //public GridArray rightGrid;
+        //public GridArray topGrid;
 
         [Header("Grid and Cell Size")]
         [Tooltip("This will determine which values from the below arrays we'll use for: \n\ngrid size (e.g 5x5, 6x6, or 7x7) \ncell size (e.g 200f, 166f, 142f)")]
@@ -32,14 +34,15 @@ namespace BlackBox
         void Start()
         {
             cellSize = cellSizeValues[((int)gridSize)];
-            CreateGrids(gridSizeValues[(int)gridSize]);
+
+            CreateGrid(mainGridGO, gridSizeValues[(int)gridSize]);
         }
 
         private void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                mainGrid.Interact(GetMouseWorldPosition());
+                GetGridArray(mainGridGO).Interact(GetMouseWorldPosition());
                 //leftGrid.Interact(GetMouseWorldPosition());
                 //botGrid.Interact(GetMouseWorldPosition());
                 //rightGrid.Interact(GetMouseWorldPosition());
@@ -47,7 +50,7 @@ namespace BlackBox
             }
 
             if (Input.GetKeyDown(KeyCode.R))
-                CreateGrids(gridSizeValues[(int)gridSize]);
+                CreateGrid(mainGridGO, gridSizeValues[(int)gridSize]);
 
             //if (Input.GetKeyDown(KeyCode.Alpha6))
             //    CreateGrids(6);
@@ -62,15 +65,16 @@ namespace BlackBox
             //    CreateGrids(9);
         }
 
-        private void CreateGrids(int size)
+        private void CreateGrid(GameObject parent, int size)
         {
-            ClearChildren(mainGrid.gameObject);
+            ClearChildren(parent);
 
-            mainGrid.Create(size, size, cellSize, mainGrid.gameObject.transform.position, cellPrefab, CellType.Node);
-            //leftGrid.CreateGrid(1, size, cellSize, leftGridContainer.transform.position, CellType.Unit, Dir.Left);
-            //botGrid.CreateGrid(size, 1, cellSize, botGridContainer.transform.position, CellType.Unit, Dir.Bot);
-            //rightGrid.CreateGrid(1, size, cellSize, rightGridContainer.transform.position, CellType.Unit, Dir.Right);
-            //topGrid.CreateGrid(size, 1, cellSize, topGridContainer.transform.position, CellType.Unit, Dir.Top);
+            GetGridArray(parent).Create(size, size, cellSize, parent.transform.position, cellPrefab, CellType.Node);
+            GetGLG(parent).cellSize = new Vector2(cellSize, cellSize);
+            //leftGrid.Create(1, size, cellSize, leftGrid.gameObject.transform.position, cellPrefab, CellType.Unit, Dir.Left);
+            //botGrid.Create(size, 1, cellSize, botGrid.gameObject.transform.position, cellPrefab, CellType.Unit, Dir.Bot);
+            //rightGrid.Create(1, size, cellSize, rightGrid.gameObject.transform.position, cellPrefab, CellType.Unit, Dir.Right);
+            //topGrid.Create(size, 1, cellSize, topGrid.gameObject.transform.position, cellPrefab, CellType.Unit, Dir.Top);
         }
 
         private void ClearChildren(GameObject parent)
@@ -85,5 +89,16 @@ namespace BlackBox
             worldPosition.z = 0f;
             return worldPosition;
         }
+
+        private GridArray GetGridArray(GameObject GO)
+        {
+            return GO.GetComponent<GridArray>();
+        }
+
+        private GridLayoutGroup GetGLG(GameObject GO)
+        {
+            return GO.GetComponent<GridLayoutGroup>();
+        }
+
     }
 }

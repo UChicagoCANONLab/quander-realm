@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3203334486126060199}
   - component: {fileID: 3181668133037365993}
+  - component: {fileID: 9165434899241143501}
   m_Layer: 5
   m_Name: NavBottom_GridSpawn
   m_TagString: Untagged
@@ -54,13 +55,26 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_StartCorner: 0
+  m_ChildAlignment: 6
+  m_StartCorner: 2
   m_StartAxis: 0
   m_CellSize: {x: 200, y: 200}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &9165434899241143501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576186336804066138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1bfd2f0189bea54e935d7490c994158, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugLineDuration: 3
 --- !u!1 &2111772691133882795
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2021642381031296760}
   - component: {fileID: 7147832185577555625}
+  - component: {fileID: 6037333277842732164}
   m_Layer: 5
   m_Name: NavRight_GridSpawn
   m_TagString: Untagged
@@ -115,13 +130,26 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_StartCorner: 0
+  m_ChildAlignment: 6
+  m_StartCorner: 2
   m_StartAxis: 0
   m_CellSize: {x: 200, y: 200}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &6037333277842732164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111772691133882795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1bfd2f0189bea54e935d7490c994158, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugLineDuration: 3
 --- !u!1 &3797947312773889913
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,6 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7281207632305662812}
   - component: {fileID: 8012443592394931683}
+  - component: {fileID: 1971071071814248776}
   m_Layer: 5
   m_Name: NavTop_GridSpawn
   m_TagString: Untagged
@@ -176,13 +205,26 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_StartCorner: 0
+  m_ChildAlignment: 6
+  m_StartCorner: 2
   m_StartAxis: 0
   m_CellSize: {x: 200, y: 200}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &1971071071814248776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797947312773889913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1bfd2f0189bea54e935d7490c994158, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugLineDuration: 3
 --- !u!1 &4755510230898492733
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,6 +235,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9129329957661370385}
   - component: {fileID: 631823991908422652}
+  - component: {fileID: 6193308919308650402}
   m_Layer: 5
   m_Name: NavLeft_GridSpawn
   m_TagString: Untagged
@@ -237,13 +280,26 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_StartCorner: 0
+  m_ChildAlignment: 6
+  m_StartCorner: 2
   m_StartAxis: 0
   m_CellSize: {x: 200, y: 200}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &6193308919308650402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4755510230898492733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1bfd2f0189bea54e935d7490c994158, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugLineDuration: 3
 --- !u!1 &6033936018998355384
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,6 +560,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8533984253417568001}
   - component: {fileID: 7179982263255312623}
+  - component: {fileID: 2972091986863378205}
   m_Layer: 5
   m_Name: MainGrid_GridSpawn
   m_TagString: Untagged
@@ -548,10 +605,23 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_StartCorner: 0
+  m_ChildAlignment: 6
+  m_StartCorner: 2
   m_StartAxis: 0
   m_CellSize: {x: 200, y: 200}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &2972091986863378205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398353734373560474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1bfd2f0189bea54e935d7490c994158, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugLineDuration: 10

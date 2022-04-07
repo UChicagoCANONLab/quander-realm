@@ -2,17 +2,17 @@ using UnityEngine;
 
 namespace BlackBox
 {
-    public class BGrid : MonoBehaviour
+    public class GridArray : MonoBehaviour
     {
         public float debugLineDuration = 3f;
 
         private int width;
         private int height;
         private float cellSize;
-        private Dir direction;
         private Vector3 origin;
-        private Cell[,] gridArray;
+        private Dir direction;
         private Ray ray;
+        private Cell[,] gridArray;
 
         public void Create(int width, int height, float cellSize, Vector3 origin, GameObject cellPrefab, CellType cellType, Dir direction = Dir.None)
         {
@@ -25,21 +25,21 @@ namespace BlackBox
 
             SetupListeners();
 
-            for (int x = 0; x < gridArray.GetLength(0); x++)
+            for (int y = 0; y < gridArray.GetLength(1); y++)
             {
-                for (int y = 0; y < gridArray.GetLength(1); y++)
+                for (int x = 0; x < gridArray.GetLength(0); x++)
                 {
-                    GameObject cellObj = Instantiate(cellPrefab, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) / 2, Quaternion.identity, gameObject.transform);
-                    Cell cell = cellObj.GetComponent<Cell>().Create(x, y, cellSize, origin, cellType, direction);
+                    GameObject cellObj = Instantiate(cellPrefab, gameObject.transform);
+                    Cell cell = cellObj.GetComponent<Cell>().Create(x, y, cellType, direction);
                     gridArray[x, y] = cell;
 
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, debugLineDuration);
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, debugLineDuration);
+                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, debugLineDuration);
+                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, debugLineDuration);
                 }
             }
 
-            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, debugLineDuration);
-            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, debugLineDuration);
+            //Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, debugLineDuration);
+            //Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, debugLineDuration);
         }
 
         private void SetupListeners()
@@ -50,11 +50,11 @@ namespace BlackBox
                 GameEvents.MarkUnit.AddListener((text, gridDirection, destPosition) => MarkUnits(text, gridDirection, destPosition));
         }
 
-        private Vector3 GetWorldPosition(int x, int y)
-        {
-            Vector3 result = new Vector3(x, y) * cellSize + origin;
-            return result; 
-        }
+        //private Vector3 GetWorldPosition(int x, int y)
+        //{
+        //    Vector3 result = new Vector3(x, y) * cellSize + origin;
+        //    return result; 
+        //}
 
         private Vector3 GetWorldPosition(Vector3 gridPosition)
         {
