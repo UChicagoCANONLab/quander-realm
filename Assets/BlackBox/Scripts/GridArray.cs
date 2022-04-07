@@ -15,7 +15,7 @@ namespace BlackBox
         private Ray ray;
         private Cell[,] gridArray;
 
-        public void Create(int width, int height, float cellSize, Vector3 origin, CellType cellType, Dir direction = Dir.None)
+        public void Create(int width, int height, float cellSize, Vector3 origin, Dir direction = Dir.None)
         {
             this.width = width;
             this.height = height;
@@ -31,7 +31,7 @@ namespace BlackBox
                 for (int x = 0; x < gridArray.GetLength(0); x++)
                 {
                     GameObject cellObj = Instantiate(cellPrefab, gameObject.transform);
-                    Cell cell = cellObj.GetComponent<Cell>().Create(x, y, cellType, direction);
+                    Cell cell = cellObj.GetComponent<Cell>().Create(x, y, direction);
                     gridArray[x, y] = cell;
 
                     //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, debugLineDuration);

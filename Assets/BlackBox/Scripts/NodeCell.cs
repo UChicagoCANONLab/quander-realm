@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 namespace BlackBox
@@ -6,7 +5,7 @@ namespace BlackBox
     public class NodeCell : Cell
     {
         private bool hasNode = false;
-        public GameObject nodeObj;
+        public GameObject nodeObj; 
 
         public override bool HasNode()
         {
@@ -21,7 +20,6 @@ namespace BlackBox
 
         public override void SetValue(string value)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

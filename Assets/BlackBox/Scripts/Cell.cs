@@ -17,10 +17,9 @@ namespace BlackBox
             button.onClick.AddListener(Interact);
         }
 
-        public Cell Create(int xPos, int yPos, CellType cellType = CellType.Node, Dir direction = Dir.None)
+        public Cell Create(int xPos, int yPos, Dir direction = Dir.None)
         {
             gridPosition = new Vector3Int(xPos, yPos);
-            this.cellType = cellType;
             this.direction = direction;
 
             return this;
