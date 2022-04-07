@@ -12,10 +12,16 @@ namespace BlackBox
         [HideInInspector] public Dir direction;
         [HideInInspector] public CellType cellType;
 
-        private void Start()
+        protected void Start()
         {
             button.onClick.AddListener(Interact);
         }
+
+        public abstract void Interact();
+
+        public abstract void SetValue(string value);
+
+        public abstract bool HasNode();
 
         public Cell Create(int xPos, int yPos, Dir direction = Dir.None)
         {
@@ -24,11 +30,5 @@ namespace BlackBox
 
             return this;
         }
-
-        public abstract void Interact();
-
-        public abstract void SetValue(string value);
-
-        public abstract bool HasNode();
     }
 }

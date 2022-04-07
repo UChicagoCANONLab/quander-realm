@@ -9,22 +9,16 @@ namespace BlackBox
 
         private int width;
         private int height;
-        private float cellSize;
-        private Vector3 origin;
         private Dir direction;
         private Ray ray;
         private Cell[,] gridArray;
 
-        public void Create(int width, int height, float cellSize, Vector3 origin, Dir direction = Dir.None)
+        public void Create(int width, int height, Dir direction = Dir.None)
         {
             this.width = width;
             this.height = height;
-            this.cellSize = cellSize;
-            this.origin = origin;
             this.direction = direction;
             gridArray = new Cell[width, height];
-
-            //SetupListeners();
 
             for (int y = 0; y < gridArray.GetLength(1); y++)
             {
@@ -33,61 +27,29 @@ namespace BlackBox
                     GameObject cellObj = Instantiate(cellPrefab, gameObject.transform);
                     Cell cell = cellObj.GetComponent<Cell>().Create(x, y, direction);
                     gridArray[x, y] = cell;
-
-                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, debugLineDuration);
-                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, debugLineDuration);
                 }
             }
 
-            //Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, debugLineDuration);
-            //Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, debugLineDuration);
+            SetupListeners();
         }
 
-        //private void SetupListeners()
-        //{
-        //    if (direction == Dir.None)
-        //        GameEvents.FireRay.AddListener((rayOrigin, rayDirection) => FireRay(rayOrigin, rayDirection));
-        //    else
-        //        GameEvents.MarkUnit.AddListener((text, gridDirection, destPosition) => MarkUnits(text, gridDirection, destPosition));
-        //}
-
-        //private Vector3 GetWorldPosition(int x, int y)
-        //{
-        //    Vector3 result = new Vector3(x, y) * cellSize + origin;
-        //    return result; 
-        //}
-
-        private Vector3 GetWorldPosition(Vector3 gridPosition)
+        private void SetupListeners()
         {
-            return new Vector3(gridPosition.x, gridPosition.y) * cellSize + origin;
-        }
-
-        public Vector3Int GetCellGridPosition(Vector3 worldPosition)
-        {
-            Vector3Int result = new Vector3Int
-            {
-                x = Mathf.FloorToInt((worldPosition - origin).x / cellSize),
-                y = Mathf.FloorToInt((worldPosition - origin).y / cellSize)
-            };
-
-            return result;
+            if (direction == Dir.None)
+                GameEvents.FireRay.AddListener((rayOrigin, rayDirection) => FireRay(rayOrigin, rayDirection));
+            else
+                GameEvents.MarkUnit.AddListener((text, gridDirection, destPosition) => MarkUnits(text, gridDirection, destPosition));
         }
 
         #region Node and Ray Behaviour
 
-        public void Interact(Vector3 worldPosition)
-        {
-            Vector3Int cellPosition = GetCellGridPosition(worldPosition);
+        //    if (cellPosition.x < 0 || cellPosition.x >= width || cellPosition.y < 0 || cellPosition.y >= height)
+        //        return;
 
-            if (cellPosition.x < 0 || cellPosition.x >= width || cellPosition.y < 0 || cellPosition.y >= height)
-                return;
+        //    if (direction == Dir.None) //avoid nodes on edge cells on main grid
+        //        if (cellPosition.x == 0 || cellPosition.x == width - 1 || cellPosition.y == 0 || cellPosition.y == height - 1)
+        //            return;
 
-            if (direction == Dir.None) //avoid nodes on edge cells on main grid
-                if (cellPosition.x == 0 || cellPosition.x == width - 1 || cellPosition.y == 0 || cellPosition.y == height - 1)
-                    return;
-
-            gridArray[cellPosition.x, cellPosition.y].Interact();
-        }
 
         private void FireRay(Vector3Int rayOrigin, Dir rayDirection)
         {
@@ -117,12 +79,8 @@ namespace BlackBox
             //update position
             ray.Forward();
 
-            //draw debug line
-            Debug.DrawLine(
-                GetWorldPosition(oldPosition) + new Vector3(cellSize, cellSize) / 2,
-                GetWorldPosition(ray.position) + new Vector3(cellSize, cellSize) / 2,
-                Color.white,
-                3f);
+            //todo: draw debug line
+
         }
 
         private void GetFrontAndDiagonalCellPositions(out Vector3Int frontMid, out Vector3Int frontRight, out Vector3Int frontLeft)
@@ -163,8 +121,7 @@ namespace BlackBox
 
             Cell cell = gridArray[gridPosition.x, gridPosition.y];
             if (cell != null)
-                if (cell.HasNode())
-                    return true;
+                return cell.HasNode();
 
             return false;
         }

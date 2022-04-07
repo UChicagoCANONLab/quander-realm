@@ -6,8 +6,6 @@ namespace BlackBox
 {
     public class BlackBoxManager : MonoBehaviour
     {
-        private float cellSize;
-
         public GameObject gridPrefab;
 
         [Header("Grid Objects")]
@@ -27,8 +25,8 @@ namespace BlackBox
         [Tooltip("Set cell size of the main grid that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         public float[] nodeCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
 
-        //[Tooltip("Set cell size of the external grids that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
-        //public float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        [Tooltip("Set cell size of the external grids that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
+        public float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
 
         void Start()
         {
@@ -37,7 +35,7 @@ namespace BlackBox
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.Alpha5))
                 CreateAllGrids();
 
             //if (Input.GetKeyDown(KeyCode.Alpha6))
@@ -45,12 +43,6 @@ namespace BlackBox
 
             //if (Input.GetKeyDown(KeyCode.Alpha7))
             //    CreateGrids(7);
-
-            //if (Input.GetKeyDown(KeyCode.Alpha8))
-            //    CreateGrids(8);
-
-            //if (Input.GetKeyDown(KeyCode.Alpha9))
-            //    CreateGrids(9);
         }
 
         private void CreateAllGrids()
@@ -67,13 +59,14 @@ namespace BlackBox
             int width = 1;
             int height = 1;
             int gridLength = gridSizeValues[(int)gridSize];
-            float cellSize = nodeCellSizeValues[(int)gridSize];
+            float cellSize = navCellSizeValues[(int)gridSize];
 
             switch (direction)
             {
                 case Dir.None:
                     width = gridLength;
                     height = gridLength;
+                    cellSize = nodeCellSizeValues[(int)gridSize];
                     break;
                 case Dir.Left:
                 case Dir.Right:
@@ -86,7 +79,7 @@ namespace BlackBox
             }
 
             ClearChildren(parent);
-            GetGridArray(parent).Create(width, height, cellSize, parent.transform.position, direction);
+            GetGridArray(parent).Create(width, height, direction);
             GetGLG(parent).cellSize = new Vector2(cellSize, cellSize);
         }
 
@@ -94,13 +87,6 @@ namespace BlackBox
         {
             foreach (Transform cell in parent.transform)
                 Destroy(cell.gameObject);
-        }
-
-        public Vector3 GetMouseWorldPosition()
-        {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            worldPosition.z = 0f;
-            return worldPosition;
         }
 
         private GridArray GetGridArray(GameObject GO)
@@ -112,6 +98,5 @@ namespace BlackBox
         {
             return GO.GetComponent<GridLayoutGroup>();
         }
-
     }
 }
