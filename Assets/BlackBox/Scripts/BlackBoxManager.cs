@@ -1,12 +1,15 @@
+using System;
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.UI;
 
 namespace BlackBox
 {
     public class BlackBoxManager : MonoBehaviour
     {
+        #region Variables
+
         public GameObject gridPrefab;
+        public Level level;
 
         [Header("Grid Objects")]
         public GameObject mainGridGO;
@@ -28,9 +31,17 @@ namespace BlackBox
         [Tooltip("Set cell size of the external grids that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         public float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
 
+        #endregion
+
         void Start()
         {
-            CreateAllGrids();
+            if (level == null)
+                CreateAllGrids(gridSize);
+            else
+                CreateAllGrids(level.gridSize);
+
+            GetGridArray(mainGridGO).SetNodes(level.nodePositions);
+            //CreateLanterns(level.nodePositions.Length);
         }
 
         //todo: Delete Update() later
@@ -38,7 +49,7 @@ namespace BlackBox
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Alpha5))
-                CreateAllGrids();
+                CreateAllGrids(gridSize);
 
             if (Input.GetKeyDown(KeyCode.Alpha6))
                 CreateAllGrids(GridSize.Medium);
@@ -48,9 +59,9 @@ namespace BlackBox
         }
 #endif
 
-        private void CreateAllGrids(GridSize newGridSize = GridSize.Small)
+        private void CreateAllGrids(GridSize gSize = GridSize.Small)
         {
-            gridSize = newGridSize;
+            gridSize = gSize;
 
             CreateGrid(mainGridGO, Dir.None);
             CreateGrid(leftGridGO, Dir.Left);
@@ -88,6 +99,8 @@ namespace BlackBox
             GetGLG(parent).cellSize = new Vector2(cellSize, cellSize);
         }
 
+        #region Helpers
+
         private void ClearChildren(GameObject parent)
         {
             foreach (Transform cell in parent.transform)
@@ -103,5 +116,7 @@ namespace BlackBox
         {
             return GO.GetComponent<GridLayoutGroup>();
         }
+
+        #endregion
     }
 }

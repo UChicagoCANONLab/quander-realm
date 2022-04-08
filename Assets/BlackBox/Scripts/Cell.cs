@@ -8,7 +8,7 @@ namespace BlackBox
         public GameObject background;
         public Button button;
 
-        [HideInInspector] public Vector3Int gridPosition;
+        [SerializeField] protected Vector3Int gridPosition;
         [HideInInspector] public Dir direction;
         [HideInInspector] public CellType cellType;
 

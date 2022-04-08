@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace BlackBox
@@ -55,6 +54,14 @@ namespace BlackBox
                 GameEvents.FireRay.AddListener((rayOrigin, rayDirection) => FireRay(rayOrigin, rayDirection));
             else
                 GameEvents.MarkUnit.AddListener((text, gridDirection, destPosition) => MarkUnits(text, gridDirection, destPosition));
+        }
+
+        public void SetNodes(Vector2Int[] nodePositions)
+        {
+            foreach (Vector2Int position in nodePositions)
+            {
+                gridArray[position.x, position.y].Interact(); // todo: rename/use a dedicated function for toggling here?
+            }
         }
 
         #region Node and Ray Behaviour
