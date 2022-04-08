@@ -19,13 +19,14 @@ namespace BlackBox
 
         public abstract void Interact();
 
-        public abstract void SetValue(string value);
+        public virtual void SetValue(string value) { }
 
         public abstract bool HasNode();
 
-        public Cell Create(int xPos, int yPos, Dir direction = Dir.None)
+        public Cell Create(int xPos, int yPos, CellType cellType, Dir direction = Dir.None)
         {
             gridPosition = new Vector3Int(xPos, yPos);
+            this.cellType = cellType;
             this.direction = direction;
 
             return this;

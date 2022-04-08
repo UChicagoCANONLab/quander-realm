@@ -9,11 +9,12 @@ namespace BlackBox
 
         public override void Interact()
         {
+            if (cellType == CellType.EdgeNode)
+                return;
+
             hasNode = !hasNode;
             nodeObj.SetActive(hasNode);
         }
-
-        public override void SetValue(string value) {}
 
         public override bool HasNode()
         {

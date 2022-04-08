@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BlackBox
@@ -25,12 +26,27 @@ namespace BlackBox
                 for (int x = 0; x < gridArray.GetLength(0); x++)
                 {
                     GameObject cellObj = Instantiate(cellPrefab, gameObject.transform);
-                    Cell cell = cellObj.GetComponent<Cell>().Create(x, y, direction);
+                    Cell cell = cellObj.GetComponent<Cell>();
+
+                    cell.Create(x, y, GetCellType(x, y), direction);
                     gridArray[x, y] = cell;
                 }
             }
 
             SetupListeners();
+        }
+
+        private CellType GetCellType(int x, int y)
+        {
+            CellType result = CellType.Node;
+
+            if (direction != Dir.None) // Nav
+                result = CellType.Nav;
+
+            else if (x == 0 || x == width - 1 || y == 0 || y == height - 1) // EdgeNode
+                result = CellType.EdgeNode;
+
+            return result;    
         }
 
         private void SetupListeners()
@@ -42,14 +58,6 @@ namespace BlackBox
         }
 
         #region Node and Ray Behaviour
-
-        //    if (cellPosition.x < 0 || cellPosition.x >= width || cellPosition.y < 0 || cellPosition.y >= height)
-        //        return;
-
-        //    if (direction == Dir.None) //avoid nodes on edge cells on main grid
-        //        if (cellPosition.x == 0 || cellPosition.x == width - 1 || cellPosition.y == 0 || cellPosition.y == height - 1)
-        //            return;
-
 
         private void FireRay(Vector3Int rayOrigin, Dir rayDirection)
         {
