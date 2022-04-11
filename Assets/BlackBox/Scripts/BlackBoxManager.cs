@@ -11,12 +11,15 @@ namespace BlackBox
         public GameObject gridPrefab;
         public Level level;
 
-        [Header("Grid Objects")]
+        [Header("Grid Containers")]
         public GameObject mainGridGO;
         public GameObject leftGridGO;
         public GameObject botGridGO;
         public GameObject rightGridGO;
         public GameObject topGridGO;
+
+        [Header("Lantern Mounts")]
+        public GameObject[] lanterns;
 
         [Header("Grid and Cell Size")]
         [Tooltip("This will determine which values from the below arrays we'll use for: \n\ngrid size (e.g 5x5, 6x6, or 7x7) \ncell size (e.g 200f, 166f, 142f)")]
@@ -41,7 +44,7 @@ namespace BlackBox
                 CreateAllGrids(level.gridSize);
 
             GetGridArray(mainGridGO).SetNodes(level.nodePositions);
-            //CreateLanterns(level.nodePositions.Length);
+            InitializeLanterns(level.nodePositions.Length);
         }
 
         //todo: Delete Update() later
@@ -49,7 +52,7 @@ namespace BlackBox
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Alpha5))
-                CreateAllGrids(gridSize);
+                CreateAllGrids(GridSize.Small);
 
             if (Input.GetKeyDown(KeyCode.Alpha6))
                 CreateAllGrids(GridSize.Medium);
@@ -59,7 +62,7 @@ namespace BlackBox
         }
 #endif
 
-        private void CreateAllGrids(GridSize gSize = GridSize.Small)
+        private void CreateAllGrids(GridSize gSize)
         {
             gridSize = gSize;
 
@@ -97,6 +100,12 @@ namespace BlackBox
             ClearChildren(parent);
             GetGridArray(parent).Create(width, height, direction);
             GetGLG(parent).cellSize = new Vector2(cellSize, cellSize);
+        }
+
+        private void InitializeLanterns(int length)
+        {
+            for (int i = 0; i < length; i++)
+                lanterns[i].SetActive(true);
         }
 
         #region Helpers

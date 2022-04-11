@@ -6,6 +6,7 @@ namespace BlackBox
     {
         private bool hasNode = false;
         public GameObject nodeObj;
+        public GameObject lanternMount;
 
         public override void Interact()
         {
