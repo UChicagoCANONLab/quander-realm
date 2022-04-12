@@ -29,5 +29,5 @@ namespace BlackBox
         Small,
         Medium,
         Large
-    }
+    };
 }

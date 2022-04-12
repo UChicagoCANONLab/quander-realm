@@ -7,13 +7,17 @@ namespace BlackBox
     public class Lantern : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
         private RectTransform rectTransform;
+        private CanvasGroup canvasGroup;
 
         [SerializeField] private Canvas canvas;
         [SerializeField] private Animator animator;
+        [SerializeField] private Transform frontMountTransform;
+        //[SerializeField] private GameObject handle;
 
         private void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
+            canvasGroup = GetComponent<CanvasGroup>();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -21,22 +25,23 @@ namespace BlackBox
             animator.SetBool("Hold", true);
         }
 
+        //todo: tween anchored position to handle's position
         public void OnBeginDrag(PointerEventData eventData)
         {
-            Debug.Log("begin drag");
-            //tween anchored position to handle's position
+            canvasGroup.blocksRaycasts = false;
+            transform.SetParent(frontMountTransform);
+            transform.SetAsLastSibling();
             UpdateAnimator(eventData);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            //Debug.Log("drag");
             UpdateAnimator(eventData);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            Debug.Log("end drag");
+            canvasGroup.blocksRaycasts = true;
             animator.SetInteger("DragDirection", 0);
             animator.SetFloat("Velocity", 0f);
         }
