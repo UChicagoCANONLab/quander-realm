@@ -11,7 +11,7 @@ namespace BlackBox
 
         [SerializeField] private Canvas canvas;
         [SerializeField] private Animator animator;
-        [SerializeField] private Transform frontMountTransform;
+        [SerializeField] private Transform frontMountTransform = null;
         //[SerializeField] private GameObject handle;
 
         private void Awake()
@@ -29,8 +29,13 @@ namespace BlackBox
         public void OnBeginDrag(PointerEventData eventData)
         {
             canvasGroup.blocksRaycasts = false;
-            transform.SetParent(frontMountTransform);
-            transform.SetAsLastSibling();
+
+            if (frontMountTransform != null)
+            {
+                transform.SetParent(frontMountTransform);
+                transform.SetAsLastSibling();
+            }
+
             UpdateAnimator(eventData);
         }
 

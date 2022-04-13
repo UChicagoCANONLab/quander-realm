@@ -11,6 +11,8 @@ namespace BlackBox
 
             lanternGO.transform.SetParent(this.transform);
             lanternGO.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+            Debug.Log("Dropped");
         }
     }
 }
