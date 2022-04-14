@@ -9,6 +9,7 @@ namespace BlackBox
         #region Variables
 
         public Button wolfieButton; //todo: use an event instead of this reference
+        public GameObject EndPanel; //todo: use an event instead of this reference
         public GameObject gridPrefab = null;
         public Level level = null;
 
@@ -88,12 +89,16 @@ namespace BlackBox
             int numCorrect = GetGridArray(mainGridGO).GetNumCorrect(level.nodePositions);
             int numNodes = level.nodePositions.Length;
 
+            EndPanel.SetActive(true);
+
             if (numCorrect == numNodes)
             {
+                GameEvents.SetEndPanelText?.Invoke("You Won!");
                 Debug.Log("Win");
             }
             else
             {
+                GameEvents.SetEndPanelText?.Invoke("You found " + numCorrect + " out of " + numNodes + " nodes.");
                 Debug.LogFormat("Lose: {0}/{1}", numCorrect, numNodes);
             }
         }
