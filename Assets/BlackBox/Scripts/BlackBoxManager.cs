@@ -62,6 +62,7 @@ namespace BlackBox
                 {
                     lantern.transform.SetParent(mount.transform);
                     lantern.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                    mount.EvaluateEmpty();
                     break;
                 }
             }

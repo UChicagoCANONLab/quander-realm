@@ -16,6 +16,7 @@ namespace BlackBox
         {
             base.Start();
             lanternMount.SetGridPosition(gridPosition);
+            lanternMount.EvaluateEmpty();
         }
 
         public override void Interact()
