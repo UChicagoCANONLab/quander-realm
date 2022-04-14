@@ -37,7 +37,7 @@ namespace BlackBox
             return hasFlag;
         }
 
-        internal void ToggleFlag(bool toggle)
+        public void ToggleFlag(bool toggle)
         {
             hasFlag = toggle;
         }

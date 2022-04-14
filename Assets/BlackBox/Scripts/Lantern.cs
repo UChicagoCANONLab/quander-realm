@@ -20,6 +20,8 @@ namespace BlackBox
             canvasGroup = GetComponent<CanvasGroup>();
         }
 
+        #region Interface Functions
+
         public void OnPointerDown(PointerEventData eventData)
         {
             animator.SetBool("Hold", true);
@@ -54,8 +56,11 @@ namespace BlackBox
         public void OnPointerUp(PointerEventData eventData)
         {
             animator.SetBool("Hold", false);
+
             //drop?
         }
+
+        #endregion
 
         private void UpdateAnimator(PointerEventData eventData)
         {

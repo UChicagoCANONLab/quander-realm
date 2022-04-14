@@ -20,7 +20,7 @@ namespace BlackBox
         public GameObject topGridGO = null;
 
         [Header("Lantern Mounts")]
-        public GameObject[] lanterns;
+        public GameObject[] lanternMounts;
 
         [Header("Grid and Cell Size")]
         [Tooltip("This will determine which values from the below arrays we'll use for: \n\ngrid size (e.g 5x5, 6x6, or 7x7) \ncell size (e.g 200f, 166f, 142f)")]
@@ -40,6 +40,7 @@ namespace BlackBox
         void Start()
         {
             wolfieButton.onClick.AddListener(CheckWinState);
+            GameEvents.ReturnToHome.AddListener((lantern) => ReturnLanternHome(lantern));
             //GameEvents.CheckWinState.AddListener(CheckWinState);
 
             if (level == null)
@@ -49,6 +50,21 @@ namespace BlackBox
 
             GetGridArray(mainGridGO).SetNodes(level.nodePositions);
             InitializeLanterns(level.nodePositions.Length);
+        }
+
+        private void ReturnLanternHome(GameObject lantern)
+        {
+            foreach(GameObject mountGO in lanternMounts)
+            {
+                LanternMount mount = mountGO.GetComponent<LanternMount>();
+
+                if (mount.isEmpty)
+                {
+                    lantern.transform.SetParent(mount.transform);
+                    lantern.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                    break;
+                }
+            }
         }
 
         //todo: Delete Update() later
@@ -124,7 +140,10 @@ namespace BlackBox
         private void InitializeLanterns(int length)
         {
             for (int i = 0; i < length; i++)
-                lanterns[i].SetActive(true);
+            {
+                lanternMounts[i].SetActive(true);
+                lanternMounts[i].GetComponent<LanternMount>().SetColliderActive(gridSize);
+            }
         }
 
         #region Helpers

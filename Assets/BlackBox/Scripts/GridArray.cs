@@ -70,7 +70,7 @@ namespace BlackBox
                 gridArray[position.x, position.y].Interact(); // todo: rename/use a dedicated function for toggling here?
         }
 
-        internal int GetNumCorrect(Vector2Int[] nodePositions)
+        public int GetNumCorrect(Vector2Int[] nodePositions)
         {
             int numCorrect = 0;
 
