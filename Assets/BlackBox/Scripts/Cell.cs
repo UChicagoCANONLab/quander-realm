@@ -8,11 +8,11 @@ namespace BlackBox
         public GameObject background;
         public Button button;
 
-        [SerializeField] protected Vector3Int gridPosition;
+        [SerializeField] protected Vector3Int gridPosition = Vector3Int.zero;
         [HideInInspector] public Dir direction;
         [HideInInspector] public CellType cellType;
 
-        protected void Start()
+        protected virtual void Start()
         {
             button.onClick.AddListener(Interact);
         }

@@ -8,15 +8,16 @@ namespace BlackBox
     {
         #region Variables
 
-        public GameObject gridPrefab;
-        public Level level;
+        public Button wolfieButton; //todo: use an event instead of this reference
+        public GameObject gridPrefab = null;
+        public Level level = null;
 
         [Header("Grid Containers")]
-        public GameObject mainGridGO;
-        public GameObject leftGridGO;
-        public GameObject botGridGO;
-        public GameObject rightGridGO;
-        public GameObject topGridGO;
+        public GameObject mainGridGO = null;
+        public GameObject leftGridGO = null;
+        public GameObject botGridGO = null;
+        public GameObject rightGridGO = null;
+        public GameObject topGridGO = null;
 
         [Header("Lantern Mounts")]
         public GameObject[] lanterns;
@@ -38,6 +39,9 @@ namespace BlackBox
 
         void Start()
         {
+            wolfieButton.onClick.AddListener(CheckWinState);
+            //GameEvents.CheckWinState.AddListener(CheckWinState);
+
             if (level == null)
                 CreateAllGrids(gridSize);
             else
@@ -61,6 +65,21 @@ namespace BlackBox
                 CreateAllGrids(GridSize.Large);
         }
 #endif
+
+        private void CheckWinState()
+        {
+            int numCorrect = GetGridArray(mainGridGO).GetNumCorrect(level.nodePositions);
+            int numNodes = level.nodePositions.Length;
+
+            if (numCorrect == numNodes)
+            {
+                Debug.Log("Win");
+            }
+            else
+            {
+                Debug.LogFormat("Lose: {0}/{1}", numCorrect, numNodes);
+            }
+        }
 
         private void CreateAllGrids(GridSize gSize)
         {

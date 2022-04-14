@@ -45,23 +45,40 @@ namespace BlackBox
             else if (x == 0 || x == width - 1 || y == 0 || y == height - 1) // EdgeNode
                 result = CellType.EdgeNode;
 
-            return result;    
+            return result;
         }
 
         private void SetupListeners()
         {
             if (direction == Dir.None)
+            {
                 GameEvents.FireRay.AddListener((rayOrigin, rayDirection) => FireRay(rayOrigin, rayDirection));
+                GameEvents.ToggleFlag.AddListener((gridPosition, toggle) => ToggleFlag(gridPosition, toggle));
+            }
             else
                 GameEvents.MarkUnit.AddListener((text, gridDirection, destPosition) => MarkUnits(text, gridDirection, destPosition));
+        }
+
+        private void ToggleFlag(Vector3Int gridPosition, bool toggle)
+        {
+            ((NodeCell)gridArray[gridPosition.x, gridPosition.y]).ToggleFlag(toggle);
         }
 
         public void SetNodes(Vector2Int[] nodePositions)
         {
             foreach (Vector2Int position in nodePositions)
-            {
                 gridArray[position.x, position.y].Interact(); // todo: rename/use a dedicated function for toggling here?
-            }
+        }
+
+        internal int GetNumCorrect(Vector2Int[] nodePositions)
+        {
+            int numCorrect = 0;
+
+            foreach(Vector2Int pos in nodePositions)
+                if (((NodeCell)gridArray[pos.x, pos.y]).HasFlag())
+                    numCorrect++;
+
+            return numCorrect;
         }
 
         #region Node and Ray Behaviour

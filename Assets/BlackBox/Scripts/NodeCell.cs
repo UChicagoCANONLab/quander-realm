@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BlackBox
@@ -5,7 +6,17 @@ namespace BlackBox
     public class NodeCell : Cell
     {
         private bool hasNode = false;
-        public GameObject nodeObj;
+        private bool hasFlag = false;
+
+        [SerializeField] private LanternMount lanternMount = null;
+
+        public GameObject nodeObj = null;
+
+        protected override void Start()
+        {
+            base.Start();
+            lanternMount.SetGridPosition(gridPosition);
+        }
 
         public override void Interact()
         {
@@ -19,6 +30,16 @@ namespace BlackBox
         public override bool HasNode()
         {
             return hasNode;
+        }
+
+        public bool HasFlag()
+        {
+            return hasFlag;
+        }
+
+        internal void ToggleFlag(bool toggle)
+        {
+            hasFlag = toggle;
         }
     }
 }
