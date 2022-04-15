@@ -70,7 +70,6 @@ namespace BlackBox
         }
 
         //todo: Delete Update() later
-#if UNITY_EDITOR
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Alpha5))
@@ -81,8 +80,10 @@ namespace BlackBox
 
             if (Input.GetKeyDown(KeyCode.Alpha7))
                 CreateAllGrids(GridSize.Large);
+
+            if (Input.GetKeyDown(KeyCode.D))
+                GameEvents.ToggleDebug?.Invoke();
         }
-#endif
 
         private void CheckWinState()
         {

@@ -8,9 +8,10 @@ namespace BlackBox
         public static FireRayEvent FireRay = new FireRayEvent();
         public static MarkerEvent MarkUnit = new MarkerEvent();
         public static FlagEvent ToggleFlag = new FlagEvent();
-        public static UnityEvent CheckWinState = new UnityEvent();
         public static LanternEvent ReturnToHome = new LanternEvent();
         public static TextEvent SetEndPanelText = new TextEvent();
+        public static UnityEvent CheckWinState = new UnityEvent();
+        public static UnityEvent ToggleDebug = new UnityEvent();
     }
 
     public class FireRayEvent : UnityEvent<Vector3Int, Dir> { }
