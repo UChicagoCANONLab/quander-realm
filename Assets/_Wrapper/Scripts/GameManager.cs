@@ -12,9 +12,6 @@ namespace Wrapper
 
         public Button backButton;
 
-        private FirebaseApp app;
-        private readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
-
         private void Awake()
         {
             DontDestroyOnLoad(this);
@@ -24,7 +21,7 @@ namespace Wrapper
             else
                 _instance = this;
 
-            FirebaseInit();
+            FirebaseCall();
 
             Events.OpenMinigame.AddListener(OpenMinigame);
             backButton.onClick.AddListener(() => 
@@ -43,35 +40,13 @@ namespace Wrapper
             SceneManager.LoadScene(minigame.StartScene);
         }
 
-        private void FirebaseInit()
+        private void FirebaseCall()
         {
-            AppOptions secondaryAppOptions = new AppOptions
-            {
-                ApiKey = "<API_KEY>",
-                AppId = "<GOOGLE_APP_ID>",
-                ProjectId = "<PROJECT_ID>"
-            };
+            FirebaseControl firebaseControl = new FirebaseControl();
+            UserSave data = new UserSave(2345, "Rob");
 
-            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => 
-            {
-                DependencyStatus dependencyStatus = task.Result;
-                if (dependencyStatus == DependencyStatus.Available)
-                {
-                    // Create and hold a reference to your FirebaseApp,
-                    // where app is a Firebase.FirebaseApp property of your application class.
-                    app = FirebaseApp.DefaultInstance;
-                    app.Options.DatabaseUrl = new System.Uri(firebaseURL);
-
-                    // Set a flag here to indicate whether Firebase is ready to use by your app.
-                }
-                else
-                {
-                    Debug.LogError(System.String.Format(
-                      "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
-                    // Firebase Unity SDK is not safe to use here.
-                }
-            });
-
+            firebaseControl.Init();
+            firebaseControl.Save(data);
         }
     }
 }
