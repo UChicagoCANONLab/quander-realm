@@ -3,11 +3,8 @@ using Filament.Content;
 
 namespace Wrapper
 {
-    public class DialogueAsset : ContentAsset
+    public class DialogueNode : ContentAsset
     {
-        [SerializeField, ContentValue("ID")]
-        public string ID = string.Empty;
-        
         [SerializeField, ContentValue("SequenceID")]
         public string sequenceID = string.Empty;
 
