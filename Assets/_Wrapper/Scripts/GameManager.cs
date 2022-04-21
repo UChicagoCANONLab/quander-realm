@@ -13,22 +13,20 @@ namespace Wrapper
 
         private void Awake()
         {
-            DontDestroyOnLoad(this);
-
-            if (_instance != null && _instance != this)
-                Destroy(this.gameObject);
-            else
-                _instance = this;
+            InitSingleton();
 
             Events.OpenMinigame.AddListener(OpenMinigame);
-            backButton.onClick.AddListener(() => 
+
+            backButton.onClick.AddListener(() =>
             {
                 if (SceneManager.GetActiveScene().buildIndex == 0)
                     return;
 
                 Debug.Log("Back To Main");
-                SceneManager.LoadScene(0); 
+                SceneManager.LoadScene(0);
             });
+
+            Events.PrintDialogue?.Invoke("W_Tutorial");
         }
 
         private void OpenMinigame(Minigame minigame)
@@ -36,5 +34,19 @@ namespace Wrapper
             Debug.Log("Opening " + minigame.name);
             SceneManager.LoadScene(minigame.StartScene);
         }
+
+        #region Helpers
+
+        private void InitSingleton()
+        {
+            DontDestroyOnLoad(this);
+
+            if (_instance != null && _instance != this)
+                Destroy(this.gameObject);
+            else
+                _instance = this;
+        }
+
+        #endregion
     }
 }
