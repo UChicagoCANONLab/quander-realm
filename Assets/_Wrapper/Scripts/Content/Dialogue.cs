@@ -3,7 +3,7 @@ using Filament.Content;
 
 namespace Wrapper
 {
-    public class DialogueNode : ContentAsset
+    public class Dialogue : ContentAsset
     {
         [SerializeField, ContentValue("SequenceID")]
         public string sequenceID = string.Empty;
@@ -15,15 +15,30 @@ namespace Wrapper
         public string text = string.Empty;
         
         [SerializeField, ContentValue("Speaker")]
-        public string speaker = string.Empty;
+        public Speaker speaker = Speaker.None;
         
         [SerializeField, ContentValue("Speaker Expression")]
-        public string speakerExpression = string.Empty;
+        public Expression speakerExpression = Expression.Default;
 
         [SerializeField, ContentValue("Listener")]
-        public string listener = string.Empty;
+        public Speaker listener = Speaker.None;
 
         [SerializeField, ContentValue("Listener Expression")]
-        public string listenerExpression = string.Empty;
+        public Expression listenerExpression = Expression.Default;
+
+        public enum Speaker
+        {
+            None,
+            Char1,
+            Char2
+        }
+
+        public enum Expression
+        {
+            Default,
+            Positive,
+            Negative,
+            Confused
+        }
     }
 }
