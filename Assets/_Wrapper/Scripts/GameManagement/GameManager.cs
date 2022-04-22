@@ -15,7 +15,7 @@ namespace Wrapper
         {
             InitSingleton();
 
-            Events.OpenMinigame.AddListener(OpenMinigame);
+            Events.OpenMinigame += OpenMinigame;
 
             backButton.onClick.AddListener(() =>
             {
@@ -25,7 +25,10 @@ namespace Wrapper
                 Debug.Log("Back To Main");
                 SceneManager.LoadScene(0);
             });
+        }
 
+        private void Start()
+        {
             Events.PrintDialogue?.Invoke("W_Tutorial");
         }
 

@@ -10,28 +10,34 @@ namespace Wrapper
 
         private void Awake()
         {
-            Events.PrintDialogue.AddListener((sID) => PrintSequence(sID));
-
-            InitializeDictionary();
+            Events.PrintDialogue += PrintSequence;
+            InitDictionary();
         }
 
-        private void InitializeDictionary()
+        private void OnDisable()
+        {
+            Events.PrintDialogue -= PrintSequence;
+        }
+
+        private void InitDictionary()
         {
             dialogueDict = new Dictionary<string, DialogueSequence>();
-            DialogueNode[] allDialogue = Resources.LoadAll<DialogueNode>(dialoguePath);
+            Dialogue[] allDialogue = Resources.LoadAll<Dialogue>(dialoguePath);
 
-            foreach (DialogueNode node in allDialogue)
+            foreach (Dialogue node in allDialogue)
             {
                 if (dialogueDict.ContainsKey(node.sequenceID))
                     dialogueDict[node.sequenceID].Add(node);
                 else
                     dialogueDict.Add(node.sequenceID, new DialogueSequence(node));
             }
+
+            Events.SortSequences?.Invoke();
         }
 
         private void PrintSequence(string sequenceID)
         {
-            foreach (DialogueNode node in dialogueDict[sequenceID].nodes)
+            foreach (Dialogue node in dialogueDict[sequenceID].Nodes)
                 Debug.LogFormat("Num: {0} Text: {1}", node.num, node.text);
         }
     } 
