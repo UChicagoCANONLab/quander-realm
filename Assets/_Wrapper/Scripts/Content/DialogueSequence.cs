@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,42 +5,29 @@ namespace Wrapper
 {
     public class DialogueSequence
     {
-        public List<DialogueNode> nodes;
+        public List<Dialogue> Nodes { get => nodes; }
+        private List<Dialogue> nodes;
 
-        public DialogueSequence()
+        public DialogueSequence(Dialogue node)
         {
-            nodes = new List<DialogueNode>();
+            Events.SortSequences += SortByLineNumber;
+            nodes = new List<Dialogue> { node };
         }
 
-        public DialogueSequence(DialogueNode node)
+        ~DialogueSequence()
         {
-            nodes = new List<DialogueNode>();
+            Events.SortSequences -= SortByLineNumber;
+        }
+
+        public void Add(Dialogue node)
+        {
             nodes.Add(node);
         }
 
-        public void Add(DialogueNode node)
+        private void SortByLineNumber()
         {
-            nodes.Add(node);
+            Debug.Log("Sorted");
+            nodes.Sort((x, y) => x.num.CompareTo(y.num));
         }
-
-        //public IEnumerator GetNodesInOrder()
-        //{
-
-        //}
-
-        //public IEnumerator GetEnumerator()
-        //{
-        //    using IEnumerator ie = base.GetEnumerator();
-        //    while (ie.MoveNext())
-        //    {
-        //        yield return Path.Combine(baseDirectory, ie.Current);
-        //    }
-        //}
-
-        //public DialogueSequence(List<DialogueNode> nodeRange)
-        //{
-        //    nodes = new List<DialogueNode>();
-        //    nodes.AddRange(nodeRange);
-        //}
     }
 }
