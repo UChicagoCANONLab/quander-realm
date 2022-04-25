@@ -30,7 +30,11 @@ namespace Wrapper
         {
             None,
             Char1,
-            Char2
+            Char2,
+            Char3,
+            Char4,
+            Char5,
+            Char6
         }
 
         public enum Expression

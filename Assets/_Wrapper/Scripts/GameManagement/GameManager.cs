@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Wrapper
 {
@@ -9,22 +8,9 @@ namespace Wrapper
         public static GameManager Instance { get { return _instance; } }
         private static GameManager _instance;
 
-        public Button backButton;
-
         private void Awake()
         {
             InitSingleton();
-
-            Events.OpenMinigame += OpenMinigame;
-
-            backButton.onClick.AddListener(() =>
-            {
-                if (SceneManager.GetActiveScene().buildIndex == 0)
-                    return;
-
-                Debug.Log("Back To Main");
-                SceneManager.LoadScene(0);
-            });
         }
 
         private void Start()
@@ -32,10 +18,20 @@ namespace Wrapper
             Events.PrintDialogue?.Invoke("W_Tutorial");
         }
 
+        private void OnEnable()
+        {
+            Events.OpenMinigame += OpenMinigame;
+        }
+
+        private void OnDisable()
+        {
+            Events.OpenMinigame -= OpenMinigame;
+        }
+
         private void OpenMinigame(Minigame minigame)
         {
-            Debug.Log("Opening " + minigame.name);
             SceneManager.LoadScene(minigame.StartScene);
+            Events.StartDialogueSequence?.Invoke("W_Tutorial");
         }
 
         #region Helpers

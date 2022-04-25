@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Wrapper
 {
@@ -7,6 +6,8 @@ namespace Wrapper
     {
         public List<Dialogue> Nodes { get => nodes; }
         private List<Dialogue> nodes;
+
+        private int currentLineNumber = 0;
 
         public DialogueSequence(Dialogue node)
         {
@@ -24,10 +25,29 @@ namespace Wrapper
             nodes.Add(node);
         }
 
+        public Dialogue GetLine(int step)
+        {
+            if (SteppingOutOfBounds(step))
+                return null;
+
+            return nodes[currentLineNumber + step];
+        }
+
         private void SortByLineNumber()
         {
-            Debug.Log("Sorted");
             nodes.Sort((x, y) => x.num.CompareTo(y.num));
+        }
+
+        private bool SteppingOutOfBounds(int step)
+        {
+            bool result = false;
+
+            if (step < 0 && currentLineNumber == 0)
+                result = true;
+            else if (step > 0 && currentLineNumber == nodes.Count - 1)
+                result = true;
+
+            return result;
         }
     }
 }
