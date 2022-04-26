@@ -1,22 +1,23 @@
 using UnityEngine;
-using Wrapper;
 
-public class DialogueButton : QButton
+namespace Wrapper
 {
-    public enum Step
+    public class DialogueButton : QButton
     {
-        Forward = 1,
-        Backward = -1
-    };
+        public enum Step
+        {
+            Forward = 1,
+            Backward = -1
+        };
 
-    [SerializeField] public Step step = Step.Forward;
-    [SerializeField] private Animator qAnimator = null; 
+        [SerializeField] public Step step = Step.Forward;
+        [SerializeField] private Animator qAnimator = null;
 
-    protected override void OnClickedHandler()
-    {
-        Debug.Log("Dialogue + " + step.ToString());
-        Events.ChangeDialogue?.Invoke((int)step);
+        protected override void OnClickedHandler()
+        {
+            Events.ChangeDialogue?.Invoke((int)step);
 
-        //todo: qAnimator.doSomething
+            //todo: qAnimator.doSomething
+        }
     }
 }

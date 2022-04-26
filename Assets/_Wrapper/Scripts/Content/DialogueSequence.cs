@@ -30,7 +30,9 @@ namespace Wrapper
             if (SteppingOutOfBounds(step))
                 return null;
 
-            return nodes[currentLineNumber + step];
+            currentLineNumber += step;
+
+            return nodes[currentLineNumber];
         }
 
         private void SortByLineNumber()

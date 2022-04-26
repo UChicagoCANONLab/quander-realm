@@ -25,7 +25,6 @@ namespace Wrapper
             Events.PrintDialogue += PrintSequence;
             Events.StartDialogueSequence += OpenDialogueView;
             Events.ChangeDialogue += UpdateDialogueNumber;
-            //Events.DialoguePrevious += Previous;
         }
 
         private void OnDisable()
@@ -33,7 +32,6 @@ namespace Wrapper
             Events.PrintDialogue -= PrintSequence;
             Events.StartDialogueSequence -= OpenDialogueView;
             Events.ChangeDialogue -= UpdateDialogueNumber;
-            //Events.DialoguePrevious -= Previous;
         }
 
         #endregion
@@ -54,7 +52,8 @@ namespace Wrapper
             Events.SortSequences?.Invoke();
         }
 
-        private void OpenDialogueView(string sequenceID)
+        //todo: change to private later
+        public void OpenDialogueView(string sequenceID)
         {
             if (!(dialogueDictionary.ContainsKey(sequenceID)))
             {
@@ -69,7 +68,6 @@ namespace Wrapper
 
         private void UpdateDialogueNumber(int step)
         {
-            //get next dialogue from sequence, send to DialogueView
             Events.UpdateDialogueView?.Invoke(currentSequence.GetLine(step));
         }
 

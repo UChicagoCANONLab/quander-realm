@@ -13,20 +13,18 @@ namespace Wrapper
         [SerializeField] private GameObject characterMountRight = null;
         [SerializeField] private Image contextImage = null; //todo: might have to work with container object instead of image
 
-        private void Awake()
-        {
-            Events.OpenDialogueView += Open;
-        }
-
         private void OnEnable()
         {
+            Events.OpenDialogueView += Open;
+            Events.CloseDialogueView += Close;
             Events.UpdateDialogueView += UpdateView;
         }
 
         private void OnDisable()
         {
-            Events.UpdateDialogueView -= UpdateView;
             Events.OpenDialogueView -= Open;
+            Events.CloseDialogueView -= Close;
+            Events.UpdateDialogueView -= UpdateView;
         }
 
         private void Open(Dialogue dialogue)
@@ -38,13 +36,16 @@ namespace Wrapper
         private void UpdateView(Dialogue dialogue)
         {
             if (dialogue == null)
-                CloseView();
+            {
+                Close();
+                return;
+            }
 
             //update the different parts of the view (if needed)
             dialogueBody.text = dialogue.text;
         }
 
-        private void CloseView()
+        private void Close()
         {
             animator.SetBool("View/On", false);
             //todo: wait for animation to complete

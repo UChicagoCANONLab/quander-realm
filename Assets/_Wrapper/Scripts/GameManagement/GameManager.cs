@@ -13,11 +13,6 @@ namespace Wrapper
             InitSingleton();
         }
 
-        private void Start()
-        {
-            Events.PrintDialogue?.Invoke("W_Tutorial");
-        }
-
         private void OnEnable()
         {
             Events.OpenMinigame += OpenMinigame;
@@ -31,7 +26,6 @@ namespace Wrapper
         private void OpenMinigame(Minigame minigame)
         {
             SceneManager.LoadScene(minigame.StartScene);
-            Events.StartDialogueSequence?.Invoke("W_Tutorial");
         }
 
         #region Helpers
