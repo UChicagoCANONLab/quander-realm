@@ -16,13 +16,14 @@ namespace Wrapper
 
         private Dialogue.Speaker characterLeft = Dialogue.Speaker.None;
         private Dialogue.Speaker characterRight = Dialogue.Speaker.None;
-        private string tempDialogueText = string.Empty;
+        private string tempDialogueText = string.Empty; //todo: refactor this?
 
         private void OnEnable()
         {
             Events.OpenDialogueView += Open;
             Events.CloseDialogueView += Close;
             Events.UpdateDialogueView += UpdateView;
+            Events.SwitchNextButton += SwitchNextButton;
         }
 
         private void OnDisable()
@@ -30,6 +31,7 @@ namespace Wrapper
             Events.OpenDialogueView -= Open;
             Events.CloseDialogueView -= Close;
             Events.UpdateDialogueView -= UpdateView;
+            Events.SwitchNextButton -= SwitchNextButton;
         }
 
         private void Open(Dialogue dialogue)
@@ -108,8 +110,17 @@ namespace Wrapper
                 //instantiate new character
             }
         }
-        
-#endregion
+
+        /// <summary>
+        /// Switch the Next button image between "dismiss" and "next",
+        /// depending on the current dialogue being the last or not
+        /// </summary>
+        private void SwitchNextButton(bool isLast)
+        {
+            animator.SetBool("DialogueLast", isLast);
+        }
+
+        #endregion
 
         private void ClearChildren(GameObject mount)
         {

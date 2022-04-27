@@ -7,11 +7,14 @@ namespace Wrapper
         public static Action SortSequences;
         public static Action<Minigame> OpenMinigame;
 
+        /// Dialogue System ///
         public static Action<string> PrintDialogue;
         public static Action<string> StartDialogueSequence;
         public static Action<Dialogue> OpenDialogueView;
         public static Action CloseDialogueView;
         public static Action<Dialogue, int> UpdateDialogueView;
         public static Action<int> ChangeDialogue;
+        public static Action<bool> TogglePreviousButton;
+        public static Action<bool> SwitchNextButton;
     }
 }

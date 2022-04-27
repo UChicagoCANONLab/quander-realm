@@ -25,19 +25,27 @@ namespace Wrapper
             nodes.Add(node);
         }
 
+        public Dialogue GetFirst()
+        {
+            currentLineNumber = 0;
+            Events.TogglePreviousButton?.Invoke(false); //disable if first line
+            return nodes[currentLineNumber];
+        }
+
         public Dialogue GetLine(int step)
         {
             if (SteppingOutOfBounds(step))
                 return null;
 
-            currentLineNumber += step;
-
+            UpdateLineNumber(step);
             return nodes[currentLineNumber];
         }
 
-        private void SortByLineNumber()
+        private void UpdateLineNumber(int step)
         {
-            nodes.Sort((x, y) => x.num.CompareTo(y.num));
+            currentLineNumber += step;
+            Events.TogglePreviousButton?.Invoke(currentLineNumber != 0); //disable if first line
+            Events.SwitchNextButton?.Invoke(currentLineNumber == nodes.Count - 1); // switch to "dismiss" button if last line
         }
 
         private bool SteppingOutOfBounds(int step)
@@ -50,6 +58,11 @@ namespace Wrapper
                 result = true;
 
             return result;
+        }
+
+        private void SortByLineNumber()
+        {
+            nodes.Sort((x, y) => x.num.CompareTo(y.num));
         }
     }
 }

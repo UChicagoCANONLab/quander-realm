@@ -61,9 +61,9 @@ namespace Wrapper
                 return;
             }
 
-            dialogueView.gameObject.SetActive(true);
             currentSequence = dialogueDictionary[sequenceID];
-            Events.OpenDialogueView?.Invoke(currentSequence.GetLine(0));
+            dialogueView.gameObject.SetActive(true);
+            Events.OpenDialogueView?.Invoke(currentSequence.GetFirst());
         }
 
         private void UpdateDialogueNumber(int step)

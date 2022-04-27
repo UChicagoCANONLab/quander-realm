@@ -14,7 +14,6 @@ namespace Wrapper
 
             EditorGUILayout.LabelField("Custom Elements", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("step"), new GUIContent("Step", "Choose whether this button moves dialogue forward of backward"), true);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("qAnimator"), new GUIContent("Animator"), true);
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Default Button Elements", EditorStyles.boldLabel);
