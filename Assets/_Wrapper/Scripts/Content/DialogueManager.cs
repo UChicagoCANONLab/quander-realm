@@ -68,7 +68,7 @@ namespace Wrapper
 
         private void UpdateDialogueNumber(int step)
         {
-            Events.UpdateDialogueView?.Invoke(currentSequence.GetLine(step));
+            Events.UpdateDialogueView?.Invoke(currentSequence.GetLine(step), step);
         }
 
         private void PrintSequence(string sequenceID)

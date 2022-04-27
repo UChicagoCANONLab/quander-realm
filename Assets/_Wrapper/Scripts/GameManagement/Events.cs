@@ -11,7 +11,7 @@ namespace Wrapper
         public static Action<string> StartDialogueSequence;
         public static Action<Dialogue> OpenDialogueView;
         public static Action CloseDialogueView;
-        public static Action<Dialogue> UpdateDialogueView;
+        public static Action<Dialogue, int> UpdateDialogueView;
         public static Action<int> ChangeDialogue;
     }
 }
