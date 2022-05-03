@@ -9,15 +9,14 @@ namespace Wrapper
         public DialogueView dialogueView = null;
 
         private const string dialoguePath = "_Wrapper/Dialogue";
-        private Dictionary<string, DialogueSequence> dialogueDictionary;
-
         private DialogueSequence currentSequence = null;
+        private Dictionary<string, DialogueSequence> dialogueDictionary;
 
         #region Unity Functions
 
         private void Awake()
         {
-            InitDictionary();
+            InitDialogueDictionary();
         }
 
         private void OnEnable()
@@ -36,7 +35,7 @@ namespace Wrapper
 
         #endregion
 
-        private void InitDictionary()
+        private void InitDialogueDictionary()
         {
             dialogueDictionary = new Dictionary<string, DialogueSequence>();
             Dialogue[] allDialogue = Resources.LoadAll<Dialogue>(dialoguePath);

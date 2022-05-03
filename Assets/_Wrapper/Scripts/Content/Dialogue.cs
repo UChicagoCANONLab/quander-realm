@@ -26,6 +26,9 @@ namespace Wrapper
         [SerializeField, ContentValue("Listener Expression")]
         public Expression listenerExpression = Expression.Default;
 
+        [SerializeField, ContentValue("Context Image Path")]
+        public string contextImagePath = string.Empty;
+
         public enum Speaker
         {
             None,

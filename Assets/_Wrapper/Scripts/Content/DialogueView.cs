@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ namespace Wrapper
 {
     public class DialogueView : MonoBehaviour
     {
+        [Header("DialogueView Parts")]
         [SerializeField] private Animator animator = null;
         [SerializeField] private TextMeshProUGUI dialogueBody = null;
         [SerializeField] private TextMeshProUGUI dupePage = null;
@@ -14,9 +16,26 @@ namespace Wrapper
         [SerializeField] private GameObject characterMountRight = null;
         [SerializeField] private Image contextImage = null; //todo: might have to work with container object instead of image
 
+        [Header("Character Prefabs")]
+        [SerializeField] private GameObject char1Prefab = null;
+        [SerializeField] private GameObject char2Prefab = null;
+        [SerializeField] private GameObject char3Prefab = null;
+        [SerializeField] private GameObject char4Prefab = null;
+        [SerializeField] private GameObject char5Prefab = null;
+        [SerializeField] private GameObject char6Prefab = null;
+
+        private Dictionary<Dialogue.Speaker, GameObject> characterDictionary; // todo: what about Speaker.None?
         private Dialogue.Speaker characterLeft = Dialogue.Speaker.None;
         private Dialogue.Speaker characterRight = Dialogue.Speaker.None;
+        private Dialogue.Expression ExpressionLeft = Dialogue.Expression.Default;
+        private Dialogue.Expression ExpressionRight = Dialogue.Expression.Default;
+        private string contextImagePath = string.Empty;
         private string tempDialogueText = string.Empty; //todo: refactor this?
+
+        private void Awake()
+        {
+            InitCharacterDictionary();
+        }
 
         private void OnEnable()
         {
@@ -62,6 +81,9 @@ namespace Wrapper
             }
 
             InitiateDialogueAnimation(dialogue, step);
+            UpdateContextImage(dialogue);
+            UpdateCharacters(dialogue);
+            UpdateExpressions(dialogue);
         }
 
         /// <summary>
@@ -107,8 +129,47 @@ namespace Wrapper
             {
                 characterLeft = dialogue.speaker;
                 ClearChildren(characterMountLeft);
-                //instantiate new character
+                Instantiate(characterDictionary[dialogue.speaker], characterMountLeft.transform);
             }
+
+            if (characterRight != dialogue.listener)
+            {
+                characterRight = dialogue.listener;
+                ClearChildren(characterMountRight);
+                Instantiate(characterDictionary[dialogue.listener], characterMountRight.transform);
+            }
+        }
+
+        private void UpdateExpressions(Dialogue dialogue)
+        {
+            if (ExpressionLeft != dialogue.speakerExpression)
+            {
+                //do something
+            }
+
+            if (ExpressionRight != dialogue.listenerExpression)
+            {
+                //do something
+            }
+        }
+
+        private void UpdateContextImage(Dialogue dialogue)
+        {
+            if (dialogue.contextImagePath != string.Empty)
+                return;
+
+            if (dialogue.contextImagePath == contextImagePath)
+                return;
+
+            Image image = Resources.Load<Image>(dialogue.contextImagePath);
+            if (image == null)
+            {
+                Debug.LogFormat("Could not find image at path: {0}", dialogue.contextImagePath);
+                return;
+            }
+
+            contextImagePath = dialogue.contextImagePath;
+
         }
 
         /// <summary>
@@ -120,7 +181,7 @@ namespace Wrapper
             animator.SetBool("DialogueLast", isLast);
         }
 
-        #endregion
+#endregion
 
         private void ClearChildren(GameObject mount)
         {
@@ -128,6 +189,17 @@ namespace Wrapper
                 Destroy(child.gameObject);
         }
 
-        //listen for next/prev and change everything based on node
+        private void InitCharacterDictionary()
+        {
+            characterDictionary = new Dictionary<Dialogue.Speaker, GameObject>
+            {
+                { Dialogue.Speaker.Char1, char1Prefab },
+                { Dialogue.Speaker.Char2, char2Prefab },
+                { Dialogue.Speaker.Char3, char3Prefab },
+                { Dialogue.Speaker.Char4, char4Prefab },
+                { Dialogue.Speaker.Char5, char5Prefab },
+                { Dialogue.Speaker.Char6, char6Prefab }
+            };
+        }
     }
 }
