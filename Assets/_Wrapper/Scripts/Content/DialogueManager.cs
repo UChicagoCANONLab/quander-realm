@@ -51,8 +51,7 @@ namespace Wrapper
             Events.SortSequences?.Invoke();
         }
 
-        //todo: change to private later
-        public void OpenDialogueView(string sequenceID)
+        private void OpenDialogueView(string sequenceID)
         {
             if (!(dialogueDictionary.ContainsKey(sequenceID)))
             {

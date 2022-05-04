@@ -15,13 +15,13 @@ namespace Wrapper
         public string text = string.Empty;
         
         [SerializeField, ContentValue("Speaker")]
-        public Speaker speaker = Speaker.None;
+        public Character speaker = Character.None;
         
         [SerializeField, ContentValue("Speaker Expression")]
         public Expression speakerExpression = Expression.Default;
 
         [SerializeField, ContentValue("Listener")]
-        public Speaker listener = Speaker.None;
+        public Character listener = Character.None;
 
         [SerializeField, ContentValue("Listener Expression")]
         public Expression listenerExpression = Expression.Default;
@@ -29,7 +29,7 @@ namespace Wrapper
         [SerializeField, ContentValue("Context Image Path")]
         public string contextImagePath = string.Empty;
 
-        public enum Speaker
+        public enum Character
         {
             None,
             Char1,

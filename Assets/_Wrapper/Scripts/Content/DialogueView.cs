@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -24,11 +23,14 @@ namespace Wrapper
         [SerializeField] private GameObject char5Prefab = null;
         [SerializeField] private GameObject char6Prefab = null;
 
-        private Dictionary<Dialogue.Speaker, GameObject> characterDictionary; // todo: what about Speaker.None?
-        private Dialogue.Speaker characterLeft = Dialogue.Speaker.None;
-        private Dialogue.Speaker characterRight = Dialogue.Speaker.None;
+        private Dictionary<Dialogue.Character, GameObject> characterDictionary; // todo: what about Speaker.None?
+        private Dialogue.Character characterLeft = Dialogue.Character.None;
+        private Dialogue.Character characterRight = Dialogue.Character.None;
         private Dialogue.Expression ExpressionLeft = Dialogue.Expression.Default;
         private Dialogue.Expression ExpressionRight = Dialogue.Expression.Default;
+        private Animator animatorCharacterLeft = null;
+        private Animator animatorCharacterRight = null;
+        
         private string contextImagePath = string.Empty;
         private string tempDialogueText = string.Empty; //todo: refactor this?
 
@@ -57,6 +59,7 @@ namespace Wrapper
         {
             dialogueBody.text = "";
             animator.SetBool("View/On", true);
+            InitCharacters(dialogue);
             UpdateView(dialogue);
         }
 
@@ -67,13 +70,34 @@ namespace Wrapper
             gameObject.SetActive(false);
         }
 
-#region Update Elements
+        private void InitCharacters(Dialogue dialogue)
+        {
+            characterLeft = dialogue.speaker;
+            characterRight = dialogue.listener;
 
-        /// <summary>
-        /// 
-        /// </summary>
+            ClearChildren(characterMountLeft);
+            ClearChildren(characterMountRight);
+
+            //start with initial speaker on the left, initial listener on the right
+            GameObject characterLeftGO = Instantiate(characterDictionary[dialogue.speaker], characterMountLeft.transform);
+            GameObject characterRightGO = Instantiate(characterDictionary[dialogue.listener], characterMountRight.transform);
+
+            animator.SetBool("CharacterLeft/On", true);
+            animator.SetBool("CharacterRight/On", true);
+
+            animatorCharacterLeft = characterLeftGO.GetComponentInChildren<Animator>();
+            animatorCharacterRight = characterRightGO.GetComponentInChildren<Animator>();
+
+            animatorCharacterLeft.SetBool("Speaking", false);
+            animatorCharacterRight.SetBool("Speaking", false);
+            animatorCharacterRight.SetBool("CharacterRight", true);
+        }
+
+        #region Update Elements
+
         private void UpdateView(Dialogue dialogue, int step = 1)
         {
+            //todo: rethink closing here
             if (dialogue == null)
             {
                 Close();
@@ -81,18 +105,19 @@ namespace Wrapper
             }
 
             InitiateDialogueAnimation(dialogue, step);
-            UpdateContextImage(dialogue);
-            UpdateCharacters(dialogue);
+            UpdateSpeakerHighlight(dialogue);
             UpdateExpressions(dialogue);
+            UpdateContextImage(dialogue);
         }
 
         /// <summary>
-        /// 
+        /// Start the first step of the dialogue snimation, the second step and dialogue body text switching are 
+        /// triggered and called by an animation event. 
         /// </summary>
-        /// <param name="step"></param>
+        /// <param name="step">positive = moving forward, negative = moving backward - in the dialogue sequence</param>
         private void InitiateDialogueAnimation(Dialogue dialogue, int step)
         {
-            if (step > 0) //Next
+            if (step > 0)
             {
                 dupePage.text = dialogue.text;
                 animator.SetTrigger("DialogueNext");
@@ -106,7 +131,8 @@ namespace Wrapper
         }
 
         /// <summary>
-        /// 
+        /// Triggered by an animation event, this method switches dialogue text on the UI and triggeres the second part
+        /// of the animation
         /// </summary>
         public void SwitchDialogueBody(int step)
         {
@@ -122,66 +148,74 @@ namespace Wrapper
             }
         }
 
-        private void UpdateCharacters(Dialogue dialogue)
+        private void UpdateSpeakerHighlight(Dialogue dialogue)
         {
-            //if it's different
-            if (characterLeft != dialogue.speaker)
+            if (dialogue.speaker == characterLeft)
             {
-                characterLeft = dialogue.speaker;
-                ClearChildren(characterMountLeft);
-                Instantiate(characterDictionary[dialogue.speaker], characterMountLeft.transform);
+                animatorCharacterLeft.SetBool("Speaking", true);
+                animatorCharacterRight.SetBool("Speaking", false);
             }
-
-            if (characterRight != dialogue.listener)
+            else
             {
-                characterRight = dialogue.listener;
-                ClearChildren(characterMountRight);
-                Instantiate(characterDictionary[dialogue.listener], characterMountRight.transform);
+                animatorCharacterRight.SetBool("Speaking", true);
+                animatorCharacterLeft.SetBool("Speaking", false);
             }
         }
 
         private void UpdateExpressions(Dialogue dialogue)
         {
-            if (ExpressionLeft != dialogue.speakerExpression)
+            //todo: refactor
+            if (characterLeft == dialogue.speaker)
             {
-                //do something
-            }
+                if (ExpressionLeft != dialogue.speakerExpression)
+                    animatorCharacterLeft.SetInteger("Expression", (int)dialogue.speakerExpression);
 
-            if (ExpressionRight != dialogue.listenerExpression)
-            {
-                //do something
+                if (ExpressionRight != dialogue.listenerExpression)
+                    animatorCharacterRight.SetInteger("Expression", (int)dialogue.listenerExpression);
             }
+            else
+            {
+                if (ExpressionLeft != dialogue.listenerExpression)
+                    animatorCharacterLeft.SetInteger("Expression", (int)dialogue.listenerExpression);
+
+                if (ExpressionRight != dialogue.speakerExpression)
+                    animatorCharacterRight.SetInteger("Expression", (int)dialogue.speakerExpression);
+            } 
         }
 
         private void UpdateContextImage(Dialogue dialogue)
         {
-            if (dialogue.contextImagePath != string.Empty)
+            if (dialogue.contextImagePath == string.Empty)
+            {
+                animator.SetBool("ContextImage/On", false);
                 return;
+            }
 
-            if (dialogue.contextImagePath == contextImagePath)
-                return;
+            //if (dialogue.contextImagePath == contextImagePath)
+            //    return;
 
-            Image image = Resources.Load<Image>(dialogue.contextImagePath);
-            if (image == null)
+            Sprite sprite = Resources.Load<Sprite>(dialogue.contextImagePath);
+            if (sprite == null)
             {
                 Debug.LogFormat("Could not find image at path: {0}", dialogue.contextImagePath);
                 return;
             }
 
-            contextImagePath = dialogue.contextImagePath;
-
+            contextImage.sprite = sprite;
+            //contextImagePath = dialogue.contextImagePath;
+            animator.SetBool("ContextImage/On", true);
         }
 
         /// <summary>
-        /// Switch the Next button image between "dismiss" and "next",
-        /// depending on the current dialogue being the last or not
+        /// Switch the Next button image to either "dismiss" or "next", depending on the current dialogue being the 
+        /// last or not
         /// </summary>
         private void SwitchNextButton(bool isLast)
         {
             animator.SetBool("DialogueLast", isLast);
         }
 
-#endregion
+        #endregion
 
         private void ClearChildren(GameObject mount)
         {
@@ -191,14 +225,14 @@ namespace Wrapper
 
         private void InitCharacterDictionary()
         {
-            characterDictionary = new Dictionary<Dialogue.Speaker, GameObject>
+            characterDictionary = new Dictionary<Dialogue.Character, GameObject>
             {
-                { Dialogue.Speaker.Char1, char1Prefab },
-                { Dialogue.Speaker.Char2, char2Prefab },
-                { Dialogue.Speaker.Char3, char3Prefab },
-                { Dialogue.Speaker.Char4, char4Prefab },
-                { Dialogue.Speaker.Char5, char5Prefab },
-                { Dialogue.Speaker.Char6, char6Prefab }
+                { Dialogue.Character.Char1, char1Prefab },
+                { Dialogue.Character.Char2, char2Prefab },
+                { Dialogue.Character.Char3, char3Prefab },
+                { Dialogue.Character.Char4, char4Prefab },
+                { Dialogue.Character.Char5, char5Prefab },
+                { Dialogue.Character.Char6, char6Prefab }
             };
         }
     }
