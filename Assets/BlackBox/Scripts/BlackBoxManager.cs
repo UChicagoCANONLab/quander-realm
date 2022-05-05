@@ -1,19 +1,27 @@
+using System;
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.UI;
 
 namespace BlackBox
 {
     public class BlackBoxManager : MonoBehaviour
     {
-        public GameObject gridPrefab;
+        #region Variables
 
-        [Header("Grid Objects")]
-        public GameObject mainGridGO;
-        public GameObject leftGridGO;
-        public GameObject botGridGO;
-        public GameObject rightGridGO;
-        public GameObject topGridGO;
+        public Button wolfieButton; //todo: use an event instead of this reference
+        public GameObject EndPanel; //todo: use an event instead of this reference
+        public GameObject gridPrefab = null;
+        public Level level = null;
+
+        [Header("Grid Containers")]
+        public GameObject mainGridGO = null;
+        public GameObject leftGridGO = null;
+        public GameObject botGridGO = null;
+        public GameObject rightGridGO = null;
+        public GameObject topGridGO = null;
+
+        [Header("Lantern Mounts")]
+        public GameObject[] lanternMounts;
 
         [Header("Grid and Cell Size")]
         [Tooltip("This will determine which values from the below arrays we'll use for: \n\ngrid size (e.g 5x5, 6x6, or 7x7) \ncell size (e.g 200f, 166f, 142f)")]
@@ -28,29 +36,77 @@ namespace BlackBox
         [Tooltip("Set cell size of the external grids that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         public float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
 
+        #endregion
+
         void Start()
         {
-            CreateAllGrids();
+            wolfieButton.onClick.AddListener(CheckWinState);
+            GameEvents.ReturnToHome.AddListener((lantern) => ReturnLanternHome(lantern));
+            //GameEvents.CheckWinState.AddListener(CheckWinState);
+
+            if (level == null)
+                CreateAllGrids(gridSize);
+            else
+                CreateAllGrids(level.gridSize);
+
+            GetGridArray(mainGridGO).SetNodes(level.nodePositions);
+            InitializeLanterns(level.nodePositions.Length);
+        }
+
+        private void ReturnLanternHome(GameObject lantern)
+        {
+            foreach(GameObject mountGO in lanternMounts)
+            {
+                LanternMount mount = mountGO.GetComponent<LanternMount>();
+
+                if (mount.isEmpty)
+                {
+                    lantern.transform.SetParent(mount.transform);
+                    lantern.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                    mount.EvaluateEmpty();
+                    break;
+                }
+            }
         }
 
         //todo: Delete Update() later
-#if UNITY_EDITOR
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Alpha5))
-                CreateAllGrids();
+                CreateAllGrids(GridSize.Small);
 
             if (Input.GetKeyDown(KeyCode.Alpha6))
                 CreateAllGrids(GridSize.Medium);
 
             if (Input.GetKeyDown(KeyCode.Alpha7))
                 CreateAllGrids(GridSize.Large);
-        }
-#endif
 
-        private void CreateAllGrids(GridSize newGridSize = GridSize.Small)
+            if (Input.GetKeyDown(KeyCode.D))
+                GameEvents.ToggleDebug?.Invoke();
+        }
+
+        private void CheckWinState()
         {
-            gridSize = newGridSize;
+            int numCorrect = GetGridArray(mainGridGO).GetNumCorrect(level.nodePositions);
+            int numNodes = level.nodePositions.Length;
+
+            EndPanel.SetActive(true);
+
+            if (numCorrect == numNodes)
+            {
+                GameEvents.SetEndPanelText?.Invoke("You Won!");
+                Debug.Log("Win");
+            }
+            else
+            {
+                GameEvents.SetEndPanelText?.Invoke("You found " + numCorrect + " out of " + numNodes + " nodes.");
+                Debug.LogFormat("Lose: {0}/{1}", numCorrect, numNodes);
+            }
+        }
+
+        private void CreateAllGrids(GridSize gSize)
+        {
+            gridSize = gSize;
 
             CreateGrid(mainGridGO, Dir.None);
             CreateGrid(leftGridGO, Dir.Left);
@@ -88,6 +144,17 @@ namespace BlackBox
             GetGLG(parent).cellSize = new Vector2(cellSize, cellSize);
         }
 
+        private void InitializeLanterns(int length)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                lanternMounts[i].SetActive(true);
+                lanternMounts[i].GetComponent<LanternMount>().SetColliderActive(gridSize);
+            }
+        }
+
+        #region Helpers
+
         private void ClearChildren(GameObject parent)
         {
             foreach (Transform cell in parent.transform)
@@ -103,5 +170,7 @@ namespace BlackBox
         {
             return GO.GetComponent<GridLayoutGroup>();
         }
+
+        #endregion
     }
 }
