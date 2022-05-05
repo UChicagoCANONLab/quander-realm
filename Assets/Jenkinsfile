@@ -85,7 +85,7 @@ config.__default__ = [
 	/**
 	 * This is the user-facing version number of the app. This corresponds to Bundle Version in iOS and versionName in Android.
 	 */
-	VERSION: "0.1.0",
+	VERSION: "0.1.2",
 
 	/**
 	 * Whether to send a Slack notification when the job starts
@@ -117,7 +117,7 @@ config.__default__ = [
 	/**
 	 * User handles added to the end of success and failure notification messages to make sure appropriate users get notified.
 	 */
-	SLACK_MENTIONS: "@Srivathsan Prakash",
+	SLACK_MENTIONS: "@sprakash",
 
 	/**
 	 * Whether to make Android builds
@@ -482,6 +482,11 @@ config.__default__ = [
  * develop branch config overrides
  */
 config.develop = [:]
+
+/**
+ * develop branch config overrides
+ */
+config.wrapper = [:]
 
 /**
  * staging branch config overrides
