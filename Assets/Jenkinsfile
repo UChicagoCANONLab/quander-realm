@@ -80,7 +80,7 @@ config.__default__ = [
 	/**
 	 * Whether to make a development build. Corresponds to the Development Build option in Unity Build Settings.
 	 */
-	DEBUG: false,
+	DEBUG: true,
 
 	/**
 	 * This is the user-facing version number of the app. This corresponds to Bundle Version in iOS and versionName in Android.
@@ -117,7 +117,7 @@ config.__default__ = [
 	/**
 	 * User handles added to the end of success and failure notification messages to make sure appropriate users get notified.
 	 */
-	SLACK_MENTIONS: "@sprakash",
+	SLACK_MENTIONS: "@sprakash @rfrank @vwilkerson",
 
 	/**
 	 * Whether to make Android builds
@@ -484,9 +484,14 @@ config.__default__ = [
 config.develop = [:]
 
 /**
- * develop branch config overrides
+ * wrapper branch config overrides
  */
 config.wrapper = [:]
+
+/**
+ * integration branch config overrides
+ */
+config.integration = [:]
 
 /**
  * staging branch config overrides
