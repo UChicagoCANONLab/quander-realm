@@ -13,6 +13,15 @@ namespace BlackBox
         private Ray ray;
         private Cell[,] gridArray;
 
+        private static int colorIndex = -1;
+        private static Color[] colorArray = new Color[] { Color.red, Color.blue, Color.green, Color.cyan, Color.black, Color.grey, Color.magenta, Color.yellow };
+
+        private void OnDestroy()
+        {
+            if (direction != Dir.None)
+                GameEvents.MarkUnits -= MarkUnits;      
+        }
+
         public void Create(int width, int height, Dir direction = Dir.None)
         {
             this.width = width;
@@ -50,13 +59,13 @@ namespace BlackBox
 
         private void SetupListeners()
         {
-            if (direction == Dir.None)
+            if (direction == Dir.None) // todo: move to onenable/ondisable after action is setup
             {
                 GameEvents.FireRay.AddListener((rayOrigin, rayDirection) => FireRay(rayOrigin, rayDirection));
                 GameEvents.ToggleFlag.AddListener((gridPosition, toggle) => ToggleFlag(gridPosition, toggle));
             }
             else
-                GameEvents.MarkUnit.AddListener((text, gridDirection, destPosition) => MarkUnits(text, gridDirection, destPosition));
+                GameEvents.MarkUnits += MarkUnits;
         }
 
         private void ToggleFlag(Vector3Int gridPosition, bool toggle)
@@ -102,7 +111,7 @@ namespace BlackBox
             if (HasNode(frontMid)) //Hit
                 ray.Kill(width); // since the main board is a square, gridLength = width = height
             else if (HasNode(frontRight) && HasNode(frontLeft)) //Reflect
-                ray.Flip(false);
+                ray.Flip();
             else if (HasNode(frontRight)) //Detour Left
                 ray.TurnLeft();
             else if (HasNode(frontLeft)) //Detour Right
@@ -112,7 +121,6 @@ namespace BlackBox
             ray.Forward();
 
             //todo: draw debug line
-
         }
 
         private void GetFrontAndDiagonalCellPositions(out Vector3Int frontMid, out Vector3Int frontRight, out Vector3Int frontLeft)
@@ -158,12 +166,21 @@ namespace BlackBox
             return false;
         }
 
-        private void MarkUnits(string text, Dir gridDirection, Vector3Int destPosition)
+        private void MarkUnits(string text, Dir gridDirection, Vector3Int destPosition, bool isDetour, bool nextColor)
         {
             if (direction != gridDirection)
                 return;
 
-            gridArray[destPosition.x, destPosition.y].SetValue(text);
+            if (nextColor)
+            {
+                if (colorIndex == colorArray.Length - 1) //temp: reset if last color
+                    colorIndex = -1;
+
+                colorIndex++;
+            }
+
+            Color color = isDetour ? colorArray[colorIndex] : Color.white;
+            gridArray[destPosition.x, destPosition.y].SetValue(text, color);
         }
 
         private bool RayInPlay()

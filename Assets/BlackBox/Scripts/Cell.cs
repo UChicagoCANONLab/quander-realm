@@ -19,7 +19,7 @@ namespace BlackBox
 
         public abstract void Interact();
 
-        public virtual void SetValue(string value) { }
+        public virtual void SetValue(string value, Color color) { }
 
         public abstract bool HasNode();
 

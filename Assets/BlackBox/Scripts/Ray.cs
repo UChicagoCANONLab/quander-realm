@@ -4,17 +4,17 @@ namespace BlackBox
 {
     public class Ray
     {
-        public int numDetours = 0;
-        public bool rayTurned = false;
-        
         public Vector3Int position;
         public Dir direction;
-
-        public Vector3Int origin;
-        public Dir originDirection;
         
-        public Vector3Int destination;
-        public Dir destDirection;
+        private bool directHit = false;
+        private bool rayDetoured = false;
+
+        private Vector3Int origin;
+        private Dir originDirection;
+
+        private Vector3Int destination;
+        private Dir destDirection;
 
         public Ray(Vector3Int origin, Dir dir, int width, int height)
         {
@@ -47,47 +47,39 @@ namespace BlackBox
 
             if (originDirection == destDirection)
             {
-                if (origin != destination)
+                if (origin == destination)
                 {
-                    //Detour
-                    GameEvents.MarkUnit?.Invoke("D" + numDetours, originDirection, origin);
-                    GameEvents.MarkUnit?.Invoke("D" + numDetours, destDirection, destination);
-                }
-                else
-                {
-                    if (numDetours == 0)
+                    if (directHit)
                     {
                         //Hit
-                        GameEvents.MarkUnit?.Invoke("H", originDirection, origin);
+                        GameEvents.MarkUnits?.Invoke("H", originDirection, origin, false, false);
                     }
-                    else
+                    else // only other case for returning to the same cell is a reflection
                     {
-                        if (rayTurned)
-                        {
-                            //Detour
-                            GameEvents.MarkUnit?.Invoke("D" + numDetours, destDirection, destination);
-                        }
-                        else
-                        {
-                            //Reflect
-                            GameEvents.MarkUnit?.Invoke("R", originDirection, origin);
-                        }
+                        //Reflect
+                        GameEvents.MarkUnits?.Invoke("R", originDirection, origin, false, false);
                     }
                 }
-            }
-            else //originDirection != destDirection
-            {
-                if (numDetours == 0)
-                {
-                    //Miss
-                    GameEvents.MarkUnit?.Invoke("M", originDirection, origin);
-                    GameEvents.MarkUnit?.Invoke("M", destDirection, destination);
-                }
-                else
+                else // different cell
                 {
                     //Detour
-                    GameEvents.MarkUnit?.Invoke("D" + numDetours, originDirection, origin);
-                    GameEvents.MarkUnit?.Invoke("D" + numDetours, destDirection, destination);
+                    GameEvents.MarkUnits?.Invoke("D", originDirection, origin, true, true);
+                    GameEvents.MarkUnits?.Invoke("D", destDirection, destination, true, false);
+                }
+            }
+            else // diff entry/exit direction
+            {
+                if (rayDetoured)
+                {
+                    //Detour
+                    GameEvents.MarkUnits?.Invoke("D", originDirection, origin, true, true);
+                    GameEvents.MarkUnits?.Invoke("D", destDirection, destination, true, false);
+                }
+                else // straight through
+                {
+                    //Miss
+                    GameEvents.MarkUnits?.Invoke("M", originDirection, origin, false, false);
+                    GameEvents.MarkUnits?.Invoke("M", destDirection, destination, false, false);
                 }
             }
         }
@@ -128,7 +120,7 @@ namespace BlackBox
             }
         }
 
-        public void Flip(bool directHit)
+        public void Flip()
         {
             switch(direction)
             {
@@ -137,9 +129,6 @@ namespace BlackBox
                 case Dir.Right: direction = Dir.Left; break; 
                 case Dir.Top: direction = Dir.Bot; break;
             }
-
-            if (!(directHit))
-                numDetours += 2;
         }
 
         public void TurnLeft()
@@ -152,8 +141,7 @@ namespace BlackBox
                 case Dir.Top: direction = Dir.Left; break;
             }
 
-            rayTurned = true;
-            numDetours++;
+            rayDetoured = true;
         }
 
         public void TurnRight()
@@ -166,15 +154,14 @@ namespace BlackBox
                 case Dir.Top: direction = Dir.Right; break;
             }
 
-            rayTurned = true;
-            numDetours++;
+            rayDetoured = true;
         }
 
         public void Kill(int gridLength) //todo: better fix
         {
             direction = originDirection;
             position = origin;
-            numDetours = 0;
+            directHit = true;
 
             switch(direction)
             {
@@ -183,7 +170,7 @@ namespace BlackBox
                 default: break;
             }
 
-            Flip(true);
+            Flip();
         }
     }
 }
