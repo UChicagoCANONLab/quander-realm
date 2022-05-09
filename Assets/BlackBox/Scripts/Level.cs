@@ -7,6 +7,7 @@ namespace BlackBox
     {
         public int level;
         public int module;
+        [Range(10, 25)] public int numEnergyUnits;
         public GridSize gridSize;
         public Vector2Int[] nodePositions;
     }

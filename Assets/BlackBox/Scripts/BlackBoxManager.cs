@@ -36,6 +36,8 @@ namespace BlackBox
         [Tooltip("Set cell size of the external grids that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         public float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
 
+        private int numEnergyUnits = 0;
+
         #endregion
 
         void Start()
@@ -49,24 +51,9 @@ namespace BlackBox
             else
                 CreateAllGrids(level.gridSize);
 
-            GetGridArray(mainGridGO).SetNodes(level.nodePositions);
+            mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
             InitializeLanterns(level.nodePositions.Length);
-        }
-
-        private void ReturnLanternHome(GameObject lantern)
-        {
-            foreach(GameObject mountGO in lanternMounts)
-            {
-                LanternMount mount = mountGO.GetComponent<LanternMount>();
-
-                if (mount.isEmpty)
-                {
-                    lantern.transform.SetParent(mount.transform);
-                    lantern.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                    mount.EvaluateEmpty();
-                    break;
-                }
-            }
+            InitializeEnergyBar();
         }
 
         //todo: Delete Update() later
@@ -85,9 +72,86 @@ namespace BlackBox
                 GameEvents.ToggleDebug?.Invoke();
         }
 
+        private void CreateAllGrids(GridSize gSize)
+        {
+            gridSize = gSize;
+
+            CreateMainGrid();
+
+            CreateUnitGrid(leftGridGO, Dir.Left);
+            CreateUnitGrid(botGridGO, Dir.Bot);
+            CreateUnitGrid(rightGridGO, Dir.Right);
+            CreateUnitGrid(topGridGO, Dir.Top);
+        }
+
+        private void CreateMainGrid()
+        {
+            int gridLength = gridSizeValues[(int)gridSize];
+            float cellSize = nodeCellSizeValues[(int)gridSize];
+
+            ClearChildren(mainGridGO);
+            mainGridGO.GetComponent<MainGrid>().Create(gridLength, gridLength, level.numEnergyUnits);
+            GetGLG(mainGridGO).cellSize = new Vector2(cellSize, cellSize);
+        }
+
+        private void CreateUnitGrid(GameObject parent, Dir direction = Dir.None)
+        {
+            int width = 1;
+            int height = 1;
+            int gridLength = gridSizeValues[(int)gridSize];
+            float cellSize = navCellSizeValues[(int)gridSize];
+
+            switch (direction)
+            {
+                case Dir.Left:
+                case Dir.Right:
+                    height = gridLength;
+                    break;
+                case Dir.Bot:
+                case Dir.Top:
+                    width = gridLength;
+                    break;
+            }
+
+            ClearChildren(parent);
+            parent.GetComponent<UnitGrid>().Create(width, height, direction);
+            GetGLG(parent).cellSize = new Vector2(cellSize, cellSize);
+        }
+
+        private void InitializeLanterns(int length)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                lanternMounts[i].SetActive(true);
+                lanternMounts[i].GetComponent<LanternMount>().SetColliderActive(gridSize);
+            }
+        }
+
+        private void InitializeEnergyBar()
+        {
+            numEnergyUnits = level.numEnergyUnits;
+            GameEvents.InitEnergyBar?.Invoke(numEnergyUnits);
+        }
+
+        private void ReturnLanternHome(GameObject lantern)
+        {
+            foreach (GameObject mountGO in lanternMounts)
+            {
+                LanternMount mount = mountGO.GetComponent<LanternMount>();
+
+                if (mount.isEmpty)
+                {
+                    lantern.transform.SetParent(mount.transform);
+                    lantern.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                    mount.EvaluateEmpty();
+                    break;
+                }
+            }
+        }
+
         private void CheckWinState()
         {
-            int numCorrect = GetGridArray(mainGridGO).GetNumCorrect(level.nodePositions);
+            int numCorrect = mainGridGO.GetComponent<MainGrid>().GetNumCorrect(level.nodePositions);
             int numNodes = level.nodePositions.Length;
 
             EndPanel.SetActive(true);
@@ -104,66 +168,12 @@ namespace BlackBox
             }
         }
 
-        private void CreateAllGrids(GridSize gSize)
-        {
-            gridSize = gSize;
-
-            CreateGrid(mainGridGO, Dir.None);
-            CreateGrid(leftGridGO, Dir.Left);
-            CreateGrid(botGridGO, Dir.Bot);
-            CreateGrid(rightGridGO, Dir.Right);
-            CreateGrid(topGridGO, Dir.Top);
-        }
-
-        private void CreateGrid(GameObject parent, Dir direction = Dir.None)
-        {
-            int width = 1;
-            int height = 1;
-            int gridLength = gridSizeValues[(int)gridSize];
-            float cellSize = navCellSizeValues[(int)gridSize];
-
-            switch (direction)
-            {
-                case Dir.None:
-                    width = gridLength;
-                    height = gridLength;
-                    cellSize = nodeCellSizeValues[(int)gridSize];
-                    break;
-                case Dir.Left:
-                case Dir.Right:
-                    height = gridLength;
-                    break;
-                case Dir.Bot:
-                case Dir.Top:
-                    width = gridLength;
-                    break;
-            }
-
-            ClearChildren(parent);
-            GetGridArray(parent).Create(width, height, direction);
-            GetGLG(parent).cellSize = new Vector2(cellSize, cellSize);
-        }
-
-        private void InitializeLanterns(int length)
-        {
-            for (int i = 0; i < length; i++)
-            {
-                lanternMounts[i].SetActive(true);
-                lanternMounts[i].GetComponent<LanternMount>().SetColliderActive(gridSize);
-            }
-        }
-
         #region Helpers
 
         private void ClearChildren(GameObject parent)
         {
             foreach (Transform cell in parent.transform)
                 Destroy(cell.gameObject);
-        }
-
-        private GridArray GetGridArray(GameObject GO)
-        {
-            return GO.GetComponent<GridArray>();
         }
 
         private GridLayoutGroup GetGLG(GameObject GO)

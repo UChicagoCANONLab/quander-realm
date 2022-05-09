@@ -15,6 +15,8 @@ namespace BlackBox
         public static UnityEvent ToggleDebug = new UnityEvent();
 
         public static Action<string, Dir, Vector3Int, bool, bool> MarkUnits;
+        public static Action DecrementEnergy;
+        public static Action<int> InitEnergyBar;
     }
 
     public class FireRayEvent : UnityEvent<Vector3Int, Dir> { }

@@ -26,28 +26,6 @@ namespace BlackBox
             SetupDebug();
         }
 
-        //todo: debug, delete later
-        private void SetupDebug()
-        {
-            text.text = gridPosition.x.ToString() + ", " + gridPosition.y.ToString();
-            GameEvents.ToggleDebug.AddListener(ToggleDebug);
-
-            foreach (Button button in buttons)
-                button.onClick.AddListener(() => { if (debug) Interact(); });
-        }
-
-        //todo: debug, delete later 
-        private void ToggleDebug()
-        {
-            debug = !(text.gameObject.activeInHierarchy);
-            text.gameObject.SetActive(debug);
-
-            if (!hasNode) 
-                return;
-
-            nodeObj.SetActive(debug);
-        }
-
         public override void Interact()
         {
             if (cellType == CellType.EdgeNode)
@@ -74,6 +52,28 @@ namespace BlackBox
         public void ToggleFlag(bool toggle)
         {
             hasFlag = toggle;
+        }
+
+        //todo: debug, delete later
+        private void SetupDebug()
+        {
+            text.text = gridPosition.x.ToString() + ", " + gridPosition.y.ToString();
+            GameEvents.ToggleDebug.AddListener(ToggleDebug);
+
+            foreach (Button button in buttons)
+                button.onClick.AddListener(() => { if (debug) Interact(); });
+        }
+
+        //todo: debug, delete later 
+        private void ToggleDebug()
+        {
+            debug = !(text.gameObject.activeInHierarchy);
+            text.gameObject.SetActive(debug);
+
+            if (!hasNode)
+                return;
+
+            nodeObj.SetActive(debug);
         }
     }
 }

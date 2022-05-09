@@ -2,42 +2,39 @@ using UnityEngine;
 
 namespace BlackBox
 {
-    public class GridArray : MonoBehaviour
+    public class MainGrid : MonoBehaviour
     {
-        public float debugLineDuration = 3f;
-        public GameObject cellPrefab;
+        [SerializeField] private float debugLineDuration = 3f;
+        [SerializeField] private GameObject nodeCellPrefab = null;
 
-        private int width;
-        private int height;
-        private Dir direction;
-        private Ray ray;
-        private Cell[,] gridArray;
-
-        private static int colorIndex = -1;
-        private static Color[] colorArray = new Color[] { Color.red, Color.blue, Color.green, Color.cyan, Color.black, Color.grey, Color.magenta, Color.yellow };
+        private int width = 0;
+        private int height = 0;
+        private int energyUnits = 0;
+        private Dir direction = Dir.None;
+        private Ray ray = null;
+        private NodeCell[,] cellArray = null;
 
         private void OnDestroy()
-        {
-            if (direction != Dir.None)
-                GameEvents.MarkUnits -= MarkUnits;      
+        {   
+
         }
 
-        public void Create(int width, int height, Dir direction = Dir.None)
+        public void Create(int width, int height, int numEnergyUnits)
         {
             this.width = width;
             this.height = height;
-            this.direction = direction;
-            gridArray = new Cell[width, height];
+            energyUnits = numEnergyUnits;
+            cellArray = new NodeCell[width, height];
 
-            for (int y = 0; y < gridArray.GetLength(1); y++)
+            for (int y = 0; y < cellArray.GetLength(1); y++)
             {
-                for (int x = 0; x < gridArray.GetLength(0); x++)
+                for (int x = 0; x < cellArray.GetLength(0); x++)
                 {
-                    GameObject cellObj = Instantiate(cellPrefab, gameObject.transform);
-                    Cell cell = cellObj.GetComponent<Cell>();
+                    GameObject nodeCellObj = Instantiate(nodeCellPrefab, gameObject.transform);
+                    NodeCell nodeCell = nodeCellObj.GetComponent<NodeCell>();
 
-                    cell.Create(x, y, GetCellType(x, y), direction);
-                    gridArray[x, y] = cell;
+                    nodeCell.Create(x, y, GetCellType(x, y), direction);
+                    cellArray[x, y] = nodeCell;
                 }
             }
 
@@ -48,10 +45,7 @@ namespace BlackBox
         {
             CellType result = CellType.Node;
 
-            if (direction != Dir.None) // Nav
-                result = CellType.Nav;
-
-            else if (x == 0 || x == width - 1 || y == 0 || y == height - 1) // EdgeNode
+            if (x == 0 || x == width - 1 || y == 0 || y == height - 1)
                 result = CellType.EdgeNode;
 
             return result;
@@ -59,24 +53,21 @@ namespace BlackBox
 
         private void SetupListeners()
         {
-            if (direction == Dir.None) // todo: move to onenable/ondisable after action is setup
-            {
-                GameEvents.FireRay.AddListener((rayOrigin, rayDirection) => FireRay(rayOrigin, rayDirection));
-                GameEvents.ToggleFlag.AddListener((gridPosition, toggle) => ToggleFlag(gridPosition, toggle));
-            }
-            else
-                GameEvents.MarkUnits += MarkUnits;
+            // todo: move to onenable/ondisable after action is setup
+            GameEvents.FireRay.AddListener((rayOrigin, rayDirection) => FireRay(rayOrigin, rayDirection));
+            GameEvents.ToggleFlag.AddListener((gridPosition, toggle) => ToggleFlag(gridPosition, toggle));
+
         }
 
         private void ToggleFlag(Vector3Int gridPosition, bool toggle)
         {
-            ((NodeCell)gridArray[gridPosition.x, gridPosition.y]).ToggleFlag(toggle);
+            cellArray[gridPosition.x, gridPosition.y].ToggleFlag(toggle);
         }
 
         public void SetNodes(Vector2Int[] nodePositions)
         {
             foreach (Vector2Int position in nodePositions)
-                gridArray[position.x, position.y].Interact(); // todo: rename/use a dedicated function for toggling here?
+                cellArray[position.x, position.y].Interact(); // todo: rename/use a dedicated function for toggling here?
         }
 
         public int GetNumCorrect(Vector2Int[] nodePositions)
@@ -84,7 +75,7 @@ namespace BlackBox
             int numCorrect = 0;
 
             foreach(Vector2Int pos in nodePositions)
-                if (((NodeCell)gridArray[pos.x, pos.y]).HasFlag())
+                if (cellArray[pos.x, pos.y].HasFlag())
                     numCorrect++;
 
             return numCorrect;
@@ -94,6 +85,14 @@ namespace BlackBox
 
         private void FireRay(Vector3Int rayOrigin, Dir rayDirection)
         {
+            if (energyUnits == 0)
+            {
+                Debug.Log("Out of energy, can't fire ray");
+                return;
+            }
+
+            energyUnits--;
+            GameEvents.DecrementEnergy?.Invoke();
             ray = new Ray(rayOrigin, rayDirection, width, height);
 
             while (RayInPlay())
@@ -156,31 +155,15 @@ namespace BlackBox
 
         private bool HasNode(Vector3Int gridPosition)
         {
+            //todo: is this check and pattern necessary now that UnitGrids have been extracted from here?
             if (gridPosition.x < 0 || gridPosition.x >= width || gridPosition.y < 0 || gridPosition.y >= height)
                 return false;
 
-            Cell cell = gridArray[gridPosition.x, gridPosition.y];
+            NodeCell cell = cellArray[gridPosition.x, gridPosition.y];
             if (cell != null)
                 return cell.HasNode();
 
             return false;
-        }
-
-        private void MarkUnits(string text, Dir gridDirection, Vector3Int destPosition, bool isDetour, bool nextColor)
-        {
-            if (direction != gridDirection)
-                return;
-
-            if (nextColor)
-            {
-                if (colorIndex == colorArray.Length - 1) //temp: reset if last color
-                    colorIndex = -1;
-
-                colorIndex++;
-            }
-
-            Color color = isDetour ? colorArray[colorIndex] : Color.white;
-            gridArray[destPosition.x, destPosition.y].SetValue(text, color);
         }
 
         private bool RayInPlay()
