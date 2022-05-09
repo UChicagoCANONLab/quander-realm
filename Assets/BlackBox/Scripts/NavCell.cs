@@ -5,10 +5,15 @@ namespace BlackBox
 {
     public class NavCell : Cell
     {
-        public TextMeshProUGUI markerText;
+        [SerializeField] private TextMeshProUGUI markerText;
+
+        private bool isMarked = false;
 
         public override void Interact()
         {
+            if (isMarked)
+                return;
+
             GameEvents.FireRay?.Invoke(gridPosition, direction);
         }
 
@@ -17,6 +22,7 @@ namespace BlackBox
             markerText.gameObject.SetActive(true);
             markerText.color = color;
             markerText.text = value;
+            isMarked = true;
         }
 
         public override bool HasNode()
