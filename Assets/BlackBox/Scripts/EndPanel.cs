@@ -11,8 +11,17 @@ namespace BlackBox
 
         private void Awake()
         {
-            GameEvents.SetEndPanelText.AddListener((text) => SetInfo(text));
             keepPlayingButton.onClick.AddListener(() => gameObject.SetActive(false));
+        }
+
+        private void OnEnable()
+        {
+            BlackBoxEvents.SetEndPanelText += SetInfo;
+        }
+
+        private void OnDisable()
+        {
+            BlackBoxEvents.SetEndPanelText -= SetInfo;
         }
 
         public void SetInfo(string text)

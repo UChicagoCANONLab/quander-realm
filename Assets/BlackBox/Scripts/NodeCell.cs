@@ -56,7 +56,7 @@ namespace BlackBox
         private void SetupDebug()
         {
             text.text = gridPosition.x.ToString() + ", " + gridPosition.y.ToString();
-            GameEvents.ToggleDebug.AddListener(ToggleDebug);
+            BlackBoxEvents.ToggleDebug.AddListener(ToggleDebug);
 
             foreach (Button button in buttons)
                 button.onClick.AddListener(() => { if (debug) Interact(); });

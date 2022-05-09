@@ -52,19 +52,19 @@ namespace BlackBox
                     if (directHit)
                     {
                         //Hit
-                        GameEvents.MarkUnits?.Invoke("H", originDirection, origin, false, false);
+                        BlackBoxEvents.MarkUnits?.Invoke("H", originDirection, origin, false, false);
                     }
                     else // only other case for returning to the same cell is a reflection
                     {
                         //Reflect
-                        GameEvents.MarkUnits?.Invoke("R", originDirection, origin, false, false);
+                        BlackBoxEvents.MarkUnits?.Invoke("R", originDirection, origin, false, false);
                     }
                 }
                 else // different cell
                 {
                     //Detour
-                    GameEvents.MarkUnits?.Invoke("D", originDirection, origin, true, true);
-                    GameEvents.MarkUnits?.Invoke("D", destDirection, destination, true, false);
+                    BlackBoxEvents.MarkUnits?.Invoke("D", originDirection, origin, true, true);
+                    BlackBoxEvents.MarkUnits?.Invoke("D", destDirection, destination, true, false);
                 }
             }
             else // diff entry/exit direction
@@ -72,14 +72,14 @@ namespace BlackBox
                 if (rayDetoured)
                 {
                     //Detour
-                    GameEvents.MarkUnits?.Invoke("D", originDirection, origin, true, true);
-                    GameEvents.MarkUnits?.Invoke("D", destDirection, destination, true, false);
+                    BlackBoxEvents.MarkUnits?.Invoke("D", originDirection, origin, true, true);
+                    BlackBoxEvents.MarkUnits?.Invoke("D", destDirection, destination, true, false);
                 }
                 else // straight through
                 {
                     //Miss
-                    GameEvents.MarkUnits?.Invoke("M", originDirection, origin, false, false);
-                    GameEvents.MarkUnits?.Invoke("M", destDirection, destination, false, false);
+                    BlackBoxEvents.MarkUnits?.Invoke("M", originDirection, origin, false, false);
+                    BlackBoxEvents.MarkUnits?.Invoke("M", destDirection, destination, false, false);
                 }
             }
         }

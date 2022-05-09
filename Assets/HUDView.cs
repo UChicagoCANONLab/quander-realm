@@ -12,14 +12,14 @@ namespace BlackBox
 
         private void OnEnable()
         {
-            GameEvents.InitEnergyBar += Init;
-            GameEvents.DecrementEnergy += DecrementEnergyBar;
+            BlackBoxEvents.InitEnergyBar += Init;
+            BlackBoxEvents.DecrementEnergy += DecrementEnergyBar;
         }
 
         private void OnDisable()
         {
-            GameEvents.InitEnergyBar -= Init;
-            GameEvents.DecrementEnergy -= DecrementEnergyBar;
+            BlackBoxEvents.InitEnergyBar -= Init;
+            BlackBoxEvents.DecrementEnergy -= DecrementEnergyBar;
         }
 
         private void Init(int numUnits)

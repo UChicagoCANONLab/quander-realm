@@ -43,7 +43,6 @@ namespace BlackBox
         void Start()
         {
             wolfieButton.onClick.AddListener(CheckWinState);
-            GameEvents.ReturnToHome.AddListener((lantern) => ReturnLanternHome(lantern));
             //GameEvents.CheckWinState.AddListener(CheckWinState);
 
             if (level == null)
@@ -53,7 +52,7 @@ namespace BlackBox
 
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
             InitializeLanterns(level.nodePositions.Length);
-            GameEvents.InitEnergyBar?.Invoke(level.numEnergyUnits);
+            BlackBoxEvents.InitEnergyBar?.Invoke(level.numEnergyUnits);
         }
 
         //todo: Delete Update() later
@@ -69,7 +68,17 @@ namespace BlackBox
                 CreateAllGrids(GridSize.Large);
 
             if (Input.GetKeyDown(KeyCode.D))
-                GameEvents.ToggleDebug?.Invoke();
+                BlackBoxEvents.ToggleDebug?.Invoke();
+        }
+
+        private void OnEnable()
+        {
+            BlackBoxEvents.ReturnLanternHome += ReturnLanternHome;
+        }
+
+        private void OnDisable()
+        {
+            BlackBoxEvents.ReturnLanternHome -= ReturnLanternHome;
         }
 
         private void CreateAllGrids(GridSize gSize)
@@ -152,12 +161,12 @@ namespace BlackBox
 
             if (numCorrect == numNodes)
             {
-                GameEvents.SetEndPanelText?.Invoke("You Won!");
+                BlackBoxEvents.SetEndPanelText?.Invoke("You Won!");
                 Debug.Log("Win");
             }
             else
             {
-                GameEvents.SetEndPanelText?.Invoke("You found " + numCorrect + " out of " + numNodes + " nodes.");
+                BlackBoxEvents.SetEndPanelText?.Invoke("You found " + numCorrect + " out of " + numNodes + " nodes.");
                 Debug.LogFormat("Lose: {0}/{1}", numCorrect, numNodes);
             }
         }

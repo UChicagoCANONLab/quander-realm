@@ -14,7 +14,7 @@ namespace BlackBox
             if (isMarked)
                 return;
 
-            GameEvents.FireRay?.Invoke(gridPosition, direction);
+            BlackBoxEvents.FireRay?.Invoke(gridPosition, direction);
         }
 
         public override void SetValue(string value, Color color)

@@ -17,7 +17,7 @@ namespace BlackBox
 
         private void OnDestroy()
         {
-            GameEvents.MarkUnits -= MarkUnits;
+            BlackBoxEvents.MarkUnits -= MarkUnits;
         }
 
         public void Create(int width, int height, Dir direction = Dir.None)
@@ -37,7 +37,7 @@ namespace BlackBox
                 }
             }
 
-            GameEvents.MarkUnits += MarkUnits;
+            BlackBoxEvents.MarkUnits += MarkUnits;
         }
 
         private void MarkUnits(string text, Dir gridDirection, Vector3Int destPosition, bool isDetour, bool nextColor)
