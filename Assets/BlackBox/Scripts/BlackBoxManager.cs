@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,35 +7,36 @@ namespace BlackBox
     {
         #region Variables
 
-        public Button wolfieButton; //todo: use an event instead of this reference
-        public GameObject EndPanel; //todo: use an event instead of this reference
-        public GameObject gridPrefab = null;
-        public Level level = null;
+        [SerializeField] private Button wolfieButton = null; //todo: use an event instead of this reference
+        [SerializeField] private GameObject EndPanel = null; //todo: use an event instead of this reference
+        [SerializeField] private Level level = null;
 
         [Header("Grid Containers")]
-        public GameObject mainGridGO = null;
-        public GameObject leftGridGO = null;
-        public GameObject botGridGO = null;
-        public GameObject rightGridGO = null;
-        public GameObject topGridGO = null;
+        [SerializeField] private GameObject mainGridGO = null;
+        [SerializeField] private GameObject leftGridGO = null;
+        [SerializeField] private GameObject botGridGO = null;
+        [SerializeField] private GameObject rightGridGO = null;
+        [SerializeField] private GameObject topGridGO = null;
 
         [Header("Lantern Mounts")]
-        public GameObject[] lanternMounts;
+        [SerializeField] private GameObject[] lanternMounts = null;
 
         [Header("Grid and Cell Size")]
         [Tooltip("This will determine which values from the below arrays we'll use for: \n\ngrid size (e.g 5x5, 6x6, or 7x7) \ncell size (e.g 200f, 166f, 142f)")]
-        public GridSize gridSize = GridSize.Small;
+        [SerializeField] 
+        private GridSize gridSize = GridSize.Small;
 
         [Tooltip("Set width/height of the grid that corresponds to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
-        public int[] gridSizeValues = new int[3] { 5, 6, 7 }; //todo: name these using an editor script to make it easier to understand
+        [SerializeField] 
+        private int[] gridSizeValues = new int[3] { 5, 6, 7 }; //todo: name these using an editor script to make it easier to understand
 
         [Tooltip("Set cell size of the main grid that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
-        public float[] nodeCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        [SerializeField] 
+        private float[] nodeCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
 
         [Tooltip("Set cell size of the external grids that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
-        public float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
-
-        private int numEnergyUnits = 0;
+        [SerializeField] 
+        private float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
 
         #endregion
 
@@ -53,7 +53,7 @@ namespace BlackBox
 
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
             InitializeLanterns(level.nodePositions.Length);
-            InitializeEnergyBar();
+            GameEvents.InitEnergyBar?.Invoke(level.numEnergyUnits);
         }
 
         //todo: Delete Update() later
@@ -91,7 +91,7 @@ namespace BlackBox
 
             ClearChildren(mainGridGO);
             mainGridGO.GetComponent<MainGrid>().Create(gridLength, gridLength, level.numEnergyUnits);
-            GetGLG(mainGridGO).cellSize = new Vector2(cellSize, cellSize);
+            mainGridGO.GetComponent<GridLayoutGroup>().cellSize = new Vector2(cellSize, cellSize);
         }
 
         private void CreateUnitGrid(GameObject parent, Dir direction = Dir.None)
@@ -115,7 +115,7 @@ namespace BlackBox
 
             ClearChildren(parent);
             parent.GetComponent<UnitGrid>().Create(width, height, direction);
-            GetGLG(parent).cellSize = new Vector2(cellSize, cellSize);
+            parent.GetComponent<GridLayoutGroup>().cellSize = new Vector2(cellSize, cellSize);
         }
 
         private void InitializeLanterns(int length)
@@ -125,12 +125,6 @@ namespace BlackBox
                 lanternMounts[i].SetActive(true);
                 lanternMounts[i].GetComponent<LanternMount>().SetColliderActive(gridSize);
             }
-        }
-
-        private void InitializeEnergyBar()
-        {
-            numEnergyUnits = level.numEnergyUnits;
-            GameEvents.InitEnergyBar?.Invoke(numEnergyUnits);
         }
 
         private void ReturnLanternHome(GameObject lantern)
@@ -174,11 +168,6 @@ namespace BlackBox
         {
             foreach (Transform cell in parent.transform)
                 Destroy(cell.gameObject);
-        }
-
-        private GridLayoutGroup GetGLG(GameObject GO)
-        {
-            return GO.GetComponent<GridLayoutGroup>();
         }
 
         #endregion

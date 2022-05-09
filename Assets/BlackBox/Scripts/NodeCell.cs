@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,10 +11,9 @@ namespace BlackBox
         private bool debug = false; //todo: debug, delete later
 
         [SerializeField] private LanternMount lanternMount = null;
-
-        public GameObject nodeObj = null;
-        public Button[] buttons; //todo: debug, delete later
-        public TextMeshProUGUI text;
+        [SerializeField] private GameObject nodeObj = null;
+        [SerializeField] private Button[] buttons; //todo: debug, delete later
+        [SerializeField] private TextMeshProUGUI text;
 
         protected override void Start()
         {

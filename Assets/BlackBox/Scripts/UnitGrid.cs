@@ -10,7 +10,10 @@ namespace BlackBox
         private NavCell[,] cellArray = null;
 
         private static int colorIndex = -1;
-        private static readonly Color[] colorArray = new Color[] { Color.red, Color.blue, Color.green, Color.cyan, Color.black, Color.grey, Color.magenta, Color.yellow };
+        private static readonly Color[] colorArray = new Color[] { 
+            Color.red, Color.blue, Color.green, Color.magenta, 
+            Color.cyan, Color.black, Color.grey, Color.yellow 
+        };
 
         private void OnDestroy()
         {
