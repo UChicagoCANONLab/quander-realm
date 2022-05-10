@@ -37,7 +37,7 @@ namespace BlackBox
                 }
             }
 
-            BlackBoxEvents.MarkUnits += MarkUnits;
+            BlackBoxEvents.MarkUnits += MarkUnits; //todo: creating new grids re-registers
         }
 
         private void MarkUnits(string text, Dir gridDirection, Vector3Int destPosition, bool isDetour, bool nextColor)

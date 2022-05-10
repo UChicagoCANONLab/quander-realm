@@ -48,7 +48,6 @@ namespace BlackBox
 
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
             InitializeLanterns(level.nodePositions.Length);
-            BlackBoxEvents.InitEnergyBar?.Invoke(level.numEnergyUnits);
         }
 
         //todo: Delete Update() later
@@ -82,6 +81,7 @@ namespace BlackBox
         private void CreateAllGrids(GridSize gSize)
         {
             gridSize = gSize;
+            BlackBoxEvents.InitEnergyBar?.Invoke(level.numEnergyUnits); //todo: move this to start when debugging is removed
 
             CreateMainGrid();
 
