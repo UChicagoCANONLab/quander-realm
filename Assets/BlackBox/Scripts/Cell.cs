@@ -5,12 +5,13 @@ namespace BlackBox
 {
     public abstract class Cell : MonoBehaviour
     {
-        public GameObject background;
-        public Button button;
-
         [SerializeField] protected Vector3Int gridPosition = Vector3Int.zero;
-        [HideInInspector] public Dir direction;
-        [HideInInspector] public CellType cellType;
+        [SerializeField] protected GameObject background = null;
+        [SerializeField] protected Animator animator = null;
+        [SerializeField] private Button button = null;
+
+        [HideInInspector] public Dir direction = Dir.None;
+        [HideInInspector] public CellType cellType = CellType.EdgeNode;
 
         protected virtual void Start()
         {

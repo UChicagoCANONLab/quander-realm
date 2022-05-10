@@ -5,7 +5,7 @@ namespace BlackBox
 {
     public class NavCell : Cell
     {
-        [SerializeField] private TextMeshProUGUI markerText;
+        [SerializeField] private TextMeshProUGUI markerText = null;
 
         private bool isMarked = false;
 
@@ -19,10 +19,11 @@ namespace BlackBox
 
         public override void SetValue(string value, Color color)
         {
-            markerText.gameObject.SetActive(true);
+            background.gameObject.SetActive(true);
             markerText.color = color;
             markerText.text = value;
             isMarked = true;
+            
         }
 
         public override bool HasNode()

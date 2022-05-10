@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,8 +13,8 @@ namespace BlackBox
 
         [SerializeField] private LanternMount lanternMount = null;
         [SerializeField] private GameObject nodeObj = null;
-        [SerializeField] private Button[] buttons; //todo: debug, delete later
-        [SerializeField] private TextMeshProUGUI text;
+        [SerializeField] private List<Button> buttons = null; //todo: debug, delete later
+        [SerializeField] private TextMeshProUGUI text = null;
 
         protected override void Start()
         {
@@ -58,6 +59,7 @@ namespace BlackBox
             text.text = gridPosition.x.ToString() + ", " + gridPosition.y.ToString();
             BlackBoxEvents.ToggleDebug.AddListener(ToggleDebug);
 
+            buttons = new List<Button>();
             foreach (Button button in buttons)
                 button.onClick.AddListener(() => { if (debug) Interact(); });
         }
