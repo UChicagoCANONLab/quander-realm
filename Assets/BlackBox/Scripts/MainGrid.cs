@@ -86,7 +86,7 @@ namespace BlackBox
         {
             if (energyUnits == 0)
             {
-                Debug.Log("Out of energy, can't fire ray");
+                BlackBoxEvents.IndicateEmptyMeter?.Invoke();
                 return;
             }
 

@@ -15,11 +15,9 @@ namespace BlackBox
         public static Action<GameObject> ReturnLanternHome;
 
         public static Action DecrementEnergy;
+        public static Action IndicateEmptyMeter;
         public static Action<int> InitEnergyBar;
 
-        public static Action<string> SetEndPanelText;
+        public static Action CheckWinState;
     }
-
-    public class TextEvent : UnityEvent<string> { }
-
 }

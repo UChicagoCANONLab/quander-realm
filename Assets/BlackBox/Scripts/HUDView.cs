@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BlackBox
 {
@@ -7,22 +10,32 @@ namespace BlackBox
     {
         [SerializeField] private GameObject unitContainer = null;
         [SerializeField] private GameObject unitPrefab = null;
+        [SerializeField] private Button wolfieButton = null;
 
+        private Animator HUDAnimator = null;
         private List<Animator> reversedAnimatorList = null;
+
+        private void Awake()
+        {
+            wolfieButton.onClick.AddListener(() => BlackBoxEvents.CheckWinState?.Invoke());
+            HUDAnimator = GetComponent<Animator>();
+        }
 
         private void OnEnable()
         {
-            BlackBoxEvents.InitEnergyBar += Init;
-            BlackBoxEvents.DecrementEnergy += DecrementEnergyBar;
+            BlackBoxEvents.InitEnergyBar += InitEnergyBar;
+            BlackBoxEvents.IndicateEmptyMeter += IndicateEmpty;
+            BlackBoxEvents.DecrementEnergy += DecrementEnergy;
         }
 
         private void OnDisable()
         {
-            BlackBoxEvents.InitEnergyBar -= Init;
-            BlackBoxEvents.DecrementEnergy -= DecrementEnergyBar;
+            BlackBoxEvents.InitEnergyBar -= InitEnergyBar;
+            BlackBoxEvents.IndicateEmptyMeter -= IndicateEmpty;
+            BlackBoxEvents.DecrementEnergy -= DecrementEnergy;
         }
 
-        private void Init(int numUnits)
+        private void InitEnergyBar(int numUnits)
         {
             foreach (Transform child in unitContainer.transform)
                 Destroy(child.gameObject);
@@ -35,7 +48,12 @@ namespace BlackBox
             }
         }
 
-        private void DecrementEnergyBar()
+        private void IndicateEmpty()
+        {
+            HUDAnimator.SetTrigger("EmptyMeter");
+        }
+
+        private void DecrementEnergy()
         {
             foreach(Animator animator in reversedAnimatorList)
             {

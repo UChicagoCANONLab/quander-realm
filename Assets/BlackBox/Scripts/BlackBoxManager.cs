@@ -7,8 +7,7 @@ namespace BlackBox
     {
         #region Variables
 
-        [SerializeField] private Button wolfieButton = null; //todo: use an event instead of this reference
-        [SerializeField] private GameObject EndPanel = null; //todo: use an event instead of this reference
+        [SerializeField] private EndPanel endPanel = null;
         [SerializeField] private Level level = null;
 
         [Header("Grid Containers")]
@@ -42,9 +41,6 @@ namespace BlackBox
 
         void Start()
         {
-            wolfieButton.onClick.AddListener(CheckWinState);
-            //GameEvents.CheckWinState.AddListener(CheckWinState);
-
             if (level == null)
                 CreateAllGrids(gridSize);
             else
@@ -74,11 +70,13 @@ namespace BlackBox
         private void OnEnable()
         {
             BlackBoxEvents.ReturnLanternHome += ReturnLanternHome;
+            BlackBoxEvents.CheckWinState += CheckWinState;
         }
 
         private void OnDisable()
         {
             BlackBoxEvents.ReturnLanternHome -= ReturnLanternHome;
+            BlackBoxEvents.CheckWinState -= CheckWinState;
         }
 
         private void CreateAllGrids(GridSize gSize)
@@ -154,21 +152,11 @@ namespace BlackBox
 
         private void CheckWinState()
         {
-            int numCorrect = mainGridGO.GetComponent<MainGrid>().GetNumCorrect(level.nodePositions);
-            int numNodes = level.nodePositions.Length;
+            WinState winState = new(level.nodePositions.Length, 
+                mainGridGO.GetComponent<MainGrid>().GetNumCorrect(level.nodePositions)); // todo: add level.reward here
 
-            EndPanel.SetActive(true);
-
-            if (numCorrect == numNodes)
-            {
-                BlackBoxEvents.SetEndPanelText?.Invoke("You Won!");
-                Debug.Log("Win");
-            }
-            else
-            {
-                BlackBoxEvents.SetEndPanelText?.Invoke("You found " + numCorrect + " out of " + numNodes + " nodes.");
-                Debug.LogFormat("Lose: {0}/{1}", numCorrect, numNodes);
-            }
+            endPanel.gameObject.SetActive(true);
+            endPanel.UpdatePanel(winState);
         }
 
         #region Helpers
