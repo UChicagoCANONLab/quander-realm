@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -25,6 +26,16 @@ namespace BlackBox
             SetupDebug();
         }
 
+        private void OnEnable()
+        {
+            BlackBoxEvents.ToggleLanternHeld += ToggleLanternHeld;
+        }
+
+        private void OnDisable()
+        {
+            BlackBoxEvents.ToggleLanternHeld -= ToggleLanternHeld;
+        }
+
         public override void Interact()
         {
             if (cellType == CellType.EdgeNode)
@@ -48,10 +59,17 @@ namespace BlackBox
             return hasFlag;
         }
 
-        public void ToggleFlag(bool toggle)
+        public void ToggleFlag(bool isOn)
         {
-            hasFlag = toggle;
+            hasFlag = isOn;
         }
+
+        private void ToggleLanternHeld(bool isOn)
+        {
+            animator.SetBool("NodeCell/Lantern", isOn);
+        }
+
+        #region Debug
 
         //todo: debug, delete later
         private void SetupDebug()
@@ -75,5 +93,7 @@ namespace BlackBox
 
             nodeObj.SetActive(debug);
         }
+
+        #endregion
     }
 }

@@ -11,6 +11,8 @@ namespace BlackBox
         public bool isEmpty = true;
         public GameObject[] colliders;
 
+        [SerializeField] private Animator nodeCellAnimator = null;
+
         private void Start()
         {
             EvaluateEmpty();   
@@ -67,7 +69,9 @@ namespace BlackBox
 
                 mountedLantern = droppedLantern;
                 isEmpty = false;
-                Debug.LogFormat("Dropped on {0}, {1}", gridPosition.x, gridPosition.y);
+
+                if (nodeCellAnimator != null)
+                    nodeCellAnimator.SetBool("NodeCell/Flagged", true);
             }
             else
             {
@@ -84,7 +88,9 @@ namespace BlackBox
 
             BlackBoxEvents.ToggleFlag.Invoke(gridPosition, false);
             isEmpty = true;
-            Debug.LogFormat("Removed from {0}, {1}", gridPosition.x, gridPosition.y);
+
+            if (nodeCellAnimator != null)
+                nodeCellAnimator.SetBool("NodeCell/Flagged", false);
         }
     }
 }

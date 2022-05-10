@@ -22,8 +22,9 @@ namespace BlackBox
             background.gameObject.SetActive(true);
             markerText.color = color;
             markerText.text = value;
+
             isMarked = true;
-            
+            animator.SetBool("NavCell/Measurement", true);
         }
 
         public override bool HasNode()
