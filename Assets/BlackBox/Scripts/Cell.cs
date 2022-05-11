@@ -20,8 +20,6 @@ namespace BlackBox
 
         public abstract void Interact();
 
-        public virtual void SetValue(string value, Color color) { }
-
         public abstract bool HasNode();
 
         public Cell Create(int xPos, int yPos, CellType cellType, Dir direction = Dir.None)

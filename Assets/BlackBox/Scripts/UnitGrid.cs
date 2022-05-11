@@ -17,7 +17,8 @@ namespace BlackBox
 
         private void OnDestroy()
         {
-            BlackBoxEvents.MarkUnits -= MarkUnits;
+            BlackBoxEvents.MarkUnits -= MarkUnit;
+            BlackBoxEvents.MarkDetourUnits -= MarkLinkedUnits;
         }
 
         public void Create(int width, int height, Dir direction = Dir.None)
@@ -37,24 +38,35 @@ namespace BlackBox
                 }
             }
 
-            BlackBoxEvents.MarkUnits += MarkUnits; //todo: creating new grids re-registers
+            BlackBoxEvents.MarkUnits += MarkUnit; //todo: creating new grids re-registers
+            BlackBoxEvents.MarkDetourUnits += MarkLinkedUnits; //todo: creating new grids re-registers
         }
 
-        private void MarkUnits(string text, Dir gridDirection, Vector3Int destPosition, bool isDetour, bool nextColor)
+        private void MarkUnit(string text, Dir gridDirection, Vector3Int destPosition)
         {
             if (direction != gridDirection)
                 return;
 
-            if (nextColor)
-            {
-                if (colorIndex == colorArray.Length - 1) //temp: reset if last color
-                    colorIndex = -1;
+            cellArray[destPosition.x, destPosition.y].SetValue(text);
+        }
 
-                colorIndex++;
+        //todo: clean up?
+        private void MarkLinkedUnits(Dir entryDirection, Vector3Int entryPosition, Dir exitDirection, Vector3Int exitPosition)
+        {
+            //Entry Cell
+            if (entryDirection == direction)
+            {
+                //if (colorIndex == colorArray.Length - 1) //temp: reset if last color
+                //    colorIndex = -1;
+
+                //colorIndex++; // todo: this isn't guaranteed to happen before the exit part of the function
+
+                cellArray[entryPosition.x, entryPosition.y].SetValue("D", Color.white, exitDirection, exitPosition);
             }
 
-            Color color = isDetour ? colorArray[colorIndex] : Color.white;
-            cellArray[destPosition.x, destPosition.y].SetValue(text, color);
+            //Exit Cell
+            if (exitDirection == direction)
+                cellArray[exitPosition.x, exitPosition.y].SetValue("D", Color.white, entryDirection, entryPosition);
         }
     }
 }
