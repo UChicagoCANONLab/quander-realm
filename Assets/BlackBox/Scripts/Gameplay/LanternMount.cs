@@ -8,9 +8,10 @@ namespace BlackBox
         private Vector3Int gridPosition = Vector3Int.back;
         private GameObject mountedLantern = null;
 
-        public bool isEmpty = true;
+        public bool isEmpty = false;
         public GameObject[] colliders;
 
+        [SerializeField] private Canvas canvas = null;
         [SerializeField] private Animator nodeCellAnimator = null;
 
         private void Start()
@@ -40,6 +41,12 @@ namespace BlackBox
                     }
                 }
             }
+        }
+
+        public void SetMountedLantern(GameObject lanternGO)
+        {
+            mountedLantern = lanternGO;
+            mountedLantern.GetComponent<Lantern>().SetCanvas(canvas);
         }
 
         public void SetColliderActive(GridSize gridSize)

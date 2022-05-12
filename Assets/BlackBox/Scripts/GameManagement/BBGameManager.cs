@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,8 +8,6 @@ namespace BlackBox
     {
         #region Inspector Variables
 
-        [SerializeField] private Level level = null;
-
         [Header("Grid Containers")]
         [SerializeField] private GameObject mainGridGO = null;
         [SerializeField] private GameObject leftGridGO = null;
@@ -16,7 +15,8 @@ namespace BlackBox
         [SerializeField] private GameObject rightGridGO = null;
         [SerializeField] private GameObject topGridGO = null;
 
-        [Header("Lantern Mounts")]
+        [Header("Lantern and Mounts")]
+        [SerializeField] private GameObject lanternPrefab = null;
         [SerializeField] private GameObject[] lanternMounts = null;
 
         [Header("Grid and Cell Size")]
@@ -38,34 +38,32 @@ namespace BlackBox
 
         #endregion
 
-        private int livesRemaining = 3;
+        private const int totalLives = 3;
+        private const string levelsPath = "BlackBox/Levels";
+        private const string firstLevelID = "L1"; // todo: refactor
+        private Level level = null;
+        private int livesRemaining;
         private int totalNodes;
 
         #region Unity Functions
 
         void Start()
         {
-            if (level == null)
-                CreateAllGrids(gridSize);
-            else
-                CreateAllGrids(level.gridSize);
-
-            mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
-            totalNodes = level.nodePositions.Length;
-            InitializeLanterns(level.nodePositions.Length);
+            level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
+            StartLevel();
         }
 
         //todo: Delete Update() later
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha5))
-                CreateAllGrids(GridSize.Small);
+            //if (Input.GetKeyDown(KeyCode.Alpha5))
+            //    CreateAllGrids(GridSize.Small);
 
-            if (Input.GetKeyDown(KeyCode.Alpha6))
-                CreateAllGrids(GridSize.Medium);
+            //if (Input.GetKeyDown(KeyCode.Alpha6))
+            //    CreateAllGrids(GridSize.Medium);
 
-            if (Input.GetKeyDown(KeyCode.Alpha7))
-                CreateAllGrids(GridSize.Large);
+            //if (Input.GetKeyDown(KeyCode.Alpha7))
+            //    CreateAllGrids(GridSize.Large);
 
             if (Input.GetKeyDown(KeyCode.D))
                 BBEvents.ToggleDebug?.Invoke();
@@ -75,12 +73,62 @@ namespace BlackBox
         {
             BBEvents.ReturnLanternHome += ReturnLanternHome;
             BBEvents.CheckWinState += CheckWinState;
+            BBEvents.StartNextLevel += NextLevel;
         }
 
         private void OnDisable()
         {
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
             BBEvents.CheckWinState -= CheckWinState;
+            BBEvents.StartNextLevel -= NextLevel;
+        }
+
+        #endregion
+
+        #region Level Management
+
+        private void StartLevel()
+        {
+            CreateAllGrids(level.gridSize);
+            mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
+
+            totalNodes = level.nodePositions.Length;
+            livesRemaining = totalLives;
+
+            BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
+            BBEvents.InitEnergyBar?.Invoke(level.numEnergyUnits);
+
+            InitializeLanterns(level.nodePositions.Length);
+        }
+
+        private void NextLevel()
+        {
+            if (level.nextLevelID == string.Empty)
+            {
+                Debug.LogFormat("Next level not set for the level: {0}", level.levelID);
+                return;
+            }   
+
+            // reusing the SetNodes function. Toggles the initially set nodes off
+            mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions); // todo: refactor
+
+            level = Resources.Load<Level>(Path.Combine(levelsPath, level.nextLevelID));
+            StartLevel();
+        }
+
+        private void CheckWinState()
+        {
+            int numCorrect = mainGridGO.GetComponent<MainGrid>().GetNumCorrect(level.nodePositions);
+            bool levelWon = totalNodes == numCorrect;
+
+            if (!levelWon)
+            {
+                livesRemaining--;
+                BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
+            }
+
+            WinState winState = new(totalNodes, numCorrect, levelWon, livesRemaining); // todo: add level.reward here
+            BBEvents.UpdateEndPanel?.Invoke(winState);
         }
 
         #endregion
@@ -90,7 +138,6 @@ namespace BlackBox
         private void CreateAllGrids(GridSize gSize)
         {
             gridSize = gSize;
-            BBEvents.InitEnergyBar?.Invoke(level.numEnergyUnits); //todo: move this to start when debugging is removed
 
             CreateMainGrid();
 
@@ -146,10 +193,25 @@ namespace BlackBox
 
         private void InitializeLanterns(int length)
         {
+            ResetLanternsAndMounts();
+
             for (int i = 0; i < length; i++)
             {
                 lanternMounts[i].SetActive(true);
                 lanternMounts[i].GetComponent<LanternMount>().SetColliderActive(gridSize);
+            }
+        }
+
+        private void ResetLanternsAndMounts()
+        {
+            foreach (GameObject mountObject in lanternMounts)
+            {
+                mountObject.SetActive(false);
+
+                LanternMount mount = mountObject.GetComponent<LanternMount>();
+                mount.EvaluateEmpty();
+                if (mount.isEmpty)
+                    mount.SetMountedLantern(Instantiate(lanternPrefab, mountObject.transform));
             }
         }
 
@@ -170,20 +232,5 @@ namespace BlackBox
         }
 
         #endregion
-
-        private void CheckWinState()
-        {
-            int numCorrect = mainGridGO.GetComponent<MainGrid>().GetNumCorrect(level.nodePositions);
-            bool levelWon = totalNodes == numCorrect;
-
-            if (!levelWon)
-            { 
-                livesRemaining--;
-                BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
-            }
-
-            WinState winState = new(totalNodes, numCorrect, levelWon, livesRemaining); // todo: add level.reward here
-            BBEvents.UpdateEndPanel?.Invoke(winState);
-        }
     }
 }

@@ -29,5 +29,6 @@ namespace BlackBox
         public static Action CheckWinState;
         public static Action<int> UpdateHUDWolfieLives;
         public static Action<WinState> UpdateEndPanel;
+        public static Action StartNextLevel;
     }
 }

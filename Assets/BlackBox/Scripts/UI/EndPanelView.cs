@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,15 +47,25 @@ namespace BlackBox
             restartLevelGO.GetComponent<Button>().onClick.AddListener(() => animator.SetBool("On", false));
             quitGO.GetComponent<Button>().onClick.AddListener(() => animator.SetBool("On", false));
             keepPlayingGO.GetComponent<Button>().onClick.AddListener(() => animator.SetBool("On", false));
-            nextLevelGO.GetComponent<Button>().onClick.AddListener(() => animator.SetBool("On", false));
+            nextLevelGO.GetComponent<Button>().onClick.AddListener(StartNextLevel);
         }
 
-        private void DisableAllButtons()
+        private void StartNextLevel()
+        {
+            animator.SetBool("On", false);
+            BBEvents.StartNextLevel?.Invoke();
+        }
+
+        private void DisableAllElements()
         {
             restartLevelGO.SetActive(false);
             quitGO.SetActive(false);
             keepPlayingGO.SetActive(false);
             nextLevelGO.SetActive(false);
+
+            winImage.SetActive(false);
+            notYetImage.SetActive(false);
+            loseImage.SetActive(false);
         }
 
         #endregion
@@ -63,11 +74,12 @@ namespace BlackBox
 
         private void UpdatePanel(WinState winState)
         {
-            DisableAllButtons();
+            DisableAllElements();
             animator.SetBool("On", true);
 
             if (winState.levelWon)
                 SetInfo(winImage, headerText: "We did it!", subHeaderText: "We found all of the items!", nextLevelGO);
+
             else
             {
                 animator.SetInteger("Lives", winState.livesRemaining);

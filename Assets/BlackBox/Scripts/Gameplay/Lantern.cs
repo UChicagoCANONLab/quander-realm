@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,12 +11,16 @@ namespace BlackBox
         [SerializeField] private Canvas canvas;
         [SerializeField] private Animator animator;
         [SerializeField] private Transform frontMountTransform = null;
-        //[SerializeField] private GameObject handle;
 
         private void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
+        }
+
+        public void SetCanvas(Canvas canvas)
+        {
+            this.canvas = canvas;
         }
 
         #region Interface Functions
