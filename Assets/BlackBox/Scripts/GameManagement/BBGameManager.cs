@@ -3,11 +3,10 @@ using UnityEngine.UI;
 
 namespace BlackBox
 {
-    public class BlackBoxManager : MonoBehaviour
+    public class BBGameManager : MonoBehaviour
     {
-        #region Variables
+        #region Inspector Variables
 
-        [SerializeField] private EndPanel endPanel = null;
         [SerializeField] private Level level = null;
 
         [Header("Grid Containers")]
@@ -39,6 +38,11 @@ namespace BlackBox
 
         #endregion
 
+        private int livesRemaining = 3;
+        private int totalNodes;
+
+        #region Unity Functions
+
         void Start()
         {
             if (level == null)
@@ -47,6 +51,7 @@ namespace BlackBox
                 CreateAllGrids(level.gridSize);
 
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
+            totalNodes = level.nodePositions.Length;
             InitializeLanterns(level.nodePositions.Length);
         }
 
@@ -63,25 +68,29 @@ namespace BlackBox
                 CreateAllGrids(GridSize.Large);
 
             if (Input.GetKeyDown(KeyCode.D))
-                BlackBoxEvents.ToggleDebug?.Invoke();
+                BBEvents.ToggleDebug?.Invoke();
         }
 
         private void OnEnable()
         {
-            BlackBoxEvents.ReturnLanternHome += ReturnLanternHome;
-            BlackBoxEvents.CheckWinState += CheckWinState;
+            BBEvents.ReturnLanternHome += ReturnLanternHome;
+            BBEvents.CheckWinState += CheckWinState;
         }
 
         private void OnDisable()
         {
-            BlackBoxEvents.ReturnLanternHome -= ReturnLanternHome;
-            BlackBoxEvents.CheckWinState -= CheckWinState;
+            BBEvents.ReturnLanternHome -= ReturnLanternHome;
+            BBEvents.CheckWinState -= CheckWinState;
         }
+
+        #endregion
+
+        #region Grids
 
         private void CreateAllGrids(GridSize gSize)
         {
             gridSize = gSize;
-            BlackBoxEvents.InitEnergyBar?.Invoke(level.numEnergyUnits); //todo: move this to start when debugging is removed
+            BBEvents.InitEnergyBar?.Invoke(level.numEnergyUnits); //todo: move this to start when debugging is removed
 
             CreateMainGrid();
 
@@ -125,6 +134,16 @@ namespace BlackBox
             parent.GetComponent<GridLayoutGroup>().cellSize = new Vector2(cellSize, cellSize);
         }
 
+        private void ClearChildren(GameObject parent)
+        {
+            foreach (Transform cell in parent.transform)
+                Destroy(cell.gameObject);
+        }
+
+        #endregion
+
+        #region Lanterns
+
         private void InitializeLanterns(int length)
         {
             for (int i = 0; i < length; i++)
@@ -150,23 +169,21 @@ namespace BlackBox
             }
         }
 
+        #endregion
+
         private void CheckWinState()
         {
-            WinState winState = new(level.nodePositions.Length, 
-                mainGridGO.GetComponent<MainGrid>().GetNumCorrect(level.nodePositions)); // todo: add level.reward here
+            int numCorrect = mainGridGO.GetComponent<MainGrid>().GetNumCorrect(level.nodePositions);
+            bool levelWon = totalNodes == numCorrect;
 
-            endPanel.gameObject.SetActive(true);
-            endPanel.UpdatePanel(winState);
+            if (!levelWon)
+            { 
+                livesRemaining--;
+                BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
+            }
+
+            WinState winState = new(totalNodes, numCorrect, levelWon, livesRemaining); // todo: add level.reward here
+            BBEvents.UpdateEndPanel?.Invoke(winState);
         }
-
-        #region Helpers
-
-        private void ClearChildren(GameObject parent)
-        {
-            foreach (Transform cell in parent.transform)
-                Destroy(cell.gameObject);
-        }
-
-        #endregion
     }
 }

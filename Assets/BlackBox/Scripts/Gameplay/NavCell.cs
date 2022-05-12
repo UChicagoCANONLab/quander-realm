@@ -19,7 +19,7 @@ namespace BlackBox
             if (isMarked)
                 return;
 
-            BlackBoxEvents.FireRay?.Invoke(gridPosition, direction);
+            BBEvents.FireRay?.Invoke(gridPosition, direction);
         }
 
         public void SetValue(string value)
@@ -52,12 +52,12 @@ namespace BlackBox
 
         private void OnEnable()
         {
-            BlackBoxEvents.ToggleLinkedHighlight += ToggleLinkedHighlight;
+            BBEvents.ToggleLinkedHighlight += ToggleLinkedHighlight;
         }
 
         private void OnDisable()
         {
-            BlackBoxEvents.ToggleLinkedHighlight -= ToggleLinkedHighlight;
+            BBEvents.ToggleLinkedHighlight -= ToggleLinkedHighlight;
         }
 
         private void ToggleLinkedHighlight(string triggerName, Dir linkedCellDirection, Vector3Int linkedCellPosition)
@@ -69,13 +69,13 @@ namespace BlackBox
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (isLinked)
-                BlackBoxEvents.ToggleLinkedHighlight?.Invoke("Highlighted", linkedCellDirection, linkedCellPosition);
+                BBEvents.ToggleLinkedHighlight?.Invoke("Highlighted", linkedCellDirection, linkedCellPosition);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             if (isLinked)
-                BlackBoxEvents.ToggleLinkedHighlight?.Invoke("Normal", linkedCellDirection, linkedCellPosition);
+                BBEvents.ToggleLinkedHighlight?.Invoke("Normal", linkedCellDirection, linkedCellPosition);
         }
 
         #endregion

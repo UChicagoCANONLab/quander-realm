@@ -17,8 +17,8 @@ namespace BlackBox
 
         private void OnDestroy()
         {
-            BlackBoxEvents.MarkUnits -= MarkUnit;
-            BlackBoxEvents.MarkDetourUnits -= MarkLinkedUnits;
+            BBEvents.MarkUnits -= MarkUnit;
+            BBEvents.MarkDetourUnits -= MarkLinkedUnits;
         }
 
         public void Create(int width, int height, Dir direction = Dir.None)
@@ -38,8 +38,8 @@ namespace BlackBox
                 }
             }
 
-            BlackBoxEvents.MarkUnits += MarkUnit; //todo: creating new grids re-registers
-            BlackBoxEvents.MarkDetourUnits += MarkLinkedUnits; //todo: creating new grids re-registers
+            BBEvents.MarkUnits += MarkUnit; //todo: creating new grids re-registers
+            BBEvents.MarkDetourUnits += MarkLinkedUnits; //todo: creating new grids re-registers
         }
 
         private void MarkUnit(string text, Dir gridDirection, Vector3Int destPosition)

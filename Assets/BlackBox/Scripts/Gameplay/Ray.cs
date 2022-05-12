@@ -52,18 +52,18 @@ namespace BlackBox
                     if (directHit)
                     {
                         //Hit
-                        BlackBoxEvents.MarkUnits?.Invoke("H", originDirection, origin);
+                        BBEvents.MarkUnits?.Invoke("H", originDirection, origin);
                     }
                     else // only other case for returning to the same cell is a reflection
                     {
                         //Reflect
-                        BlackBoxEvents.MarkUnits?.Invoke("R", originDirection, origin);
+                        BBEvents.MarkUnits?.Invoke("R", originDirection, origin);
                     }
                 }
                 else // different cell
                 {
                     //Detour
-                    BlackBoxEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination);
+                    BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination);
                 }
             }
             else // diff entry/exit direction
@@ -71,13 +71,13 @@ namespace BlackBox
                 if (rayDetoured)
                 {
                     //Detour
-                    BlackBoxEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination);
+                    BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination);
                 }
                 else // straight through
                 {
                     //Miss
-                    BlackBoxEvents.MarkUnits?.Invoke("M", originDirection, origin);
-                    BlackBoxEvents.MarkUnits?.Invoke("M", destDirection, destination);
+                    BBEvents.MarkUnits?.Invoke("M", originDirection, origin);
+                    BBEvents.MarkUnits?.Invoke("M", destDirection, destination);
                 }
             }
         }
