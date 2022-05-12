@@ -65,7 +65,7 @@ namespace BlackBox
                 droppedLantern.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
                 if (gridPosition != Vector3Int.back) // using "back" or (0, 0, -1) as default. Z will be 0 instead if this mount belongs to a cell
-                    BlackBoxEvents.ToggleFlag.Invoke(gridPosition, true);
+                    BBEvents.ToggleFlag.Invoke(gridPosition, true);
 
                 mountedLantern = droppedLantern;
                 isEmpty = false;
@@ -75,7 +75,7 @@ namespace BlackBox
             }
             else
             {
-                BlackBoxEvents.ReturnLanternHome?.Invoke(droppedLantern);
+                BBEvents.ReturnLanternHome?.Invoke(droppedLantern);
             }
         }
 
@@ -86,7 +86,7 @@ namespace BlackBox
             if (eventData.pointerDrag.GetComponent<Lantern>() == null) return;
             if (eventData.pointerDrag != mountedLantern) return;
 
-            BlackBoxEvents.ToggleFlag.Invoke(gridPosition, false);
+            BBEvents.ToggleFlag.Invoke(gridPosition, false);
             isEmpty = true;
 
             if (nodeCellAnimator != null)

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,23 +15,32 @@ namespace BlackBox
 
         private void Awake()
         {
-            wolfieButton.onClick.AddListener(() => BlackBoxEvents.CheckWinState?.Invoke());
+            wolfieButton.onClick.AddListener(() => BBEvents.CheckWinState?.Invoke());
             HUDAnimator = GetComponent<Animator>();
         }
 
         private void OnEnable()
         {
-            BlackBoxEvents.InitEnergyBar += InitEnergyBar;
-            BlackBoxEvents.IndicateEmptyMeter += IndicateEmpty;
-            BlackBoxEvents.DecrementEnergy += DecrementEnergy;
+            BBEvents.InitEnergyBar += InitEnergyBar;
+            BBEvents.IndicateEmptyMeter += IndicateEmpty;
+            BBEvents.DecrementEnergy += DecrementEnergy;
+            BBEvents.UpdateHUDWolfieLives += UpdateWolfieLives;
         }
 
         private void OnDisable()
         {
-            BlackBoxEvents.InitEnergyBar -= InitEnergyBar;
-            BlackBoxEvents.IndicateEmptyMeter -= IndicateEmpty;
-            BlackBoxEvents.DecrementEnergy -= DecrementEnergy;
+            BBEvents.InitEnergyBar -= InitEnergyBar;
+            BBEvents.IndicateEmptyMeter -= IndicateEmpty;
+            BBEvents.DecrementEnergy -= DecrementEnergy;
+            BBEvents.UpdateHUDWolfieLives -= UpdateWolfieLives;
         }
+
+        private void UpdateWolfieLives(int livesRemaining)
+        {
+            HUDAnimator.SetInteger("Lives", livesRemaining);
+        }
+
+        #region Energy Bar
 
         private void InitEnergyBar(int numUnits)
         {
@@ -64,5 +71,7 @@ namespace BlackBox
                 }
             }
         }
+
+        #endregion
     }
 }

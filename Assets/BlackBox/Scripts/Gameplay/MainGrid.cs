@@ -16,8 +16,8 @@ namespace BlackBox
 
         private void OnDestroy()
         {   
-            BlackBoxEvents.FireRay -= FireRay;
-            BlackBoxEvents.ToggleFlag -= ToggleFlag;
+            BBEvents.FireRay -= FireRay;
+            BBEvents.ToggleFlag -= ToggleFlag;
         }
 
         public void Create(int width, int height, int numEnergyUnits)
@@ -54,8 +54,8 @@ namespace BlackBox
 
         private void SetupListeners()
         {
-            BlackBoxEvents.FireRay += FireRay;
-            BlackBoxEvents.ToggleFlag += ToggleFlag;
+            BBEvents.FireRay += FireRay;
+            BBEvents.ToggleFlag += ToggleFlag;
         }
 
         private void ToggleFlag(Vector3Int gridPosition, bool toggle)
@@ -86,12 +86,12 @@ namespace BlackBox
         {
             if (energyUnits == 0)
             {
-                BlackBoxEvents.IndicateEmptyMeter?.Invoke();
+                BBEvents.IndicateEmptyMeter?.Invoke();
                 return;
             }
 
             energyUnits--;
-            BlackBoxEvents.DecrementEnergy?.Invoke();
+            BBEvents.DecrementEnergy?.Invoke();
             ray = new Ray(rayOrigin, rayDirection, width, height);
 
             while (RayInPlay())

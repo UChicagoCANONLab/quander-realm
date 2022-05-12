@@ -28,12 +28,12 @@ namespace BlackBox
 
         private void OnEnable()
         {
-            BlackBoxEvents.ToggleLanternHeld += ToggleLanternHeld;
+            BBEvents.ToggleLanternHeld += ToggleLanternHeld;
         }
 
         private void OnDisable()
         {
-            BlackBoxEvents.ToggleLanternHeld -= ToggleLanternHeld;
+            BBEvents.ToggleLanternHeld -= ToggleLanternHeld;
         }
 
         public override void Interact()
@@ -75,7 +75,7 @@ namespace BlackBox
         private void SetupDebug()
         {
             text.text = gridPosition.x.ToString() + ", " + gridPosition.y.ToString();
-            BlackBoxEvents.ToggleDebug.AddListener(ToggleDebug);
+            BBEvents.ToggleDebug.AddListener(ToggleDebug);
 
             buttons = new List<Button>();
             foreach (Button button in buttons)

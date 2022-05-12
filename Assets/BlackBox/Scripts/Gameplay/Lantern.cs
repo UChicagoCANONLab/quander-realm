@@ -25,7 +25,7 @@ namespace BlackBox
         public void OnPointerDown(PointerEventData eventData)
         {
             animator.SetBool("Hold", true);
-            BlackBoxEvents.ToggleLanternHeld?.Invoke(true);
+            BBEvents.ToggleLanternHeld?.Invoke(true);
         }
 
         //todo: tween anchored position to handle's position
@@ -57,7 +57,7 @@ namespace BlackBox
         public void OnPointerUp(PointerEventData eventData)
         {
             animator.SetBool("Hold", false);
-            BlackBoxEvents.ToggleLanternHeld?.Invoke(false);
+            BBEvents.ToggleLanternHeld?.Invoke(false);
             //drop?
         }
 
