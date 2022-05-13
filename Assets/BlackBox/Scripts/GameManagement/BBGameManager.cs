@@ -8,6 +8,8 @@ namespace BlackBox
     {
         #region Inspector Variables
 
+        [SerializeField] private string firstLevelID = "L01"; // todo: refactor
+
         [Header("Grid Containers")]
         [SerializeField] private GameObject mainGridGO = null;
         [SerializeField] private GameObject leftGridGO = null;
@@ -38,12 +40,11 @@ namespace BlackBox
 
         #endregion
 
-        private const int totalLives = 3;
         private const string levelsPath = "BlackBox/Levels";
-        private const string firstLevelID = "L1"; // todo: refactor
-        private Level level = null;
+        private const int totalLives = 3;
         private int livesRemaining;
         private int totalNodes;
+        private Level level = null;
 
         #region Unity Functions
 

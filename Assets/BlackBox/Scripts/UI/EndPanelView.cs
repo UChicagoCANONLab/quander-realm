@@ -56,18 +56,6 @@ namespace BlackBox
             BBEvents.StartNextLevel?.Invoke();
         }
 
-        private void DisableAllElements()
-        {
-            restartLevelGO.SetActive(false);
-            quitGO.SetActive(false);
-            keepPlayingGO.SetActive(false);
-            nextLevelGO.SetActive(false);
-
-            winImage.SetActive(false);
-            notYetImage.SetActive(false);
-            loseImage.SetActive(false);
-        }
-
         #endregion
 
         #region Update Panel
@@ -95,12 +83,26 @@ namespace BlackBox
             }
         }
 
+        private void DisableAllElements()
+        {
+            restartLevelGO.SetActive(false);
+            quitGO.SetActive(false);
+            keepPlayingGO.SetActive(false);
+            nextLevelGO.SetActive(false);
+
+            winImage.SetActive(false);
+            notYetImage.SetActive(false);
+            loseImage.SetActive(false);
+        }
+
         private void SetInfo(GameObject imageGO, string headerText, string subHeaderText, GameObject buttonGO = null)
         {
             imageGO.SetActive(true);
             header.text = headerText;
             subHeader.text = subHeaderText;
-            buttonGO?.SetActive(true);
+
+            if (buttonGO != null)
+                buttonGO.SetActive(true);
         }
 
         #endregion
