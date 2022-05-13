@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3203334486126060199}
   - component: {fileID: 3181668133037365993}
-  - component: {fileID: 9165434899241143501}
+  - component: {fileID: 8001230310923304080}
   m_Layer: 5
   m_Name: NavBottom
   m_TagString: Untagged
@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &9165434899241143501
+--- !u!114 &8001230310923304080
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,11 +71,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 576186336804066138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1bfd2f0189bea54e935d7490c994158, type: 3}
+  m_Script: {fileID: 11500000, guid: 040756c3d231a924d80541c52148cbb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugLineDuration: 3
-  cellPrefab: {fileID: 6069765137553700382, guid: ccd351ec6ff07b94183f410d55e49549, type: 3}
+  navCellPrefab: {fileID: 6069765137553700382, guid: ccd351ec6ff07b94183f410d55e49549, type: 3}
 --- !u!1 &2111772691133882795
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2021642381031296760}
   - component: {fileID: 7147832185577555625}
-  - component: {fileID: 6037333277842732164}
+  - component: {fileID: 5605771717444007321}
   m_Layer: 5
   m_Name: NavRight
   m_TagString: Untagged
@@ -138,7 +137,7 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &6037333277842732164
+--- !u!114 &5605771717444007321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,11 +146,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2111772691133882795}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1bfd2f0189bea54e935d7490c994158, type: 3}
+  m_Script: {fileID: 11500000, guid: 040756c3d231a924d80541c52148cbb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugLineDuration: 3
-  cellPrefab: {fileID: 6069765137553700382, guid: ccd351ec6ff07b94183f410d55e49549, type: 3}
+  navCellPrefab: {fileID: 6069765137553700382, guid: ccd351ec6ff07b94183f410d55e49549, type: 3}
 --- !u!1 &3797947312773889913
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7281207632305662812}
   - component: {fileID: 8012443592394931683}
-  - component: {fileID: 1971071071814248776}
+  - component: {fileID: 1855293119113683864}
   m_Layer: 5
   m_Name: NavTop
   m_TagString: Untagged
@@ -214,7 +212,7 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &1971071071814248776
+--- !u!114 &1855293119113683864
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -223,11 +221,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3797947312773889913}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1bfd2f0189bea54e935d7490c994158, type: 3}
+  m_Script: {fileID: 11500000, guid: 040756c3d231a924d80541c52148cbb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugLineDuration: 3
-  cellPrefab: {fileID: 6069765137553700382, guid: ccd351ec6ff07b94183f410d55e49549, type: 3}
+  navCellPrefab: {fileID: 6069765137553700382, guid: ccd351ec6ff07b94183f410d55e49549, type: 3}
 --- !u!1 &4755510230898492733
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,7 +235,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9129329957661370385}
   - component: {fileID: 631823991908422652}
-  - component: {fileID: 6193308919308650402}
+  - component: {fileID: 8123851683492012492}
   m_Layer: 5
   m_Name: NavLeft
   m_TagString: Untagged
@@ -290,7 +287,7 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &6193308919308650402
+--- !u!114 &8123851683492012492
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,11 +296,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4755510230898492733}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1bfd2f0189bea54e935d7490c994158, type: 3}
+  m_Script: {fileID: 11500000, guid: 040756c3d231a924d80541c52148cbb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugLineDuration: 3
-  cellPrefab: {fileID: 6069765137553700382, guid: ccd351ec6ff07b94183f410d55e49549, type: 3}
+  navCellPrefab: {fileID: 6069765137553700382, guid: ccd351ec6ff07b94183f410d55e49549, type: 3}
 --- !u!1 &6033936018998355384
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,4 +625,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugLineDuration: 10
-  cellPrefab: {fileID: 6069765137553700382, guid: 2909e1684a9c53c44b0a565896520285, type: 3}
+  nodeCellPrefab: {fileID: 6069765137553700382, guid: 2909e1684a9c53c44b0a565896520285, type: 3}
