@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace BlackBox
 {
-    public class LanternMount : MonoBehaviour, IDropHandler, IPointerExitHandler
+    public class LanternMount : MonoBehaviour, IDropHandler
     {
         private Vector3Int gridPosition = Vector3Int.back;
         private GameObject mountedLantern = null;
@@ -64,40 +64,41 @@ namespace BlackBox
 
         public void OnDrop(PointerEventData eventData)
         {
-            GameObject droppedLantern = eventData.pointerDrag;
+            GameObject lanternGO = eventData.pointerDrag;
 
             if (isEmpty)
-            {
-                droppedLantern.transform.SetParent(this.transform);
-                droppedLantern.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-
-                if (gridPosition != Vector3Int.back) // using "back" or (0, 0, -1) as default. Z will be 0 instead if this mount belongs to a cell
-                    BBEvents.ToggleFlag.Invoke(gridPosition, true);
-
-                mountedLantern = droppedLantern;
-                isEmpty = false;
-
-                if (nodeCellAnimator != null)
-                    nodeCellAnimator.SetBool("NodeCell/Flagged", true);
-            }
+                Flag(lanternGO);
             else
-            {
-                BBEvents.ReturnLanternHome?.Invoke(droppedLantern);
-            }
+                BBEvents.ReturnLanternHome?.Invoke(lanternGO);
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public void Flag(GameObject lanternGO)
         {
-            if (isEmpty) return;
-            if (eventData.pointerDrag == null) return;
-            if (eventData.pointerDrag.GetComponent<Lantern>() == null) return;
-            if (eventData.pointerDrag != mountedLantern) return;
+            lanternGO.transform.SetParent(this.transform);
+            lanternGO.GetComponent<Lantern>().SetParentMount(this);
+            lanternGO.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
-            BBEvents.ToggleFlag.Invoke(gridPosition, false);
-            isEmpty = true;
+            isEmpty = false;
+            mountedLantern = lanternGO;
+
+            if (gridPosition != Vector3Int.back) // using "back" as default. Z will be 0 if this mount belongs to a cell
+                BBEvents.ToggleFlag.Invoke(gridPosition, true);
 
             if (nodeCellAnimator != null)
-                nodeCellAnimator.SetBool("NodeCell/Flagged", false);
+                nodeCellAnimator.SetBool("NodeCell/Flagged", true); // animator will be set if this mount belongs to a cell
+
+        }
+
+        public void UnFlag()
+        {
+            isEmpty = true;
+            mountedLantern = null;
+            
+            if (gridPosition != Vector3Int.back)
+                BBEvents.ToggleFlag.Invoke(gridPosition, false);
+
+            if (nodeCellAnimator != null)
+                nodeCellAnimator.SetBool("NodeCell/Flagged", false); 
         }
     }
 }

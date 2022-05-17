@@ -72,16 +72,16 @@ namespace BlackBox
 
         private void OnEnable()
         {
-            BBEvents.ReturnLanternHome += ReturnLanternHome;
-            BBEvents.CheckWinState += CheckWinState;
             BBEvents.StartNextLevel += NextLevel;
+            BBEvents.CheckWinState += CheckWinState;
+            BBEvents.ReturnLanternHome += ReturnLanternHome;
         }
 
         private void OnDisable()
         {
-            BBEvents.ReturnLanternHome -= ReturnLanternHome;
-            BBEvents.CheckWinState -= CheckWinState;
             BBEvents.StartNextLevel -= NextLevel;
+            BBEvents.CheckWinState -= CheckWinState;
+            BBEvents.ReturnLanternHome -= ReturnLanternHome;
         }
 
         #endregion
@@ -216,7 +216,7 @@ namespace BlackBox
             }
         }
 
-        private void ReturnLanternHome(GameObject lantern)
+        private void ReturnLanternHome(GameObject lanternGO)
         {
             foreach (GameObject mountGO in lanternMounts)
             {
@@ -224,12 +224,12 @@ namespace BlackBox
 
                 if (mount.isEmpty)
                 {
-                    lantern.transform.SetParent(mount.transform);
-                    lantern.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                    mount.EvaluateEmpty();
+                    lanternGO.transform.SetParent(mount.transform);
+                    lanternGO.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                    mount.Flag(lanternGO);
                     break;
                 }
-            }
+            } 
         }
 
         #endregion

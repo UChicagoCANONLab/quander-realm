@@ -1,26 +1,24 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace BlackBox
 {
-    public class Lantern : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
+    public class Lantern : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
     {
-        private RectTransform rectTransform;
-        private CanvasGroup canvasGroup;
+        private CanvasGroup canvasGroup = null;
+        private LanternMount parentMount = null;
+        private RectTransform rectTransform = null;
 
-        [SerializeField] private Canvas canvas;
-        [SerializeField] private Animator animator;
+        [SerializeField] private Canvas canvas = null;
+        [SerializeField] private Animator animator = null;
         [SerializeField] private Transform frontMountTransform = null;
 
         private void Awake()
         {
+            parentMount = GetParentMount();
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
-        }
-
-        public void SetCanvas(Canvas canvas)
-        {
-            this.canvas = canvas;
         }
 
         #region Interface Functions
@@ -28,21 +26,15 @@ namespace BlackBox
         public void OnPointerDown(PointerEventData eventData)
         {
             animator.SetBool("Hold", true);
-            BBEvents.ToggleLanternHeld?.Invoke(true);
-        }
-
-        //todo: tween anchored position to handle's position
-        public void OnBeginDrag(PointerEventData eventData)
-        {
             canvasGroup.blocksRaycasts = false;
+            BBEvents.ToggleLanternHeld?.Invoke(true);
 
-            if (frontMountTransform != null)
-            {
-                transform.SetParent(frontMountTransform);
-                transform.SetAsLastSibling();
-            }
+            if (parentMount != null)
+                parentMount.UnFlag();
 
-            UpdateAnimator(eventData);
+            transform.SetParent(frontMountTransform);
+            transform.SetAsLastSibling();
+            parentMount = null;
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -50,21 +42,43 @@ namespace BlackBox
             UpdateAnimator(eventData);
         }
 
-        public void OnEndDrag(PointerEventData eventData)
-        {
-            canvasGroup.blocksRaycasts = true;
-            animator.SetInteger("DragDirection", 0);
-            animator.SetFloat("Velocity", 0f);
-        }
-
         public void OnPointerUp(PointerEventData eventData)
         {
             animator.SetBool("Hold", false);
+            animator.SetFloat("Velocity", 0f);
+            animator.SetInteger("DragDirection", 0);
+
+            canvasGroup.blocksRaycasts = true;
             BBEvents.ToggleLanternHeld?.Invoke(false);
-            //drop?
+            StartCoroutine("ReturnHomeIfUnmounted");
         }
 
         #endregion
+
+        #region Helpers
+
+        private IEnumerator ReturnHomeIfUnmounted()
+        {
+            yield return null;
+
+            if (GetParentMount() == null)
+                BBEvents.ReturnLanternHome?.Invoke(this.gameObject);
+        }
+
+        public void SetCanvas(Canvas canvas)
+        {
+            this.canvas = canvas;
+        }
+
+        public void SetParentMount(LanternMount parent)
+        {
+            parentMount = parent;
+        }
+
+        private LanternMount GetParentMount()
+        {
+            return transform.parent.GetComponent<LanternMount>();
+        }
 
         private void UpdateAnimator(PointerEventData eventData)
         {
@@ -95,5 +109,7 @@ namespace BlackBox
 
             return (int)Mathf.Sign(newPosition.x - oldPosition.x);
         }
+
+        #endregion
     }
 }

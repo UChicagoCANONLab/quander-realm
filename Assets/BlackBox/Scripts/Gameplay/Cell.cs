@@ -39,7 +39,7 @@ namespace BlackBox
 
         public Cell Create(int xPos, int yPos, CellType cellType, Dir direction = Dir.None)
         {
-            gridPosition = new Vector3Int(xPos, yPos);
+            gridPosition = new Vector3Int(xPos, yPos, 0);
             this.cellType = cellType;
             this.direction = direction;
 
