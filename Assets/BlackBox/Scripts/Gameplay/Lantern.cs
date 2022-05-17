@@ -12,7 +12,6 @@ namespace BlackBox
 
         [SerializeField] private Canvas canvas = null;
         [SerializeField] private Animator animator = null;
-        [SerializeField] private Transform frontMountTransform = null;
 
         private void Awake()
         {
@@ -32,7 +31,7 @@ namespace BlackBox
             if (parentMount != null)
                 parentMount.UnFlag();
 
-            transform.SetParent(frontMountTransform);
+            transform.SetParent(BBEvents.GetFrontMount?.Invoke());
             transform.SetAsLastSibling();
             parentMount = null;
         }

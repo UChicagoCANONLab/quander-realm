@@ -19,6 +19,7 @@ namespace BlackBox
         public static Action<Vector3Int, bool> ToggleFlag;
         public static Action<GameObject> ReturnLanternHome;
         public static Action<bool> ToggleLanternHeld;
+        public static Func<Transform> GetFrontMount;
 
         /// Energy Bar
         public static Action DecrementEnergy;

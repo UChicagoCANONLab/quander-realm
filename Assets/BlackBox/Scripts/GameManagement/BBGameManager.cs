@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,8 @@ namespace BlackBox
         [SerializeField] private GameObject topGridGO = null;
 
         [Header("Lantern and Mounts")]
+        public Transform lanternFrontMount = null;
+
         [SerializeField] private GameObject lanternPrefab = null;
         [SerializeField] private GameObject[] lanternMounts = null;
 
@@ -74,6 +77,7 @@ namespace BlackBox
         {
             BBEvents.StartNextLevel += NextLevel;
             BBEvents.CheckWinState += CheckWinState;
+            BBEvents.GetFrontMount += GetLanternFrontMount;
             BBEvents.ReturnLanternHome += ReturnLanternHome;
         }
 
@@ -81,6 +85,7 @@ namespace BlackBox
         {
             BBEvents.StartNextLevel -= NextLevel;
             BBEvents.CheckWinState -= CheckWinState;
+            BBEvents.GetFrontMount -= GetLanternFrontMount;
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
         }
 
@@ -230,6 +235,11 @@ namespace BlackBox
                     break;
                 }
             } 
+        }
+
+        private Transform GetLanternFrontMount()
+        {
+            return lanternFrontMount;
         }
 
         #endregion
