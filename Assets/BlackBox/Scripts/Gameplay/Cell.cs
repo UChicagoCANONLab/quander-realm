@@ -18,6 +18,21 @@ namespace BlackBox
             button.onClick.AddListener(Interact);
         }
 
+        protected virtual void OnEnable()
+        {
+            BBEvents.ToggleLanternHeld += ToggleLanternHeld;
+        }
+
+        protected virtual void OnDisable()
+        {
+            BBEvents.ToggleLanternHeld -= ToggleLanternHeld;
+        }
+
+        protected void ToggleLanternHeld(bool isOn)
+        {
+            animator.SetBool("NodeCell/Lantern", isOn);
+        }
+
         public abstract void Interact();
 
         public abstract bool HasNode();
