@@ -10,15 +10,22 @@ namespace BlackBox
         private NavCell[,] cellArray = null;
 
         private static int colorIndex = -1;
-        private static readonly Color[] colorArray = new Color[] { 
-            Color.red, Color.blue, Color.green, Color.magenta, 
+        private static readonly Color[] colorArray = new Color[] 
+        {
+            Color.red, Color.blue, Color.green, Color.magenta,
             Color.cyan, Color.black, Color.grey, Color.yellow 
         };
 
-        private void OnDestroy()
+        private void OnEnable()
+        {
+            BBEvents.MarkUnits += MarkUnit; //todo: creating new grids re-registers
+            BBEvents.MarkDetourUnits += MarkLinkedUnits; //todo: creating new grids re-registers
+        }
+
+        private void OnDisable()
         {
             BBEvents.MarkUnits -= MarkUnit;
-            BBEvents.MarkDetourUnits -= MarkLinkedUnits;
+            BBEvents.MarkDetourUnits -= MarkLinkedUnits;            
         }
 
         public void Create(int width, int height, Dir direction = Dir.None)
@@ -37,9 +44,6 @@ namespace BlackBox
                     cellArray[x, y] = navCell;
                 }
             }
-
-            BBEvents.MarkUnits += MarkUnit; //todo: creating new grids re-registers
-            BBEvents.MarkDetourUnits += MarkLinkedUnits; //todo: creating new grids re-registers
         }
 
         private void MarkUnit(string text, Dir gridDirection, Vector3Int destPosition)

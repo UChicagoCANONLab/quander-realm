@@ -14,10 +14,16 @@ namespace BlackBox
         private Ray ray = null;
         private NodeCell[,] cellArray = null;
 
-        private void OnDestroy()
-        {   
+        private void OnEnable()
+        {
+            BBEvents.FireRay += FireRay;
+            BBEvents.ToggleFlag += ToggleFlag;
+        }
+
+        private void OnDisable()
+        {
             BBEvents.FireRay -= FireRay;
-            BBEvents.ToggleFlag -= ToggleFlag;
+            BBEvents.ToggleFlag -= ToggleFlag;            
         }
 
         public void Create(int width, int height, int numEnergyUnits)
@@ -38,8 +44,6 @@ namespace BlackBox
                     cellArray[x, y] = nodeCell;
                 }
             }
-
-            SetupListeners();
         }
 
         private CellType GetCellType(int x, int y)
@@ -50,12 +54,6 @@ namespace BlackBox
                 result = CellType.EdgeNode;
 
             return result;
-        }
-
-        private void SetupListeners()
-        {
-            BBEvents.FireRay += FireRay;
-            BBEvents.ToggleFlag += ToggleFlag;
         }
 
         private void ToggleFlag(Vector3Int gridPosition, bool toggle)
