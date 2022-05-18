@@ -18,13 +18,28 @@ namespace BlackBox
             button.onClick.AddListener(Interact);
         }
 
+        protected virtual void OnEnable()
+        {
+            BBEvents.ToggleLanternHeld += ToggleLanternHeld;
+        }
+
+        protected virtual void OnDisable()
+        {
+            BBEvents.ToggleLanternHeld -= ToggleLanternHeld;
+        }
+
+        protected void ToggleLanternHeld(bool isOn)
+        {
+            animator.SetBool("NodeCell/Lantern", isOn);
+        }
+
         public abstract void Interact();
 
         public abstract bool HasNode();
 
         public Cell Create(int xPos, int yPos, CellType cellType, Dir direction = Dir.None)
         {
-            gridPosition = new Vector3Int(xPos, yPos);
+            gridPosition = new Vector3Int(xPos, yPos, 0);
             this.cellType = cellType;
             this.direction = direction;
 

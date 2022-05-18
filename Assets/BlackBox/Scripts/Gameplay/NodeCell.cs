@@ -26,16 +26,6 @@ namespace BlackBox
             SetupDebug();
         }
 
-        private void OnEnable()
-        {
-            BBEvents.ToggleLanternHeld += ToggleLanternHeld;
-        }
-
-        private void OnDisable()
-        {
-            BBEvents.ToggleLanternHeld -= ToggleLanternHeld;
-        }
-
         public override void Interact()
         {
             if (cellType == CellType.EdgeNode)
@@ -62,11 +52,6 @@ namespace BlackBox
         public void ToggleFlag(bool isOn)
         {
             hasFlag = isOn;
-        }
-
-        private void ToggleLanternHeld(bool isOn)
-        {
-            animator.SetBool("NodeCell/Lantern", isOn);
         }
 
         #region Debug

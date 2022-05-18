@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,8 @@ namespace BlackBox
         [SerializeField] private GameObject topGridGO = null;
 
         [Header("Lantern and Mounts")]
+        public Transform lanternFrontMount = null;
+
         [SerializeField] private GameObject lanternPrefab = null;
         [SerializeField] private GameObject[] lanternMounts = null;
 
@@ -72,16 +75,18 @@ namespace BlackBox
 
         private void OnEnable()
         {
-            BBEvents.ReturnLanternHome += ReturnLanternHome;
-            BBEvents.CheckWinState += CheckWinState;
             BBEvents.StartNextLevel += NextLevel;
+            BBEvents.CheckWinState += CheckWinState;
+            BBEvents.GetFrontMount += GetLanternFrontMount;
+            BBEvents.ReturnLanternHome += ReturnLanternHome;
         }
 
         private void OnDisable()
         {
-            BBEvents.ReturnLanternHome -= ReturnLanternHome;
-            BBEvents.CheckWinState -= CheckWinState;
             BBEvents.StartNextLevel -= NextLevel;
+            BBEvents.CheckWinState -= CheckWinState;
+            BBEvents.GetFrontMount -= GetLanternFrontMount;
+            BBEvents.ReturnLanternHome -= ReturnLanternHome;
         }
 
         #endregion
@@ -216,7 +221,7 @@ namespace BlackBox
             }
         }
 
-        private void ReturnLanternHome(GameObject lantern)
+        private void ReturnLanternHome(GameObject lanternGO)
         {
             foreach (GameObject mountGO in lanternMounts)
             {
@@ -224,12 +229,18 @@ namespace BlackBox
 
                 if (mount.isEmpty)
                 {
-                    lantern.transform.SetParent(mount.transform);
-                    lantern.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                    mount.EvaluateEmpty();
+                    lanternGO.transform.SetParent(mount.transform);
+                    lanternGO.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                    mount.Flag(lanternGO);
+                    Debug.Log("Returned");
                     break;
                 }
-            }
+            } 
+        }
+
+        private Transform GetLanternFrontMount()
+        {
+            return lanternFrontMount;
         }
 
         #endregion
