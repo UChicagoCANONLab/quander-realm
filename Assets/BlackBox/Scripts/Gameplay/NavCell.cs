@@ -50,13 +50,17 @@ namespace BlackBox
 
         #region Linked Highlight
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+
             BBEvents.ToggleLinkedHighlight += ToggleLinkedHighlight;
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
+
             BBEvents.ToggleLinkedHighlight -= ToggleLinkedHighlight;
         }
 
