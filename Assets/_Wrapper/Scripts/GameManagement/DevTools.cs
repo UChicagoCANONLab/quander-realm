@@ -37,6 +37,49 @@ namespace Wrapper
         {
             Events.CloseDialogueView?.Invoke();
         }
+
+        [Command("lvl", "Go to a specific level"), UnityEngine.Scripting.Preserve]
+        static private void GotoLevel(string levelID)
+        {
+            try
+            {
+                BlackBox.BBEvents.GotoLevel?.Invoke(levelID);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+        }
+
+        [Command("clm", "Clear Markers"), UnityEngine.Scripting.Preserve]
+        static private void ClearMarkers()
+        {
+            try
+            {
+                BlackBox.BBEvents.ClearMarkers?.Invoke();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+        }
+
+        [Command("d", "Toggle BlackBox debug mode"), UnityEngine.Scripting.Preserve]
+        static private void ToggleDebug()
+        {
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+            try
+            {
+                BlackBox.BBEvents.ToggleDebug?.Invoke();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+#else
+            Debug.LogWarning("Command only works for ios and android");
+#endif
+        }
     }
 #endif
 }

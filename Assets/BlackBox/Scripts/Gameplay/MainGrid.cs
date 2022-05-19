@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BlackBox
@@ -18,12 +19,14 @@ namespace BlackBox
         {
             BBEvents.FireRay += FireRay;
             BBEvents.ToggleFlag += ToggleFlag;
+            BBEvents.ClearMarkers += ResetEnergy; // Debug
         }
 
         private void OnDisable()
         {
             BBEvents.FireRay -= FireRay;
             BBEvents.ToggleFlag -= ToggleFlag;            
+            BBEvents.ClearMarkers += ResetEnergy; // Debug
         }
 
         public void Create(int width, int height, int numEnergyUnits)
@@ -173,5 +176,10 @@ namespace BlackBox
         }
 
         #endregion
+
+        private void ResetEnergy()
+        {
+            energyUnits = (int)BBEvents.GetNumEnergyUnits?.Invoke();
+        }
     }
 }

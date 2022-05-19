@@ -9,7 +9,6 @@ namespace BlackBox
         [SerializeField] private TextMeshProUGUI markerText = null;
 
         private bool isMarked = false;
-
         private bool isLinked = false;
         private Dir linkedCellDirection = Dir.None;
         private Vector3Int linkedCellPosition = Vector3Int.back;
@@ -34,13 +33,30 @@ namespace BlackBox
         {
             animator.SetBool("NavCell/Measurement", true);
             background.gameObject.SetActive(true);
+
             markerText.color = color;
             markerText.text = value;
+
             isMarked = true;
             isLinked = true;
 
             this.linkedCellDirection = linkedCellDirection;
             this.linkedCellPosition = linkedCellPosition;
+        }
+
+        // Debug
+        private void ResetValue()
+        {
+            animator.SetBool("NavCell/Measurement", false);
+            background.gameObject.SetActive(false);
+
+            markerText.text = string.Empty;
+
+            isMarked = false;
+            isLinked = false;
+
+            linkedCellDirection = Dir.None;
+            linkedCellPosition = Vector3Int.back;
         }
 
         public override bool HasNode()
@@ -54,13 +70,15 @@ namespace BlackBox
         {
             base.OnEnable();
 
+            BBEvents.ClearMarkers += ResetValue; // Debug
             BBEvents.ToggleLinkedHighlight += ToggleLinkedHighlight;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-
+            
+            BBEvents.ClearMarkers -= ResetValue; // Debug
             BBEvents.ToggleLinkedHighlight -= ToggleLinkedHighlight;
         }
 
