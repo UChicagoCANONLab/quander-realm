@@ -2,7 +2,7 @@ using UnityEngine.UI;
 
 namespace Wrapper
 {
-    public abstract class QButton : Button
+    public class QButton : Button
     {
         protected override void Awake()
         {
@@ -10,6 +10,9 @@ namespace Wrapper
             onClick.AddListener(OnClickedHandler);
         }
 
-        protected abstract void OnClickedHandler();
+        protected virtual void OnClickedHandler()
+        {
+
+        }
     }
 }
