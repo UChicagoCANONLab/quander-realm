@@ -48,6 +48,7 @@ namespace BlackBox
         private int livesRemaining;
         private int totalNodes;
         private Level level = null;
+        private bool debug = false;
 
         #region Unity Functions
 
@@ -57,35 +58,36 @@ namespace BlackBox
             StartLevel();
         }
 
-        //todo: Delete Update() later
+        // Debug
+#if UNITY_EDITOR || UNITY_WEBGL
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.Alpha5))
-            //    CreateAllGrids(GridSize.Small);
-
-            //if (Input.GetKeyDown(KeyCode.Alpha6))
-            //    CreateAllGrids(GridSize.Medium);
-
-            //if (Input.GetKeyDown(KeyCode.Alpha7))
-            //    CreateAllGrids(GridSize.Large);
-
             if (Input.GetKeyDown(KeyCode.D))
                 BBEvents.ToggleDebug?.Invoke();
         }
+#endif
 
         private void OnEnable()
         {
+            BBEvents.GotoLevel += NextLevel; // Debug
+            BBEvents.IsDebug += GetDebugBool; // Debug
+            BBEvents.ToggleDebug += ToggleDebug; // Debug
             BBEvents.StartNextLevel += NextLevel;
             BBEvents.CheckWinState += CheckWinState;
             BBEvents.GetFrontMount += GetLanternFrontMount;
+            BBEvents.GetNumEnergyUnits += GetNumEnergyUnits;
             BBEvents.ReturnLanternHome += ReturnLanternHome;
         }
 
         private void OnDisable()
         {
+            BBEvents.GotoLevel -= NextLevel; // Debug
+            BBEvents.IsDebug += GetDebugBool; // Debug
+            BBEvents.ToggleDebug -= ToggleDebug; // Debug
             BBEvents.StartNextLevel -= NextLevel;
             BBEvents.CheckWinState -= CheckWinState;
             BBEvents.GetFrontMount -= GetLanternFrontMount;
+            BBEvents.GetNumEnergyUnits -= GetNumEnergyUnits;
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
         }
 
@@ -102,9 +104,11 @@ namespace BlackBox
             livesRemaining = totalLives;
 
             BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
-            BBEvents.InitEnergyBar?.Invoke(level.numEnergyUnits);
+            BBEvents.InitEnergyBar?.Invoke();
 
             InitializeLanterns(level.nodePositions.Length);
+
+            Debug.LogFormat("starting level: {0}", level.levelID);
         }
 
         private void NextLevel()
@@ -119,6 +123,22 @@ namespace BlackBox
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions); // todo: refactor
 
             level = Resources.Load<Level>(Path.Combine(levelsPath, level.nextLevelID));
+            StartLevel();
+        }
+
+        // Debug
+        private void NextLevel(string levelID)
+        {
+            Level tempLevel = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
+            if (tempLevel == null)
+            {
+                Debug.LogFormat("Could not find level with ID: {0}", levelID);
+                return;
+            }
+
+            mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
+
+            level = tempLevel;
             StartLevel();
         }
 
@@ -244,5 +264,20 @@ namespace BlackBox
         }
 
         #endregion
+
+        private int GetNumEnergyUnits()
+        {
+            return level.numEnergyUnits;
+        }
+
+        private bool GetDebugBool()
+        {
+            return debug;
+        }
+
+        private void ToggleDebug()
+        {
+            debug = !debug;
+        }
     }
 }

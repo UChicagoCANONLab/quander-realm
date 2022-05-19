@@ -7,7 +7,10 @@ namespace BlackBox
     public static class BBEvents
     {
         /// Debug
-        public static UnityEvent ToggleDebug = new UnityEvent();
+        public static Action ToggleDebug;
+        public static Func<bool> IsDebug;
+        public static Action<string> GotoLevel;
+        public static Action ClearMarkers;
 
         /// Ray and Markers
         public static Action<Vector3Int, Dir> FireRay;
@@ -24,7 +27,8 @@ namespace BlackBox
         /// Energy Bar
         public static Action DecrementEnergy;
         public static Action IndicateEmptyMeter;
-        public static Action<int> InitEnergyBar;
+        public static Action InitEnergyBar;
+        public static Func<int> GetNumEnergyUnits;
 
         /// Level Submission
         public static Action CheckWinState;

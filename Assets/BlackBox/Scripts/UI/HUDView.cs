@@ -21,6 +21,7 @@ namespace BlackBox
 
         private void OnEnable()
         {
+            BBEvents.ClearMarkers += InitEnergyBar; // Debug
             BBEvents.InitEnergyBar += InitEnergyBar;
             BBEvents.IndicateEmptyMeter += IndicateEmpty;
             BBEvents.DecrementEnergy += DecrementEnergy;
@@ -29,6 +30,7 @@ namespace BlackBox
 
         private void OnDisable()
         {
+            BBEvents.ClearMarkers += InitEnergyBar; // Debug
             BBEvents.InitEnergyBar -= InitEnergyBar;
             BBEvents.IndicateEmptyMeter -= IndicateEmpty;
             BBEvents.DecrementEnergy -= DecrementEnergy;
@@ -42,8 +44,10 @@ namespace BlackBox
 
         #region Energy Bar
 
-        private void InitEnergyBar(int numUnits)
+        private void InitEnergyBar()
         {
+            int numUnits = (int)BBEvents.GetNumEnergyUnits?.Invoke();
+
             foreach (Transform child in unitContainer.transform)
                 Destroy(child.gameObject);
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,11 +9,11 @@ namespace BlackBox
     {
         private bool hasNode = false;
         private bool hasFlag = false;
-        private bool debug = false; //todo: debug, delete later
+        private bool debug = false; // Debug
 
         [SerializeField] private LanternMount lanternMount = null;
         [SerializeField] private GameObject nodeObj = null;
-        [SerializeField] private List<Button> buttons = null; //todo: debug, delete later
+        [SerializeField] private List<Button> buttons = null; // Debug
         [SerializeField] private TextMeshProUGUI text = null;
 
         protected override void Start()
@@ -26,6 +25,18 @@ namespace BlackBox
             SetupDebug();
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            BBEvents.ToggleDebug += ToggleDebug;
+        }
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            BBEvents.ToggleDebug -= ToggleDebug;
+        }
         public override void Interact()
         {
             if (cellType == CellType.EdgeNode)
@@ -33,7 +44,7 @@ namespace BlackBox
 
             hasNode = !hasNode;
 
-            //todo: debug, delete later
+            // Debug
             if (debug)
                 nodeObj.SetActive(hasNode);
         }
@@ -56,18 +67,19 @@ namespace BlackBox
 
         #region Debug
 
-        //todo: debug, delete later
         private void SetupDebug()
         {
-            text.text = gridPosition.x.ToString() + ", " + gridPosition.y.ToString();
-            BBEvents.ToggleDebug.AddListener(ToggleDebug);
+            debug = (bool)BBEvents.IsDebug?.Invoke();
 
+            text.text = gridPosition.x.ToString() + ", " + gridPosition.y.ToString();
             buttons = new List<Button>();
             foreach (Button button in buttons)
                 button.onClick.AddListener(() => { if (debug) Interact(); });
+
+            if (debug)
+                ToggleDebug();
         }
 
-        //todo: debug, delete later 
         private void ToggleDebug()
         {
             debug = !(text.gameObject.activeInHierarchy);
