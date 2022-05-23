@@ -80,12 +80,12 @@ config.__default__ = [
 	/**
 	 * Whether to make a development build. Corresponds to the Development Build option in Unity Build Settings.
 	 */
-	DEBUG: false,
+	DEBUG: true,
 
 	/**
 	 * This is the user-facing version number of the app. This corresponds to Bundle Version in iOS and versionName in Android.
 	 */
-	VERSION: "0.1.1",
+	VERSION: "0.1.2",
 
 	/**
 	 * Whether to send a Slack notification when the job starts
@@ -105,7 +105,7 @@ config.__default__ = [
 	/**
 	 * This is the channel that notifications will be sent to.
 	 */
-	SLACK_CHANNEL: "#quantum-builds",
+	SLACK_CHANNEL: "#quantum-dev",
 
 	/**
 	 * This is the Jenkins credential ID that contains the Slack API token.
@@ -117,7 +117,7 @@ config.__default__ = [
 	/**
 	 * User handles added to the end of success and failure notification messages to make sure appropriate users get notified.
 	 */
-	SLACK_MENTIONS: "@sprakash",
+	SLACK_MENTIONS: "@sprakash @vwilkerson @asmythe",
 
 	/**
 	 * Whether to make Android builds
@@ -482,6 +482,11 @@ config.__default__ = [
  * develop branch config overrides
  */
 config.develop = [:]
+
+/**
+ * develop branch config overrides
+ */
+config.wrapper = [:]
 
 /**
  * staging branch config overrides

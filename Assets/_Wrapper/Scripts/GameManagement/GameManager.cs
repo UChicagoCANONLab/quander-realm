@@ -10,16 +10,15 @@ namespace Wrapper
         public static GameManager Instance { get { return _instance; } }
         private static GameManager _instance;
 
-        public Button backButton;
-
         private void Awake()
         {
-            DontDestroyOnLoad(this);
+            InitSingleton();
+        }
 
-            if (_instance != null && _instance != this)
-                Destroy(this.gameObject);
-            else
-                _instance = this;
+        private void OnEnable()
+        {
+            Events.OpenMinigame += OpenMinigame;
+        }
 
             FirebaseCall();
 
@@ -32,11 +31,13 @@ namespace Wrapper
                 Debug.Log("Back To Main");
                 SceneManager.LoadScene(0); 
             });
+        private void OnDisable()
+        {
+            Events.OpenMinigame -= OpenMinigame;
         }
 
         private void OpenMinigame(Minigame minigame)
         {
-            Debug.Log("Opening " + minigame.name);
             SceneManager.LoadScene(minigame.StartScene);
         }
 
@@ -48,5 +49,19 @@ namespace Wrapper
             firebaseControl.Init();
             firebaseControl.Save(data);
         }
+
+        #region Helpers
+
+        private void InitSingleton()
+        {
+            DontDestroyOnLoad(this);
+
+            if (_instance != null && _instance != this)
+                Destroy(this.gameObject);
+            else
+                _instance = this;
+        }
+
+        #endregion
     }
 }
