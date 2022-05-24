@@ -1,23 +1,34 @@
 using Firebase;
 using Firebase.Database;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Wrapper
 {
-    public class FirebaseControl
+    public class SaveManager
     {
         private FirebaseApp app;
         private DatabaseReference m_reference;
+        private UserSave userSave;
+        
         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
 
-        public void Init()
+        public SaveManager()
+        {
+            Events.SubmitResearchCode += Login;
+            userSave = new UserSave();
+        }
+
+        ~SaveManager()
+        {
+            Events.SubmitResearchCode -= Login;
+        }
+
+        public void InitFirebase()
         {
             AppOptions devEnvOptions = new AppOptions
             {
                 ApiKey = "AIzaSyBdbF7HlY93besU9gJKdB4LKN3E5uFpG78",
-                //AppId = "1:721683477410:android:7ff5322e48d5134cd8b8fb",
+                AppId = "1:721683477410:android:7ff5322e48d5134cd8b8fb",
                 ProjectId = "filament-zombies"
             };
 
@@ -43,25 +54,40 @@ namespace Wrapper
             m_reference = FirebaseDatabase.DefaultInstance.RootReference;
         }
 
+        private bool Login(string rCode)
+        {
+            bool isLoggedIn = true;
+
+            Debug.Log("Attempting Login");
+            //check if user with code exists
+            //Future<UserSave> future = Future.Create<UserSave>();
+            //Routine routine = Routine.Start(LoadRoutine(future, email));
+            //future.LinkTo(routine);
+
+            //fetch the save file
+            //set current usersave to that
+            Debug.Log("Login Successful");
+
+            return isLoggedIn;
+        }
+
         public bool Save(UserSave data)
         {
-            if (m_reference != null)
-            {
-                string json = JsonUtility.ToJson(data);
-                if (json == "")
-                {
-                    Debug.LogWarning("empty userSave");
-                    return false;
-                }
-                m_reference.Child("users").Child(json.Replace(".", ",")).SetRawJsonValueAsync(json);
-                return true;
-            }
-            else
+            if (m_reference == null)
             {
                 Debug.LogError("No database reference on save");
                 return false;
             }
-        }
 
+            string json = JsonUtility.ToJson(data);
+            if (json == "")
+            {
+                Debug.LogWarning("empty userSave");
+                return false;
+            }
+
+            m_reference.Child("data").Child(data.id).SetRawJsonValueAsync(json);
+            return true;
+        }
     }
 }

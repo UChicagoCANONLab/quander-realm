@@ -4,11 +4,13 @@ namespace Wrapper
 {
     public static class Events
     {
-        public static Action SortSequences;
         public static Action<Minigame> OpenMinigame;
+
+        public static Func<string, bool> SubmitResearchCode;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;
+        public static Action SortSequences;
         public static Action<string> StartDialogueSequence;
         public static Action<Dialogue> OpenDialogueView;
         public static Action CloseDialogueView;

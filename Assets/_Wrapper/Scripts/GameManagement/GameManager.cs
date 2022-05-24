@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Firebase;
+using System;
 
 namespace Wrapper
 {
@@ -13,6 +14,7 @@ namespace Wrapper
         private void Awake()
         {
             InitSingleton();
+            FirebaseCall();
         }
 
         private void OnEnable()
@@ -20,17 +22,6 @@ namespace Wrapper
             Events.OpenMinigame += OpenMinigame;
         }
 
-            FirebaseCall();
-
-            Events.OpenMinigame.AddListener(OpenMinigame);
-            backButton.onClick.AddListener(() => 
-            {
-                if (SceneManager.GetActiveScene().buildIndex == 0)
-                    return;
-
-                Debug.Log("Back To Main");
-                SceneManager.LoadScene(0); 
-            });
         private void OnDisable()
         {
             Events.OpenMinigame -= OpenMinigame;
@@ -43,11 +34,11 @@ namespace Wrapper
 
         private void FirebaseCall()
         {
-            FirebaseControl firebaseControl = new FirebaseControl();
-            UserSave data = new UserSave(2345, "Rob");
+            SaveManager saveManager = new SaveManager();
+            UserSave data = new UserSave("Rob", "CU_02");
 
-            firebaseControl.Init();
-            firebaseControl.Save(data);
+            saveManager.InitFirebase();
+            saveManager.Save(data);
         }
 
         #region Helpers
