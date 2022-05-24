@@ -10,6 +10,7 @@ namespace Wrapper
                 return;
 
             SceneManager.LoadScene(0);
+            Events.MinigameClosed?.Invoke();
         }
     }
 }

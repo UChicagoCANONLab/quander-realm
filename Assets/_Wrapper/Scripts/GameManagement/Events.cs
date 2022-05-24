@@ -6,6 +6,7 @@ namespace Wrapper
     {
         public static Action SortSequences;
         public static Action<Minigame> OpenMinigame;
+        public static Action MinigameClosed;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;
