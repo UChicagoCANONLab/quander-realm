@@ -5,6 +5,7 @@ namespace Wrapper
     public static class Events
     {
         public static Action<Minigame> OpenMinigame;
+        public static Action MinigameClosed;
 
         public static Func<string, bool> SubmitResearchCode;
 
