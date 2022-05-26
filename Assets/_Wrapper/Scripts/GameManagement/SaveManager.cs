@@ -1,29 +1,35 @@
 using Firebase;
 using Firebase.Database;
+using System.Collections;
 using UnityEngine;
+using BeauRoutine;
 
 namespace Wrapper
 {
     public class SaveManager
     {
+        private bool isFirebaseReady = false;
         private FirebaseApp app;
         private DatabaseReference m_reference;
-        private UserSave userSave;
+        private UserSave currentUserSave;
         
         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
 
         public SaveManager()
         {
             Events.SubmitResearchCode += Login;
-            userSave = new UserSave();
+            Events.UpdateRemoteSave += UpdateRemoteSave;
+
+            Routine.Start(InitFirebase());
         }
 
         ~SaveManager()
         {
             Events.SubmitResearchCode -= Login;
+            Events.UpdateRemoteSave -= UpdateRemoteSave;
         }
 
-        public void InitFirebase()
+        public IEnumerator InitFirebase()
         {
             AppOptions devEnvOptions = new AppOptions
             {
@@ -37,22 +43,34 @@ namespace Wrapper
                 DependencyStatus dependencyStatus = task.Result;
                 if (dependencyStatus == DependencyStatus.Available)
                 {
-                    //Create and hold a reference to your FirebaseApp,
-                    //where app is a Firebase.FirebaseApp property of your application class.
                     app = FirebaseApp.DefaultInstance;
                     app.Options.DatabaseUrl = new System.Uri(firebaseURL);
-                    //Set a flag here to indicate whether Firebase is ready to use by your app.
+                    isFirebaseReady = true;
                 }
                 else
-                {
-                    Debug.LogError(System.String.Format(
-                      "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
-                    //Firebase Unity SDK is not safe to use here.
-                }
+                    Debug.LogErrorFormat("Could not resolve all Firebase dependencies: {0}", dependencyStatus);
             });
 
+            yield return Routine.Race
+            (
+                Routine.WaitCondition(() => isFirebaseReady),
+                Routine.WaitSeconds(5)
+            );
+
+            Debug.LogFormat("FireBaseReady = {0}", isFirebaseReady);
             m_reference = FirebaseDatabase.DefaultInstance.RootReference;
+
+            //TestSave();
         }
+
+        //private void TestSave()
+        //{
+        //    currentUserSave = new UserSave("Sibi", "CU_01");
+
+        //    BBSaveData bbSave = new BBSaveData { lastCompletedLevelID = "L04", IntroDialogueSeen = false };
+        //    Events.UpdateMinigameSaveData(Game.BlackBox, bbSave);
+        //    Events.AddReward?.Invoke("CU_02");
+        //}
 
         private bool Login(string rCode)
         {
@@ -71,7 +89,7 @@ namespace Wrapper
             return isLoggedIn;
         }
 
-        public bool Save(UserSave data)
+        private bool UpdateRemoteSave()
         {
             if (m_reference == null)
             {
@@ -79,14 +97,14 @@ namespace Wrapper
                 return false;
             }
 
-            string json = JsonUtility.ToJson(data);
+            string json = JsonUtility.ToJson(currentUserSave);
             if (json == "")
             {
                 Debug.LogWarning("empty userSave");
                 return false;
             }
 
-            m_reference.Child("data").Child(data.id).SetRawJsonValueAsync(json);
+            m_reference.Child("data").Child(currentUserSave.id).SetRawJsonValueAsync(json);
             return true;
         }
     }

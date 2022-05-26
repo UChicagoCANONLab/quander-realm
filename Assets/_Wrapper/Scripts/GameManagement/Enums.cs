@@ -30,10 +30,10 @@ namespace Wrapper
     /// Save System ///
     public enum Game
     {
-        BlackBox,
-        Circuits,
-        Labyrinth,
-        QueueBits,
-        Qupcakes
+        BlackBox = 0,
+        Circuits = 1,
+        Labyrinth = 2,
+        QueueBits = 3,
+        Qupcakes = 4
     }
 }

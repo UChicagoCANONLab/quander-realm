@@ -1,8 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Firebase;
-using System;
 
 namespace Wrapper
 {
@@ -11,10 +8,12 @@ namespace Wrapper
         public static GameManager Instance { get { return _instance; } }
         private static GameManager _instance;
 
+        private SaveManager saveManager;
+
         private void Awake()
         {
             InitSingleton();
-            FirebaseCall();
+            saveManager = new SaveManager();
         }
 
         private void OnEnable()
@@ -30,15 +29,6 @@ namespace Wrapper
         private void OpenMinigame(Minigame minigame)
         {
             SceneManager.LoadScene(minigame.StartScene);
-        }
-
-        private void FirebaseCall()
-        {
-            SaveManager saveManager = new SaveManager();
-            UserSave data = new UserSave("Rob", "CU_02");
-
-            saveManager.InitFirebase();
-            saveManager.Save(data);
         }
 
         #region Helpers
