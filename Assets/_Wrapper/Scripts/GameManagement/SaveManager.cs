@@ -10,9 +10,10 @@ namespace Wrapper
     {
         private bool isFirebaseReady = false;
         private FirebaseApp app;
-        private DatabaseReference m_reference;
+        private DatabaseReference dbReference;
         private UserSave currentUserSave;
         
+        public bool isUserLoggedIn = false;
         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
 
         public SaveManager()
@@ -58,40 +59,90 @@ namespace Wrapper
             );
 
             Debug.LogFormat("FireBaseReady = {0}", isFirebaseReady);
-            m_reference = FirebaseDatabase.DefaultInstance.RootReference;
+            dbReference = FirebaseDatabase.DefaultInstance.RootReference;
 
             //TestSave();
         }
 
-        //private void TestSave()
-        //{
-        //    currentUserSave = new UserSave("Sibi", "CU_01");
-
-        //    BBSaveData bbSave = new BBSaveData { lastCompletedLevelID = "L04", IntroDialogueSeen = false };
-        //    Events.UpdateMinigameSaveData(Game.BlackBox, bbSave);
-        //    Events.AddReward?.Invoke("CU_02");
-        //}
-
-        private bool Login(string rCode)
+        private void TestSave()
         {
-            bool isLoggedIn = true;
+            currentUserSave = new UserSave("Sibi", "CU_01");
 
-            Debug.Log("Attempting Login");
-            //check if user with code exists
-            //Future<UserSave> future = Future.Create<UserSave>();
-            //Routine routine = Routine.Start(LoadRoutine(future, email));
-            //future.LinkTo(routine);
+            BBSaveData bbSave = new BBSaveData { lastCompletedLevelID = "L04", IntroDialogueSeen = false };
+            Events.UpdateMinigameSaveData(Game.BlackBox, bbSave);
+            Events.AddReward?.Invoke("CU_02");
+        }
 
-            //fetch the save file
-            //set current usersave to that
-            Debug.Log("Login Successful");
+        private void Login(string researchCode)
+        {
+            Routine.Start(LoginRoutine(researchCode));
+        }
 
-            return isLoggedIn;
+        private IEnumerator LoginRoutine(string researchCode)
+        {
+            Future<UserSave> futureSave = Future.Create<UserSave>();
+            Routine loadRoutine = Routine.Start(LoadUser(futureSave, researchCode));
+            futureSave.LinkTo(loadRoutine);
+            yield return futureSave;
+
+            if (futureSave.IsComplete())
+            {
+                currentUserSave = futureSave;
+                isUserLoggedIn = true;
+            }
+
+            Events.LoginEvent?.Invoke(isUserLoggedIn);
+        }
+
+        private IEnumerator LoadUser(Future<UserSave> futureSave, string researchCode)
+        {
+            string formattedCode = researchCode.Trim().ToLower();
+
+            if (formattedCode.Equals(string.Empty))
+            {
+                Debug.LogError("Empty research code entered");
+                futureSave.Fail();
+            }
+            else if (dbReference == null)
+            {
+                Debug.LogError("No database reference on load");
+                futureSave.Fail();
+            }
+            else
+            {
+                dbReference.Child("data").Child(formattedCode).GetValueAsync().ContinueWith(task =>
+                {
+                    if (task.IsFaulted)
+                    {
+                        Debug.LogError("Error loading user data using research code");
+                        futureSave.Fail();
+                    }
+                    else if (task.IsCompleted)
+                    {
+                        DataSnapshot snapshot = task.Result;
+                        if (!(snapshot.Exists))
+                        {
+                            futureSave.Fail();
+                        }
+                        else
+                        {
+                            UserSave save = JsonUtility.FromJson<UserSave>(snapshot.GetRawJsonValue());
+                            futureSave.Complete(save);
+                        }
+                    }
+                });
+            }
+
+            yield return Routine.Race
+            (
+                Routine.WaitCondition(futureSave.IsDone),
+                Routine.WaitSeconds(3)
+            );
         }
 
         private bool UpdateRemoteSave()
         {
-            if (m_reference == null)
+            if (dbReference == null)
             {
                 Debug.LogError("No database reference on save");
                 return false;
@@ -100,11 +151,11 @@ namespace Wrapper
             string json = JsonUtility.ToJson(currentUserSave);
             if (json == "")
             {
-                Debug.LogWarning("empty userSave");
+                Debug.LogError("Empty UserSave");
                 return false;
             }
 
-            m_reference.Child("data").Child(currentUserSave.id).SetRawJsonValueAsync(json);
+            dbReference.Child("data").Child(currentUserSave.id).SetRawJsonValueAsync(json);
             return true;
         }
     }
