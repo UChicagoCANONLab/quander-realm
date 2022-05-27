@@ -492,6 +492,7 @@ config.wrapper = [:]
  * staging branch config overrides
  */
 config.staging = [
+	DEBUG: false,
 	WEBGL_OPEN_ACCESS: true
 ]
 
@@ -499,7 +500,9 @@ config.staging = [
  * production branch config overrides
  */
 config.production = [
+	DEBUG: false,
 	ANDROID_KEYSTORE_FILE_USE_CREDENTIALS: false, /* ToDo: Make Keystore for production */
+	APP_IDENTIFIER: "com.filament.uchicago.quanderrealm",
 	ANDROID_ARCHIVE_SYMBOLS: true,
 	IOS_ARCHIVE_SYMBOLS: true,
 	WEBGL_OPEN_ACCESS: true

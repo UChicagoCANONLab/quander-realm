@@ -13,7 +13,13 @@ namespace Wrapper
         private DatabaseReference m_reference;
         private UserSave currentUserSave;
         
+#if PRODUCTION_FB
+        public static readonly string firebaseURL = "https://quander-production-default-rtdb.firebaseio.com/";
+#else
         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
+#endif
+
+
 
         public SaveManager()
         {
@@ -31,13 +37,6 @@ namespace Wrapper
 
         public IEnumerator InitFirebase()
         {
-            AppOptions devEnvOptions = new AppOptions
-            {
-                ApiKey = "AIzaSyBdbF7HlY93besU9gJKdB4LKN3E5uFpG78",
-                AppId = "1:721683477410:android:7ff5322e48d5134cd8b8fb",
-                ProjectId = "filament-zombies"
-            };
-
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
             {
                 DependencyStatus dependencyStatus = task.Result;
