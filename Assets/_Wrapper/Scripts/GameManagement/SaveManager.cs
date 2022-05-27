@@ -64,14 +64,14 @@ namespace Wrapper
             //TestSave();
         }
 
-        private void TestSave()
-        {
-            currentUserSave = new UserSave("Sibi", "CU_01");
+        //private void TestSave()
+        //{
+        //    currentUserSave = new UserSave("Sibi", "CU_01");
 
-            BBSaveData bbSave = new BBSaveData { lastCompletedLevelID = "L04", IntroDialogueSeen = false };
-            Events.UpdateMinigameSaveData(Game.BlackBox, bbSave);
-            Events.AddReward?.Invoke("CU_02");
-        }
+        //    BBSaveData bbSave = new BBSaveData { lastCompletedLevelID = "L04", IntroDialogueSeen = false };
+        //    Events.UpdateMinigameSaveData(Game.BlackBox, bbSave);
+        //    Events.AddReward?.Invoke("CU_02");
+        //}
 
         private void Login(string researchCode)
         {
