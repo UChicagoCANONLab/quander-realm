@@ -7,14 +7,13 @@ namespace Wrapper
         public static Action<Minigame> OpenMinigame;
         public static Action MinigameClosed;
 
-
         /// Save System ///
-        public static Action<bool> LoginEvent;
-        public static Action<string> AddReward;
-        public static Func<bool> UpdateRemoteSave;
-        public static Func<Game, object> GetMinigameSaveData;
-        public static Action<Game, object> UpdateMinigameSaveData;
         public static Action<string> SubmitResearchCode;
+        public static Action<LoginStatus> UpdateLoginStatus;
+        public static Action<string> AddReward;
+        public static Action<Game, object> UpdateMinigameSaveData;
+        public static Func<Game, object> GetMinigameSaveData;
+        public static Func<bool> UpdateRemoteSave;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;

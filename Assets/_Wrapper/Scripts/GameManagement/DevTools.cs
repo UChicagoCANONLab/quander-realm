@@ -37,6 +37,12 @@ namespace Wrapper
         {
             Events.CloseDialogueView?.Invoke();
         }
+
+        [Command("r", "add Reward to savefile"), UnityEngine.Scripting.Preserve]
+        static private void AddReward(string rewardID)
+        {
+            Events.AddReward?.Invoke(rewardID);
+        }
     }
 #endif
 }

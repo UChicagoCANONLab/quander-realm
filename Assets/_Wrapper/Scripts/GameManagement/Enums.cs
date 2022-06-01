@@ -28,6 +28,7 @@ namespace Wrapper
     };
 
     /// Save System ///
+    
     public enum Game
     {
         BlackBox = 0,
@@ -35,5 +36,15 @@ namespace Wrapper
         Labyrinth = 2,
         QueueBits = 3,
         Qupcakes = 4
+    }
+
+    public enum LoginStatus
+    {
+        Success,
+        Failure,
+        FormatError,
+        DatabaseError,
+        RetrievalError,
+        NonExistentUserError
     }
 }
