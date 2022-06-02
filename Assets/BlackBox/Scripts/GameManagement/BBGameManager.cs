@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using Wrapper;
 
 namespace BlackBox
 {
@@ -43,6 +44,7 @@ namespace BlackBox
 
         #endregion
 
+        private BBSaveData saveData;
         private const string levelsPath = "BlackBox/Levels";
         private const int totalLives = 3;
         private int livesRemaining;
@@ -54,7 +56,8 @@ namespace BlackBox
 
         void Start()
         {
-            level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
+            InitSaveData();
+            InitLevel();
             StartLevel();
         }
 
@@ -95,6 +98,27 @@ namespace BlackBox
 
         #region Level Management
 
+        private void InitSaveData()
+        {
+            try
+            {
+                string saveString = Events.GetMinigameSaveData?.Invoke(Game.BlackBox);
+                saveData = JsonUtility.FromJson<BBSaveData>(saveString);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+
+            if (saveData == null)
+                saveData = new BBSaveData();
+        }
+
+        private void InitLevel()
+        {
+            string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
+            level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
+        }
         private void StartLevel()
         {
             CreateAllGrids(level.gridSize);
@@ -147,7 +171,14 @@ namespace BlackBox
             int numCorrect = mainGridGO.GetComponent<MainGrid>().GetNumCorrect(level.nodePositions);
             bool levelWon = totalNodes == numCorrect;
 
-            if (!levelWon)
+            if (levelWon)
+            {
+                saveData.currentLevelID = level.nextLevelID;
+
+                Debug.LogFormat("Calling Update: {0}", saveData.currentLevelID);
+                Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+            }
+            else
             {
                 livesRemaining--;
                 BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
