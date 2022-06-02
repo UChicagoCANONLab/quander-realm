@@ -8,9 +8,12 @@ namespace Wrapper
         public static GameManager Instance { get { return _instance; } }
         private static GameManager _instance;
 
+        private SaveManager saveManager;
+
         private void Awake()
         {
             InitSingleton();
+            saveManager = new SaveManager();
         }
 
         private void OnEnable()
