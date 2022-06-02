@@ -65,6 +65,36 @@
       },
       "url": "https://registry.filamentgames.com"
     },
+    "com.google.external-dependency-manager": {
+      "version": "file:C:/Users/18015/Downloads/com.google.external-dependency-manager-1.2.171.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
+    "com.google.firebase.app": {
+      "version": "file:C:/Users/18015/Downloads/com.google.firebase.app-9.0.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.external-dependency-manager": "1.2.171"
+      }
+    },
+    "com.google.firebase.auth": {
+      "version": "file:C:/Users/18015/Downloads/com.google.firebase.auth-9.0.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.app": "9.0.0"
+      }
+    },
+    "com.google.firebase.database": {
+      "version": "file:C:/Users/18015/Downloads/com.google.firebase.database-9.0.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.auth": "9.0.0"
+      }
+    },
     "com.potatointeractive.pcg": {
       "version": "1.1.0",
       "depth": 0,
