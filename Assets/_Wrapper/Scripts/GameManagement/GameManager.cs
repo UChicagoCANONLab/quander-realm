@@ -9,12 +9,11 @@ namespace Wrapper
         private static GameManager _instance;
 
         [SerializeField] private GameObject loginScreen;
-        private SaveManager saveManager;
+        [SerializeField] private SaveManager saveManager;
 
         private void Awake()
         {
             InitSingleton();
-            saveManager = new SaveManager();
         }
 
         private void Start()
