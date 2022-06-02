@@ -7,6 +7,7 @@ namespace Wrapper
     {
         [SerializeField] private QButton loginButton;
         [SerializeField] private TMP_InputField field;
+        [SerializeField] private TextMeshProUGUI errorText;
 
         private void Awake()
         {
@@ -36,11 +37,18 @@ namespace Wrapper
                 case LoginStatus.Success:
                     gameObject.SetActive(false);
                     break;
-                case LoginStatus.Failure:
                 case LoginStatus.FormatError:
+                    errorText.text = "Login failed: Format Error";
+                    break;
                 case LoginStatus.DatabaseError:
+                    errorText.text = "Login failed: Database Error";
+                    break;
                 case LoginStatus.RetrievalError:
+                    errorText.text = "Login failed: Save file retrieval Error";
+                    break;
                 case LoginStatus.NonExistentUserError:
+                    errorText.text = "Login failed: User does not exist";
+                    break;
                 default:
                     break;
             }

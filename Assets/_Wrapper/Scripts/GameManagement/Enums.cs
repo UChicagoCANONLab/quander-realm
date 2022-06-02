@@ -41,7 +41,6 @@ namespace Wrapper
     public enum LoginStatus
     {
         Success,
-        Failure,
         FormatError,
         DatabaseError,
         RetrievalError,
