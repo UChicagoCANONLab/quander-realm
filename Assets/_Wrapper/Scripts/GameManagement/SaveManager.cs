@@ -6,7 +6,7 @@ using BeauRoutine;
 
 namespace Wrapper
 {
-    public class SaveManager
+    public class SaveManager : MonoBehaviour
     {
         private bool isDatabaseReady = false;
         private FirebaseApp app;
@@ -14,8 +14,8 @@ namespace Wrapper
         private DataSnapshot databaseSnapshot;
         private UserSave currentUserSave = null;
         
+        [HideInInspector] public bool isUserLoggedIn = false;
         public int researchCodeLength = 6;
-        public bool isUserLoggedIn = false;
 
 #if PRODUCTION_FB
         public static readonly string firebaseURL = "https://quander-production-default-rtdb.firebaseio.com/";
@@ -23,18 +23,21 @@ namespace Wrapper
         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
 #endif
 
-        public SaveManager()
+        private void Awake()
+        {
+            Routine.Start(InitFirebase());   
+        }
+
+        private void OnEnable()
         {
             Events.AddReward += AddReward;
             Events.SubmitResearchCode += Login;
             Events.UpdateRemoteSave += UpdateRemoteSave;
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
-
-            Routine.Start(InitFirebase());
         }
 
-        ~SaveManager()
+        private void OnDisable()
         {
             Events.AddReward -= AddReward;
             Events.SubmitResearchCode -= Login;
