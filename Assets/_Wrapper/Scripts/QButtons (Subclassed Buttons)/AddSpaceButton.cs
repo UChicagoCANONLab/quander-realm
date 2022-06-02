@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace Wrapper
@@ -16,7 +13,6 @@ namespace Wrapper
 
         protected override void OnClickedHandler()
         {
-            Debug.Log("clicked");
             inputField.text += " ";
         }
     }

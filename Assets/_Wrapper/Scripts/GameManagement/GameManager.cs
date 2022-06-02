@@ -8,9 +8,18 @@ namespace Wrapper
         public static GameManager Instance { get { return _instance; } }
         private static GameManager _instance;
 
+        [SerializeField] private GameObject loginScreen;
+        [SerializeField] private SaveManager saveManager;
+
         private void Awake()
         {
             InitSingleton();
+        }
+
+        private void Start()
+        {
+            if (!(saveManager.isUserLoggedIn))
+                loginScreen.SetActive(true);
         }
 
         private void OnEnable()
