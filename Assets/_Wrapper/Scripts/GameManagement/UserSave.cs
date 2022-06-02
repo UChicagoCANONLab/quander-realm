@@ -12,10 +12,6 @@ namespace Wrapper
 
         public UserSave(string idString = "", string rewardID = "")
         {
-            Events.AddReward += AddReward;
-            Events.GetMinigameSaveData += GetMinigameSaveData;
-            Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
-
             rewards = new List<string>();
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
 
@@ -25,14 +21,7 @@ namespace Wrapper
             AddReward(rewardID);
         }
 
-        ~UserSave()
-        {
-            Events.AddReward -= AddReward;
-            Events.GetMinigameSaveData -= GetMinigameSaveData;
-            Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
-        }
-
-        private void AddReward(string rewardID)
+        public void AddReward(string rewardID)
         {
             if (rewardID.Equals(string.Empty))
                 return;
@@ -45,22 +34,20 @@ namespace Wrapper
             Events.UpdateRemoteSave?.Invoke();
         }
 
-        private void UpdateMinigameSaveData(Game game, object data)
+        public void UpdateMinigameSave(Game game, object data)
         {
             //todo: error catching?
             minigameSaves[(int)game] = JsonUtility.ToJson(data);
-            Events.UpdateRemoteSave?.Invoke();
         }
 
-        private object GetMinigameSaveData(Game game)
+        public string GetMinigameSave(Game game)
         {
             //todo: error catching?
             string saveString = minigameSaves[(int)game];
-
             if (saveString.Equals(string.Empty))
                 return null;
 
-            return JsonUtility.FromJson<object>(saveString);
+            return saveString;
         }
 
         private string FormatString(string rawString)

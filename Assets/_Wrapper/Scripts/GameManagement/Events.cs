@@ -12,7 +12,7 @@ namespace Wrapper
         public static Action<LoginStatus> UpdateLoginStatus;
         public static Action<string> AddReward;
         public static Action<Game, object> UpdateMinigameSaveData;
-        public static Func<Game, object> GetMinigameSaveData;
+        public static Func<Game, string> GetMinigameSaveData;
         public static Func<bool> UpdateRemoteSave;
 
         /// Dialogue System ///
