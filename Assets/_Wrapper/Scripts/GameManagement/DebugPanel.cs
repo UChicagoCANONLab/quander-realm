@@ -20,6 +20,9 @@ public class DebugPanel : MonoBehaviour
     
     private void Awake()
     {
+#if PRODUCTION_FB
+        gameObject.SetActive(false);
+#endif
         SetupOptions();
         submitButton.onClick.AddListener(SubmitCommand);
     }
