@@ -9,6 +9,7 @@ namespace Wrapper
         private static GameManager _instance;
 
         [SerializeField] private GameObject loginScreen;
+        [SerializeField] private GameObject DebugPanel;
         [SerializeField] private SaveManager saveManager;
 
         private void Awake()
@@ -20,6 +21,12 @@ namespace Wrapper
         {
             if (!(saveManager.isUserLoggedIn))
                 loginScreen.SetActive(true);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.BackQuote))
+                DebugPanel.SetActive(!(DebugPanel.activeInHierarchy));
         }
 
         private void OnEnable()
