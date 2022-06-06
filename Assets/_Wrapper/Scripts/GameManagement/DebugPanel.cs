@@ -11,7 +11,10 @@ public class DebugPanel : MonoBehaviour
     {
         Open_Dialog_UI,
         Close_Dialog_UI,
-        Add_Reward
+        Add_Reward,
+        BB_Goto_Level,
+        BB_Toggle_Debug,
+        BB_Clear_Markers
     };
 
     public TMP_Dropdown dropDown;
@@ -57,6 +60,15 @@ public class DebugPanel : MonoBehaviour
                 break;
             case Option.Add_Reward:
                 AddReward(fieldText);
+                break;
+            case Option.BB_Goto_Level:
+                Events.BBGotoLevel?.Invoke(fieldText);
+                break;
+            case Option.BB_Toggle_Debug:
+                Events.BBToggleDebug?.Invoke();
+                break;
+            case Option.BB_Clear_Markers:
+                Events.BBClearMarkers?.Invoke();
                 break;
         }
 

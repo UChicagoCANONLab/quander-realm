@@ -25,5 +25,10 @@ namespace Wrapper
         public static Action<int> ChangeDialogue;
         public static Action<bool> SwitchNextButton;
         public static Action<bool> TogglePreviousButton;
+
+        /// Debug ///
+        public static Action<string> BBGotoLevel;
+        public static Action BBToggleDebug;
+        public static Action BBClearMarkers;
     }
 }
