@@ -9,6 +9,7 @@ namespace Wrapper
         private static GameManager _instance;
 
         [SerializeField] private GameObject loginScreen;
+        [SerializeField] private GameObject DebugPanel;
         [SerializeField] private SaveManager saveManager;
 
         private void Awake()
@@ -22,6 +23,13 @@ namespace Wrapper
                 loginScreen.SetActive(true);
         }
 
+#if !PRODUCTION_FB
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.BackQuote))
+                DebugPanel.SetActive(!(DebugPanel.activeInHierarchy));
+        }
+#endif
         private void OnEnable()
         {
             Events.OpenMinigame += OpenMinigame;
