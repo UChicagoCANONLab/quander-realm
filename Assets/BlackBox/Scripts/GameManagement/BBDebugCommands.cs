@@ -29,7 +29,7 @@ namespace BlackBox
             #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
                 BBEvents.ToggleDebug?.Invoke();
             #else
-                Debug.LogWarning("Command only works for ios and android");
+                Debug.LogWarning("Command only works for ios and android, use the 'D' key to toggle Debug Mode");
             #endif
         }
 
