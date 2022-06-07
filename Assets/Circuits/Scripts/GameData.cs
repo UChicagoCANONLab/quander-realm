@@ -13,9 +13,10 @@ public static class GameData
 
     private static bool tutorialShown = false;
 
-
+#if UNITY_WEBGL == true && UNITY_EDITOR == false
     [DllImport("__Internal")]
     private static extern void SendData(string callback);
+#endif
 
     public static string getNextScene() {
         string outString = "";
