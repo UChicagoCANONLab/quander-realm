@@ -2,16 +2,19 @@
 namespace Wrapper
 {
     /// Dialogue System ///
+    
     public enum Character
     {
-        None,
-        Char1,
-        Char2,
-        Char3,
-        Char4,
-        Char5,
-        Char6
-    }
+        Molly,
+        Tangle,
+        Byte,
+        Wolfie,
+        Batty,
+        TwinA,
+        TwinB,
+        Chef,
+        None
+    };
 
     public enum Expression
     {
@@ -19,7 +22,7 @@ namespace Wrapper
         Positive,
         Negative,
         Confused
-    }
+    };
 
     public enum Step
     {
@@ -36,7 +39,7 @@ namespace Wrapper
         Labyrinth = 2,
         QueueBits = 3,
         Qupcakes = 4
-    }
+    };
 
     public enum LoginStatus
     {
@@ -45,5 +48,15 @@ namespace Wrapper
         DatabaseError,
         RetrievalError,
         NonExistentUserError
-    }
+    };
+
+    /// Rewards ///
+    
+    public enum CardType
+    {
+        Character,
+        ComputerPart,
+        Visual,
+        Concept
+    };
 }
