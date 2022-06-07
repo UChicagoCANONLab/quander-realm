@@ -10,16 +10,16 @@ public class WebLoadBehavior : MonoBehaviour
     
     public string nextScene;
     private int timeout = 100;
+
+#if UNITY_WEBGL == true && UNITY_EDITOR == false
     [DllImport("__Internal")]
     private static extern void GameLoaded(string callback);
 
     private void Start()
     {
-#if UNITY_WEBGL == true && UNITY_EDITOR == false
-    GameLoaded ("loadData");
-#endif
+        GameLoaded ("loadData");
     }
-
+#endif
 
     public void loadData(string data)
     {
