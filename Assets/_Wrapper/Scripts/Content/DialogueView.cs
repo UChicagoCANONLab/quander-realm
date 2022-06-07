@@ -23,11 +23,11 @@ namespace Wrapper
         [SerializeField] private GameObject char5Prefab = null;
         [SerializeField] private GameObject char6Prefab = null;
 
-        private Dictionary<Dialogue.Character, GameObject> characterDictionary; // todo: what about Speaker.None?
-        private Dialogue.Character characterLeft = Dialogue.Character.None;
-        private Dialogue.Character characterRight = Dialogue.Character.None;
-        private Dialogue.Expression ExpressionLeft = Dialogue.Expression.Default;
-        private Dialogue.Expression ExpressionRight = Dialogue.Expression.Default;
+        private Dictionary<Character, GameObject> characterDictionary; // todo: what about Speaker.None?
+        private Character characterLeft = Character.None;
+        private Character characterRight = Character.None;
+        private Expression ExpressionLeft = Expression.Default;
+        private Expression ExpressionRight = Expression.Default;
         private Animator animatorCharacterLeft = null;
         private Animator animatorCharacterRight = null;
         
@@ -225,14 +225,14 @@ namespace Wrapper
 
         private void InitCharacterDictionary()
         {
-            characterDictionary = new Dictionary<Dialogue.Character, GameObject>
+            characterDictionary = new Dictionary<Character, GameObject>
             {
-                { Dialogue.Character.Char1, char1Prefab },
-                { Dialogue.Character.Char2, char2Prefab },
-                { Dialogue.Character.Char3, char3Prefab },
-                { Dialogue.Character.Char4, char4Prefab },
-                { Dialogue.Character.Char5, char5Prefab },
-                { Dialogue.Character.Char6, char6Prefab }
+                { Character.Char1, char1Prefab },
+                { Character.Char2, char2Prefab },
+                { Character.Char3, char3Prefab },
+                { Character.Char4, char4Prefab },
+                { Character.Char5, char5Prefab },
+                { Character.Char6, char6Prefab }
             };
         }
     }
