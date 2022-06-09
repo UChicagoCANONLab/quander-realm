@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Wrapper
 {
-    public class RewardCard : ContentAsset
+    public class RewardAsset : ContentAsset
     {
         [SerializeField, ContentValue("Game")]
         public Game game;
