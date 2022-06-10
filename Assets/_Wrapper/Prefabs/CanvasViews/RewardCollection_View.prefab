@@ -2325,7 +2325,7 @@ GameObject:
   - component: {fileID: 4951701228393399003}
   - component: {fileID: 7457565893098010478}
   m_Layer: 5
-  m_Name: RewardsMount
+  m_Name: VisibleRewardsMount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3195,6 +3195,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4951701228393399006}
+  - {fileID: 1447065323429234021}
   - {fileID: 4951701229161447381}
   m_Father: {fileID: 4951701229164974886}
   m_RootOrder: 2
@@ -4315,7 +4316,7 @@ RectTransform:
   - {fileID: 4951701228256172560}
   - {fileID: 4951701228769425979}
   m_Father: {fileID: 4951701228851538552}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5202,12 +5203,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4082170cecdfd5f48a1e6772b5aea4cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visibleRewardsMount: {fileID: 4951701228393399007}
+  hiddenRewardsMount: {fileID: 6941090942600317815}
   BBRewardPrefab: {fileID: 1309896438385295909, guid: 5bae8a8eb8691d2459e0d9f724ac3363, type: 3}
   CTRewardPrefab: {fileID: 2541008831443918794, guid: d8566c06035146248a7e81117c1ed8f6, type: 3}
   LARewardPrefab: {fileID: 2541008831443918794, guid: 46a8d66ea2697d940a7bfd8713457690, type: 3}
   QBRewardPrefab: {fileID: 2541008831443918794, guid: 828915e01901b8847bab03c2b237b51b, type: 3}
   QURewardPrefab: {fileID: 2541008831443918794, guid: 1ba14e653a2bf3843b0e28f6c9206c19, type: 3}
-  rewardsMount: {fileID: 4951701228393399007}
 --- !u!1 &4951701229508963261
 GameObject:
   m_ObjectHideFlags: 0
@@ -6108,3 +6110,77 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 0
+--- !u!1 &6941090942600317815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1447065323429234021}
+  - component: {fileID: 6110300569365583907}
+  - component: {fileID: 5179106120775247392}
+  m_Layer: 5
+  m_Name: HiddenRewardsMount
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1447065323429234021
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6941090942600317815}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4951701228851538552}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 40}
+  m_SizeDelta: {x: 420, y: 580}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6110300569365583907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6941090942600317815}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 1
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 673.61, y: 928.24}
+  m_Spacing: {x: 35, y: 35}
+  m_Constraint: 0
+  m_ConstraintCount: 2
+--- !u!225 &5179106120775247392
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6941090942600317815}
+  m_Enabled: 0
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

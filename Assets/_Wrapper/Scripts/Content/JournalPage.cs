@@ -6,7 +6,7 @@ namespace Wrapper
     public class JournalPage
     {
         private const int maxListSize = 4;
-        private List<GameObject> cardList;
+        public List<GameObject> cardList;
 
         public JournalPage()
         {

@@ -19,10 +19,17 @@ namespace Wrapper
         [SerializeField] private TextMeshProUGUI titleBack;
         [SerializeField] private TextMeshProUGUI backText;
 
+        private Animator animator;
+
+        private void Awake()
+        {
+            animator = gameObject.GetComponent<Animator>();
+        }
+        
         public void SetContent(RewardAsset rAsset, Color color)
         {
             string cardTypeDisplayName = ObjectNames.NicifyVariableName(rAsset.cardType.ToString());
-            string titleDisplayName = ObjectNames.NicifyVariableName(rAsset.title.ToString());
+            string titleDisplayName = ObjectNames.NicifyVariableName(rAsset.title);
 
             cardTypeTextFront.text = cardTypeDisplayName;
             cardTypeColorStrip.color = color;
@@ -45,6 +52,11 @@ namespace Wrapper
             }
 
             image.sprite = cardSprite;
+        }
+
+        public void ToggleSelected(bool isSelected)
+        {
+            animator.SetBool("Selected", isSelected);
         }
     }
 }

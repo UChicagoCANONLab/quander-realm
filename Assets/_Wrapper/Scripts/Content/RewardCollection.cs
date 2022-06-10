@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,13 +9,15 @@ namespace Wrapper
     {
         #region Variables
 
+        [SerializeField] private GameObject visibleRewardsMount;
+        [SerializeField] private GameObject hiddenRewardsMount;
+
+        [Header("Card Prefabs")]
         [SerializeField] private GameObject BBRewardPrefab;
         [SerializeField] private GameObject CTRewardPrefab;
         [SerializeField] private GameObject LARewardPrefab;
         [SerializeField] private GameObject QBRewardPrefab;
         [SerializeField] private GameObject QURewardPrefab;
-
-        [SerializeField] private GameObject rewardsMount;
 
         private const string rewardsPath = "_Wrapper/Rewards";
 
@@ -31,6 +34,18 @@ namespace Wrapper
             InitJournalDict();
 
             PopulateJournal();
+            SwitchPage(journal.First().Value.First());
+        }
+
+        private void SwitchPage(JournalPage journalPage)
+        {
+            // Move visible cards to the background 
+            foreach(GameObject rewardGO in visibleRewardsMount.transform)
+                rewardGO.transform.SetParent(hiddenRewardsMount.transform);
+
+            // Bring current page's cards into the foreground
+            foreach(GameObject rewardGO in journalPage.cardList)
+                rewardGO.transform.SetParent(visibleRewardsMount.transform);
         }
 
         private void PopulateJournal()
@@ -39,7 +54,7 @@ namespace Wrapper
 
             foreach (RewardAsset rAsset in rewardAssetArray)
             {
-                GameObject rewardGO = Instantiate(prefabDict[rAsset.game], rewardsMount.transform);
+                GameObject rewardGO = Instantiate(prefabDict[rAsset.game], hiddenRewardsMount.transform);
                 Color typeColor = colorDict[rAsset.cardType];
 
                 rewardGO.GetComponent<Reward>().SetContent(rAsset, typeColor);
