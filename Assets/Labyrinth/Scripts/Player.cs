@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     private int deg;
     private float speed = 5f;
 
+    public Animator animator;
+
     private GameBehavior gb;
 
     public Player() { 
@@ -132,6 +134,10 @@ public class Player : MonoBehaviour
     }
 
     public void move(Vector3 movement) {
+        animator.SetFloat("Horizontal", movement.x);
+        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat("Speed", movement.sqrMagnitude);
+
         movepoint.position += movement;
         ploc += movement * -1;
     }

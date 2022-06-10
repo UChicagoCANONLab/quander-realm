@@ -10,11 +10,12 @@ public class MazeCell : MonoBehaviour
     private int ty;
 
     private int type;
-    public bool visited;
     public Dictionary<string, bool> walls;
-    public bool goal;
     public int deg;
 
+    public bool goal;
+    public bool start;
+    public bool visited;
 
     private GameBehavior gb = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>(); 
 
@@ -90,6 +91,10 @@ public class MazeCell : MonoBehaviour
 
     public void toggleGoal(bool val) {
         goal = val;
+    }
+
+    public void toggleStart(bool val) {
+        start = val;
     }
     
     /* public void setType(int degree) {

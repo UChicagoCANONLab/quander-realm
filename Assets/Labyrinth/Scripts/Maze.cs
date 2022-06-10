@@ -178,6 +178,7 @@ public class Maze : MonoBehaviour
     }
 
     public void distributeGoal(MazeCell[,] maze, Player player) {
+        maze[0, gb.size-1].toggleStart(true);
         maze[gb.size-1, 0].toggleGoal(true);
         currGoal = new Vector3(gb.size-1, 0, 0);
     }
@@ -361,7 +362,6 @@ public class Maze : MonoBehaviour
                 if (x==0 && y==(size-1)) {
                     tm.walls.SetTile(new Vector3Int((-x+size/2) + tm.translation(size, xcent), -(y+1)+size/2, 0), wallTiles[1]);
                     tm.walls.SetTile(new Vector3Int((-(x-1)+size/2) + tm.translation(size, xcent), -y+size/2, 0), wallTiles[2]);
-                    tm.goal.SetTile(new Vector3Int((-x+size/2) + tm.translation(size, xcent), -y+size/2, 0), startTile);
                 }
                 else if (y==(size-1)) {
                     tm.walls.SetTile(new Vector3Int((-x+size/2) + tm.translation(size, xcent), -(y+1)+size/2, 0), wallTiles[1]);
@@ -372,6 +372,9 @@ public class Maze : MonoBehaviour
 
                 if (curr.getGoal == true) {
                     tm.goal.SetTile(new Vector3Int((-x+size/2) + tm.translation(size, xcent), -y+size/2, 0), goalTile);
+                }
+                else if (curr.start == true) {
+                    tm.goal.SetTile(new Vector3Int((-x+size/2) + tm.translation(size, xcent), -y+size/2, 0), startTile);
                 }
             }
         }

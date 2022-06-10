@@ -22,6 +22,12 @@ public class ButtonBehavior : MonoBehaviour
     } 
  */
 
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            LoadMainMenu();
+        }
+    }
+
     public void LoadLevelSelectMenu() {
         SceneManager.LoadScene("LevelSelect");
     }
@@ -74,7 +80,7 @@ public class ButtonBehavior : MonoBehaviour
                 currScene = "4x4.180";
                 break;
             case 7:
-                currScene = "5x5.180.2";
+                currScene = "5x5.180.1";
                 break;
             case 8:
                 currScene = "5x5.180.2";

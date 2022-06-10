@@ -73,6 +73,12 @@ public class GameBehavior : MonoBehaviour
         if (winner == true) {
             btn.Win(numStars);
         }
+        /* if (Input.GetKeyDown(KeyCode.Escape)) {
+            btn.LoadMainMenu();
+        } */
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            pm.SwitchPlayer();
+        }
     }
 
     public void collectGoal() {
@@ -87,7 +93,7 @@ public class GameBehavior : MonoBehaviour
     }
 
     public void checkNumStars() {
-        if (steps > (int)(1.2 * pathLength)) {
+        if (steps > (int)(1.25 * pathLength)) {
             stars[2].visibilityOff();
             numStars = 2;
         }
@@ -95,25 +101,26 @@ public class GameBehavior : MonoBehaviour
             stars[1].visibilityOff();
             numStars = 1;
         }
-        if (steps > (int)(2 * pathLength)) {
+        if (steps > (int)(1.75 * pathLength)) {
             stars[0].visibilityOff();
             numStars = 0;
         }
         return;
     }
 
-    void OnGUI() {
+   /*  void OnGUI() {
         if (winner != true) {
             GUI.Box(new Rect(10, 10, 150, 25), "Goals Collected: " + goalsCollected);
             GUI.Box(new Rect(10, 350, 200, 25), hintText);
         }
-    }
+    } */
 
     
 
 // ~~~~~~~~~~~~~~~ BUTTONS ~~~~~~~~~~~~~~~
 
     public void GiveHint() {
+        string hintDir;
         if (hintsUsed == 3) {
             hintText = "You used all your hints!";
             return;
@@ -121,16 +128,18 @@ public class GameBehavior : MonoBehaviour
         object[] hint = maze.calcPathToGoal();
         string hintPath = hint[0].ToString();
         int hintDeg = (int)hint[1];
-        Debug.Log(hintDeg);
 
         if (hintDeg == 0) {
-            hintText = $"Hint: Try going {goalTextNormal[hintPath[0].ToString()]}!";
+            hintDir = goalTextNormal[hintPath[0].ToString()];
+            // hintText = $"Hint: Try going {goalTextNormal[hintPath[0].ToString()]}!";
         }
         else if (hintDeg == 180) {
-            hintText = $"Hint: Try going {goalTextNormal[rot180[hintPath[0].ToString()]]}!";
+            hintDir = goalTextNormal[rot180[hintPath[0].ToString()]];
+            // hintText = $"Hint: Try going {goalTextNormal[rot180[hintPath[0].ToString()]]}!";
         }
         else if (hintDeg == 90) {
-            hintText = $"Hint: Try going {goalTextNormal[rot90[hintPath[0].ToString()]]}!";
+            hintDir = goalTextNormal[rot90[hintPath[0].ToString()]];
+            // hintText = $"Hint: Try going {goalTextNormal[rot90[hintPath[0].ToString()]]}!";
         }
 
         hintsUsed++;
@@ -160,13 +169,7 @@ public class GameBehavior : MonoBehaviour
         }
 
         if (pm.player1.current == false) {
-            pm.player1.toggleType();
-            pm.player2.toggleType();
-
-            maze.map1.toggleRenderer(maze.map1.overlay);
-            maze.map1.toggleCollider(maze.map1.walls);
-            maze.map2.toggleRenderer(maze.map2.overlay);
-            maze.map2.toggleCollider(maze.map2.walls);
+            pm.SwitchPlayer();
         }
     }
 

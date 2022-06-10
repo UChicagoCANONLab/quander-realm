@@ -67,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
                 else {
                     movementx = new Vector3(Input.GetAxisRaw("Horizontal"),0,0);
                 }
+
                 Vector3 mirrorMovementx = mirroredMovement(deg, sign, movementx, "horizontal");
 
                 if (!Physics2D.OverlapCircle(main.getActualPosition + movementx/3, 0.25f)) {
@@ -74,7 +75,9 @@ public class PlayerMovement : MonoBehaviour
                     main.move(movementx);
                     mirror.move(mirrorMovementx);
                     gb.steps++;
+                    
                     movementx = new Vector3(0,0,0);
+                    // Invoke("stopAnim", 0.75f);
         
                     if ((main.getPloc == new Vector3(gb.size-1, 0, 0)) || 
                     mirror.getPloc == new Vector3(gb.size-1, 0, 0)) {
@@ -103,7 +106,9 @@ public class PlayerMovement : MonoBehaviour
                     main.move(movementy);
                     mirror.move(mirrorMovementy);
                     gb.steps++;
+                    
                     movementy = new Vector3(0,0,0);
+                    // Invoke("stopAnim", 0.75f);
         
                     if ((main.getPloc == new Vector3(gb.size-1, 0, 0)) || 
                     mirror.getPloc == new Vector3(gb.size-1, 0, 0)) {
@@ -121,6 +126,11 @@ public class PlayerMovement : MonoBehaviour
     public void goalTime() {
         gb.collectGoal();
     }
+
+    /* public void stopAnim() {
+        player1.animator.SetFloat("Speed", 0.0f);
+        player2.animator.SetFloat("Speed", 0.0f);
+    } */
 
     public Vector3 getButtonPress(string dir) {
         mov = dir;
@@ -140,16 +150,16 @@ public class PlayerMovement : MonoBehaviour
         return movement;
     }
 
-    public Vector3 mirroredMovement(int deg, float sign, Vector3 origMovement, string dir) { //1 = vertical, -1 = horizontal (just for 90deg)
+    public Vector3 mirroredMovement(int deg, float sign, Vector3 origMovement, string dir) {
         if (deg == 0) {
             return origMovement;
         }
         else if (deg == 90) {
             if (dir == "vertical") {
-                return (-1* sign * new Vector3(Input.GetAxisRaw("Vertical"),0,0));
+                return (-1* sign * new Vector3(origMovement.y,0,0));
             }
             else if (dir == "horizontal") {
-                return (sign * new Vector3(0,Input.GetAxisRaw("Horizontal"),0));
+                return (sign * new Vector3(0,origMovement.x,0));
             }
         }
         else if (deg == 180) {
