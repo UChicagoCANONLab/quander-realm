@@ -6,17 +6,23 @@ namespace Wrapper
 {
     public class RewardCollection : MonoBehaviour
     {
-        private const string rewardsPath = "_Wrapper/Rewards";
-
-        private Dictionary<CardType, Color> colorDict;
-        private Dictionary<Game, GameObject> prefabDict;
-        private Dictionary<Game, List<JournalPage>> journal;
+        #region Variables
 
         [SerializeField] private GameObject BBRewardPrefab;
         [SerializeField] private GameObject CTRewardPrefab;
         [SerializeField] private GameObject LARewardPrefab;
         [SerializeField] private GameObject QBRewardPrefab;
         [SerializeField] private GameObject QURewardPrefab;
+
+        [SerializeField] private GameObject rewardsMount;
+
+        private const string rewardsPath = "_Wrapper/Rewards";
+
+        private Dictionary<CardType, Color> colorDict;
+        private Dictionary<Game, GameObject> prefabDict;
+        private Dictionary<Game, List<JournalPage>> journal;
+
+        #endregion
 
         void Awake()
         {
@@ -33,7 +39,7 @@ namespace Wrapper
 
             foreach (RewardAsset rAsset in rewardAssetArray)
             {
-                GameObject rewardGO = Instantiate(prefabDict[rAsset.game]);
+                GameObject rewardGO = Instantiate(prefabDict[rAsset.game], rewardsMount.transform);
                 Color typeColor = colorDict[rAsset.cardType];
 
                 rewardGO.GetComponent<Reward>().SetContent(rAsset, typeColor);
