@@ -26,6 +26,9 @@ namespace Wrapper
         public static Action<bool> SwitchNextButton;
         public static Action<bool> TogglePreviousButton;
 
+        /// Reward System ///
+        public static Func<string, bool> IsRewardUnlocked;
+
         /// Debug ///
         public static Action<string> BBGotoLevel;
         public static Action BBToggleDebug;

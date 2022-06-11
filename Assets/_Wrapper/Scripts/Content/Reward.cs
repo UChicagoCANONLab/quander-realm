@@ -7,6 +7,8 @@ namespace Wrapper
 {
     public class Reward : MonoBehaviour
     {
+        [SerializeField] private Animator animator;
+
         [Header("Front")]
         [SerializeField] private TextMeshProUGUI cardTypeTextFront;
         [SerializeField] private Image cardTypeColorStrip;
@@ -20,15 +22,8 @@ namespace Wrapper
         [SerializeField] private TextMeshProUGUI backText;
 
         private string id;
-        private Animator animator;
         private const string stateDisabled = "Disabled";
         private const string stateSelected = "Selected";
-
-        private void Awake()
-        {
-            animator = gameObject.GetComponent<Animator>();
-            //animator.SetBool(stateDisabled, false);
-        }
 
         public void SetContent(RewardAsset rAsset, Color color)
         {
@@ -46,6 +41,8 @@ namespace Wrapper
             cardTypeBack.text = cardTypeDisplayName;
             titleBack.text = titleDisplayName;
             backText.text = rAsset.backText;
+
+            InitAnimationState();
         }
 
         private void SetFrontImage(RewardAsset rAsset)
@@ -60,10 +57,21 @@ namespace Wrapper
             image.sprite = cardSprite;
         }
 
+        private void InitAnimationState()
+        {
+            bool isUnlocked = (bool)Events.IsRewardUnlocked?.Invoke(id);
+
+            if (isUnlocked)
+                animator.SetBool(stateDisabled, false);
+        }
+
         public void ToggleSelected(bool isSelected)
         {
             if (animator.GetBool(stateDisabled))
+            {
+                Debug.LogFormat("Cannot 'Select' disabled card: {0}", titleFront.text);
                 return;
+            }
 
             animator.SetBool(stateSelected, isSelected);
         }
