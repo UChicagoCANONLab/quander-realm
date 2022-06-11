@@ -19,17 +19,23 @@ namespace Wrapper
         [SerializeField] private TextMeshProUGUI titleBack;
         [SerializeField] private TextMeshProUGUI backText;
 
+        private string id;
         private Animator animator;
+        private const string stateDisabled = "Disabled";
+        private const string stateSelected = "Selected";
 
         private void Awake()
         {
             animator = gameObject.GetComponent<Animator>();
+            //animator.SetBool(stateDisabled, false);
         }
-        
+
         public void SetContent(RewardAsset rAsset, Color color)
         {
             string cardTypeDisplayName = ObjectNames.NicifyVariableName(rAsset.cardType.ToString());
             string titleDisplayName = ObjectNames.NicifyVariableName(rAsset.title);
+
+            id = rAsset.rewardID;
 
             cardTypeTextFront.text = cardTypeDisplayName;
             cardTypeColorStrip.color = color;
@@ -56,7 +62,10 @@ namespace Wrapper
 
         public void ToggleSelected(bool isSelected)
         {
-            animator.SetBool("Selected", isSelected);
+            if (animator.GetBool(stateDisabled))
+                return;
+
+            animator.SetBool(stateSelected, isSelected);
         }
     }
 }
