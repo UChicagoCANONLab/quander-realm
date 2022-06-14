@@ -7,9 +7,8 @@ namespace Wrapper
     public class UserSave
     {
         public string id = string.Empty;
-
-        private string[] minigameSaves;
-        private List<string> rewards;
+        public string[] minigameSaves;
+        public List<string> rewards;
 
         public UserSave(string idString = "", string rewardID = "")
         {
@@ -32,7 +31,6 @@ namespace Wrapper
                 return;
 
             rewards.Add(formatted);
-            Events.UpdateRemoteSave?.Invoke();
         }
 
         public bool HasReward(string rewardID)

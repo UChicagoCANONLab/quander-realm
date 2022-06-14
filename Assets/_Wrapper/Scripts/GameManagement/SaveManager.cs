@@ -118,7 +118,10 @@ namespace Wrapper
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;
-                Routine.WaitCondition(() => UpdateRemoteSave());
+
+                yield return Routine.Race(
+                    Routine.WaitCondition(() => UpdateRemoteSave()),
+                    Routine.WaitSeconds(5));
             }
 
             currentUserSave = JsonUtility.FromJson<UserSave>(
