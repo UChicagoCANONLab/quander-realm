@@ -28,6 +28,7 @@ namespace Wrapper
 
         /// Reward System ///
         public static Func<string, bool> IsRewardUnlocked;
+        public static Action<JournalPage> OpenJournalPage;
 
         /// Debug ///
         public static Action<string> BBGotoLevel;

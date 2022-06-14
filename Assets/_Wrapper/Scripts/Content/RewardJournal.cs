@@ -34,7 +34,6 @@ namespace Wrapper
 
         private const string rewardsPath = "_Wrapper/Rewards";
         private Reward currentReward;
-        private JournalSection currentSection;
 
         #endregion
 
@@ -44,20 +43,17 @@ namespace Wrapper
             InitPrefabDict();
             InitJournal();
             PopulateJournal();
-            SwitchSection(journal.First().Key);
+            OpenFirstPage();
         }
 
-        private void SwitchSection(Game game)
+        private void OnEnable()
         {
-            JournalSection newSection = journal[game];
+            Events.OpenJournalPage += SwitchPage;
+        }
 
-            SwitchPage(newSection.GetFirstPage());
-
-            if (currentSection != null)
-                currentSection.ToggleTab(false);
-            
-            newSection.ToggleTab(true);
-            currentSection = newSection;
+        private void OnDisable()
+        {
+            Events.OpenJournalPage -= SwitchPage;
         }
 
         /// <summary>
@@ -65,15 +61,33 @@ namespace Wrapper
         /// </summary>
         private void SwitchPage(JournalPage journalPage)
         {
-            foreach(GameObject rewardGO in visibleRewardsMount.transform)
-                rewardGO.transform.SetParent(hiddenRewardsMount.transform);
+            foreach (Transform rewardTransform in GetVisibleCards())
+                rewardTransform.SetParent(hiddenRewardsMount.transform);
 
-            foreach(GameObject rewardGO in journalPage.cardList)
+            foreach (GameObject rewardGO in journalPage.cardList)
                 rewardGO.transform.SetParent(visibleRewardsMount.transform);
 
             //todo: find first available reward rather than first
             //visibleRewardsMount.transform.GetChild(0).GetComponent<Reward>().ToggleSelected(true);
         }
+
+        private List<Transform> GetVisibleCards()
+        {
+            List<Transform> visibleCards = new List<Transform>();
+
+            foreach (Transform transform in visibleRewardsMount.transform)
+                visibleCards.Add(transform);
+
+            return visibleCards;
+        }
+
+        private void OpenFirstPage()
+        {
+            JournalSection firstSection = journal.First().Value;
+            SwitchPage(firstSection.GetFirstPage());
+            firstSection.ToggleTab(true);
+        }
+
 
         #region Initialize
 
