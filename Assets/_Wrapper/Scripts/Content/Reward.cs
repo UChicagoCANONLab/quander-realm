@@ -2,6 +2,8 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using BeauRoutine;
+using System.Collections;
 
 namespace Wrapper
 {
@@ -42,7 +44,7 @@ namespace Wrapper
             titleBack.text = titleDisplayName;
             backText.text = rAsset.backText;
 
-            InitAnimationState();
+            Routine.Start(InitAnimationState());
         }
 
         private void SetFrontImage(RewardAsset rAsset)
@@ -57,12 +59,14 @@ namespace Wrapper
             image.sprite = cardSprite;
         }
 
-        private void InitAnimationState()
+        private IEnumerator InitAnimationState()
         {
             bool isUnlocked = (bool)Events.IsRewardUnlocked?.Invoke(id);
-
             if (isUnlocked)
+            {
+                yield return null;
                 animator.SetBool(stateDisabled, false);
+            }
         }
 
         public void ToggleSelected(bool isSelected)
