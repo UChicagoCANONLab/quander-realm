@@ -8,7 +8,9 @@ namespace Wrapper
 {
     public class JournalSection
     {
-        private List<JournalPage> pages;
+        private static int nextPageNumber = 0;
+
+        public List<JournalPage> pages;
         private Toggle tab;
         private Animator tabAnimator;
 
@@ -44,7 +46,11 @@ namespace Wrapper
         private void AddPageIfNeeded()
         {
             if (pages.Count == 0 || pages.Last().IsFull())
+            {
                 pages.Add(new JournalPage());
+                pages.Last().pageNumber = nextPageNumber;
+                nextPageNumber++;
+            }
         }
 
         public JournalPage GetFirstPage()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ namespace Wrapper
 {
     public class JournalPage
     {
+        public int pageNumber;
         private const int maxListSize = 4;
         public List<GameObject> cardList;
 

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using BeauRoutine;
 
 namespace Wrapper
 {
     public class RewardJournal : MonoBehaviour
     {
         #region Variables
+
+        [SerializeField] private Animator animator;
 
         [Header("Card Mounts")]
         [SerializeField] private GameObject visibleRewardsMount;
@@ -28,12 +31,18 @@ namespace Wrapper
         [SerializeField] private GameObject QBTab;
         [SerializeField] private GameObject QUTab;
 
+        [Header("Navigation")]
+        [SerializeField] private Button previousButton;
+        [SerializeField] private Button nextButton;
+        [SerializeField] private Toggle[] navDots;
+
         private Dictionary<CardType, Color> colorDict;
         private Dictionary<Game, GameObject> prefabDict;
         private Dictionary<Game, JournalSection> journal;
 
         private const string rewardsPath = "_Wrapper/Rewards";
         private Reward currentReward;
+        private JournalPage currentPage;
 
         #endregion
 
@@ -42,6 +51,12 @@ namespace Wrapper
             InitColorDict();
             InitPrefabDict();
             InitJournal();
+            InitPageNavigation();
+        }
+
+        private void Start()
+        {
+            animator.SetBool("On", true);
             PopulateJournal();
             OpenFirstPage();
         }
@@ -56,19 +71,63 @@ namespace Wrapper
             Events.OpenJournalPage -= SwitchPage;
         }
 
+        private void SwitchPage(int pageNumber)
+        {
+            foreach(JournalSection section in journal.Values)
+            {
+                foreach(JournalPage page in section.pages)
+                {
+                    if (page.pageNumber == pageNumber)
+                    {
+                        SwitchPage(page);
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Uses the navDots' OnValueChangedEvent to trigger a page switch. The function will add the value of "step"
+        /// to the current page's index and trigger the navDot at that index.
+        /// </summary>
+        private void SwitchPage(Step step)
+        {
+            int newIndex = currentPage.pageNumber + (int)step;
+            if (newIndex < 0 || newIndex > navDots.Length - 1)
+                return;
+
+            navDots[newIndex].isOn = true;
+        }
+
         /// <summary>
         /// Move visible cards to the hidden cards mount, bring the requested page's cards onto the visible cards mount
         /// </summary>
-        private void SwitchPage(JournalPage journalPage)
+        private void SwitchPage(JournalPage page)
         {
             foreach (Transform rewardTransform in GetVisibleCards())
                 rewardTransform.SetParent(hiddenRewardsMount.transform);
 
-            foreach (GameObject rewardGO in journalPage.cardList)
+            foreach (GameObject rewardGO in page.cardList)
+            {
                 rewardGO.transform.SetParent(visibleRewardsMount.transform);
+                Routine.Start(rewardGO.GetComponent<Reward>().InitAnimationState());
+            }
 
-            //todo: find first available reward rather than first
-            //visibleRewardsMount.transform.GetChild(0).GetComponent<Reward>().ToggleSelected(true);
+            currentPage = page;
+            SelectFirstAvailableCard();
+        }
+
+        private void SelectFirstAvailableCard()
+        {
+            foreach (Transform rewardTransform in GetVisibleCards())
+            {
+                Reward reward = rewardTransform.GetComponent<Reward>();
+                if (reward.IsUnlocked())
+                {
+                    reward.ToggleSelected(true);
+                    break;
+                }
+            }
         }
 
         private List<Transform> GetVisibleCards()
@@ -87,7 +146,6 @@ namespace Wrapper
             SwitchPage(firstSection.GetFirstPage());
             firstSection.ToggleTab(true);
         }
-
 
         #region Initialize
 
@@ -129,6 +187,15 @@ namespace Wrapper
                 { Game.QueueBits, new JournalSection(QBTab) },
                 { Game.Qupcakes,  new JournalSection(QUTab) }
             };
+        }
+
+        private void InitPageNavigation()
+        {
+            foreach (Toggle dot in navDots)
+                dot.onValueChanged.AddListener((isOn) => SwitchPage(Array.IndexOf(navDots, dot)));
+
+            previousButton.onClick.AddListener(() => SwitchPage(Step.Backward));
+            nextButton.onClick.AddListener(() => SwitchPage(Step.Forward));
         }
 
         private void PopulateJournal()
