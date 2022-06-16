@@ -1,8 +1,6 @@
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using BeauRoutine;
 using System.Collections;
 
 namespace Wrapper
@@ -29,8 +27,8 @@ namespace Wrapper
 
         public void SetContent(RewardAsset rAsset, Color color)
         {
-            string cardTypeDisplayName = ObjectNames.NicifyVariableName(rAsset.cardType.ToString());
-            string titleDisplayName = ObjectNames.NicifyVariableName(rAsset.title);
+            string cardTypeDisplayName = GetDisplayName(rAsset.cardType.ToString());
+            string titleDisplayName = GetDisplayName(rAsset.title);
 
             id = rAsset.rewardID;
 
@@ -43,8 +41,6 @@ namespace Wrapper
             cardTypeBack.text = cardTypeDisplayName;
             titleBack.text = titleDisplayName;
             backText.text = rAsset.backText;
-
-            Routine.Start(InitAnimationState());
         }
 
         private void SetFrontImage(RewardAsset rAsset)
@@ -59,14 +55,18 @@ namespace Wrapper
             image.sprite = cardSprite;
         }
 
-        private IEnumerator InitAnimationState()
+        public IEnumerator InitAnimationState()
         {
-            bool isUnlocked = (bool)Events.IsRewardUnlocked?.Invoke(id);
-            if (isUnlocked)
+            if (IsUnlocked())
             {
                 yield return null;
                 animator.SetBool(stateDisabled, false);
             }
+        }
+
+        public bool IsUnlocked()
+        {
+            return Events.IsRewardUnlocked?.Invoke(id) ?? false;
         }
 
         public void ToggleSelected(bool isSelected)
@@ -78,6 +78,11 @@ namespace Wrapper
             }
 
             animator.SetBool(stateSelected, isSelected);
+        }
+
+        private string GetDisplayName(string input)
+        {
+            return input;
         }
     }
 }

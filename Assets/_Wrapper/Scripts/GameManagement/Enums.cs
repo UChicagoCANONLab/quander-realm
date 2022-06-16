@@ -24,6 +24,9 @@ namespace Wrapper
         Confused
     };
 
+    /// <summary>
+    /// Translates Step.Forward to +1 and Step.Backward to -1
+    /// </summary>
     public enum Step
     {
         Forward = 1,
