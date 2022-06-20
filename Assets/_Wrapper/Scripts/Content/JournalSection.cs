@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,11 +7,11 @@ namespace Wrapper
 {
     public class JournalSection
     {
+        private Toggle tab;
+        private Animator tabAnimator;
         private static int nextPageNumber = 0;
 
         public List<JournalPage> pages;
-        private Toggle tab;
-        private Animator tabAnimator;
 
         public JournalSection(GameObject tabGO)
         {

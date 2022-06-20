@@ -48,6 +48,7 @@ namespace Wrapper
 
         void Awake()
         {
+            Events.ToggleLoadingScreen?.Invoke();
             InitColorDict();
             InitPrefabDict();
             InitJournal();
@@ -59,6 +60,7 @@ namespace Wrapper
             animator.SetBool("On", true);
             PopulateJournal();
             OpenFirstPage();
+            Events.ToggleLoadingScreen?.Invoke();
         }
 
         private void OnEnable()

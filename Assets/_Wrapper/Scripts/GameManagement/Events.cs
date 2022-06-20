@@ -4,8 +4,10 @@ namespace Wrapper
 {
     public static class Events
     {
+        /// Game Management ///
         public static Action<Minigame> OpenMinigame;
         public static Action MinigameClosed;
+        public static Action ToggleLoadingScreen;
 
         /// Save System ///
         public static Action<string> SubmitResearchCode;

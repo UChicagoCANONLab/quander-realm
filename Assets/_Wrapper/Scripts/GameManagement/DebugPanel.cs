@@ -9,9 +9,10 @@ public class DebugPanel : MonoBehaviour
 {
     private enum Option
     {
+        Add_Reward,
+        ToggleLoadingScreen,
         Open_Dialog_UI,
         Close_Dialog_UI,
-        Add_Reward,
         BB_Goto_Level,
         BB_Toggle_Debug,
         BB_Clear_Markers
@@ -52,14 +53,17 @@ public class DebugPanel : MonoBehaviour
 
         switch(commandType)
         {
+            case Option.ToggleLoadingScreen:
+                ToggleLoadingScreen();
+                break;            
+            case Option.Add_Reward:
+                AddReward(fieldText);
+                break;
             case Option.Open_Dialog_UI:
                 OpenDialogueSequence(fieldText);
                 break;
             case Option.Close_Dialog_UI:
                 CloseDialogueUI();
-                break;
-            case Option.Add_Reward:
-                AddReward(fieldText);
                 break;
             case Option.BB_Goto_Level:
                 Events.BBGotoLevel?.Invoke(fieldText);
@@ -90,5 +94,10 @@ public class DebugPanel : MonoBehaviour
     static private void AddReward(string rewardID)
     {
         Events.AddReward?.Invoke(rewardID);
+    }
+
+    static private void ToggleLoadingScreen()
+    {
+        Events.ToggleLoadingScreen?.Invoke();
     }
 }

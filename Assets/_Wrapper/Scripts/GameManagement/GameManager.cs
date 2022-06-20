@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,10 +9,12 @@ namespace Wrapper
     {
         public static GameManager Instance { get { return _instance; } }
         private static GameManager _instance;
+        private GameObject loadingScreenGO = null;
 
         [SerializeField] private GameObject loginScreen;
         [SerializeField] private GameObject DebugPanel;
         [SerializeField] private SaveManager saveManager;
+        [SerializeField] private GameObject loadingScreenPrefab;
 
         private void Awake()
         {
@@ -33,11 +37,28 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.OpenMinigame += OpenMinigame;
+            Events.ToggleLoadingScreen += ToggleLoadingScreen;
         }
 
         private void OnDisable()
         {
             Events.OpenMinigame -= OpenMinigame;
+            Events.ToggleLoadingScreen -= ToggleLoadingScreen;
+        }
+
+        private void ToggleLoadingScreen()
+        {
+            if (loadingScreenGO == null)
+                loadingScreenGO = Instantiate(loadingScreenPrefab);
+            else
+                StartCoroutine("DestroyLoadingScreen");
+        }
+
+        private IEnumerator DestroyLoadingScreen()
+        {
+            yield return new WaitForSeconds(2f);
+            Destroy(loadingScreenGO);
+            loadingScreenGO = null;
         }
 
         private void OpenMinigame(Minigame minigame)
