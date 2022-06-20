@@ -11,8 +11,9 @@ namespace Wrapper
         private static GameManager _instance;
         private GameObject loadingScreenGO = null;
 
+        [SerializeField] private float loadingToggleDelay = 2f;
         [SerializeField] private GameObject loginScreen;
-        [SerializeField] private GameObject DebugPanel;
+        [SerializeField] private GameObject debugPanel;
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private GameObject loadingScreenPrefab;
 
@@ -31,9 +32,10 @@ namespace Wrapper
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.BackQuote))
-                DebugPanel.SetActive(!(DebugPanel.activeInHierarchy));
+                debugPanel.SetActive(!(debugPanel.activeInHierarchy));
         }
 #endif
+
         private void OnEnable()
         {
             Events.OpenMinigame += OpenMinigame;
@@ -46,24 +48,17 @@ namespace Wrapper
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
         }
 
+        private void OpenMinigame(Minigame minigame)
+        {
+            SceneManager.LoadScene(minigame.StartScene);
+        }
+
         private void ToggleLoadingScreen()
         {
             if (loadingScreenGO == null)
                 loadingScreenGO = Instantiate(loadingScreenPrefab);
             else
-                StartCoroutine("DestroyLoadingScreen");
-        }
-
-        private IEnumerator DestroyLoadingScreen()
-        {
-            yield return new WaitForSeconds(2f);
-            Destroy(loadingScreenGO);
-            loadingScreenGO = null;
-        }
-
-        private void OpenMinigame(Minigame minigame)
-        {
-            SceneManager.LoadScene(minigame.StartScene);
+                StartCoroutine("DestroyLoadingScreen"); // todo: debug, delete later
         }
 
         #region Helpers
@@ -76,6 +71,14 @@ namespace Wrapper
                 Destroy(this.gameObject);
             else
                 _instance = this;
+        }
+
+        // todo: debug, delete later
+        private IEnumerator DestroyLoadingScreen()
+        {
+            yield return new WaitForSeconds(loadingToggleDelay);
+            Destroy(loadingScreenGO);
+            loadingScreenGO = null;
         }
 
         #endregion
