@@ -62,8 +62,9 @@ namespace Wrapper
         {
             if (IsUnlocked())
             {
-                yield return null;
-                yield return null;
+                while (!(this.gameObject.activeInHierarchy))
+                    yield return null;
+
                 animator.SetBool(stateDisabled, false);
             }
         }
@@ -80,6 +81,7 @@ namespace Wrapper
             animator.SetBool(stateSelected, true);
         }
 
+        // todo: change raw input into user facing string
         private string GetDisplayName(string input)
         {
             return input;

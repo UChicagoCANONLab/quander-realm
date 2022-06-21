@@ -69,13 +69,13 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.FeatureCard += FeatureCard;
-            Events.OpenJournalPage += SwitchPage;
+            Events.OpenJournalPage += SwitchPageVisual;
         }
 
         private void OnDisable()
         {
             Events.FeatureCard -= FeatureCard;
-            Events.OpenJournalPage -= SwitchPage;
+            Events.OpenJournalPage -= SwitchPageVisual;
         }
         private void FeatureCard(string id)
         {
@@ -110,7 +110,7 @@ namespace Wrapper
                 {
                     if (page.pageNumber == pageNumber)
                     {
-                        SwitchPage(page);
+                        SwitchPageVisual(page);
                         pageFound = true;
                         break;
                     }
@@ -137,7 +137,7 @@ namespace Wrapper
         /// <summary>
         /// Move visible cards to the hidden cards mount, bring the requested page's cards onto the visible cards mount
         /// </summary>
-        private void SwitchPage(JournalPage page)
+        private void SwitchPageVisual(JournalPage page)
         {
             Debug.Log("SwitchActual");
             foreach (Transform rewardTransform in GetVisibleCards())
@@ -230,13 +230,15 @@ namespace Wrapper
                 { Game.Qupcakes,  new JournalSection(QUTab) }
             };
 
+            Events.ResetPageNumbers?.Invoke();
         }
 
         private void OpenFirstPage()
         {
             animator.SetBool("On", true);
-            SwitchPage(0);
+            currentPage = journal.First().Value.pages.First();
             journal.First().Value.ToggleTabAnim(true);
+            SwitchPage(0);
         }
 
         private void InitPageNavigation()

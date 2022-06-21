@@ -7,9 +7,11 @@ namespace Wrapper
 {
     public class JournalSection
     {
+        private static int nextPageNumber = 0;
         private Toggle tab;
         private Animator tabAnimator;
-        private static int nextPageNumber = 0;
+        private const string stateNormal = "Normal";
+        private const string stateSelected = "Selected";
 
         public List<JournalPage> pages;
 
@@ -17,6 +19,17 @@ namespace Wrapper
         {
             pages = new List<JournalPage>();
             InitSectionTab(tabGO);
+            Events.ResetPageNumbers += ResetPageNumbers;
+        }
+
+        ~JournalSection()
+        {
+            Events.ResetPageNumbers -= ResetPageNumbers;
+        }
+
+        private void ResetPageNumbers()
+        {
+            nextPageNumber = 0;
         }
 
         private void InitSectionTab(GameObject tabGO)
@@ -28,10 +41,17 @@ namespace Wrapper
 
         private void OpenSection(bool isOn)
         {
-            ToggleTabAnim(isOn);
-
             if (isOn)
+            {
+                //Events.OpenSection?.Invoke(pages.First().pageNumber);
                 Events.OpenJournalPage?.Invoke(pages.First());
+            }
+        }
+
+        public void ToggleTabAnim(bool isOn)
+        {
+            Debug.LogFormat("toggleTabAnim {0}: {1}", pages.First().cardList.First().GetComponent<Reward>().game, isOn);
+            tabAnimator.SetTrigger(isOn ? stateSelected : stateNormal);
         }
 
         public void AddCard(GameObject rewardGO)
@@ -39,8 +59,6 @@ namespace Wrapper
             AddPageIfNeeded();
             pages.Last().Add(rewardGO);
         }
-
-        #region Helpers
 
         private void AddPageIfNeeded()
         {
@@ -51,17 +69,5 @@ namespace Wrapper
                 nextPageNumber++;
             }
         }
-
-        public JournalPage GetFirstPage()
-        {
-            return pages.First();
-        }
-
-        public void ToggleTabAnim(bool isOn)
-        {
-            tabAnimator.SetTrigger(isOn ? "Selected" : "Normal");
-        }
-
-        #endregion
     }
 }
