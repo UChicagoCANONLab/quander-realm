@@ -28,10 +28,10 @@ namespace Wrapper
 
         private void OpenSection(bool isOn)
         {
-            ToggleTab(isOn);
+            ToggleTabAnim(isOn);
 
             if (isOn)
-                Events.OpenJournalPage(pages.First());
+                Events.OpenJournalPage?.Invoke(pages.First());
         }
 
         public void AddCard(GameObject rewardGO)
@@ -57,7 +57,7 @@ namespace Wrapper
             return pages.First();
         }
 
-        public void ToggleTab(bool isOn)
+        public void ToggleTabAnim(bool isOn)
         {
             tabAnimator.SetTrigger(isOn ? "Selected" : "Normal");
         }

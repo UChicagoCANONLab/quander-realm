@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using BeauRoutine;
+using System.IO;
 
 namespace Wrapper
 {
@@ -16,6 +17,7 @@ namespace Wrapper
         [Header("Card Mounts")]
         [SerializeField] private GameObject visibleRewardsMount;
         [SerializeField] private GameObject hiddenRewardsMount;
+        [SerializeField] private GameObject featuredCardMount;
 
         [Header("Card Prefabs")]
         [SerializeField] private GameObject BBRewardPrefab;
@@ -49,6 +51,7 @@ namespace Wrapper
         void Awake()
         {
             Events.ToggleLoadingScreen?.Invoke();
+            Debug.Log("Awake");
             InitColorDict();
             InitPrefabDict();
             InitJournal();
@@ -57,7 +60,7 @@ namespace Wrapper
 
         private void Start()
         {
-            animator.SetBool("On", true);
+            Debug.Log("Start");
             PopulateJournal();
             OpenFirstPage();
             Events.ToggleLoadingScreen?.Invoke();
@@ -65,16 +68,42 @@ namespace Wrapper
 
         private void OnEnable()
         {
+            Events.FeatureCard += FeatureCard;
             Events.OpenJournalPage += SwitchPage;
         }
 
         private void OnDisable()
         {
+            Events.FeatureCard -= FeatureCard;
             Events.OpenJournalPage -= SwitchPage;
+        }
+        private void FeatureCard(string id)
+        {
+            animator.SetBool("FeatureCard", false);
+
+            foreach (Transform transform in featuredCardMount.transform)
+                Destroy(transform.gameObject);
+
+            RewardAsset rAsset = Resources.Load<RewardAsset>(Path.Combine(rewardsPath, id));
+            GameObject rewardGO = CreateCard(rAsset, featuredCardMount);
+
+            currentReward = rewardGO.GetComponent<Reward>();
+            animator.SetBool("FeatureCard", true);
+        }
+
+        private GameObject CreateCard(RewardAsset rAsset, GameObject mount)
+        {
+            GameObject rewardGO = Instantiate(prefabDict[rAsset.game], mount.transform);
+            rewardGO.GetComponent<Reward>().SetContent(rAsset, colorDict[rAsset.cardType]);
+
+            return rewardGO;
         }
 
         private void SwitchPage(int pageNumber)
         {
+            Debug.Log("SwitchPageNum");
+            bool pageFound = false;
+
             foreach(JournalSection section in journal.Values)
             {
                 foreach(JournalPage page in section.pages)
@@ -82,9 +111,13 @@ namespace Wrapper
                     if (page.pageNumber == pageNumber)
                     {
                         SwitchPage(page);
+                        pageFound = true;
                         break;
                     }
                 }
+
+                if (pageFound)
+                    break;
             }
         }
 
@@ -106,34 +139,33 @@ namespace Wrapper
         /// </summary>
         private void SwitchPage(JournalPage page)
         {
+            Debug.Log("SwitchActual");
             foreach (Transform rewardTransform in GetVisibleCards())
                 rewardTransform.SetParent(hiddenRewardsMount.transform);
 
             foreach (GameObject rewardGO in page.cardList)
             {
                 rewardGO.transform.SetParent(visibleRewardsMount.transform);
-                Routine.Start(rewardGO.GetComponent<Reward>().InitAnimationState());
+                Routine.Start(rewardGO.GetComponent<Reward>().UpdateAnimationState());
             }
 
+            //SelectFirstAvailableCard();
+            //ManageSectionTabAnim(page);
             currentPage = page;
-            SelectFirstAvailableCard();
         }
 
-        private void SelectFirstAvailableCard()
+        private void ManageSectionTabAnim(JournalPage page)
         {
-            foreach (Transform rewardTransform in GetVisibleCards())
-            {
-                Reward reward = rewardTransform.GetComponent<Reward>();
-                if (reward.IsUnlocked())
-                {
-                    reward.ToggleSelected(true);
-                    break;
-                }
-            }
+            Game currentGame = currentPage.cardList.First().GetComponent<Reward>().game;
+            Game newGame = page.cardList.First().GetComponent<Reward>().game;
+
+            if (currentGame != newGame)
+                journal[currentGame].ToggleTabAnim(true);
         }
 
         private List<Transform> GetVisibleCards()
         {
+            Debug.Log("GetVisibleCards");
             List<Transform> visibleCards = new List<Transform>();
 
             foreach (Transform transform in visibleRewardsMount.transform)
@@ -142,11 +174,18 @@ namespace Wrapper
             return visibleCards;
         }
 
-        private void OpenFirstPage()
+        private void SelectFirstAvailableCard()
         {
-            JournalSection firstSection = journal.First().Value;
-            SwitchPage(firstSection.GetFirstPage());
-            firstSection.ToggleTab(true);
+            Debug.Log("SelectFirstAvail");
+            foreach (Transform rewardTransform in GetVisibleCards())
+            {
+                Reward reward = rewardTransform.GetComponent<Reward>();
+                if (reward.IsUnlocked())
+                {
+                    Routine.Start(reward.SelectCard());
+                    break;
+                }
+            }
         }
 
         #region Initialize
@@ -181,6 +220,7 @@ namespace Wrapper
 
         private void InitJournal()
         {
+            Debug.Log("InitJournal");
             journal = new Dictionary<Game, JournalSection>
             {
                 { Game.BlackBox,  new JournalSection(BBTab) },
@@ -189,12 +229,30 @@ namespace Wrapper
                 { Game.QueueBits, new JournalSection(QBTab) },
                 { Game.Qupcakes,  new JournalSection(QUTab) }
             };
+
+        }
+
+        private void OpenFirstPage()
+        {
+            animator.SetBool("On", true);
+            SwitchPage(0);
+            journal.First().Value.ToggleTabAnim(true);
         }
 
         private void InitPageNavigation()
         {
+            Debug.Log("InitPageNav");
             foreach (Toggle dot in navDots)
-                dot.onValueChanged.AddListener((isOn) => SwitchPage(Array.IndexOf(navDots, dot)));
+            {
+                dot.onValueChanged.AddListener((isOn) => 
+                {
+                    if (currentPage.pageNumber == Array.IndexOf(navDots, dot))
+                        return;
+
+                    if (isOn)
+                        SwitchPage(Array.IndexOf(navDots, dot)); 
+                });
+            }
 
             previousButton.onClick.AddListener(() => SwitchPage(Step.Backward));
             nextButton.onClick.AddListener(() => SwitchPage(Step.Forward));
@@ -206,9 +264,7 @@ namespace Wrapper
 
             foreach (RewardAsset rAsset in rewardAssetArray)
             {
-                GameObject rewardGO = Instantiate(prefabDict[rAsset.game], hiddenRewardsMount.transform);
-                rewardGO.GetComponent<Reward>().SetContent(rAsset, colorDict[rAsset.cardType]);
-
+                GameObject rewardGO = CreateCard(rAsset, hiddenRewardsMount);
                 journal[rAsset.game].AddCard(rewardGO);
             }
         }

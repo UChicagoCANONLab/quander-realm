@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using BeauRoutine;
 
 namespace Wrapper
 {
@@ -22,6 +23,7 @@ namespace Wrapper
         [SerializeField] private TextMeshProUGUI backText;
 
         private string id;
+        public Game game;
         private const string stateDisabled = "Disabled";
         private const string stateSelected = "Selected";
 
@@ -31,6 +33,7 @@ namespace Wrapper
             string titleDisplayName = GetDisplayName(rAsset.title);
 
             id = rAsset.rewardID;
+            game = rAsset.game;
 
             cardTypeTextFront.text = cardTypeDisplayName;
             cardTypeColorStrip.color = color;
@@ -55,10 +58,11 @@ namespace Wrapper
             image.sprite = cardSprite;
         }
 
-        public IEnumerator InitAnimationState()
+        public IEnumerator UpdateAnimationState()
         {
             if (IsUnlocked())
             {
+                yield return null;
                 yield return null;
                 animator.SetBool(stateDisabled, false);
             }
@@ -69,15 +73,11 @@ namespace Wrapper
             return Events.IsRewardUnlocked?.Invoke(id) ?? false;
         }
 
-        public void ToggleSelected(bool isSelected)
+        public IEnumerator SelectCard()
         {
-            if (animator.GetBool(stateDisabled))
-            {
-                Debug.LogFormat("Cannot 'Select' disabled card: {0}", titleFront.text);
-                return;
-            }
+            yield return UpdateAnimationState();
 
-            animator.SetBool(stateSelected, isSelected);
+            animator.SetBool(stateSelected, true);
         }
 
         private string GetDisplayName(string input)
