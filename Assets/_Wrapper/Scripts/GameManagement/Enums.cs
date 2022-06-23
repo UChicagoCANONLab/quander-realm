@@ -62,4 +62,10 @@ namespace Wrapper
         Visual,
         Concept
     };
+
+    public enum DisplayType
+    {
+        Featured,
+        InJournal
+    }
 }

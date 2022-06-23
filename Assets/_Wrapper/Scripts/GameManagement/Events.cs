@@ -1,4 +1,5 @@
 using System;
+using UnityEngine.UI;
 
 namespace Wrapper
 {
@@ -33,6 +34,9 @@ namespace Wrapper
         public static Action<JournalPage> OpenJournalPage;
         public static Action<string> FeatureCard;
         public static Action ResetPageNumbers;
+        public static Func<int, Toggle> GetNavDot;
+        public static Action<JournalPage> SwitchPage;
+        public static Action UnselectAllCards;
 
         /// Debug ///
         public static Action<string> BBGotoLevel;

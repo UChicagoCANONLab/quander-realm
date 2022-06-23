@@ -3,12 +3,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using BeauRoutine;
+using System;
 
 namespace Wrapper
 {
     public class Reward : MonoBehaviour
     {
         [SerializeField] private Animator animator;
+        [SerializeField] private Button button;
 
         [Header("Front")]
         [SerializeField] private TextMeshProUGUI cardTypeTextFront;
@@ -23,17 +25,31 @@ namespace Wrapper
         [SerializeField] private TextMeshProUGUI backText;
 
         private string id;
-        public Game game;
+        private DisplayType displayType;
         private const string stateDisabled = "Disabled";
         private const string stateSelected = "Selected";
+        private const string triggerFlip = "Flip";
+        
+        public Game game;
 
-        public void SetContent(RewardAsset rAsset, Color color)
+        private void OnEnable()
+        {
+            Events.UnselectAllCards += UnselectSelf;
+        }
+
+        private void OnDisable()
+        {
+            Events.UnselectAllCards -= UnselectSelf;
+        }
+
+        public void SetContent(RewardAsset rAsset, Color color, DisplayType displayType)
         {
             string cardTypeDisplayName = GetDisplayName(rAsset.cardType.ToString());
             string titleDisplayName = GetDisplayName(rAsset.title);
 
             id = rAsset.rewardID;
             game = rAsset.game;
+            this.displayType = displayType;
 
             cardTypeTextFront.text = cardTypeDisplayName;
             cardTypeColorStrip.color = color;
@@ -44,6 +60,16 @@ namespace Wrapper
             cardTypeBack.text = cardTypeDisplayName;
             titleBack.text = titleDisplayName;
             backText.text = rAsset.backText;
+
+            SetupButton();
+        }
+
+        private void SetupButton()
+        {
+            if (displayType == DisplayType.Featured)
+                button.onClick.AddListener(() => animator.SetTrigger(triggerFlip));
+            else
+                button.onClick.AddListener(() => Routine.Start(SelectCard()));
         }
 
         private void SetFrontImage(RewardAsset rAsset)
@@ -77,8 +103,15 @@ namespace Wrapper
         public IEnumerator SelectCard()
         {
             yield return UpdateAnimationState();
+            Events.UnselectAllCards?.Invoke();
 
             animator.SetBool(stateSelected, true);
+            Events.FeatureCard?.Invoke(id.Trim().ToLower());
+        }
+
+        private void UnselectSelf()
+        {
+            animator.SetBool(stateSelected, false);
         }
 
         // todo: change raw input into user facing string

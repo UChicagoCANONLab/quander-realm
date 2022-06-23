@@ -11,7 +11,7 @@ namespace Wrapper
         private static GameManager _instance;
         private GameObject loadingScreenGO = null;
 
-        [SerializeField] private float loadingToggleDelay = 2f;
+        [SerializeField] private float loadingToggleDelay = 0.5f;
         [SerializeField] private GameObject loginScreen;
         [SerializeField] private GameObject debugPanel;
         [SerializeField] private SaveManager saveManager;

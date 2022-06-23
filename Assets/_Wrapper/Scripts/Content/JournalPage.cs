@@ -1,17 +1,58 @@
+using BeauRoutine;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Wrapper
 {
     public class JournalPage
     {
-        public int pageNumber;
+        private Toggle navDot;
         private const int maxListSize = 4;
+
+        public int pageNumber;
         public List<GameObject> cardList;
 
-        public JournalPage()
+        public JournalPage(int pageNumber)
         {
             cardList = new List<GameObject>();
+            this.pageNumber = pageNumber;
+
+            InitNavDot();
+        }
+
+        private void InitNavDot()
+        {
+            navDot = Events.GetNavDot?.Invoke(pageNumber);
+            navDot.onValueChanged.AddListener(OpenPage);
+        }
+
+        public void OpenPage(bool isOn)
+        {
+            if (!(isOn))
+                return;
+
+            Events.SwitchPage?.Invoke(this);
+            SelectFirstUnlockedCard();
+        }
+
+        public void ClickNavDot()
+        {
+            Debug.LogFormat("clicked dot on page {0}", pageNumber);
+            navDot.isOn = true;
+        }
+
+        private void SelectFirstUnlockedCard()
+        {
+            foreach (GameObject cardGO in cardList)
+            {
+                Reward reward = cardGO.GetComponent<Reward>();
+                if (reward.IsUnlocked())
+                {
+                    Routine.Start(reward.SelectCard());
+                    break;
+                }
+            }
         }
 
         public bool IsFull()

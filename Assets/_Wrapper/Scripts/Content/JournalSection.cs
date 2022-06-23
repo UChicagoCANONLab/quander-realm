@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +9,8 @@ namespace Wrapper
     public class JournalSection
     {
         private static int nextPageNumber = 0;
-        private Toggle tab;
+        //private Toggle tab;
+        private Button tab;
         private Animator tabAnimator;
         private const string stateNormal = "Normal";
         private const string stateSelected = "Selected";
@@ -19,39 +21,36 @@ namespace Wrapper
         {
             pages = new List<JournalPage>();
             InitSectionTab(tabGO);
+
+            //Events.SwitchPage += UpdateTab;
             Events.ResetPageNumbers += ResetPageNumbers;
         }
 
         ~JournalSection()
         {
+            //Events.SwitchPage -= UpdateTab;
             Events.ResetPageNumbers -= ResetPageNumbers;
-        }
-
-        private void ResetPageNumbers()
-        {
-            nextPageNumber = 0;
         }
 
         private void InitSectionTab(GameObject tabGO)
         {
+            tab = tabGO.GetComponent<Button>();
+            //tab.onClick.AddListener(OpenSection);
             tabAnimator = tabGO.GetComponent<Animator>();
-            tab = tabGO.GetComponent<Toggle>();
-            tab.onValueChanged.AddListener((isOn) => OpenSection(isOn));
         }
 
-        private void OpenSection(bool isOn)
+        private void OpenSection()
         {
-            if (isOn)
-            {
-                //Events.OpenSection?.Invoke(pages.First().pageNumber);
-                Events.OpenJournalPage?.Invoke(pages.First());
-            }
+            pages.First().ClickNavDot();
         }
 
         public void ToggleTabAnim(bool isOn)
         {
             Debug.LogFormat("toggleTabAnim {0}: {1}", pages.First().cardList.First().GetComponent<Reward>().game, isOn);
-            tabAnimator.SetTrigger(isOn ? stateSelected : stateNormal);
+            tabAnimator.SetTrigger(stateNormal);
+
+            if (isOn)
+                tabAnimator.SetTrigger(stateSelected);
         }
 
         public void AddCard(GameObject rewardGO)
@@ -64,10 +63,21 @@ namespace Wrapper
         {
             if (pages.Count == 0 || pages.Last().IsFull())
             {
-                pages.Add(new JournalPage());
-                pages.Last().pageNumber = nextPageNumber;
+                pages.Add(new JournalPage(nextPageNumber));
                 nextPageNumber++;
             }
+        }
+
+        private void UpdateTab(JournalPage currentPage)
+        {
+            foreach (JournalPage page in pages)
+                if (page.pageNumber == currentPage.pageNumber)
+                    ToggleTabAnim(true);
+        }
+
+        private void ResetPageNumbers()
+        {
+            nextPageNumber = 0;
         }
     }
 }
