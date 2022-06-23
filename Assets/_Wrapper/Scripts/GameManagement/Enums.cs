@@ -58,7 +58,7 @@ namespace Wrapper
     public enum CardType
     {
         Character,
-        ComputerPart,
+        Computer_Part,
         Visual,
         Concept
     };

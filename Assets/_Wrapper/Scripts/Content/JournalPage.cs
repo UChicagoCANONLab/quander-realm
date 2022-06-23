@@ -38,7 +38,6 @@ namespace Wrapper
 
         public void ClickNavDot()
         {
-            Debug.LogFormat("clicked dot on page {0}", pageNumber);
             navDot.isOn = true;
         }
 

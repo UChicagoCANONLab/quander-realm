@@ -1,4 +1,5 @@
 using BeauRoutine;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -140,21 +141,40 @@ namespace Wrapper
             navDots[newIndex].isOn = true;
         }
 
+        private void SwitchCardsOnPage(JournalPage newPage)
+        {
+            Routine.Start(SwitchCardsRoutine(newPage));
+        }
+
         /// <summary>
         /// Move visible cards to the hidden cards mount, bring the requested page's cards onto the visible cards mount
         /// </summary>
-        private void SwitchCardsOnPage(JournalPage page)
+        private IEnumerator SwitchCardsRoutine(JournalPage newPage)
         {
+            animator.SetTrigger(GetPageFlipTrigger(newPage));
+            yield return animator.WaitToCompleteAnimation(3);
+
             foreach (Transform rewardTransform in GetVisibleCards())
                 rewardTransform.SetParent(hiddenRewardsMount.transform);
 
-            foreach (GameObject rewardGO in page.cardList)
+            foreach (GameObject rewardGO in newPage.cardList)
             {
                 rewardGO.transform.SetParent(visibleRewardsMount.transform);
                 Routine.Start(rewardGO.GetComponent<Reward>().UpdateAnimationState());
             }
 
-            currentPage = page;
+            animator.SetTrigger(GetPageFlipTrigger(newPage));
+
+            currentPage = newPage;
+        }
+
+        private string GetPageFlipTrigger(JournalPage newPage)
+        {
+            string animTrigger = "Previous";
+            if (currentPage.pageNumber > newPage.pageNumber)
+                animTrigger = "Next";
+
+            return animTrigger;
         }
 
         private List<Transform> GetVisibleCards()
@@ -186,7 +206,7 @@ namespace Wrapper
                 { CardType.Visual, visualColor },
                 { CardType.Character, charColor },
                 { CardType.Concept, conceptColor },
-                { CardType.ComputerPart, compPartColor }
+                { CardType.Computer_Part, compPartColor }
             };
         }
 

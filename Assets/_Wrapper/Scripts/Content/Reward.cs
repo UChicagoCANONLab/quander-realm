@@ -45,7 +45,6 @@ namespace Wrapper
         public void SetContent(RewardAsset rAsset, Color color, DisplayType displayType)
         {
             string cardTypeDisplayName = GetDisplayName(rAsset.cardType.ToString());
-            string titleDisplayName = GetDisplayName(rAsset.title);
 
             id = rAsset.rewardID;
             game = rAsset.game;
@@ -53,12 +52,12 @@ namespace Wrapper
 
             cardTypeTextFront.text = cardTypeDisplayName;
             cardTypeColorStrip.color = color;
-            titleFront.text = titleDisplayName;
+            titleFront.text = rAsset.title;
             flavorText.text = rAsset.flavorText;
             SetFrontImage(rAsset);
 
             cardTypeBack.text = cardTypeDisplayName;
-            titleBack.text = titleDisplayName;
+            titleBack.text = rAsset.title;
             backText.text = rAsset.backText;
 
             SetupButton();
@@ -114,10 +113,9 @@ namespace Wrapper
             animator.SetBool(stateSelected, false);
         }
 
-        // todo: change raw input into user facing string
         private string GetDisplayName(string input)
         {
-            return input;
+            return input.Replace("_", " ");
         }
     }
 }
