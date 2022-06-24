@@ -9,36 +9,33 @@ namespace Wrapper
     public class JournalSection
     {
         private static int nextPageNumber = 0;
-        private Toggle tab;
-        //private Button tab;
-        private Animator tabAnimator;
         private const string stateNormal = "Normal";
         private const string stateSelected = "Selected";
+        private Toggle tab;
+        private Animator tabAnimator;
 
         public List<JournalPage> pages;
 
         public JournalSection(GameObject tabGO)
         {
-            pages = new List<JournalPage>();
-            InitSectionTab(tabGO);
-
             Events.SwitchPage += UpdateTab;
-            Events.ResetTabs += ToggleTabAnim;
             Events.ResetPageNumbers += ResetPageNumbers;
+
+            InitSectionTab(tabGO);
+            pages = new List<JournalPage>();
         }
 
         ~JournalSection()
         {
             Events.SwitchPage -= UpdateTab;
-            Events.ResetTabs -= ToggleTabAnim;
             Events.ResetPageNumbers -= ResetPageNumbers;
         }
 
         private void InitSectionTab(GameObject tabGO)
         {
             tab = tabGO.GetComponent<Toggle>();
-            tab.onValueChanged.AddListener((isOn) => OpenSection(isOn));
             tabAnimator = tabGO.GetComponent<Animator>();
+            tab.onValueChanged.AddListener(OpenSection);
         }
 
         private void OpenSection(bool isOn)
@@ -46,20 +43,20 @@ namespace Wrapper
             if (!(isOn))
                 return;
 
-            Events.ResetTabs?.Invoke(false);
             pages.First().ClickNavDot();
+        }
+
+        private void UpdateTab(JournalPage currentPage)
+        {
+            foreach (JournalPage page in pages)
+                if (page.pageNumber == currentPage.pageNumber)
+                    ToggleTabAnim(true);
         }
 
         public void ToggleTabAnim(bool isOn)
         {
-            Debug.LogFormat("toggleTabAnim {0}: {1}", pages.First().cardList.First().GetComponent<Reward>().game, isOn);
-            //tabAnimator.SetTrigger(isOn ? stateSelected : stateNormal);
-            if (isOn)
-                tabAnimator.SetTrigger(stateSelected);
-            else
-                tabAnimator.ResetTrigger(stateSelected);
-
-
+            tab.SetIsOnWithoutNotify(isOn);
+            tabAnimator.SetTrigger(isOn ? stateSelected : stateNormal);
         }
 
         public void AddCard(GameObject rewardGO)
@@ -75,16 +72,6 @@ namespace Wrapper
                 pages.Add(new JournalPage(nextPageNumber));
                 nextPageNumber++;
             }
-        }
-
-        private void UpdateTab(JournalPage currentPage)
-        {
-            foreach (JournalPage page in pages)
-                if (page.pageNumber == currentPage.pageNumber)
-                {
-                    Events.ResetTabs?.Invoke(false);
-                    ToggleTabAnim(true);
-                }
         }
 
         private void ResetPageNumbers()

@@ -50,6 +50,8 @@ namespace Wrapper
 
         #endregion
 
+        #region Unity Functions
+
         void Awake()
         {
             //Events.ToggleLoadingScreen?.Invoke();
@@ -80,6 +82,8 @@ namespace Wrapper
             Events.SwitchPage -= SwitchCardsOnPage;
             Events.FeatureCard -= StartFeaturedCardSwap;
         }
+
+        #endregion
 
         #region Featured Card
 
@@ -120,13 +124,7 @@ namespace Wrapper
 
         #endregion
 
-        private GameObject CreateCard(RewardAsset rAsset, GameObject mount, DisplayType displayType)
-        {
-            GameObject rewardGO = Instantiate(prefabDict[rAsset.game], mount.transform);
-            rewardGO.GetComponent<Reward>().SetContent(rAsset, colorDict[rAsset.cardType], displayType);
-
-            return rewardGO;
-        }
+        #region Page Switching
 
         /// <summary>
         /// Uses the navDots' OnValueChangedEvent to trigger a page switch. The function will add the value of "step"
@@ -170,9 +168,9 @@ namespace Wrapper
 
         private string GetPageFlipTrigger(JournalPage newPage)
         {
-            string animTrigger = "Previous";
+            string animTrigger = "Next";
             if (currentPage.pageNumber > newPage.pageNumber)
-                animTrigger = "Next";
+                animTrigger = "Previous";
 
             return animTrigger;
         }
@@ -185,6 +183,16 @@ namespace Wrapper
                 visibleCards.Add(transform);
 
             return visibleCards;
+        }
+
+        #endregion
+
+        private GameObject CreateCard(RewardAsset rAsset, GameObject mount, DisplayType displayType)
+        {
+            GameObject rewardGO = Instantiate(prefabDict[rAsset.game], mount.transform);
+            rewardGO.GetComponent<Reward>().SetContent(rAsset, colorDict[rAsset.cardType], displayType);
+
+            return rewardGO;
         }
 
         private Toggle GetNavDot(int pageNumber)
@@ -240,6 +248,7 @@ namespace Wrapper
         {
             currentPage = journal.First().Value.pages.First();
             currentPage.ClickNavDot();
+            //journal.First().Value.ToggleTabAnim(true);
         }
 
         private void InitPrevNextButtons()
