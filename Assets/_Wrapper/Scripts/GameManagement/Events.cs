@@ -37,6 +37,7 @@ namespace Wrapper
         public static Func<int, Toggle> GetNavDot;
         public static Action<JournalPage> SwitchPage;
         public static Action UnselectAllCards;
+        public static Action<JournalPage> UpdateTab;
 
         /// Debug ///
         public static Action<string> BBGotoLevel;

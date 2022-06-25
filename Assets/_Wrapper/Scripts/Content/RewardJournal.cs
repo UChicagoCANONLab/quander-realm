@@ -161,8 +161,8 @@ namespace Wrapper
                 Routine.Start(rewardGO.GetComponent<Reward>().UpdateAnimationState());
             }
 
+            Events.UpdateTab?.Invoke(newPage);
             animator.SetTrigger(GetPageFlipTrigger(newPage));
-
             currentPage = newPage;
         }
 
@@ -248,7 +248,6 @@ namespace Wrapper
         {
             currentPage = journal.First().Value.pages.First();
             currentPage.ClickNavDot();
-            //journal.First().Value.ToggleTabAnim(true);
         }
 
         private void InitPrevNextButtons()
