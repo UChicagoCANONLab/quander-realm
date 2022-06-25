@@ -8,31 +8,33 @@ namespace Wrapper
     public class DialogueView : MonoBehaviour
     {
         [Header("DialogueView Parts")]
-        [SerializeField] private Animator animator = null;
-        [SerializeField] private TextMeshProUGUI dialogueBody = null;
-        [SerializeField] private TextMeshProUGUI dupePage = null;
-        [SerializeField] private GameObject characterMountLeft = null;
-        [SerializeField] private GameObject characterMountRight = null;
-        [SerializeField] private Image contextImage = null; //todo: might have to work with container object instead of image
+        [SerializeField] private Animator animator;
+        [SerializeField] private TextMeshProUGUI dialogueBody;
+        [SerializeField] private TextMeshProUGUI dupePage;
+        [SerializeField] private GameObject characterMountLeft;
+        [SerializeField] private GameObject characterMountRight;
+        [SerializeField] private Image contextImage; //todo: might have to work with container object instead of image
 
         [Header("Character Prefabs")]
-        [SerializeField] private GameObject char1Prefab = null;
-        [SerializeField] private GameObject char2Prefab = null;
-        [SerializeField] private GameObject char3Prefab = null;
-        [SerializeField] private GameObject char4Prefab = null;
-        [SerializeField] private GameObject char5Prefab = null;
-        [SerializeField] private GameObject char6Prefab = null;
+        [SerializeField] private GameObject mollyPrefab;
+        [SerializeField] private GameObject tanglePrefab;
+        [SerializeField] private GameObject bytePrefab;
+        [SerializeField] private GameObject wolfiePrefab;
+        [SerializeField] private GameObject battyPrefab;
+        [SerializeField] private GameObject twinAPrefab;
+        [SerializeField] private GameObject twinBPrefab;
+        [SerializeField] private GameObject chefPrefab;
 
         private Dictionary<Character, GameObject> characterDictionary; // todo: what about Speaker.None?
-        private Character characterLeft = Character.None;
-        private Character characterRight = Character.None;
-        private Expression ExpressionLeft = Expression.Default;
-        private Expression ExpressionRight = Expression.Default;
-        private Animator animatorCharacterLeft = null;
-        private Animator animatorCharacterRight = null;
+        private Character characterLeft;
+        private Character characterRight;
+        private Expression ExpressionLeft;
+        private Expression ExpressionRight;
+        private Animator animatorCharacterLeft;
+        private Animator animatorCharacterRight;
         
-        private string contextImagePath = string.Empty;
-        private string tempDialogueText = string.Empty; //todo: refactor this?
+        private string contextImagePath;
+        private string tempDialogueText; //todo: refactor this?
 
         private void Awake()
         {
@@ -227,12 +229,14 @@ namespace Wrapper
         {
             characterDictionary = new Dictionary<Character, GameObject>
             {
-                { Character.Char1, char1Prefab },
-                { Character.Char2, char2Prefab },
-                { Character.Char3, char3Prefab },
-                { Character.Char4, char4Prefab },
-                { Character.Char5, char5Prefab },
-                { Character.Char6, char6Prefab }
+                { Character.Molly, mollyPrefab },
+                { Character.Tangle, tanglePrefab },
+                { Character.Byte, bytePrefab },
+                { Character.Wolfie, wolfiePrefab },
+                { Character.Batty, battyPrefab },
+                { Character.TwinA, twinAPrefab },
+                { Character.TwinB, twinBPrefab },
+                { Character.Chef, chefPrefab }
             };
         }
     }
