@@ -9,9 +9,9 @@ namespace Wrapper
         Tangle,
         Byte,
         Wolfie,
-        Batty,
         TwinA,
         TwinB,
+        TwinsBoth,
         Chef,
         None
     };
@@ -31,6 +31,13 @@ namespace Wrapper
     {
         Forward = 1,
         Backward = -1
+    };
+
+    public enum Side
+    {
+        Left,
+        Right,
+        None
     };
 
     /// Save System ///
@@ -67,5 +74,5 @@ namespace Wrapper
     {
         Featured,
         InJournal
-    }
+    };
 }

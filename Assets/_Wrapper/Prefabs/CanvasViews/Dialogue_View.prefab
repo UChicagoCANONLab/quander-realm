@@ -1410,17 +1410,21 @@ MonoBehaviour:
   animator: {fileID: 8856166818158043184}
   dialogueBody: {fileID: 47152865155410001}
   dupePage: {fileID: 463901562}
-  characterMountLeft: {fileID: 712826905307515595}
-  characterMountRight: {fileID: 3790410791388513603}
   contextImage: {fileID: 7791400539170444944}
+  charMountLeft: {fileID: 712826905307515595}
+  charNameBGLeft: {fileID: 5512332017749215124}
+  charNameTextLeft: {fileID: 1866342584304722971}
+  charMountRight: {fileID: 3790410791388513603}
+  charNameBGRight: {fileID: 5078554892377884692}
+  charNameTextRight: {fileID: 1433146022994848667}
   mollyPrefab: {fileID: 5775404264842735026, guid: cf6af63325e462449ab757bc3fafb421, type: 3}
   tanglePrefab: {fileID: 5775404264842735026, guid: fa0ccf261c44eb44aa006c50e4fbb4a4, type: 3}
   bytePrefab: {fileID: 5775404264842735026, guid: 91728ebc2a91e0f49a64afccaa2a810a, type: 3}
   wolfiePrefab: {fileID: 5775404264842735026, guid: 6248c1a210c1aba4ea5875ef67602074, type: 3}
-  battyPrefab: {fileID: 5775404264842735026, guid: f89ccf4566b7e2e4c93cd60937cfddcd, type: 3}
-  twinAPrefab: {fileID: 5775404264842735026, guid: f89ccf4566b7e2e4c93cd60937cfddcd, type: 3}
-  twinBPrefab: {fileID: 5775404264842735026, guid: f89ccf4566b7e2e4c93cd60937cfddcd, type: 3}
-  chefPrefab: {fileID: 5775404264842735026, guid: f89ccf4566b7e2e4c93cd60937cfddcd, type: 3}
+  twinAPrefab: {fileID: 5775404264842735026, guid: 344ec618ea19be1468fcc436672494d9, type: 3}
+  twinBPrefab: {fileID: 5775404264842735026, guid: 33b18a82f2567a747b624d4e9e453cec, type: 3}
+  twinsBothPrefab: {fileID: 5775404264842735026, guid: 9d028422dd0abfc45a4b83943891be49, type: 3}
+  chefPrefab: {fileID: 5775404264842735026, guid: 5f167d2b8fb75ad4b9c535bc9ef30340, type: 3}
 --- !u!95 &8856166818158043184
 Animator:
   serializedVersion: 4
@@ -2463,6 +2467,28 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1433146022994848667 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8235231851864031843, guid: 1016be10565ada44889f7d25fbc4ac96, type: 3}
+  m_PrefabInstance: {fileID: 7037689200149899768}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5078554892377884692 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2868867515248288236, guid: 1016be10565ada44889f7d25fbc4ac96, type: 3}
+  m_PrefabInstance: {fileID: 7037689200149899768}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &9021089054401959696 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2061449855380930280, guid: 1016be10565ada44889f7d25fbc4ac96, type: 3}
@@ -2582,6 +2608,28 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1866342584304722971 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8235231851864031843, guid: 1016be10565ada44889f7d25fbc4ac96, type: 3}
+  m_PrefabInstance: {fileID: 7759701116899321464}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5512332017749215124 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2868867515248288236, guid: 1016be10565ada44889f7d25fbc4ac96, type: 3}
+  m_PrefabInstance: {fileID: 7759701116899321464}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8589563735192819856 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2061449855380930280, guid: 1016be10565ada44889f7d25fbc4ac96, type: 3}
