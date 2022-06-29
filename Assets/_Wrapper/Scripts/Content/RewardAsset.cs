@@ -8,6 +8,9 @@ namespace Wrapper
         [SerializeField, ContentValue("Game")]
         public Game game;
 
+        [SerializeField, ContentValue("Level")]
+        public int level;
+
         [SerializeField, ContentValue("Reward ID")]
         public string rewardID;
 

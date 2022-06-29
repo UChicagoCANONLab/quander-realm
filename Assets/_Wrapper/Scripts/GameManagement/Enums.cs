@@ -9,19 +9,19 @@ namespace Wrapper
         Tangle,
         Byte,
         Wolfie,
-        Batty,
-        TwinA,
-        TwinB,
+        Wayne,
+        Fran,
+        Ken,
+        Franken_Twins,
         Chef,
         None
     };
 
     public enum Expression
     {
-        Default,
-        Positive,
-        Negative,
-        Confused
+        Neutral,
+        Happy,
+        Disappointed
     };
 
     /// <summary>
@@ -31,6 +31,13 @@ namespace Wrapper
     {
         Forward = 1,
         Backward = -1
+    };
+
+    public enum Side
+    {
+        Left,
+        Right,
+        None
     };
 
     /// Save System ///
@@ -67,5 +74,5 @@ namespace Wrapper
     {
         Featured,
         InJournal
-    }
+    };
 }
