@@ -33,9 +33,10 @@ namespace Wrapper
         [SerializeField] private GameObject tanglePrefab;
         [SerializeField] private GameObject bytePrefab;
         [SerializeField] private GameObject wolfiePrefab;
-        [SerializeField] private GameObject twinAPrefab;
-        [SerializeField] private GameObject twinBPrefab;
-        [SerializeField] private GameObject twinsBothPrefab;
+        [SerializeField] private GameObject waynePrefab;
+        [SerializeField] private GameObject franPrefab;
+        [SerializeField] private GameObject kenPrefab;
+        [SerializeField] private GameObject franken_twinsPrefab;
         [SerializeField] private GameObject chefPrefab;
 
         private Dictionary<Character, GameObject> charDictionary; // todo: what about Speaker.None?
@@ -135,8 +136,8 @@ namespace Wrapper
             ClearChildren(charMountLeft);
             ClearChildren(charMountRight);
 
-            charNameTextLeft.text = dialogue.speaker.ToString();
-            charNameTextRight.text = dialogue.listener.ToString();
+            charNameTextLeft.text = dialogue.speaker.ToString().Replace("_", " ");
+            charNameTextRight.text = dialogue.listener.ToString().Replace("_", " ");
 
             GameObject charLeftGO = Instantiate(charDictionary[dialogue.speaker], charMountLeft.transform);
             GameObject charRightGO = Instantiate(charDictionary[dialogue.listener], charMountRight.transform);
@@ -156,14 +157,15 @@ namespace Wrapper
         {
             charDictionary = new Dictionary<Character, GameObject>
             {
-                { Character.Molly,      mollyPrefab },
-                { Character.Tangle,     tanglePrefab },
-                { Character.Byte,       bytePrefab },
-                { Character.Wolfie,     wolfiePrefab },
-                { Character.TwinA,      twinAPrefab },
-                { Character.TwinB,      twinBPrefab },
-                { Character.TwinsBoth,  twinsBothPrefab },
-                { Character.Chef,       chefPrefab }
+                { Character.Molly, mollyPrefab },
+                { Character.Tangle, tanglePrefab },
+                { Character.Byte, bytePrefab },
+                { Character.Wolfie, wolfiePrefab },
+                { Character.Wayne, waynePrefab },
+                { Character.Fran, franPrefab },
+                { Character.Ken, kenPrefab },
+                { Character.Franken_Twins, franken_twinsPrefab },
+                { Character.Chef, chefPrefab }
             };
         }
 
@@ -235,7 +237,7 @@ namespace Wrapper
 
                 charLeft = character;
                 ClearChildren(charMountLeft);
-                charNameTextLeft.text = character.ToString();
+                charNameTextLeft.text = character.ToString().Replace("_", " ");
                 GameObject charLeftGO = Instantiate(charDictionary[character], charMountLeft.transform);
                 animatorCharLeft = charLeftGO.GetComponentInChildren<Animator>();
                 
@@ -249,7 +251,7 @@ namespace Wrapper
 
                 charRight = character;
                 ClearChildren(charMountRight);
-                charNameTextRight.text = character.ToString();
+                charNameTextRight.text = character.ToString().Replace("_", " ");
                 GameObject charRightGO = Instantiate(charDictionary[character], charMountRight.transform);
                 animatorCharRight = charRightGO.GetComponentInChildren<Animator>();
                 

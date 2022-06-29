@@ -9,9 +9,10 @@ namespace Wrapper
         Tangle,
         Byte,
         Wolfie,
-        TwinA,
-        TwinB,
-        TwinsBoth,
+        Wayne,
+        Fran,
+        Ken,
+        Franken_Twins,
         Chef,
         None
     };
