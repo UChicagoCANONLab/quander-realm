@@ -6,6 +6,7 @@ namespace BlackBox
     public class Level : ScriptableObject
     {
         public string levelID;
+        public int number;
         public int module;
         public string nextLevelID;
 

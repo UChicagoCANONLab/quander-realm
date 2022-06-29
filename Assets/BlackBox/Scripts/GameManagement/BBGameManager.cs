@@ -184,7 +184,7 @@ namespace BlackBox
                 BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
             }
 
-            WinState winState = new(totalNodes, numCorrect, levelWon, livesRemaining); // todo: add level.reward here
+            WinState winState = new(totalNodes, numCorrect, levelWon, level.number, livesRemaining);
             BBEvents.UpdateEndPanel?.Invoke(winState);
         }
 

@@ -23,6 +23,7 @@ namespace BlackBox
         [SerializeField] private GameObject nextLevelGO = null;
 
         private Animator animator = null;
+        private int level;
 
         private void Awake()
         {
@@ -53,6 +54,7 @@ namespace BlackBox
         private void StartNextLevel()
         {
             animator.SetBool("On", false);
+            Wrapper.Events.CollectAndDisplayReward(Wrapper.Game.BlackBox, level);
             BBEvents.StartNextLevel?.Invoke();
         }
 
@@ -66,7 +68,10 @@ namespace BlackBox
             animator.SetBool("On", true);
 
             if (winState.levelWon)
+            {
+                level = winState.level;
                 SetInfo(winImage, headerText: "We did it!", subHeaderText: "We found all of the items!", nextLevelGO);
+            }
 
             else
             {
@@ -83,6 +88,16 @@ namespace BlackBox
             }
         }
 
+        private void SetInfo(GameObject imageGO, string headerText, string subHeaderText, GameObject buttonGO = null)
+        {
+            imageGO.SetActive(true);
+            header.text = headerText;
+            subHeader.text = subHeaderText;
+
+            if (buttonGO != null)
+                buttonGO.SetActive(true);
+        }
+
         private void DisableAllElements()
         {
             restartLevelGO.SetActive(false);
@@ -93,16 +108,6 @@ namespace BlackBox
             winImage.SetActive(false);
             notYetImage.SetActive(false);
             loseImage.SetActive(false);
-        }
-
-        private void SetInfo(GameObject imageGO, string headerText, string subHeaderText, GameObject buttonGO = null)
-        {
-            imageGO.SetActive(true);
-            header.text = headerText;
-            subHeader.text = subHeaderText;
-
-            if (buttonGO != null)
-                buttonGO.SetActive(true);
         }
 
         #endregion

@@ -31,7 +31,14 @@ namespace Wrapper
                 return;
 
             rewards.Add(formatted);
-            Events.UpdateRemoteSave?.Invoke();
+        }
+
+        public bool HasReward(string rewardID)
+        {
+            if (rewards == null)
+                return false;
+
+            return rewards.Contains(FormatString(rewardID));
         }
 
         public void UpdateMinigameSave(Game game, object data)

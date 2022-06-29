@@ -1,5 +1,8 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using BeauRoutine;
 
 namespace Wrapper
 {
@@ -8,13 +11,23 @@ namespace Wrapper
         public static GameManager Instance { get { return _instance; } }
         private static GameManager _instance;
 
+        [SerializeField] private float loadingToggleDelay = 0.5f;
         [SerializeField] private GameObject loginScreen;
-        [SerializeField] private GameObject DebugPanel;
+        [SerializeField] private GameObject debugPanel;
         [SerializeField] private SaveManager saveManager;
+        [SerializeField] private GameObject loadingScreenPrefab;
+
+        public readonly string rewardsPath = "_Wrapper/Rewards/RewardAssets/";
+        public RewardAsset[] rewardAssets;
+        
+        private GameObject loadingScreenGO = null;
+
+        #region Unity Functions
 
         private void Awake()
         {
             InitSingleton();
+            InitRewardAssetArray();
         }
 
         private void Start()
@@ -27,22 +40,52 @@ namespace Wrapper
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.BackQuote))
-                DebugPanel.SetActive(!(DebugPanel.activeInHierarchy));
+                debugPanel.SetActive(!(debugPanel.activeInHierarchy));
         }
 #endif
+
         private void OnEnable()
         {
             Events.OpenMinigame += OpenMinigame;
+            Events.ToggleLoadingScreen += ToggleLoadingScreen;
+            Events.CollectAndDisplayReward += CollectAndDisplayReward;
         }
 
         private void OnDisable()
         {
             Events.OpenMinigame -= OpenMinigame;
+            Events.ToggleLoadingScreen -= ToggleLoadingScreen;
+            Events.CollectAndDisplayReward -= CollectAndDisplayReward;
         }
+
+        #endregion
 
         private void OpenMinigame(Minigame minigame)
         {
             SceneManager.LoadScene(minigame.StartScene);
+        }
+
+        private void ToggleLoadingScreen()
+        {
+            if (loadingScreenGO == null)
+                loadingScreenGO = Instantiate(loadingScreenPrefab);
+            else
+                Routine.Start(DestroyLoadingScreen()); // todo: debug, delete later
+        }
+
+        private void CollectAndDisplayReward(Game game, int level)
+        {
+            RewardAsset levelReward = Array.Find(rewardAssets, (reward) => reward.game == game && reward.level == level);
+            if (levelReward == null)
+            {
+                Debug.LogFormat("No Reward found for {0} level {1}", game.ToString(), level);
+                return;
+            }
+
+            Events.AddReward(levelReward.rewardID);
+
+            //todo: call a function that creates the card and displays it in the reward card panel
+            Debug.LogFormat("Won Reward {0} in game {1} at level {2}", levelReward.rewardID, game, level);
         }
 
         #region Helpers
@@ -55,6 +98,19 @@ namespace Wrapper
                 Destroy(this.gameObject);
             else
                 _instance = this;
+        }
+
+        // todo: debug, delete later
+        private IEnumerator DestroyLoadingScreen()
+        {
+            yield return new WaitForSeconds(loadingToggleDelay);
+            Destroy(loadingScreenGO);
+            loadingScreenGO = null;
+        }
+
+        private void InitRewardAssetArray()
+        {
+            rewardAssets = Resources.LoadAll<RewardAsset>(rewardsPath);
         }
 
         #endregion

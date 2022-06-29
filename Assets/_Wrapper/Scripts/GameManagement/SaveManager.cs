@@ -3,6 +3,7 @@ using Firebase.Database;
 using System.Collections;
 using UnityEngine;
 using BeauRoutine;
+using System;
 
 namespace Wrapper
 {
@@ -32,6 +33,7 @@ namespace Wrapper
         {
             Events.AddReward += AddReward;
             Events.SubmitResearchCode += Login;
+            Events.IsRewardUnlocked += IsRewardUnlocked;
             Events.UpdateRemoteSave += UpdateRemoteSave;
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
@@ -41,9 +43,15 @@ namespace Wrapper
         {
             Events.AddReward -= AddReward;
             Events.SubmitResearchCode -= Login;
+            Events.IsRewardUnlocked -= IsRewardUnlocked;
             Events.UpdateRemoteSave -= UpdateRemoteSave;
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
+        }
+
+        private bool IsRewardUnlocked(string rewardID)
+        {
+            return currentUserSave.HasReward(rewardID);
         }
 
         public IEnumerator InitFirebase()
@@ -110,7 +118,10 @@ namespace Wrapper
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;
-                Routine.WaitCondition(() => UpdateRemoteSave());
+
+                yield return Routine.Race(
+                    Routine.WaitCondition(() => UpdateRemoteSave()),
+                    Routine.WaitSeconds(5));
             }
 
             currentUserSave = JsonUtility.FromJson<UserSave>(
