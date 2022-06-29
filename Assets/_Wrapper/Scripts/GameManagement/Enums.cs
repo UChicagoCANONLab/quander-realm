@@ -19,10 +19,9 @@ namespace Wrapper
 
     public enum Expression
     {
-        Default,
-        Positive,
-        Negative,
-        Confused
+        Neutral,
+        Happy,
+        Disappointed
     };
 
     /// <summary>
