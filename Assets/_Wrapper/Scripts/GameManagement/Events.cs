@@ -38,6 +38,7 @@ namespace Wrapper
         public static Action<JournalPage> SwitchPage;
         public static Action UnselectAllCards;
         public static Action<JournalPage> UpdateTab;
+        public static Action<Game, int> CollectAndDisplayReward;
 
         /// Debug ///
         public static Action<string> BBGotoLevel;

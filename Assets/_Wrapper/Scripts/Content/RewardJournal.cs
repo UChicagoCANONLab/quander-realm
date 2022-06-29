@@ -42,7 +42,6 @@ namespace Wrapper
         private Dictionary<Game, GameObject> prefabDict;
         private Dictionary<Game, JournalSection> journal;
 
-        private const string rewardsPath = "_Wrapper/Rewards/RewardAssets/";
         private const string featuredCardParam = "FeaturedCard";
         private GameObject featuredCardGO;
         private string featuredCardID;
@@ -105,7 +104,7 @@ namespace Wrapper
             foreach (Transform transform in featuredCardMount.transform)
                 Destroy(transform.gameObject);
 
-            RewardAsset rAsset = Resources.Load<RewardAsset>(Path.Combine(rewardsPath, featuredCardID));
+            RewardAsset rAsset = Resources.Load<RewardAsset>(Path.Combine(GameManager.Instance.rewardsPath, featuredCardID));
             if (rAsset == null)
             {
                 Debug.LogErrorFormat("Could not find card {0} to feature", featuredCardID);
@@ -258,9 +257,7 @@ namespace Wrapper
 
         private void PopulateJournal()
         {
-            RewardAsset[] rewardAssetArray = Resources.LoadAll<RewardAsset>(rewardsPath);
-
-            foreach (RewardAsset rAsset in rewardAssetArray)
+            foreach (RewardAsset rAsset in GameManager.Instance.rewardAssets)
             {
                 GameObject rewardGO = CreateCard(rAsset, hiddenRewardsMount, DisplayType.InJournal);
                 journal[rAsset.game].AddCard(rewardGO);
