@@ -163,6 +163,7 @@ namespace Wrapper
             Events.UpdateTab?.Invoke(newPage);
             animator.SetTrigger(GetPageFlipTrigger(newPage));
             currentPage = newPage;
+            UpdateNavButtons();
         }
 
         private string GetPageFlipTrigger(JournalPage newPage)
@@ -197,6 +198,19 @@ namespace Wrapper
         private Toggle GetNavDot(int pageNumber)
         {
             return navDots[pageNumber];
+        }
+
+        private void UpdateNavButtons()
+        {
+            if (currentPage.pageNumber == 0)
+                previousButton.interactable = false;
+            else
+                previousButton.interactable = true;
+
+            if (currentPage.pageNumber == navDots.Length - 1)
+                nextButton.interactable = false;
+            else
+                nextButton.interactable = true;
         }
 
         #region Initialize
