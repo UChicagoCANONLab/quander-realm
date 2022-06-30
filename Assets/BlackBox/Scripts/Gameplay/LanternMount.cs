@@ -64,7 +64,6 @@ namespace BlackBox
 
         public void OnDrop(PointerEventData eventData)
         {
-            Debug.Log("Dropped");
             GameObject lanternGO = eventData.pointerDrag;
 
             if (isEmpty)
@@ -75,7 +74,6 @@ namespace BlackBox
 
         public void Flag(GameObject lanternGO)
         {
-            Debug.Log("Flag");
             lanternGO.transform.SetParent(this.transform);
             lanternGO.GetComponent<Lantern>().SetParentMount(this);
             lanternGO.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
@@ -93,7 +91,6 @@ namespace BlackBox
 
         public void UnFlag()
         {
-            Debug.Log("Unflag");
             isEmpty = true;
             mountedLantern = null;
             
