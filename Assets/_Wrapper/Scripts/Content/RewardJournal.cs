@@ -233,7 +233,7 @@ namespace Wrapper
         {
             journal = new Dictionary<Game, JournalSection>
             {
-                { Game.BlackBox,  new JournalSection(BBTab) },
+                { Game.BlackBox,  new JournalSection(BBTab, true) },
                 { Game.Circuits,  new JournalSection(CTTab) },
                 { Game.Labyrinth, new JournalSection(LATab) },
                 { Game.QueueBits, new JournalSection(QBTab) },
