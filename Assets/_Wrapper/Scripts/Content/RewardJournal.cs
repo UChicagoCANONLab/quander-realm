@@ -163,6 +163,7 @@ namespace Wrapper
             Events.UpdateTab?.Invoke(newPage);
             animator.SetTrigger(GetPageFlipTrigger(newPage));
             currentPage = newPage;
+            UpdateNavButtons();
         }
 
         private string GetPageFlipTrigger(JournalPage newPage)
@@ -199,6 +200,19 @@ namespace Wrapper
             return navDots[pageNumber];
         }
 
+        private void UpdateNavButtons()
+        {
+            if (currentPage.pageNumber == 0)
+                previousButton.interactable = false;
+            else
+                previousButton.interactable = true;
+
+            if (currentPage.pageNumber == navDots.Length - 1)
+                nextButton.interactable = false;
+            else
+                nextButton.interactable = true;
+        }
+
         #region Initialize
 
         private void InitColorDict()
@@ -233,7 +247,7 @@ namespace Wrapper
         {
             journal = new Dictionary<Game, JournalSection>
             {
-                { Game.BlackBox,  new JournalSection(BBTab) },
+                { Game.BlackBox,  new JournalSection(BBTab, true) },
                 { Game.Circuits,  new JournalSection(CTTab) },
                 { Game.Labyrinth, new JournalSection(LATab) },
                 { Game.QueueBits, new JournalSection(QBTab) },
