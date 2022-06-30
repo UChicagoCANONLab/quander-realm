@@ -24,13 +24,11 @@ namespace BlackBox
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            Debug.Log("OnPointerDown");
             animator.SetBool("Hold", true);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            Debug.Log("OnBeginDrag");
             canvasGroup.blocksRaycasts = false;
             BBEvents.ToggleLanternHeld?.Invoke(true);
 
@@ -49,7 +47,6 @@ namespace BlackBox
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            Debug.Log("OnPointerUp");
             animator.SetBool("Hold", false);
             animator.SetFloat("Velocity", 0f);
             animator.SetInteger("DragDirection", 0);
@@ -69,7 +66,6 @@ namespace BlackBox
 
             if (GetParentMount() == null)
             {
-                Debug.Log("Return called");
                 BBEvents.ReturnLanternHome?.Invoke(this.gameObject);
             }
         }

@@ -131,8 +131,6 @@ namespace BlackBox
             BBEvents.InitEnergyBar?.Invoke();
 
             InitializeLanterns(level.nodePositions.Length);
-
-            Debug.LogFormat("starting level: {0}", level.levelID);
         }
 
         private void NextLevel()
@@ -174,8 +172,6 @@ namespace BlackBox
             if (levelWon)
             {
                 saveData.currentLevelID = level.nextLevelID;
-
-                Debug.LogFormat("Calling Update: {0}", saveData.currentLevelID);
                 Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
             }
             else
@@ -283,7 +279,6 @@ namespace BlackBox
                     lanternGO.transform.SetParent(mount.transform);
                     lanternGO.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                     mount.Flag(lanternGO);
-                    Debug.Log("Returned");
                     break;
                 }
             } 

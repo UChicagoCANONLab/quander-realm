@@ -26,7 +26,7 @@ namespace BlackBox
 
         private void ToggleDebug()
         {
-            #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
+            #if (UNITY_IOS || UNITY_ANDROID || UNITY_STANDALONE_WIN) && !UNITY_EDITOR
                 BBEvents.ToggleDebug?.Invoke();
             #else
                 Debug.LogWarning("Command only works for ios and android, use the 'D' key to toggle Debug Mode");
