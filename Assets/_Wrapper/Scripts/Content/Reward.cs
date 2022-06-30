@@ -14,13 +14,14 @@ namespace Wrapper
 
         [Header("Front")]
         [SerializeField] private TextMeshProUGUI cardTypeTextFront;
-        [SerializeField] private Image cardTypeColorStrip;
+        [SerializeField] private Image cardTypeColorFront;
         [SerializeField] private TextMeshProUGUI titleFront;
         [SerializeField] private TextMeshProUGUI flavorText;
         [SerializeField] private Image image;
 
         [Header("Back")]
-        [SerializeField] private TextMeshProUGUI cardTypeBack;
+        [SerializeField] private TextMeshProUGUI cardTypeTextBack;
+        [SerializeField] private Image cardTypeColorBack;
         [SerializeField] private TextMeshProUGUI titleBack;
         [SerializeField] private TextMeshProUGUI backText;
 
@@ -51,12 +52,13 @@ namespace Wrapper
             this.displayType = displayType;
 
             cardTypeTextFront.text = cardTypeDisplayName;
-            cardTypeColorStrip.color = color;
+            cardTypeColorFront.color = color;
             titleFront.text = rAsset.title;
             flavorText.text = rAsset.flavorText;
             SetFrontImage(rAsset);
 
-            cardTypeBack.text = cardTypeDisplayName;
+            cardTypeTextBack.text = cardTypeDisplayName;
+            cardTypeColorBack.color = color;
             titleBack.text = rAsset.title;
             backText.text = rAsset.backText;
 
