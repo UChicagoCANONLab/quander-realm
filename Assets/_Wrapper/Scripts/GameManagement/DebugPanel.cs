@@ -21,6 +21,7 @@ public class DebugPanel : MonoBehaviour
     public TMP_Dropdown dropDown;
     public TMP_InputField inputField;
     public Button submitButton;
+    public TextMeshProUGUI consoleLog;
     
     private void Awake()
     {
@@ -34,6 +35,36 @@ public class DebugPanel : MonoBehaviour
     private void OnEnable()
     {
         inputField.text = "";
+        Application.logMessageReceived += UpdateLog;
+    }
+
+    private void OnDisable()
+    {
+        Application.logMessageReceived += UpdateLog;
+    }
+
+    private void UpdateLog(string condition, string stackTrace, LogType type)
+    {
+        if (condition.Contains("[BeauRoutine]"))
+            return;
+
+        consoleLog.text = condition;
+
+        Color color;
+        switch (type)
+        {
+            case LogType.Error:
+            case LogType.Exception:
+                color = Color.red;
+                break;
+            case LogType.Warning:
+                color = Color.yellow;
+                break;
+            default:
+                color = Color.white;
+                break;
+        }
+        consoleLog.color = color;
     }
 
     private void SetupOptions()
