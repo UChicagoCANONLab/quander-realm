@@ -104,15 +104,20 @@ namespace Wrapper
         public IEnumerator SelectCard()
         {
             yield return UpdateAnimationState();
-            Events.UnselectAllCards?.Invoke();
 
+            if (!IsUnlocked())
+                yield break;
+
+            Events.UnselectAllCards?.Invoke();
             animator.SetBool(stateSelected, true);
             Events.FeatureCard?.Invoke(id.Trim().ToLower());
+            button.interactable = false;
         }
 
         private void UnselectSelf()
         {
             animator.SetBool(stateSelected, false);
+            button.interactable = true;
         }
 
         private string GetDisplayName(string input)
