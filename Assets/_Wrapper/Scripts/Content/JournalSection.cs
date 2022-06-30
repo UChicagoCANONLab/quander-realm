@@ -13,12 +13,15 @@ namespace Wrapper
 
         public List<JournalPage> pages;
 
-        public JournalSection(GameObject tabGO)
+        public JournalSection(GameObject tabGO, bool isFirst = false)
         {
             Events.UpdateTab += UpdateTab;
             Events.ResetPageNumbers += ResetPageNumbers;
 
             InitSectionTab(tabGO);
+            if (isFirst)
+                tab.SetIsOnWithoutNotify(true);
+
             pages = new List<JournalPage>();
         }
 
@@ -36,15 +39,8 @@ namespace Wrapper
 
         private void OpenSection(bool isOn)
         {
-            try
-            {
-                if (isOn)
-                    pages.First().ClickNavDot();
-            }
-            catch(Exception e)
-            {
-                Debug.LogWarning(e.Message);
-            }
+            if (isOn)
+                pages.First().ClickNavDot();
         }
 
         private void UpdateTab(JournalPage currentPage)
