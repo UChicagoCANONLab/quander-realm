@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReturnButton : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject startPanel, recipePanel;
-
-    public void ReturnToStartPage()
+    public class ReturnButton : MonoBehaviour
     {
-        startPanel.SetActive(true);
-        recipePanel.SetActive(false);
+        public GameObject startPanel, recipePanel;
+
+        public void ReturnToStartPage()
+        {
+            startPanel.SetActive(true);
+            recipePanel.SetActive(false);
+        }
     }
 }

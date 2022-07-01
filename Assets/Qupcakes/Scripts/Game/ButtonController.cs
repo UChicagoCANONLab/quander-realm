@@ -1,112 +1,114 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Costume = AssetCostumeUtilities;
+using Costume = Qupcakery.AssetCostumeUtilities;
 
 /* Button manager */
-
-public class ButtonController : MonoBehaviour
+namespace Qupcakery
 {
-    /* Button pressed event handling */
-    public delegate void ButtonPressedHandler();
-    public ButtonPressedHandler ButtonPressed;
-
-    public void SubscribeToCustomerEvent(GameObject customer)
+    public class ButtonController : MonoBehaviour
     {
-        /* Subscribe to 1st customer's events */
-        CustomerManager cm = customer.GetComponent<CustomerManager>();
-        cm.Patience.PatienceEnded += OnCustomerPatienceEnded;
-        cm.CakeReceived += OnCustomerReceivedCake;
-        cm.ArrivedAtTable += OnCustomerArrivalAtTable;
-    }
+        /* Button pressed event handling */
+        public delegate void ButtonPressedHandler();
+        public ButtonPressedHandler ButtonPressed;
 
-    public enum ButtonState
-    {
-        CanNotBePressed, CanBePressed, Pressed
-    }
-
-    public ButtonState buttonState { get; protected set; }
-
-    public void ResetButton()
-    {
-        UpdateButtonState(ButtonState.CanNotBePressed);
-    }
-
-    // On press
-    protected void OnMouseDown()
-    {
-        if (GameUtilities.gameIsPaused)
-            return;
-        
-        if (buttonState == ButtonState.CanBePressed)
+        public void SubscribeToCustomerEvent(GameObject customer)
         {
-            UpdateButtonState(ButtonState.Pressed); 
-            OnButtonPressed();
+            /* Subscribe to 1st customer's events */
+            CustomerManager cm = customer.GetComponent<CustomerManager>();
+            cm.Patience.PatienceEnded += OnCustomerPatienceEnded;
+            cm.CakeReceived += OnCustomerReceivedCake;
+            cm.ArrivedAtTable += OnCustomerArrivalAtTable;
         }
-    }
 
-    protected void UpdateButtonState(ButtonState bs)
-    {
-        buttonState = bs;
-  
-        switch(buttonState)
+        public enum ButtonState
         {
-            case ButtonState.CanNotBePressed:
-                Costume.SetCostume(gameObject, "Basic",
-                    "CanNotBePressed");
-                break;
-            case ButtonState.CanBePressed:
-                Costume.SetCostume(gameObject, "Basic",
-                   "CanBePressed");
-                break;
-            case ButtonState.Pressed:
-                Costume.SetCostume(gameObject, "Basic",
-                   "Pressed");
-                break;
+            CanNotBePressed, CanBePressed, Pressed
         }
-    }
 
-    // Publisher
-    protected virtual void OnButtonPressed()
-    {
-        if (ButtonPressed!=null)
-        {
-            ButtonPressed();
-        }
-    }
+        public ButtonState buttonState { get; protected set; }
 
-    // Subscriber
-    public void OnCustomerReceivedCake()
-    {
-        if (buttonState == ButtonState.Pressed)
+        public void ResetButton()
         {
             UpdateButtonState(ButtonState.CanNotBePressed);
         }
-    }
 
-    // Subscriber
-    public void OnCustomerArrivalAtTable()
-    {
-        if (buttonState == ButtonState.CanNotBePressed)
-            UpdateButtonState(ButtonState.CanBePressed);
-    }
+        // On press
+        protected void OnMouseDown()
+        {
+            if (GameUtilities.gameIsPaused)
+                return;
 
-    // Subscriber to patience-end for a batch
-    public void OnCustomerPatienceEnded()
-    {
-        if (buttonState != ButtonState.CanNotBePressed)
-            UpdateButtonState(ButtonState.CanNotBePressed);
-    }
+            if (buttonState == ButtonState.CanBePressed)
+            {
+                UpdateButtonState(ButtonState.Pressed);
+                OnButtonPressed();
+            }
+        }
 
-    // Subscriber to CakeOnBeltTracker
-    public virtual void OnCakesReady()
-    {
-        // //Debug.Log("OnCakesReady: Not implemented");
-    }
+        protected void UpdateButtonState(ButtonState bs)
+        {
+            buttonState = bs;
 
-    // Subscriber to CakeOnBeltTracker
-    public virtual void OnCakesRemovedFromBelt()
-    {
-        // //Debug.Log("OnCakesRemovedFromBelt: Not implemented");
+            switch (buttonState)
+            {
+                case ButtonState.CanNotBePressed:
+                    Costume.SetCostume(gameObject, "Basic",
+                        "CanNotBePressed");
+                    break;
+                case ButtonState.CanBePressed:
+                    Costume.SetCostume(gameObject, "Basic",
+                       "CanBePressed");
+                    break;
+                case ButtonState.Pressed:
+                    Costume.SetCostume(gameObject, "Basic",
+                       "Pressed");
+                    break;
+            }
+        }
 
+        // Publisher
+        protected virtual void OnButtonPressed()
+        {
+            if (ButtonPressed != null)
+            {
+                ButtonPressed();
+            }
+        }
+
+        // Subscriber
+        public void OnCustomerReceivedCake()
+        {
+            if (buttonState == ButtonState.Pressed)
+            {
+                UpdateButtonState(ButtonState.CanNotBePressed);
+            }
+        }
+
+        // Subscriber
+        public void OnCustomerArrivalAtTable()
+        {
+            if (buttonState == ButtonState.CanNotBePressed)
+                UpdateButtonState(ButtonState.CanBePressed);
+        }
+
+        // Subscriber to patience-end for a batch
+        public void OnCustomerPatienceEnded()
+        {
+            if (buttonState != ButtonState.CanNotBePressed)
+                UpdateButtonState(ButtonState.CanNotBePressed);
+        }
+
+        // Subscriber to CakeOnBeltTracker
+        public virtual void OnCakesReady()
+        {
+            // Debug.Log("OnCakesReady: Not implemented");
+        }
+
+        // Subscriber to CakeOnBeltTracker
+        public virtual void OnCakesRemovedFromBelt()
+        {
+            // Debug.Log("OnCakesRemovedFromBelt: Not implemented");
+
+        }
     }
 }

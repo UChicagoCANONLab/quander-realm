@@ -2,33 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class LastPageButton : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject tutorialManager;
-    public Image lastButtonImage, nextButtonImage;
-    int pageNum;
-
-    public void GoToLastPage()
+    public class LastPageButton : MonoBehaviour
     {
-        pageNum = tutorialManager.GetComponent<TutorialManager>().currentPageNum;
+        public GameObject tutorialManager;
+        public Image lastButtonImage, nextButtonImage;
+        int pageNum;
 
-        int totalPageNum = tutorialManager.GetComponent<TutorialManager>().totalPageNum;
+        public void GoToLastPage()
+        {
+            pageNum = tutorialManager.GetComponent<TutorialManager>().currentPageNum;
 
-        if (totalPageNum != 1)
-            nextButtonImage.color = new Color(1f, 1f, 1f, 1f);
+            int totalPageNum = tutorialManager.GetComponent<TutorialManager>().totalPageNum;
 
-        // If current page is the first page
-        if (pageNum == 0)
-            return;
+            if (totalPageNum != 1)
+                nextButtonImage.color = new Color(1f, 1f, 1f, 1f);
 
-        // If current page is the second page, visually disable the button
-        if (pageNum == 1)
-            lastButtonImage.color = new Color(1f,1f,1f,0.5f);
-        else
-            lastButtonImage.color = new Color(1f, 1f, 1f, 1f);
+            // If current page is the first page
+            if (pageNum == 0)
+                return;
 
-        // Go to last page
-        tutorialManager.GetComponent<TutorialManager>().currentPageNum -= 1;
+            // If current page is the second page, visually disable the button
+            if (pageNum == 1)
+                lastButtonImage.color = new Color(1f, 1f, 1f, 0.5f);
+            else
+                lastButtonImage.color = new Color(1f, 1f, 1f, 1f);
+
+            // Go to last page
+            tutorialManager.GetComponent<TutorialManager>().currentPageNum -= 1;
+        }
     }
 }

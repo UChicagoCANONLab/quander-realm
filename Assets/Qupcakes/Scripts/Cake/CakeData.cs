@@ -1,8 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class CakeData : ScriptableObject
+namespace Qupcakery
 {
-    public float Speed;
+    [CreateAssetMenu]
+    public class CakeData : ScriptableObject
+    {
+        public float Speed;
+    }
 }

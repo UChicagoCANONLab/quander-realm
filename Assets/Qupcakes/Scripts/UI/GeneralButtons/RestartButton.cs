@@ -5,26 +5,29 @@ using UnityEngine.SceneManagement;
 
 // Restart level during gameplay
 
-public class RestartButton : MonoBehaviour
+namespace Qupcakery
 {
-    public void RestartGame()
+    public class RestartButton : MonoBehaviour
     {
-        GameManagement.Instance.game.gameStat.SetLevelResultAndSave(GameStat.LevelResult.QUIT);
-
-        if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
-            return;
-
-        if (GameUtilities.gameIsPaused) GameUtilities.UnpauseGame();
-
-        switch (GameManagement.Instance.gameMode)
+        public void RestartGame()
         {
-            case GameManagement.GameMode.Regular:
-                GameObjectsManagement.ResetAllGameObjects();
-                SceneManagementUtilities.LoadGameScene();
-                break;
-            case GameManagement.GameMode.Experiment:
-                SceneManagementUtilities.LoadExperimentMode();
-                break;
+            GameManagement.Instance.game.gameStat.SetLevelResultAndSave(GameStat.LevelResult.QUIT);
+
+            if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
+                return;
+
+            if (GameUtilities.gameIsPaused) GameUtilities.UnpauseGame();
+
+            switch (GameManagement.Instance.gameMode)
+            {
+                case GameManagement.GameMode.Regular:
+                    GameObjectsManagement.ResetAllGameObjects();
+                    SceneManagementUtilities.LoadGameScene();
+                    break;
+                case GameManagement.GameMode.Experiment:
+                    SceneManagementUtilities.LoadExperimentMode();
+                    break;
+            }
         }
     }
 }

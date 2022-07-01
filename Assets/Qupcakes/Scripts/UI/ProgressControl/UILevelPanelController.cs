@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UILevelPanelController : MonoBehaviour
+namespace Qupcakery
 {
-    public Text t; 
-
-    private void Start()
+    public class UILevelPanelController : MonoBehaviour
     {
-        t.text = "LEVEL " + GameManagement.
-            Instance.GetCurrentLevel().LevelInd;
+        public Text t;
+
+        private void Start()
+        {
+            t.text = "LEVEL " + GameManagement.
+                Instance.GetCurrentLevel().LevelInd;
+        }
     }
 }

@@ -4,19 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class HelpNotButton : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject recipePanel;
-    public GameObject startPanel;
-    public Image recipeImage;
-
-    public void ShowNotRecipe()
+    public class HelpNotButton : MonoBehaviour
     {
-        // //Debug.Log("Showing not recipe");
-        startPanel.SetActive(false);
-        recipePanel.SetActive(true);
-        recipePanel.GetComponentInChildren<Text>().text = "Flavor-inverter (NOT Gate)";
+        public GameObject recipePanel;
+        public GameObject startPanel;
+        public Image recipeImage;
 
-        recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "NOT").SingleOrDefault();
+        public void ShowNotRecipe()
+        {
+            // Debug.Log("Showing not recipe");
+            startPanel.SetActive(false);
+            recipePanel.SetActive(true);
+            recipePanel.GetComponentInChildren<Text>().text = "Flavor-inverter (NOT Gate)";
+
+            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "NOT").SingleOrDefault();
+        }
     }
 }

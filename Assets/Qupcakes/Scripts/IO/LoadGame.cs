@@ -6,50 +6,54 @@ using UnityEngine;
  * Loads game from file/database
  */
 
-public class LoadGame : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject ResumeButton;
-
-    [DllImport("__Internal")]
-    private static extern void QupcakesGameLoaded(string callback);
-
-    public static int Load()
+    public class LoadGame : MonoBehaviour
     {
+        public GameObject ResumeButton;
+
+        [DllImport("__Internal")]
+        private static extern void QupcakesGameLoaded(string callback);
+
+        public static int Load()
+        {
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
-            QupcakesGameLoaded ("QupcakesLoadData");
+                QupcakesGameLoaded ("QupcakesLoadData");
 #endif
-        //string data = File.ReadAllText(Application.dataPath + "/test.txt");
-        //QupcakesloadData(data);
-        return 0;
-    }
+            //string data = File.ReadAllText(Application.dataPath + "/test.txt");
+            //QupcakesloadData(data);
+            return 0;
+        }
 
-    public void QupcakesLoadData(string data)
-    {
-        //Debug.Log("I just got this data:");
-        //Debug.Log(data);
-
-        if (data.Length > 0)
+        public void QupcakesLoadData(string data)
         {
-            GameManagement.Instance.CreateNewGame();
+            Debug.Log("I just got this data:");
+            Debug.Log(data);
 
-            // If there is data
-            GameStat gameStat = JsonUtility.FromJson<GameStat>(data);
-            GameManagement.Instance.game.gameStat.TotalEarning = gameStat.TotalEarning;
-            GameManagement.Instance.game.gameStat.MaxLevelCompleted = gameStat.MaxLevelCompleted;
-            PlayerPrefs.SetInt("Earning", (int)gameStat.TotalEarning);
-
-            for (int i = 1; i <= GameManagement.Instance.GetTotalLevelCnt(); i++)
+            if (data.Length > 0)
             {
-                int starCnt = (int) gameStat.GetLevelPerformance(i);
-                string level = "Level" + i;
-                PlayerPrefs.SetInt(level, starCnt);
+                GameManagement.Instance.CreateNewGame();
 
-                GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i, (int)starCnt);
+                // If there is data
+                GameStat gameStat = JsonUtility.FromJson<GameStat>(data);
+                GameManagement.Instance.game.gameStat.TotalEarning = gameStat.TotalEarning;
+                GameManagement.Instance.game.gameStat.MaxLevelCompleted = gameStat.MaxLevelCompleted;
+                PlayerPrefs.SetInt("Earning", (int)gameStat.TotalEarning);
+
+                for (int i = 1; i <= GameManagement.Instance.GetTotalLevelCnt(); i++)
+                {
+                    int starCnt = (int)gameStat.GetLevelPerformance(i);
+                    string level = "Level" + i;
+                    PlayerPrefs.SetInt(level, starCnt);
+
+                    GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i, (int)starCnt);
+                }
             }
-        } else
-        {
-            // #TODO: modify for non-webgl
-            ResumeButton.GetComponent<ResumeButton>().DeactiveResumeButton();
+            else
+            {
+                // #TODO: modify for non-webgl
+                ResumeButton.GetComponent<ResumeButton>().DeactiveResumeButton();
+            }
         }
     }
 }
