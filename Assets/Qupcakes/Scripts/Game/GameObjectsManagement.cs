@@ -16,7 +16,7 @@ public static class GameObjectsManagement
         GameObject cakeboxPrefab, GameObject buttonPrefab,
         GameObject panelPrefab)
     {
-        foreach (int i in Enumerable.Range(0, Constants.MaxCustomerPerBatch))
+        foreach (int i in Enumerable.Range(0, qConstants.MaxCustomerPerBatch))
         {
             /* Generates customers outside the game scene */
             Customers[i] = UnityEngine.Object.Instantiate(customerPrefab,
@@ -49,7 +49,7 @@ public static class GameObjectsManagement
 
     public static void DeactiveAllGameObjects()
     {
-        foreach (int i in Enumerable.Range(0, Constants.MaxCustomerPerBatch))
+        foreach (int i in Enumerable.Range(0, qConstants.MaxCustomerPerBatch))
         {
             Customers[i].SetActive(false);
             CakeBoxes[i].SetActive(false);
@@ -60,7 +60,7 @@ public static class GameObjectsManagement
 
     public static void ResetAllGameObjects()
     {
-        for (int i = 0; i < Constants.MaxCustomerPerBatch; i++)
+        for (int i = 0; i < qConstants.MaxCustomerPerBatch; i++)
         {
             ResetCakeBoxObj(CakeBoxes[i]);
             ResetCustomerObj(Customers[i]);

@@ -19,7 +19,7 @@ public class ZGate : Gate
         {
             case 2:
                 //Debug.Log("distance is : " + Math.Abs(cakeState.probabilities[0] - 0.5f));
-                if (Math.Abs(cakeState.probabilities[0] - 0.5f) < Constants.FloatCmpMargin)
+                if (Math.Abs(cakeState.probabilities[0] - 0.5f) < qConstants.FloatCmpMargin)
                         cake.UpdateCakeStateFlipPhase();
                 break;
             case 4:

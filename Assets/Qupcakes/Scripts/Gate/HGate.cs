@@ -13,12 +13,12 @@ public class HGate : Gate
         /* forbid operation on states in entanglement */
         System.Diagnostics.Debug.Assert(cakeState.stateSize == 2);
 
-        if (cakeState.probabilities[0] > 1 - Constants.FloatCmpMargin
-            && cakeState.probabilities[0] < 1 + Constants.FloatCmpMargin)
+        if (cakeState.probabilities[0] > 1 - qConstants.FloatCmpMargin
+            && cakeState.probabilities[0] < 1 + qConstants.FloatCmpMargin)
         {
             cake.UpdateCakeState(0.5f, 0.5f, CakeState.Phase.Positive);
-        } else if (cakeState.probabilities[1] > 1 - Constants.FloatCmpMargin
-            && cakeState.probabilities[0] < 1 + Constants.FloatCmpMargin)
+        } else if (cakeState.probabilities[1] > 1 - qConstants.FloatCmpMargin
+            && cakeState.probabilities[0] < 1 + qConstants.FloatCmpMargin)
         {
             cake.UpdateCakeState(0.5f, 0.5f, CakeState.Phase.Negative);
         }

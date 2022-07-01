@@ -1,5 +1,6 @@
 ﻿using System;
-public static class Constants
+
+public static class qConstants
 {
     public const int MaxCustomerPerBatch = 3;
     public const int MaxBeltPerBatch = 3;
@@ -8,3 +9,4 @@ public static class Constants
     public const int MaxNumberOfLevels = 25;
     public const float FloatCmpMargin = 0.0001f;
 }
+

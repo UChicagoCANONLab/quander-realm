@@ -102,7 +102,7 @@ namespace BlackBox
         {
             try
             {
-                string saveString = Events.GetMinigameSaveData?.Invoke(Game.BlackBox);
+                string saveString = Events.GetMinigameSaveData?.Invoke(Wrapper.Game.BlackBox);
                 saveData = JsonUtility.FromJson<BBSaveData>(saveString);
             }
             catch (Exception e)
@@ -172,7 +172,7 @@ namespace BlackBox
             if (levelWon)
             {
                 saveData.currentLevelID = level.nextLevelID;
-                Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+                Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
             }
             else
             {

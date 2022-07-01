@@ -38,9 +38,9 @@ public class GameStat
         MaxLevelCompleted = 0;
         LevelJustAttempted = 0; 
         levelPerformance = new int[totalLevelCnt];
-        PuzzleResults = new bool[Constants.MaxNumberOfPuzzlePerLevel];
-        CompressedPuzzleSolutions = new long[Constants.MaxNumberOfPuzzlePerLevel];
-        CompressedPuzzles = new int[Constants.MaxNumberOfPuzzlePerLevel];
+        PuzzleResults = new bool[qConstants.MaxNumberOfPuzzlePerLevel];
+        CompressedPuzzleSolutions = new long[qConstants.MaxNumberOfPuzzlePerLevel];
+        CompressedPuzzles = new int[qConstants.MaxNumberOfPuzzlePerLevel];
     }
 
     // Constructor for loaded game
@@ -50,9 +50,9 @@ public class GameStat
         TotalEarning = newTotalEarning;
         MaxLevelCompleted = newTotalCompletedLevels;
         levelPerformance = new int[totalLevelCnt];
-        PuzzleResults = new bool[Constants.MaxNumberOfPuzzlePerLevel];
-        CompressedPuzzleSolutions = new long[Constants.MaxNumberOfPuzzlePerLevel];
-        CompressedPuzzles = new int[Constants.MaxNumberOfPuzzlePerLevel];
+        PuzzleResults = new bool[qConstants.MaxNumberOfPuzzlePerLevel];
+        CompressedPuzzleSolutions = new long[qConstants.MaxNumberOfPuzzlePerLevel];
+        CompressedPuzzles = new int[qConstants.MaxNumberOfPuzzlePerLevel];
     }
 
     public void SetLevelJustAttempted(int levelInd)

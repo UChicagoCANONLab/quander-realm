@@ -46,7 +46,7 @@ public static class DataCompression
         long res = 0;
         for (int i = 0; i < puzzleSize; i++)
         {
-            for (int j = 0; j < Constants.MaxGatePerBelt; j++)
+            for (int j = 0; j < qConstants.MaxGatePerBelt; j++)
             {
                 res += solution[i, j];
                 res = res << 3;
@@ -60,10 +60,10 @@ public static class DataCompression
     {
         int puzzleSize = (int)compressedSolution & 3;
         compressedSolution = compressedSolution >> 3;
-        int[,] solution = new int[Constants.MaxBeltPerBatch, Constants.MaxGatePerBelt];
-        for (int i= Constants.MaxBeltPerBatch - 1; i>=0; i--)
+        int[,] solution = new int[qConstants.MaxBeltPerBatch, qConstants.MaxGatePerBelt];
+        for (int i= qConstants.MaxBeltPerBatch - 1; i>=0; i--)
         {
-            for (int j = Constants.MaxGatePerBelt - 1; j>=0; j--)
+            for (int j = qConstants.MaxGatePerBelt - 1; j>=0; j--)
             {
                 solution[i, j] = (int)compressedSolution & 7;
                 compressedSolution = compressedSolution >> 3;

@@ -8,9 +8,9 @@ public class GateSlots
 {
     public static GateSlots Instance { get; private set; } =
         new GateSlots();
-    public int[,] Solution = new int[Constants.MaxBeltPerBatch, Constants.MaxGatePerBelt]; // 0 -> none, 1 -> NOT,...
+    public int[,] Solution = new int[qConstants.MaxBeltPerBatch, qConstants.MaxGatePerBelt]; // 0 -> none, 1 -> NOT,...
 
-    private bool[,] slots = new bool[Constants.MaxBeltPerBatch, Constants.MaxGatePerBelt]; // true -> available
+    private bool[,] slots = new bool[qConstants.MaxBeltPerBatch, qConstants.MaxGatePerBelt]; // true -> available
     
     int maxGatesPerBelt;
     int beltCnt;

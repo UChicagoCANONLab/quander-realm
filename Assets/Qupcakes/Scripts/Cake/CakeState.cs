@@ -241,7 +241,7 @@ public class CakeState
         for (int i=0; i<4; i++)
         {
             if (!(Math.Abs(probabilities[i] - target.probabilities[i])
-                < Constants.FloatCmpMargin))
+                < qConstants.FloatCmpMargin))
             {
                 return false;
             }
