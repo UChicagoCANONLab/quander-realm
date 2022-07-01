@@ -38,7 +38,7 @@ public class GameBehavior : MonoBehaviour
 
     private bool hintProvided = false;
 
-    private int[] levelScores = new int[Constants.N_LEVELS];
+    private int[] levelScores = new int[CTConstants.N_LEVELS];
 
     private float sceneScale = 1f;
 
@@ -75,7 +75,7 @@ public class GameBehavior : MonoBehaviour
 
         var loadedGate = Resources.Load("Circuits/Prefabs/H_Gate");
         gateObjects = new BaseGateBehavior[circuit.Count, circuit[0].Count];
-        Vector3 offset = new Vector3((-nCols / 2) * Constants.gridResolution_w, ((-nLines / 2) - .5f) * Constants.gridResolution_h);
+        Vector3 offset = new Vector3((-nCols / 2) * CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h);
         for (int i = 0; i < circuit.Count; i++)
         {
             string row = "";
@@ -315,13 +315,13 @@ public class GameBehavior : MonoBehaviour
 
         int nCols = circuit[0].Count;
         nLines = circuit.Count;
-        Vector3 offset = new Vector3((-nCols / 2) * Constants.gridResolution_w, ((-nLines / 2) - .5f) * Constants.gridResolution_h*sceneScale);
+        Vector3 offset = new Vector3((-nCols / 2) * CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h*sceneScale);
         for (int i = 0; i < circuit.Count; i++)
         {
             var currLine = Instantiate(linePrefab);
             LineRenderer lr = currLine.GetComponent<LineRenderer>();
             lr.SetWidth(sceneScale, sceneScale);
-            float yCord = (nLines - i) * Constants.gridResolution_h*sceneScale;
+            float yCord = (nLines - i) * CTConstants.gridResolution_h*sceneScale;
 
             Vector3[] positions = { new Vector3(-200, yCord) + offset, new Vector3(200, yCord) + offset };
             lr.SetPositions(positions);
@@ -338,8 +338,8 @@ public class GameBehavior : MonoBehaviour
         gb.y = y;
         gb.gameBehavior = this;
         currGate.transform.parent = gatesObject.transform;
-        Vector3 offset = new Vector3((-nCols / 2) * Constants.gridResolution_w, (-nLines / 2) * Constants.gridResolution_h);
-        currGate.transform.position = new Vector3(Constants.gridResolution_w * x, Constants.gridResolution_h * (nLines - y - 1)) + offset;
+        Vector3 offset = new Vector3((-nCols / 2) * CTConstants.gridResolution_w, (-nLines / 2) * CTConstants.gridResolution_h);
+        currGate.transform.position = new Vector3(CTConstants.gridResolution_w * x, CTConstants.gridResolution_h * (nLines - y - 1)) + offset;
         gateObjects[y, x] = gb;
     }
 
@@ -425,7 +425,7 @@ public class GameBehavior : MonoBehaviour
             }
         }
 
-        float sparkSeparation = Constants.gridResolution_w;
+        float sparkSeparation = CTConstants.gridResolution_w;
 
         int nLines = circuit.Count;
         int nCols = circuit[0].Count;
@@ -435,11 +435,11 @@ public class GameBehavior : MonoBehaviour
         {
 
 
-            Vector3 offset = new Vector3(-nSpark*Constants.gridResolution_w, ((-nLines / 2) - .5f) * Constants.gridResolution_h ) * sceneScale;
+            Vector3 offset = new Vector3(-nSpark*CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h ) * sceneScale;
             for (int i = 0; i < circuit.Count; i++)
             {
                 float sparkOffset = 0;
-                float yCord = (nLines - i) * Constants.gridResolution_h * sceneScale;
+                float yCord = (nLines - i) * CTConstants.gridResolution_h * sceneScale;
                 GameObject spark = Instantiate(sparkPrefab);
                 spark.transform.localScale = Vector3.one * sceneScale;
                 float circuitLen = 4f * camera.orthographicSize;

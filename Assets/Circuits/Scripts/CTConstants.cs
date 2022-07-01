@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Constants
+public class CTConstants
 {
     public const float camera_scale = 10.75f;
     public const float gridResolution_w = .45f * camera_scale;
