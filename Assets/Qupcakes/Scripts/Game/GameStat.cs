@@ -111,7 +111,7 @@ namespace Qupcakery
         {
             Result = (int)result;
             /* Save to databse */
-            SaveGame.Save();
+            //SaveGame.Save();
         }
 
         public void SetPuzzleResult(int puzzleInd, bool result)
