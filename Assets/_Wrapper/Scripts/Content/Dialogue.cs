@@ -6,46 +6,27 @@ namespace Wrapper
     public class Dialogue : ContentAsset
     {
         [SerializeField, ContentValue("SequenceID")]
-        public string sequenceID = string.Empty;
+        public string sequenceID;
 
         [SerializeField, ContentValue("Number")]
-        public int num = 0;
+        public int num;
         
         [SerializeField, ContentValue("Text")]
-        public string text = string.Empty;
+        public string text;
         
         [SerializeField, ContentValue("Speaker")]
-        public Character speaker = Character.None;
+        public Character speaker;
         
         [SerializeField, ContentValue("Speaker Expression")]
-        public Expression speakerExpression = Expression.Default;
+        public Expression speakerExpression;
 
         [SerializeField, ContentValue("Listener")]
-        public Character listener = Character.None;
+        public Character listener;
 
         [SerializeField, ContentValue("Listener Expression")]
-        public Expression listenerExpression = Expression.Default;
+        public Expression listenerExpression;
 
         [SerializeField, ContentValue("Context Image Path")]
-        public string contextImagePath = string.Empty;
-
-        public enum Character
-        {
-            None,
-            Char1,
-            Char2,
-            Char3,
-            Char4,
-            Char5,
-            Char6
-        }
-
-        public enum Expression
-        {
-            Default,
-            Positive,
-            Negative,
-            Confused
-        }
+        public string contextImagePath;
     }
 }

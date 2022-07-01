@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using SysDebug = System.Diagnostics.Debug;
-using CakeUtil = Qupcakery.CakeStateUtilities;
+using CakeUtil = CakeStateUtilities;
 
 /*
  * Cake object for interfacing with Unity

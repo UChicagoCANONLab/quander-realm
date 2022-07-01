@@ -5,12 +5,6 @@ namespace Wrapper
 {
     public class DialogueButton : QButton
     {
-        public enum Step
-        {
-            Forward = 1,
-            Backward = -1
-        };
-
         [SerializeField] public Step step = Step.Forward;
 
         protected override void OnEnable()
