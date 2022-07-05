@@ -2,14 +2,17 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using BeauRoutine;
 
 namespace Wrapper
 {
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get { return _instance; } }
+
         private static GameManager _instance;
         private GameObject loadingScreenGO = null;
+        private const string introSequenceID = "W_Intro";
 
         [SerializeField] private float loadingToggleDelay = 0.5f;
         [SerializeField] private GameObject loginScreen;
@@ -20,6 +23,7 @@ namespace Wrapper
         private void Awake()
         {
             InitSingleton();
+            Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?
         }
 
         private void Start()
@@ -58,7 +62,7 @@ namespace Wrapper
             if (loadingScreenGO == null)
                 loadingScreenGO = Instantiate(loadingScreenPrefab);
             else
-                StartCoroutine("DestroyLoadingScreen"); // todo: debug, delete later
+                Routine.Start(DestroyLoadingScreen()); //todo: debug, delete later
         }
 
         #region Helpers
@@ -79,6 +83,18 @@ namespace Wrapper
             yield return new WaitForSeconds(loadingToggleDelay);
             Destroy(loadingScreenGO);
             loadingScreenGO = null;
+        }
+
+        private IEnumerator IntroDialogueRoutine()
+        {
+            while (!(saveManager.isUserLoggedIn) || !(saveManager.currentUserSave != null))
+                yield return null;
+
+            if (saveManager.HasPlayerSeenIntroDialogue())
+                yield break;
+
+            Events.StartDialogueSequence?.Invoke(introSequenceID);
+            saveManager.ToggleIntroDialogueSeen(true);
         }
 
         #endregion
