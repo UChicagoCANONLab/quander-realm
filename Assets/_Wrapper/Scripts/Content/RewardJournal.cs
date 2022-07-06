@@ -42,7 +42,6 @@ namespace Wrapper
         private Dictionary<Game, GameObject> prefabDict;
         private Dictionary<Game, JournalSection> journal;
 
-        private const string rewardsPath = "_Wrapper/Rewards/RewardAssets/";
         private const string featuredCardParam = "FeaturedCard";
         private GameObject featuredCardGO;
         private string featuredCardID;
@@ -105,7 +104,7 @@ namespace Wrapper
             foreach (Transform transform in featuredCardMount.transform)
                 Destroy(transform.gameObject);
 
-            RewardAsset rAsset = Resources.Load<RewardAsset>(Path.Combine(rewardsPath, featuredCardID));
+            RewardAsset rAsset = Resources.Load<RewardAsset>(Path.Combine(GameManager.Instance.rewardsPath, featuredCardID));
             if (rAsset == null)
             {
                 Debug.LogErrorFormat("Could not find card {0} to feature", featuredCardID);
@@ -164,6 +163,7 @@ namespace Wrapper
             Events.UpdateTab?.Invoke(newPage);
             animator.SetTrigger(GetPageFlipTrigger(newPage));
             currentPage = newPage;
+            UpdateNavButtons();
         }
 
         private string GetPageFlipTrigger(JournalPage newPage)
@@ -200,6 +200,19 @@ namespace Wrapper
             return navDots[pageNumber];
         }
 
+        private void UpdateNavButtons()
+        {
+            if (currentPage.pageNumber == 0)
+                previousButton.interactable = false;
+            else
+                previousButton.interactable = true;
+
+            if (currentPage.pageNumber == navDots.Length - 1)
+                nextButton.interactable = false;
+            else
+                nextButton.interactable = true;
+        }
+
         #region Initialize
 
         private void InitColorDict()
@@ -234,7 +247,7 @@ namespace Wrapper
         {
             journal = new Dictionary<Game, JournalSection>
             {
-                { Game.BlackBox,  new JournalSection(BBTab) },
+                { Game.BlackBox,  new JournalSection(BBTab, true) },
                 { Game.Circuits,  new JournalSection(CTTab) },
                 { Game.Labyrinth, new JournalSection(LATab) },
                 { Game.QueueBits, new JournalSection(QBTab) },
@@ -258,9 +271,7 @@ namespace Wrapper
 
         private void PopulateJournal()
         {
-            RewardAsset[] rewardAssetArray = Resources.LoadAll<RewardAsset>(rewardsPath);
-
-            foreach (RewardAsset rAsset in rewardAssetArray)
+            foreach (RewardAsset rAsset in GameManager.Instance.rewardAssets)
             {
                 GameObject rewardGO = CreateCard(rAsset, hiddenRewardsMount, DisplayType.InJournal);
                 journal[rAsset.game].AddCard(rewardGO);

@@ -20,9 +20,15 @@ namespace Wrapper
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private GameObject loadingScreenPrefab;
 
+        public readonly string rewardsPath = "_Wrapper/Rewards/RewardAssets/";
+        public RewardAsset[] rewardAssets;
+        
+        #region Unity Functions
+
         private void Awake()
         {
             InitSingleton();
+            InitRewardAssetArray();
             Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?
         }
 
@@ -44,13 +50,17 @@ namespace Wrapper
         {
             Events.OpenMinigame += OpenMinigame;
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
+            Events.CollectAndDisplayReward += CollectAndDisplayReward;
         }
 
         private void OnDisable()
         {
             Events.OpenMinigame -= OpenMinigame;
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
+            Events.CollectAndDisplayReward -= CollectAndDisplayReward;
         }
+
+        #endregion
 
         private void OpenMinigame(Minigame minigame)
         {
@@ -62,6 +72,22 @@ namespace Wrapper
             if (loadingScreenGO == null)
                 loadingScreenGO = Instantiate(loadingScreenPrefab);
             else
+                Routine.Start(DestroyLoadingScreen()); // todo: debug, delete later
+        }
+
+        private void CollectAndDisplayReward(Game game, int level)
+        {
+            RewardAsset levelReward = Array.Find(rewardAssets, (reward) => reward.game == game && reward.level == level);
+            if (levelReward == null)
+            {
+                Debug.LogFormat("No Reward found for game {1} level {2}", game, level);
+                return;
+            }
+
+            Events.AddReward(levelReward.rewardID);
+
+            //todo: call a function that creates the card and displays it in the reward card panel
+            Debug.LogFormat("Won Reward {0} in game {1} at level {2}", levelReward.rewardID, game, level);
                 Routine.Start(DestroyLoadingScreen()); //todo: debug, delete later
         }
 
@@ -83,6 +109,11 @@ namespace Wrapper
             yield return new WaitForSeconds(loadingToggleDelay);
             Destroy(loadingScreenGO);
             loadingScreenGO = null;
+        }
+
+        private void InitRewardAssetArray()
+        {
+            rewardAssets = Resources.LoadAll<RewardAsset>(rewardsPath);
         }
 
         private IEnumerator IntroDialogueRoutine()
