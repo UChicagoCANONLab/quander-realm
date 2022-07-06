@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BeauRoutine;
+using UnityEngine.UI;
 
 namespace Wrapper
 {
@@ -17,6 +18,7 @@ namespace Wrapper
         [SerializeField] private float loadingToggleDelay = 0.5f;
         [SerializeField] private GameObject loginScreen;
         [SerializeField] private GameObject debugPanel;
+        [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private GameObject loadingScreenPrefab;
 
@@ -30,6 +32,7 @@ namespace Wrapper
             InitSingleton();
             InitRewardAssetArray();
             Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?
+            debugButton.onClick.AddListener(() => debugPanel.SetActive(!(debugPanel.activeInHierarchy))); //todo: debug, delete later
         }
 
         private void Start()
@@ -37,15 +40,6 @@ namespace Wrapper
             if (!(saveManager.isUserLoggedIn))
                 loginScreen.SetActive(true);
         }
-
-#if !PRODUCTION_FB
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.BackQuote))
-                debugPanel.SetActive(!(debugPanel.activeInHierarchy));
-        }
-#endif
-
         private void OnEnable()
         {
             Events.OpenMinigame += OpenMinigame;
