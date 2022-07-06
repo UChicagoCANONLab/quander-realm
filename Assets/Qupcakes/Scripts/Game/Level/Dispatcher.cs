@@ -5,79 +5,82 @@ using SysDebug = System.Diagnostics.Debug;
 /*
  * Dispatch puzzles
  */
-
-public class Dispatcher
-{ 
-    // Event publisher
-    public delegate void BatchDoneHandler();
-    public BatchDoneHandler BatchDonePublisher;
-    public delegate void AllBatchDoneHandler();
-    public AllBatchDoneHandler AllBatchDonePublisher;
-    public delegate void NewBatchDispatchHandler();
-    public NewBatchDispatchHandler NewBatchDispatchedPublisher;
-
-    public int NextBatchInd { get; private set; } = 0;
-
-    private Level level;
-
-    // Constructor
-    public Dispatcher(Level currLevel, Timer newTimer)
+namespace Qupcakery
+{
+    public class Dispatcher
     {
-        level = currLevel;
+        // Event publisher
+        public delegate void BatchDoneHandler();
+        public BatchDoneHandler BatchDonePublisher;
+        public delegate void AllBatchDoneHandler();
+        public AllBatchDoneHandler AllBatchDonePublisher;
+        public delegate void NewBatchDispatchHandler();
+        public NewBatchDispatchHandler NewBatchDispatchedPublisher;
 
-        /* Subscribe to 1st Customer-batch-done event */
-        CustomerManager cm = GameObjectsManagement.Customers[0]
-            .GetComponent<CustomerManager>();
-        cm.RemoveBatchEndedListeners();
-        cm.BatchEnded += OnBatchDone;
-    }
+        public int NextBatchInd { get; private set; } = 0;
 
-    // Subscriber to customer reaction
-    // Batch is done once the first customer has left the scene
-    public void OnBatchDone()
-    {
-        OnBatchDonePublisher();
+        private Level level;
 
-        /* Reset all active customers */
-        for (int i = 0; i < level.TotalBeltCnt; i++)
+        // Constructor
+        public Dispatcher(Level currLevel, Timer newTimer)
         {
-            GameObjectsManagement.ResetCustomerObj(
-                GameObjectsManagement.Customers[i]);
+            level = currLevel;
+
+            /* Subscribe to 1st Customer-batch-done event */
+            CustomerManager cm = GameObjectsManagement.Customers[0]
+                .GetComponent<CustomerManager>();
+            cm.RemoveBatchEndedListeners();
+            cm.BatchEnded += OnBatchDone;
         }
 
-        if (NextBatchInd < level.TotalPuzzleCnt)
+        // Subscriber to customer reaction
+        // Batch is done once the first customer has left the scene
+        public void OnBatchDone()
         {
-            DispatchNewBatch();
-        } else
-        {
-            AllBatchDonePublisher();
+            OnBatchDonePublisher();
+
+            /* Reset all active customers */
+            for (int i = 0; i < level.TotalBeltCnt; i++)
+            {
+                GameObjectsManagement.ResetCustomerObj(
+                    GameObjectsManagement.Customers[i]);
+            }
+
+            if (NextBatchInd < level.TotalPuzzleCnt)
+            {
+                DispatchNewBatch();
+            }
+            else
+            {
+                AllBatchDonePublisher();
+            }
         }
-    }
 
-    // OnBatchDone publisher
-    protected virtual void OnBatchDonePublisher()
-    {
-        if (BatchDonePublisher != null)
+        // OnBatchDone publisher
+        protected virtual void OnBatchDonePublisher()
         {
-            BatchDonePublisher();
+            if (BatchDonePublisher != null)
+            {
+                BatchDonePublisher();
+            }
         }
-    }
 
-    // OnAllBatchDone publisher
-    protected virtual void OnAllBatchDonePublisher()
-    {
-        if (AllBatchDonePublisher != null)
+        // OnAllBatchDone publisher
+        protected virtual void OnAllBatchDonePublisher()
         {
-            AllBatchDonePublisher();
+            if (AllBatchDonePublisher != null)
+            {
+                AllBatchDonePublisher();
+            }
         }
-    }
 
-    public void DispatchNewBatch()
-    {
-        DispatchPuzzle.Dispatch(level.Puzzles[NextBatchInd],
-            GameObjectsManagement.Customers, GameObjectsManagement.CakeBoxes);
+        public void DispatchNewBatch()
+        {
+            DispatchPuzzle.Dispatch(level.Puzzles[NextBatchInd],
+                GameObjectsManagement.Customers, GameObjectsManagement.CakeBoxes);
 
-        if (NewBatchDispatchedPublisher != null) NewBatchDispatchedPublisher();
-        NextBatchInd++;
+            if (NewBatchDispatchedPublisher != null) NewBatchDispatchedPublisher();
+            NextBatchInd++;
+        }
     }
 }

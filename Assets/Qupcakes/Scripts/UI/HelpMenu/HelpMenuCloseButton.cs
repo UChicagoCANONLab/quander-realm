@@ -3,25 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HelpMenuCloseButton : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject helpPanel;
-    public GameObject topBar;
-    public GameObject pauseButton;
-
-    public void CloseHelpPanel()
+    public class HelpMenuCloseButton : MonoBehaviour
     {
-        if (helpPanel != null)
+        public GameObject helpPanel;
+        public GameObject topBar;
+        public GameObject pauseButton;
+
+        public void CloseHelpPanel()
         {
-            helpPanel.SetActive(false);
+            if (helpPanel != null)
+            {
+                helpPanel.SetActive(false);
 
-            // Unpause game
-            GameUtilities.UnpauseGame();
-            pauseButton.GetComponent<PauseButton>().SetPauseSprite();
+                // Unpause game
+                GameUtilities.UnpauseGame();
+                pauseButton.GetComponent<PauseButton>().SetPauseSprite();
 
-            // Reactivate top bar
-            if (topBar != null)
-                topBar.SetActive(true);
+                // Reactivate top bar
+                if (topBar != null)
+                    topBar.SetActive(true);
+            }
         }
     }
 }

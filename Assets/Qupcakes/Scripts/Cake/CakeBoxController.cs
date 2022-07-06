@@ -1,96 +1,98 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Costume = AssetCostumeUtilities;
+using Costume = Qupcakery.AssetCostumeUtilities;
 
 /* Manages cake state change and box movement in game */
-
-public class CakeBoxController : MonoBehaviour
+namespace Qupcakery
 {
-    [SerializeField]
-    public Cake cake { get; set; } = new Cake();
-    //public Cake entangledCake { get; private set; }
-
-    [SerializeField]
-    protected CakeData cakeData;
-    protected Direction direction = Direction.Right;
-    protected HorizontalMovement movement;
-    public bool moving = false;
-
-    private void Awake()
+    public class CakeBoxController : MonoBehaviour
     {
-        cake.CakeStateUpdated += UpdateCostume;
-    }
+        [SerializeField]
+        public Cake cake { get; set; } = new Cake();
+        //public Cake entangledCake { get; private set; }
 
-    protected void Start()
-    {
-        /* Subscribe to button-pressed event publisher */
-        GameObjectsManagement.Button.GetComponent<ButtonController>().
-            ButtonPressed += OnButtonPressed;
+        [SerializeField]
+        protected CakeData cakeData;
+        protected Direction direction = Direction.Right;
+        protected HorizontalMovement movement;
+        public bool moving = false;
 
-        movement = new HorizontalMovement(initialSpeed: cakeData.Speed);
-    }
-
-    protected void FixedUpdate()
-    {
-        if (moving)
+        private void Awake()
         {
-            transform.localPosition = movement.UpdatePosition(
-                transform.localPosition, Time.fixedDeltaTime, direction);
+            cake.CakeStateUpdated += UpdateCostume;
         }
-    }
 
-    // Reaches customer
-    protected void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Customer")
+        protected void Start()
         {
-            moving = false; 
+            /* Subscribe to button-pressed event publisher */
+            GameObjectsManagement.Button.GetComponent<ButtonController>().
+                ButtonPressed += OnButtonPressed;
+
+            movement = new HorizontalMovement(initialSpeed: cakeData.Speed);
         }
-    }
 
-    // Update cakestate
-    public void UpdateCakeBoxState(int CakeSpec)
-    {
-        ////Debug.Log("Updating cakeState to " + cakeState.GetCakeType());
-        cake.UpdateCakeState(CakeSpec);
-    }
-
-    public void UpdateCostume()
-    {
-        if (!cake.IsEntangled)
-            Costume.SetCakeBoxCostume(gameObject, cake);
-        else
+        protected void FixedUpdate()
         {
-            foreach (var cakeObj in GameObjectsManagement.CakeBoxes)
+            if (moving)
             {
-                if (cakeObj.activeSelf)
-                    Costume.SetCakeBoxCostume(
-                        cakeObj, cakeObj.GetComponent<CakeBoxController>().cake);
+                transform.localPosition = movement.UpdatePosition(
+                    transform.localPosition, Time.fixedDeltaTime, direction);
             }
         }
-    }
 
-    // Update cake type (post-measurement)
-    public void SetMeasuredCakeType(GameCakeType gameCakeType)
-    {
-        GameObject cakeObj = transform.Find("ActualCake").gameObject;
-        Costume.SetCakeCostume(cakeObj, gameCakeType);
-    }
+        // Reaches customer
+        protected void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.tag == "Customer")
+            {
+                moving = false;
+            }
+        }
 
-    // Subscriber
-    protected void OnButtonPressed()
-    {
-        moving = true;
-    }
+        // Update cakestate
+        public void UpdateCakeBoxState(int CakeSpec)
+        {
+            //Debug.Log("Updating cakeState to " + cakeState.GetCakeType());
+            cake.UpdateCakeState(CakeSpec);
+        }
 
-    //public void SetEntangledCake(Cake cake)
-    //{
-    //    entangledCake = cake; 
-    //}
+        public void UpdateCostume()
+        {
+            if (!cake.IsEntangled)
+                Costume.SetCakeBoxCostume(gameObject, cake);
+            else
+            {
+                foreach (var cakeObj in GameObjectsManagement.CakeBoxes)
+                {
+                    if (cakeObj.activeSelf)
+                        Costume.SetCakeBoxCostume(
+                            cakeObj, cakeObj.GetComponent<CakeBoxController>().cake);
+                }
+            }
+        }
 
-    public void Reset()
-    {
-        moving = false;
-        //entangledCake = null;
+        // Update cake type (post-measurement)
+        public void SetMeasuredCakeType(GameCakeType gameCakeType)
+        {
+            GameObject cakeObj = transform.Find("ActualCake").gameObject;
+            Costume.SetCakeCostume(cakeObj, gameCakeType);
+        }
+
+        // Subscriber
+        protected void OnButtonPressed()
+        {
+            moving = true;
+        }
+
+        //public void SetEntangledCake(Cake cake)
+        //{
+        //    entangledCake = cake; 
+        //}
+
+        public void Reset()
+        {
+            moving = false;
+            //entangledCake = null;
+        }
     }
 }

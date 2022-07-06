@@ -6,43 +6,46 @@ using UnityEngine.SceneManagement;
  * Utility functions that facilitate scene change
  */
 
-public static class SceneManagementUtilities
+namespace Qupcakery
 {
-
-    public static void LoadGameScene()
+    public static class SceneManagementUtilities
     {
-        SceneManager.LoadScene("Level");
-    }
 
-    public static void LoadHomePage()
-    {
-        SceneManager.LoadScene("QupcakesStartScene");
-    }
+        public static void LoadGameScene()
+        {
+            SceneManager.LoadScene("Level");
+        }
 
-    public static void LoadModeSelectionScene()
-    {
-        // SceneManager.LoadScene("ModeSelection");
-        // #IMPORTANT: temporary change for quantime
-        SceneManager.LoadScene("LevelSelection");
-    }
+        public static void LoadHomePage()
+        {
+            SceneManager.LoadScene("QupcakesStartScene");
+        }
 
-    public static void LoadExperimentMode()
-    {
-        SceneManager.LoadScene("ExperimentMode");
-    }
+        public static void LoadModeSelectionScene()
+        {
+            // SceneManager.LoadScene("ModeSelection");
+            // #IMPORTANT: temporary change for quantime
+            SceneManager.LoadScene("LevelSelection");
+        }
 
-    public static void LoadLevelSelectionMenu()
-    {
-        SceneManager.LoadScene("LevelSelection");
-    }
+        public static void LoadExperimentMode()
+        {
+            SceneManager.LoadScene("ExperimentMode");
+        }
 
-    public static void LoadLoseMenu()
-    {
-        SceneManager.LoadScene("LoseMenu");
-    }
+        public static void LoadLevelSelectionMenu()
+        {
+            SceneManager.LoadScene("LevelSelection");
+        }
 
-    public static void LoadWinMenu()
-    {
-        SceneManager.LoadScene("WinMenu");
+        public static void LoadLoseMenu()
+        {
+            SceneManager.LoadScene("LoseMenu");
+        }
+
+        public static void LoadWinMenu()
+        {
+            SceneManager.LoadScene("WinMenu");
+        }
     }
 }

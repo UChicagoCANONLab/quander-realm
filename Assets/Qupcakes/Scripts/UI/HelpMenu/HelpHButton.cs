@@ -4,18 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class HelpHButton : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject recipePanel;
-    public GameObject startPanel;
-    public Image recipeImage;
-
-    public void ShowHRecipe()
+    public class HelpHButton : MonoBehaviour
     {
-        startPanel.SetActive(false);
-        recipePanel.SetActive(true);
-        recipePanel.GetComponentInChildren<Text>().text = "Surprise Wrapper (Hadamard Gate)"; 
+        public GameObject recipePanel;
+        public GameObject startPanel;
+        public Image recipeImage;
 
-        recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "H").SingleOrDefault();
+        public void ShowHRecipe()
+        {
+            startPanel.SetActive(false);
+            recipePanel.SetActive(true);
+            recipePanel.GetComponentInChildren<Text>().text = "Surprise Wrapper (Hadamard Gate)";
+
+            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "H").SingleOrDefault();
+        }
     }
 }

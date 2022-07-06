@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialCloseButton : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject tutorialPanel;
-    public GameObject pauseButton;
-
-    public void CloseTutorialPanel()
+    public class TutorialCloseButton : MonoBehaviour
     {
-        if (tutorialPanel != null)
+        public GameObject tutorialPanel;
+        public GameObject pauseButton;
+
+        public void CloseTutorialPanel()
         {
-            tutorialPanel.SetActive(false);
-            GameUtilities.UnpauseGame();
-            pauseButton.GetComponent<PauseButton>().SetPauseSprite();
-        }       
+            if (tutorialPanel != null)
+            {
+                tutorialPanel.SetActive(false);
+                GameUtilities.UnpauseGame();
+                pauseButton.GetComponent<PauseButton>().SetPauseSprite();
+            }
+        }
     }
 }

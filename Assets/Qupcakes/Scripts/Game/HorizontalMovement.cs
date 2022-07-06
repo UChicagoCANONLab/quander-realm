@@ -1,25 +1,28 @@
 ﻿using System;
 using UnityEngine;
 
-public enum Direction
+namespace Qupcakery
 {
-    Left = -1, Right = 1
-}
-
-public class HorizontalMovement
-{
-    private float speed;
-
-    public HorizontalMovement(float initialSpeed)
+    public enum Direction
     {
-        speed = initialSpeed; 
+        Left = -1, Right = 1
     }
 
-    // Calculate new position based on elapsed time and speed
-    public Vector2 UpdatePosition(Vector2 currPosition,
-        float deltaTime, Direction direction)
+    public class HorizontalMovement
     {
-        float dx = ((int)direction) * deltaTime * speed;
-        return new Vector2(currPosition.x + dx, currPosition.y);
+        private float speed;
+
+        public HorizontalMovement(float initialSpeed)
+        {
+            speed = initialSpeed;
+        }
+
+        // Calculate new position based on elapsed time and speed
+        public Vector2 UpdatePosition(Vector2 currPosition,
+            float deltaTime, Direction direction)
+        {
+            float dx = ((int)direction) * deltaTime * speed;
+            return new Vector2(currPosition.x + dx, currPosition.y);
+        }
     }
 }

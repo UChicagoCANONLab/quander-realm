@@ -4,19 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class HelpZButton : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject recipePanel;
-    public GameObject startPanel;
-    public Image recipeImage;
-
-    public void ShowZRecipe()
+    public class HelpZButton : MonoBehaviour
     {
-        // //Debug.Log("Showing not recipe");
-        startPanel.SetActive(false);
-        recipePanel.SetActive(true);
-        recipePanel.GetComponentInChildren<Text>().text = "Mystery-inverter (Z Gate)";
+        public GameObject recipePanel;
+        public GameObject startPanel;
+        public Image recipeImage;
 
-        recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "Z").SingleOrDefault();
+        public void ShowZRecipe()
+        {
+            // Debug.Log("Showing not recipe");
+            startPanel.SetActive(false);
+            recipePanel.SetActive(true);
+            recipePanel.GetComponentInChildren<Text>().text = "Mystery-inverter (Z Gate)";
+
+            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "Z").SingleOrDefault();
+        }
     }
 }

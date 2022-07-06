@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PatienceController : MonoBehaviour
+namespace Qupcakery
 {
-    [SerializeField]
-    GameObject patienceBarFull;
 
-    private void Start()
+    public class PatienceController : MonoBehaviour
     {
-        patienceBarFull.transform.localScale = new Vector2(1f, 1f);
-    }
+        [SerializeField]
+        GameObject patienceBarFull;
 
-    public void OnPatienceUpdated(float remainingRatio)
-    {
-        patienceBarFull.transform.localScale = new Vector2(remainingRatio, 1f);
+        private void Start()
+        {
+            patienceBarFull.transform.localScale = new Vector2(1f, 1f);
+        }
+
+        public void OnPatienceUpdated(float remainingRatio)
+        {
+            patienceBarFull.transform.localScale = new Vector2(remainingRatio, 1f);
+        }
     }
 }

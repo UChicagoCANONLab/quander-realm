@@ -1,20 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class MenuButton : MonoBehaviour
+namespace Qupcakery
 {
-    public void LoadLevelSelectionMenu()
+    public class MenuButton : MonoBehaviour
     {
-        GameManagement.Instance.game.gameStat.SetLevelResultAndSave(GameStat.LevelResult.QUIT);
+        public void LoadLevelSelectionMenu()
+        {
+            GameManagement.Instance.game.gameStat.SetLevelResultAndSave(GameStat.LevelResult.QUIT);
 
-        if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
-            return;
+            if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
+                return;
 
-        GameObjectsManagement.ResetAllGameObjects();
-        GameObjectsManagement.DeactiveAllGameObjects();
+            GameObjectsManagement.ResetAllGameObjects();
+            GameObjectsManagement.DeactiveAllGameObjects();
 
-        GameUtilities.UnpauseGame();
-        SceneManagementUtilities.LoadLevelSelectionMenu();
+            GameUtilities.UnpauseGame();
+            SceneManagementUtilities.LoadLevelSelectionMenu();
+        }
     }
 }

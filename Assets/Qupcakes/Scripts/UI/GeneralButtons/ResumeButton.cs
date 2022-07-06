@@ -3,27 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResumeButton : MonoBehaviour
+
+namespace Qupcakery
 {
-    public Image buttonImage;
-
-    private void Awake()
+    public class ResumeButton : MonoBehaviour
     {
-        buttonImage.color = new Color(1f, 1f, 1f, 1f);
-        if (!GameManagement.Instance.GameInProgress())
-            DeactiveResumeButton();
-    }
+        public Image buttonImage;
 
-    public void DeactiveResumeButton()
-    {
-        buttonImage.color = new Color(1f, 1f, 1f, 0.5f);
-    }
-
-    public void ResumeGame()
-    {
-        if (GameManagement.Instance.GameInProgress())
+        private void Awake()
         {
-            SceneManagementUtilities.LoadModeSelectionScene();
+            buttonImage.color = new Color(1f, 1f, 1f, 1f);
+            if (!GameManagement.Instance.GameInProgress())
+                DeactiveResumeButton();
+        }
+
+        public void DeactiveResumeButton()
+        {
+            buttonImage.color = new Color(1f, 1f, 1f, 0.5f);
+        }
+
+        public void ResumeGame()
+        {
+            if (GameManagement.Instance.GameInProgress())
+            {
+                SceneManagementUtilities.LoadModeSelectionScene();
+            }
         }
     }
 }

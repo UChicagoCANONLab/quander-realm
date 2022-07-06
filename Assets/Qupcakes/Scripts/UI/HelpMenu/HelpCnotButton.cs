@@ -4,18 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class HelpCnotButton : MonoBehaviour
+
+namespace Qupcakery
 {
-    public GameObject recipePanel;
-    public GameObject startPanel;
-    public Image recipeImage;
-
-    public void ShowCnotRecipe()
+    public class HelpCnotButton : MonoBehaviour
     {
-        startPanel.SetActive(false);
-        recipePanel.SetActive(true);
-        recipePanel.GetComponentInChildren<Text>().text = "Chocolate-powered Flavor-inverter (CNOT Gate)";
+        public GameObject recipePanel;
+        public GameObject startPanel;
+        public Image recipeImage;
 
-        recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "CNOT").SingleOrDefault();
+        public void ShowCnotRecipe()
+        {
+            startPanel.SetActive(false);
+            recipePanel.SetActive(true);
+            recipePanel.GetComponentInChildren<Text>().text = "Chocolate-powered Flavor-inverter (CNOT Gate)";
+
+            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "CNOT").SingleOrDefault();
+        }
     }
 }

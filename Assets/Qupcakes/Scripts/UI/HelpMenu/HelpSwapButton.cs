@@ -4,18 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class HelpSwapButton : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject recipePanel;
-    public GameObject startPanel;
-    public Image recipeImage;
-
-    public void ShowSwapRecipe()
+    public class HelpSwapButton : MonoBehaviour
     {
-        startPanel.SetActive(false);
-        recipePanel.SetActive(true);
-        recipePanel.GetComponentInChildren<Text>().text = "Flavor-swapper (SWAP Gate)";
+        public GameObject recipePanel;
+        public GameObject startPanel;
+        public Image recipeImage;
 
-        recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "SWAP").SingleOrDefault();
+        public void ShowSwapRecipe()
+        {
+            startPanel.SetActive(false);
+            recipePanel.SetActive(true);
+            recipePanel.GetComponentInChildren<Text>().text = "Flavor-swapper (SWAP Gate)";
+
+            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "SWAP").SingleOrDefault();
+        }
     }
 }

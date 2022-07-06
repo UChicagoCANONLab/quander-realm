@@ -1,46 +1,49 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExperimentCakeBoxController : CakeBoxController
+namespace Qupcakery
 {
-    CakePositionController positionController;
-
-    private new void Start() 
+    public class ExperimentCakeBoxController : CakeBoxController
     {
-        ExperimentButtonController.Instance.ButtonPressed
-           += OnButtonPressed;
+        CakePositionController positionController;
 
-        positionController = gameObject.GetComponent<CakePositionController>();
-        movement = new HorizontalMovement(initialSpeed: cakeData.Speed);
-
-    }
-
-    private new void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Table")
+        private new void Start()
         {
-            moving = false;
-            Destroy(gameObject.GetComponent<CakePositionController>());
-            Destroy(gameObject.GetComponent<ExperimentCakeBoxController>());
+            ExperimentButtonController.Instance.ButtonPressed
+               += OnButtonPressed;
+
+            positionController = gameObject.GetComponent<CakePositionController>();
+            movement = new HorizontalMovement(initialSpeed: cakeData.Speed);
+
         }
-    }
 
-    // Subscriber
-    private new void OnButtonPressed()
-    {
-        if (positionController.status == CakePositionController.CakeStatus.OnBelt)
+        private new void OnTriggerEnter2D(Collider2D collision)
         {
-            // #TODO: make it opaque
-            GameObject cakeRef = Instantiate(gameObject, transform.position, Quaternion.identity);
-            Destroy(cakeRef.transform.Find("ActualCake").gameObject);
-            cakeRef.transform.Find("Box").gameObject.
-                GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.7f);
-            cakeRef.transform.Find("CakeLabel").gameObject.
-                GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.7f);
-            Destroy(cakeRef.GetComponent<CakePositionController>());
-            Destroy(cakeRef.GetComponent<ExperimentCakeBoxController>());
+            if (collision.gameObject.tag == "Table")
+            {
+                moving = false;
+                Destroy(gameObject.GetComponent<CakePositionController>());
+                Destroy(gameObject.GetComponent<ExperimentCakeBoxController>());
+            }
+        }
 
-            moving = true;           
+        // Subscriber
+        private new void OnButtonPressed()
+        {
+            if (positionController.status == CakePositionController.CakeStatus.OnBelt)
+            {
+                // #TODO: make it opaque
+                GameObject cakeRef = Instantiate(gameObject, transform.position, Quaternion.identity);
+                Destroy(cakeRef.transform.Find("ActualCake").gameObject);
+                cakeRef.transform.Find("Box").gameObject.
+                    GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.7f);
+                cakeRef.transform.Find("CakeLabel").gameObject.
+                    GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.7f);
+                Destroy(cakeRef.GetComponent<CakePositionController>());
+                Destroy(cakeRef.GetComponent<ExperimentCakeBoxController>());
+
+                moving = true;
+            }
         }
     }
 }

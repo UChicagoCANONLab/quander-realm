@@ -13,9 +13,9 @@ namespace Wrapper
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
-        private UserSave currentUserSave = null;
         
         [HideInInspector] public bool isUserLoggedIn = false;
+        public UserSave currentUserSave = null;
         public int researchCodeLength = 6;
 
 #if PRODUCTION_FB
@@ -54,7 +54,7 @@ namespace Wrapper
             return currentUserSave.HasReward(rewardID);
         }
 
-        public IEnumerator InitFirebase()
+        private IEnumerator InitFirebase()
         {
             bool isFirebaseReady = false;
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
@@ -122,6 +122,8 @@ namespace Wrapper
                 yield return Routine.Race(
                     Routine.WaitCondition(() => UpdateRemoteSave()),
                     Routine.WaitSeconds(5));
+
+                yield return Routine.Start(GetDatabaseSnapshot());
             }
 
             currentUserSave = JsonUtility.FromJson<UserSave>(
@@ -191,6 +193,18 @@ namespace Wrapper
 
             dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
             return true;
+        }
+
+        //todo: merge intro dialogue methods or make it a property with get/set
+        public bool HasPlayerSeenIntroDialogue()
+        {
+            return currentUserSave.introDialogueSeen;
+        }
+
+        public void ToggleIntroDialogueSeen(bool hasSeen)
+        {
+            currentUserSave.introDialogueSeen = hasSeen;
+            UpdateRemoteSave();
         }
 
         #endregion
