@@ -3,31 +3,36 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BeauRoutine;
+using UnityEngine.UI;
 
 namespace Wrapper
 {
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get { return _instance; } }
+
         private static GameManager _instance;
+        private GameObject loadingScreenGO = null;
+        private const string introSequenceID = "W_Intro";
 
         [SerializeField] private float loadingToggleDelay = 0.5f;
         [SerializeField] private GameObject loginScreen;
         [SerializeField] private GameObject debugPanel;
+        [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private GameObject loadingScreenPrefab;
 
         public readonly string rewardsPath = "_Wrapper/Rewards/RewardAssets/";
         public RewardAsset[] rewardAssets;
         
-        private GameObject loadingScreenGO = null;
-
         #region Unity Functions
 
         private void Awake()
         {
             InitSingleton();
             InitRewardAssetArray();
+            Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?
+            debugButton.onClick.AddListener(() => debugPanel.SetActive(!(debugPanel.activeInHierarchy))); //todo: debug, delete later
         }
 
         private void Start()
@@ -35,15 +40,6 @@ namespace Wrapper
             if (!(saveManager.isUserLoggedIn))
                 loginScreen.SetActive(true);
         }
-
-#if !PRODUCTION_FB
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.BackQuote))
-                debugPanel.SetActive(!(debugPanel.activeInHierarchy));
-        }
-#endif
-
         private void OnEnable()
         {
             Events.OpenMinigame += OpenMinigame;
@@ -86,6 +82,7 @@ namespace Wrapper
 
             //todo: call a function that creates the card and displays it in the reward card panel
             Debug.LogFormat("Won Reward {0} in game {1} at level {2}", levelReward.rewardID, game, level);
+                Routine.Start(DestroyLoadingScreen()); //todo: debug, delete later
         }
 
         #region Helpers
@@ -111,6 +108,18 @@ namespace Wrapper
         private void InitRewardAssetArray()
         {
             rewardAssets = Resources.LoadAll<RewardAsset>(rewardsPath);
+        }
+
+        private IEnumerator IntroDialogueRoutine()
+        {
+            while (!(saveManager.isUserLoggedIn) || !(saveManager.currentUserSave != null))
+                yield return null;
+
+            if (saveManager.HasPlayerSeenIntroDialogue())
+                yield break;
+
+            Events.StartDialogueSequence?.Invoke(introSequenceID);
+            saveManager.ToggleIntroDialogueSeen(true);
         }
 
         #endregion
