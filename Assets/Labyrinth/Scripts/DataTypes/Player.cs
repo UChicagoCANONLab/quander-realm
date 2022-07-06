@@ -37,8 +37,6 @@ public class Player : MonoBehaviour
         movepoint.transform.position += mx;
 
         deg = degree;
-
-        Debug.Log(ploc);
     }
 
     public Vector3 genMx(int sign, int degree, Vector3 mx) {
@@ -139,7 +137,17 @@ public class Player : MonoBehaviour
         animator.SetFloat("Speed", movement.sqrMagnitude);
 
         movepoint.position += movement;
-        ploc += movement * -1;
+
+        if (deg == 180) {
+            ploc += new Vector3(movement.x, movement.y, 0);
+            Debug.Log("it is 180");
+        }
+        else if (deg == 90) {
+            ploc += new Vector3(-1*movement.y, movement.x, 0);
+        }
+        else { //if (deg == 0)
+            ploc += movement * -1;
+        }
     }
 
 

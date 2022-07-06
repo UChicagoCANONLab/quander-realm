@@ -75,6 +75,9 @@ public class PlayerMovement : MonoBehaviour
                     main.move(movementx);
                     mirror.move(mirrorMovementx);
                     gb.steps++;
+
+                    Debug.Log($"Mirror: {mirror.getPloc}");
+                    Debug.Log($"Main: {main.getPloc}");
                     
                     movementx = new Vector3(0,0,0);
                     // Invoke("stopAnim", 0.75f);
@@ -107,6 +110,9 @@ public class PlayerMovement : MonoBehaviour
                     mirror.move(mirrorMovementy);
                     gb.steps++;
                     
+                    Debug.Log($"Mirror: {mirror.getPloc}");
+                    Debug.Log($"Main: {main.getPloc}");
+
                     movementy = new Vector3(0,0,0);
                     // Invoke("stopAnim", 0.75f);
         

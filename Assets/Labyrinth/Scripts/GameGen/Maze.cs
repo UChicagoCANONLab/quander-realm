@@ -63,6 +63,7 @@ public class Maze : MonoBehaviour
         for (int x=0; x < size; x++) {
             for (int y=0; y < size; y++) {
                 newMaze[x,y] = new MazeCell(x,y);
+                // newMaze[x,y](x,y);
                 newMaze[x,y].walls["N"] = maze[x,y].walls["N"];
                 newMaze[x,y].walls["S"] = maze[x,y].walls["S"];
                 newMaze[x,y].walls["E"] = maze[x,y].walls["E"];
@@ -230,7 +231,7 @@ public class Maze : MonoBehaviour
             }
         }
         List<object[]> pathList = new List<object[]>();
-        MazeCell startTile = maze[startx, starty];
+        MazeCell startTile = maze[Mathf.Abs(startx), Mathf.Abs(starty)];
         startTile.visited = true;
 
         foreach (KeyValuePair<string,bool> direction in startTile.walls) {
@@ -243,7 +244,7 @@ public class Maze : MonoBehaviour
             int tempx = (int)pathList[0][0];
             int tempy = (int)pathList[0][1];
 
-            MazeCell oldTile = maze[tempx, tempy];
+            MazeCell oldTile = maze[Mathf.Abs(tempx), Mathf.Abs(tempy)];
             string dir = (string)pathList[0][2];
             pathList.RemoveAt(0);
 
@@ -269,8 +270,6 @@ public class Maze : MonoBehaviour
         Vector3 start; Vector3 end;
         int degree;
     
-        Debug.Log(pm.player1.current);
-        Debug.Log(pm.player2.current);
         if (pm.player1.current == true) {
         //if (currGoal.z == 1) {
             start = pm.player1.getPloc;
@@ -282,6 +281,8 @@ public class Maze : MonoBehaviour
             degree = deg;
         }
         else { return new object[] {"X", 0}; }
+
+        Debug.Log(start);
 
         end = new Vector3(gb.size-1, 0, 0);
 
