@@ -6,26 +6,29 @@ using UnityEngine.UI;
 
 /* Controls display of the timer */
 
-public class UIClockController : MonoBehaviour
+namespace Qupcakery
 {
-    public static UIClockController Instance { get; private set; }
-    
-    public Image ClockIndicatorUI;
-   
-    void Awake()
+    public class UIClockController : MonoBehaviour
     {
-        Instance = this;
-        SetValue(1f);
-    }
+        public static UIClockController Instance { get; private set; }
 
-    private void SetValue(float value)
-    {
-        ClockIndicatorUI.fillAmount = value;
-    }
+        public Image ClockIndicatorUI;
 
-    // TimerClicked event subscriber
-    public void OnTimerClicked(float totalTime, float remainingTime)
-    {
-        SetValue(remainingTime / totalTime);
+        void Awake()
+        {
+            Instance = this;
+            SetValue(1f);
+        }
+
+        private void SetValue(float value)
+        {
+            ClockIndicatorUI.fillAmount = value;
+        }
+
+        // TimerClicked event subscriber
+        public void OnTimerClicked(float totalTime, float remainingTime)
+        {
+            SetValue(remainingTime / totalTime);
+        }
     }
-}
+} 

@@ -1,11 +1,13 @@
 ﻿using System;
 using UnityEngine;
-
-public class GameModeButton : MonoBehaviour
+namespace Qupcakery
 {
-    public void EnterGameMode()
+    public class GameModeButton : MonoBehaviour
     {
-        GameManagement.Instance.SetGameMode(GameManagement.GameMode.Regular);
-        SceneManagementUtilities.LoadLevelSelectionMenu();
+        public void EnterGameMode()
+        {
+            GameManagement.Instance.SetGameMode(GameManagement.GameMode.Regular);
+            SceneManagementUtilities.LoadLevelSelectionMenu();
+        }
     }
 }

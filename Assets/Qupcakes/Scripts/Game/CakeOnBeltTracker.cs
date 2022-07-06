@@ -3,130 +3,135 @@ using UnityEngine;
 using SysDebug = System.Diagnostics.Debug;
 
 /* Keeps track of cake gameobjects on belts, only used for experimental mode*/
-
-public class CakeOnBeltTracker
+namespace Qupcakery
 {
-    // Publisher for experiment mode
-    public delegate void CakesReadyToBeDeliveredHandler();
-    public CakesReadyToBeDeliveredHandler CakesReadyToBeDelivered;
-    public delegate void CakesRemovedFromBeltHandler();
-    public CakesRemovedFromBeltHandler CakesRemovedFromBelt;
-
-    public static CakeOnBeltTracker Instance { get { return Nested.instance; }
-        private set { } }
-
-    private class Nested
+    public class CakeOnBeltTracker
     {
-        static Nested() { }
+        // Publisher for experiment mode
+        public delegate void CakesReadyToBeDeliveredHandler();
+        public CakesReadyToBeDeliveredHandler CakesReadyToBeDelivered;
+        public delegate void CakesRemovedFromBeltHandler();
+        public CakesRemovedFromBeltHandler CakesRemovedFromBelt;
 
-        internal static CakeOnBeltTracker instance = new CakeOnBeltTracker();
-    }
-
-    private int totalBeltCnt;
-
-    private Dictionary<int, GameObject> cakeTracker
-         = new Dictionary<int, GameObject>();
-
-    public void InitializeTracker(int beltCnt)
-    {
-        totalBeltCnt = beltCnt;
-
-        if (GameManagement.Instance.gameMode
-            == GameManagement.GameMode.Experiment)
+        public static CakeOnBeltTracker Instance
         {
-            if (CakesReadyToBeDelivered!=null)
+            get { return Nested.instance; }
+            private set { }
+        }
+
+        private class Nested
+        {
+            static Nested() { }
+
+            internal static CakeOnBeltTracker instance = new CakeOnBeltTracker();
+        }
+
+        private int totalBeltCnt;
+
+        private Dictionary<int, GameObject> cakeTracker
+             = new Dictionary<int, GameObject>();
+
+        public void InitializeTracker(int beltCnt)
+        {
+            totalBeltCnt = beltCnt;
+
+            if (GameManagement.Instance.gameMode
+                == GameManagement.GameMode.Experiment)
             {
-                foreach (CakesReadyToBeDeliveredHandler d
-                    in CakesReadyToBeDelivered.GetInvocationList())
+                if (CakesReadyToBeDelivered != null)
                 {
-                    CakesReadyToBeDelivered -= d;
+                    foreach (CakesReadyToBeDeliveredHandler d
+                        in CakesReadyToBeDelivered.GetInvocationList())
+                    {
+                        CakesReadyToBeDelivered -= d;
+                    }
+                }
+
+                if (CakesRemovedFromBelt != null)
+                {
+                    foreach (CakesRemovedFromBeltHandler d
+                    in CakesRemovedFromBelt.GetInvocationList())
+                    {
+                        CakesRemovedFromBelt -= d;
+                    }
                 }
             }
-            
-            if (CakesRemovedFromBelt != null)
+
+            for (int i = 0; i < beltCnt; i++)
             {
-                foreach (CakesRemovedFromBeltHandler d
-                in CakesRemovedFromBelt.GetInvocationList())
-                {
-                    CakesRemovedFromBelt -= d;
-                }
-            }         
-        }  
-
-        for (int i=0; i<beltCnt; i++)
-        {
-            cakeTracker[i] = null;
+                cakeTracker[i] = null;
+            }
         }
-    }
 
-    public void AddCakeToBelt(GameObject cake, int beltInd)
-    {
-        SysDebug.Assert(cakeTracker[beltInd] == null);
+        public void AddCakeToBelt(GameObject cake, int beltInd)
+        {
+            SysDebug.Assert(cakeTracker[beltInd] == null);
 
-        cakeTracker[beltInd] = cake;
+            cakeTracker[beltInd] = cake;
 
-        /* In experiment mode, notify button that it can be pressed
-        if every belt has a cake */
-        if(GameManagement.Instance.gameMode == GameManagement.GameMode.Experiment)
+            /* In experiment mode, notify button that it can be pressed
+            if every belt has a cake */
+            if (GameManagement.Instance.gameMode == GameManagement.GameMode.Experiment)
+            {
+                for (int i = 0; i < totalBeltCnt; i++)
+                {
+                    if (cakeTracker[i] == null)
+                        return;
+                }
+                OnCakesReadyToBeDelivered();
+            }
+        }
+
+        public GameObject GetCakeFromBelt(int beltInd)
+        {
+            // Debug.Log("Getting cake " + cakeTracker[beltInd] + " from belt "+beltInd);
+            return GameObjectsManagement.CakeBoxes[beltInd];
+        }
+
+        public void RemoveCakeFromBelt(int beltInd)
+        {
+            cakeTracker[beltInd] = null;
+            if (GameManagement.Instance.gameMode == GameManagement.GameMode.Experiment)
+            {
+                OnCakesRemovedFromBelt();
+            }
+        }
+
+        public void RemoveCakesFromBelt()
         {
             for (int i = 0; i < totalBeltCnt; i++)
             {
-                if (cakeTracker[i] ==  null)
-                    return;
+                cakeTracker[i] = null;
+
             }
-            OnCakesReadyToBeDelivered();
         }
-    }
 
-    public GameObject GetCakeFromBelt(int beltInd)
-    {
-        // //Debug.Log("Getting cake " + cakeTracker[beltInd] + " from belt "+beltInd);
-        return GameObjectsManagement.CakeBoxes[beltInd];
-    }
-
-    public void RemoveCakeFromBelt(int beltInd)
-    {
-        cakeTracker[beltInd] = null;
-        if (GameManagement.Instance.gameMode == GameManagement.GameMode.Experiment)
+        public List<GameObject> GetCakesInList()
         {
-            OnCakesRemovedFromBelt();
+            List<GameObject> cakes = new List<GameObject>();
+            foreach (int key in cakeTracker.Keys)
+            {
+                cakes.Add(cakeTracker[key]);
+            }
+            return cakes;
         }
-    }
 
-    public void RemoveCakesFromBelt()
-    {
-        for (int i=0; i<totalBeltCnt; i++)
+        // Event publisher
+        protected virtual void OnCakesReadyToBeDelivered()
         {
-            cakeTracker[i] = null;
-
+            if (CakesReadyToBeDelivered != null)
+            {
+                CakesReadyToBeDelivered();
+            }
         }
-    }
 
-    public List<GameObject> GetCakesInList()
-    {
-        List<GameObject> cakes = new List<GameObject>();
-        foreach (int key in cakeTracker.Keys)
+        // Event publisher
+        protected virtual void OnCakesRemovedFromBelt()
         {
-            cakes.Add(cakeTracker[key]);
-        }
-        return cakes;
-    }
-
-    // Event publisher
-    protected virtual void OnCakesReadyToBeDelivered()
-    {
-        if (CakesReadyToBeDelivered!=null)
-        {
-            CakesReadyToBeDelivered();
-        }
-    }
-
-    // Event publisher
-    protected virtual void OnCakesRemovedFromBelt()
-    {
-        if (CakesRemovedFromBelt != null)
-        {
-            CakesRemovedFromBelt();
+            if (CakesRemovedFromBelt != null)
+            {
+                CakesRemovedFromBelt();
+            }
         }
     }
 }

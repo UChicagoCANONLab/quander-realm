@@ -3,30 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WinMenuController : MonoBehaviour
+namespace Qupcakery
 {
-    public Image star1, star2, star3;
-    public Sprite fullStar;
-    
-    void Start()
+    public class WinMenuController : MonoBehaviour
     {
-        string level = "Level" + (GameManagement.Instance.GetCurrentLevelInd()).ToString();
-        int starCnt = GameUtilities.GetLevelResult(level);
+        public Image star1, star2, star3;
+        public Sprite fullStar;
 
-        switch (starCnt)
+        void Start()
         {
-            case 1:
-                star1.sprite = fullStar;
-                break;
-            case 2:
-                star1.sprite = fullStar;
-                star2.sprite = fullStar;
-                break;
-            case 3:
-                star1.sprite = fullStar;
-                star2.sprite = fullStar;
-                star3.sprite = fullStar;
-                break;
+            string level = "Level" + (GameManagement.Instance.GetCurrentLevelInd()).ToString();
+            int starCnt = GameUtilities.GetLevelResult(level);
+
+            switch (starCnt)
+            {
+                case 1:
+                    star1.sprite = fullStar;
+                    break;
+                case 2:
+                    star1.sprite = fullStar;
+                    star2.sprite = fullStar;
+                    break;
+                case 3:
+                    star1.sprite = fullStar;
+                    star2.sprite = fullStar;
+                    star3.sprite = fullStar;
+                    break;
+            }
         }
     }
 }

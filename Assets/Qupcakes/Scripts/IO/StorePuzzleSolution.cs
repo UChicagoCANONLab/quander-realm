@@ -1,49 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StorePuzzleSolution : MonoBehaviour
+namespace Qupcakery
 {
-    // First two columns store the puzzle, rest stores the sln
-    LevelManager lm;
-    ButtonController bc;
-
-    // Use this for initialization
-    void Start()
+    public class StorePuzzleSolution : MonoBehaviour
     {
-        lm = GameObject.Find("LevelManager").GetComponent<LevelManager>();
-        bc = GameObject.Find("Button(Clone)").GetComponent<ButtonController>();
-        bc.ButtonPressed += StoreSolution;
-    }
+        // First two columns store the puzzle, rest stores the sln
+        LevelManager lm;
+        ButtonController bc;
 
-    void StoreSolution()
-    {
-        int levelInd = lm.level.LevelInd;
-        int puzzleInd = lm.currentBatchNum;
+        // Use this for initialization
+        void Start()
+        {
+            lm = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+            bc = GameObject.Find("Button(Clone)").GetComponent<ButtonController>();
+            bc.ButtonPressed += StoreSolution;
+        }
 
-        Puzzle puzzle = lm.level.Puzzles[puzzleInd];
-        GameManagement.Instance.game.gameStat.
-            SetCompressedPuzzle(puzzleInd, puzzle);
+        void StoreSolution()
+        {
+            int levelInd = lm.level.LevelInd;
+            int puzzleInd = lm.currentBatchNum;
 
-        GameManagement.Instance.game.gameStat.
-            SetCompressedPuzzleSolution(puzzleInd, GateSlots.Instance.Solution, puzzle.Size);
+            Puzzle puzzle = lm.level.Puzzles[puzzleInd];
+            GameManagement.Instance.game.gameStat.
+                SetCompressedPuzzle(puzzleInd, puzzle);
 
-        ////Debug.Log("Saving level " + levelInd + ", puzzle " + puzzleInd + " solution: ");
+            GameManagement.Instance.game.gameStat.
+                SetCompressedPuzzleSolution(puzzleInd, GateSlots.Instance.Solution, puzzle.Size);
 
-        //string print = "\n";
-        //for (int i = 0; i < 3; i++)
-        //{
-        //    for (int j = 0; j < 6; j++)
-        //    {
-        //        print += puzzleAndSolutions[i,j];
-        //        print += ", ";
-        //    }
-        //    print += "\n";
-        //}
-        ////Debug.Log(print);
-    }
+            //Debug.Log("Saving level " + levelInd + ", puzzle " + puzzleInd + " solution: ");
 
-    private void OnDestroy()
-    {
-        bc.ButtonPressed -= StoreSolution;
+            //string print = "\n";
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    for (int j = 0; j < 6; j++)
+            //    {
+            //        print += puzzleAndSolutions[i,j];
+            //        print += ", ";
+            //    }
+            //    print += "\n";
+            //}
+            //Debug.Log(print);
+        }
+
+        private void OnDestroy()
+        {
+            bc.ButtonPressed -= StoreSolution;
+        }
     }
 }

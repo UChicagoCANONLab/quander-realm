@@ -3,28 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HelpMenuButton : MonoBehaviour
+namespace Qupcakery
 {
-    public GameObject helpPanel;
-    public GameObject recipePanel, startPanel;
-    public GameObject topBar;
-
-    public void OpenPanel()
+    public class HelpMenuButton : MonoBehaviour
     {
-        if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
-            return;
+        public GameObject helpPanel;
+        public GameObject recipePanel, startPanel;
+        public GameObject topBar;
 
-        if ( helpPanel != null)
+        public void OpenPanel()
         {
-            recipePanel.SetActive(false);
-            helpPanel.SetActive(true);
-            startPanel.SetActive(true);
+            if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
+                return;
 
-            // pause game
-            GameUtilities.PauseGame();
+            if (helpPanel != null)
+            {
+                recipePanel.SetActive(false);
+                helpPanel.SetActive(true);
+                startPanel.SetActive(true);
 
-            // Deactivate top bar
-            topBar.SetActive(false);
+                // pause game
+                GameUtilities.PauseGame();
+
+                // Deactivate top bar
+                topBar.SetActive(false);
+            }
         }
     }
 }

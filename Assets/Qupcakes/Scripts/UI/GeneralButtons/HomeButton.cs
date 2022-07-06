@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HomeButton : MonoBehaviour
+namespace Qupcakery
 {
-    public void GoToHomePage()
+    public class HomeButton : MonoBehaviour
     {
-        SceneManagementUtilities.LoadHomePage();
+        public void GoToHomePage()
+        {
+            SceneManagementUtilities.LoadHomePage();
+        }
     }
 }

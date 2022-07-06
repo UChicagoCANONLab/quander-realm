@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ChangeGameModeButton : MonoBehaviour
+namespace Qupcakery
 {
-    public void GoToChangeMadeScene()
+    public class ChangeGameModeButton : MonoBehaviour
     {
-        SceneManagementUtilities.LoadModeSelectionScene();
+        public void GoToChangeMadeScene()
+        {
+            SceneManagementUtilities.LoadModeSelectionScene();
+        }
     }
 }

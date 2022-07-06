@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
-
-public class ExperimentModeButton : MonoBehaviour
+namespace Qupcakery
 {
-    public void EnterExperimentMode()
+    public class ExperimentModeButton : MonoBehaviour
     {
-        GameManagement.Instance.SetGameMode(GameManagement.GameMode.Experiment);
-        SceneManagementUtilities.LoadLevelSelectionMenu();
+        public void EnterExperimentMode()
+        {
+            GameManagement.Instance.SetGameMode(GameManagement.GameMode.Experiment);
+            SceneManagementUtilities.LoadLevelSelectionMenu();
+        }
     }
 }

@@ -5,78 +5,81 @@ using UnityEngine.UI;
 
 /* Controls display of the level earning */
 
-public class UIProgressBar : MonoBehaviour
+namespace Qupcakery
 {
-    public static UIProgressBar Instance { get; private set; }
-
-    public Image progressIndicatorUI;
-    
-    public Image mask;
-    public Image starMask1;
-    public Image starMask20, starMask21;
-    public Image starMask30, starMask31, starMask32;
-
-    // Level goal
-    private int goal = 0;
-    private int currentProgress = 0;
-
-    void Awake()
+    public class UIProgressBar : MonoBehaviour
     {
-        Instance = this;
-    }
+        public static UIProgressBar Instance { get; private set; }
 
-    void Start()
-    {
-        progressIndicatorUI.fillAmount = 0;
+        public Image progressIndicatorUI;
 
-        starMask1.rectTransform.localScale = new Vector3(0f,1f,1f);
-        starMask20.rectTransform.localScale = new Vector3(0f,1f,1f);
-        starMask21.rectTransform.localScale = new Vector3(0f, 1f, 1f);
-        starMask30.rectTransform.localScale = new Vector3(0f,1f,1f);
-        starMask31.rectTransform.localScale = new Vector3(0f, 1f, 1f);
-        starMask32.rectTransform.localScale = new Vector3(0f, 1f, 1f);
-    }
+        public Image mask;
+        public Image starMask1;
+        public Image starMask20, starMask21;
+        public Image starMask30, starMask31, starMask32;
 
-    public void SetValue(float value)
-    {
-        progressIndicatorUI.fillAmount = value;
+        // Level goal
+        private int goal = 0;
+        private int currentProgress = 0;
 
-        if (value > 0.6f)
-            starMask1.rectTransform.localScale = new Vector3(1f,1f,1f);
-        if (value > 0.8f)
+        void Awake()
         {
-            starMask20.rectTransform.localScale = new Vector3(1f, 1f, 1f);
-            starMask21.rectTransform.localScale = new Vector3(1f, 1f, 1f);
+            Instance = this;
         }
-        if (value > 0.99f)
+
+        void Start()
         {
-            starMask30.rectTransform.localScale = new Vector3(1f, 1f, 1f);
-            starMask31.rectTransform.localScale = new Vector3(1f, 1f, 1f);
-            starMask32.rectTransform.localScale = new Vector3(1f, 1f, 1f);
+            progressIndicatorUI.fillAmount = 0;
+
+            starMask1.rectTransform.localScale = new Vector3(0f, 1f, 1f);
+            starMask20.rectTransform.localScale = new Vector3(0f, 1f, 1f);
+            starMask21.rectTransform.localScale = new Vector3(0f, 1f, 1f);
+            starMask30.rectTransform.localScale = new Vector3(0f, 1f, 1f);
+            starMask31.rectTransform.localScale = new Vector3(0f, 1f, 1f);
+            starMask32.rectTransform.localScale = new Vector3(0f, 1f, 1f);
         }
-    }
 
-    // Sets the level goal
-    public void SetGoal(int levelGoal)
-    {
-        goal = levelGoal;
-    }
+        public void SetValue(float value)
+        {
+            progressIndicatorUI.fillAmount = value;
 
-    public float GetCompletionRate()
-    {
-        return (float)currentProgress / (float)goal;
-    }
+            if (value > 0.6f)
+                starMask1.rectTransform.localScale = new Vector3(1f, 1f, 1f);
+            if (value > 0.8f)
+            {
+                starMask20.rectTransform.localScale = new Vector3(1f, 1f, 1f);
+                starMask21.rectTransform.localScale = new Vector3(1f, 1f, 1f);
+            }
+            if (value > 0.99f)
+            {
+                starMask30.rectTransform.localScale = new Vector3(1f, 1f, 1f);
+                starMask31.rectTransform.localScale = new Vector3(1f, 1f, 1f);
+                starMask32.rectTransform.localScale = new Vector3(1f, 1f, 1f);
+            }
+        }
 
-    public int GetCurrentEarning()
-    {
-        return currentProgress;
-    }
+        // Sets the level goal
+        public void SetGoal(int levelGoal)
+        {
+            goal = levelGoal;
+        }
 
-    // CoinCollected event subscriber
-    public void OnCoinsCollected(int amount)
-    {
-        currentProgress += amount;
-        SetValue((float) currentProgress / (float) goal);
-        UILevelCoinTracker.instance.UpdateCoinAmount(currentProgress);
+        public float GetCompletionRate()
+        {
+            return (float)currentProgress / (float)goal;
+        }
+
+        public int GetCurrentEarning()
+        {
+            return currentProgress;
+        }
+
+        // CoinCollected event subscriber
+        public void OnCoinsCollected(int amount)
+        {
+            currentProgress += amount;
+            SetValue((float)currentProgress / (float)goal);
+            UILevelCoinTracker.instance.UpdateCoinAmount(currentProgress);
+        }
     }
 }

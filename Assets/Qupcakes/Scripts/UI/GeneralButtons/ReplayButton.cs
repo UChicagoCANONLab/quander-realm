@@ -2,14 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReplayButton : MonoBehaviour
+
+namespace Qupcakery
 {
-    public void Replay()
+    public class ReplayButton : MonoBehaviour
     {
-        // If help/tutorial panel is active, do nothing
-        if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
-            return;
-        GameObjectsManagement.ResetAllGameObjects();
-        SceneManagementUtilities.LoadGameScene();
+        public void Replay()
+        {
+            // If help/tutorial panel is active, do nothing
+            if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
+                return;
+            GameObjectsManagement.ResetAllGameObjects();
+            SceneManagementUtilities.LoadGameScene();
+        }
     }
 }

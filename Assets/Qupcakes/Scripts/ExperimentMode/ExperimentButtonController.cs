@@ -1,28 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Costume = AssetCostumeUtilities;
+using Costume = Qupcakery.AssetCostumeUtilities;
 
 /* Button manager (experiment mode) */
-
-public class ExperimentButtonController : ButtonController
+namespace Qupcakery
 {
-    public new static ButtonController Instance { get; protected set; }
-
-    private new void Awake()
+    public class ExperimentButtonController : ButtonController
     {
-        Instance = this;
-        UpdateButtonState(ButtonState.CanNotBePressed);
-    }
+        public new static ButtonController Instance { get; protected set; }
 
-    // Subscriber to CakeOnBeltTracker
-    public override void OnCakesReady()
-    {
-        UpdateButtonState(ButtonState.CanBePressed);
-    }
+        private new void Awake()
+        {
+            Instance = this;
+            UpdateButtonState(ButtonState.CanNotBePressed);
+        }
 
-    // Subscriber to CakeOnBeltTracker
-    public override void OnCakesRemovedFromBelt()
-    {
-        UpdateButtonState(ButtonState.CanNotBePressed);
+        // Subscriber to CakeOnBeltTracker
+        public override void OnCakesReady()
+        {
+            UpdateButtonState(ButtonState.CanBePressed);
+        }
+
+        // Subscriber to CakeOnBeltTracker
+        public override void OnCakesRemovedFromBelt()
+        {
+            UpdateButtonState(ButtonState.CanNotBePressed);
+        }
     }
 }

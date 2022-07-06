@@ -3,49 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseButton : MonoBehaviour
+namespace Qupcakery
 {
-    public Sprite pauseSprite;
-    public Sprite unpauseSprite;
-
-    Image image;
-
-    private void Awake()
+    public class PauseButton : MonoBehaviour
     {
-        image = GetComponent<Image>();
+        public Sprite pauseSprite;
+        public Sprite unpauseSprite;
 
-        if (GameUtilities.gameIsPaused)
+        Image image;
+
+        private void Awake()
         {
-            SetUnpauseSprite();
+            image = GetComponent<Image>();
+
+            if (GameUtilities.gameIsPaused)
+            {
+                SetUnpauseSprite();
+            }
         }
-    }
 
-    public void PauseGame()
-    {
-        if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
-            return;
-
-        if (GameUtilities.gameIsPaused)
+        public void PauseGame()
         {
-            GameUtilities.UnpauseGame();
-            SetPauseSprite();
-            //Utilities.DeactiveGamePanel();
+            if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
+                return;
+
+            if (GameUtilities.gameIsPaused)
+            {
+                GameUtilities.UnpauseGame();
+                SetPauseSprite();
+                //Utilities.DeactiveGamePanel();
+            }
+            else
+            {
+                GameUtilities.PauseGame();
+                SetUnpauseSprite();
+                //Utilities.ActiveGamePanel();
+            }
         }
-        else
+
+        public void SetPauseSprite()
         {
-            GameUtilities.PauseGame();
-            SetUnpauseSprite();
-            //Utilities.ActiveGamePanel();
+            image.sprite = pauseSprite;
         }
-    }
 
-    public void SetPauseSprite()
-    {
-        image.sprite = pauseSprite;
-    }
-
-    public void SetUnpauseSprite()
-    {
-        image.sprite = unpauseSprite;
+        public void SetUnpauseSprite()
+        {
+            image.sprite = unpauseSprite;
+        }
     }
 }

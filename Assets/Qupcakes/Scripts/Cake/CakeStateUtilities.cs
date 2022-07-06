@@ -2,26 +2,30 @@
 using UnityEngine;
 using SysDebug = System.Diagnostics.Debug;
 
-public static class CakeStateUtilities
+
+namespace Qupcakery
 {
-    // Get opposite caketype
-    public static CakeType GetOppositeType(CakeType cakeType)
+    public static class CakeStateUtilities
     {
-        switch (cakeType)
+        // Get opposite caketype
+        public static CakeType GetOppositeType(CakeType cakeType)
         {
-            case CakeType.Vanilla:
-                return CakeType.Chocolate;
-            case CakeType.Chocolate:
-                return CakeType.Vanilla;
-            default:
-                throw new ArgumentException("GetOppositeType: Invalid cake type");
+            switch (cakeType)
+            {
+                case CakeType.Vanilla:
+                    return CakeType.Chocolate;
+                case CakeType.Chocolate:
+                    return CakeType.Vanilla;
+                default:
+                    throw new ArgumentException("GetOppositeType: Invalid cake type");
+            }
         }
+
+        // Entangle two cakes
+        public static void EntangleCakes(Cake cake0, Cake cake1)
+        {
+
+        }
+
     }
-
-    // Entangle two cakes
-    public static void EntangleCakes(Cake cake0, Cake cake1)
-    {
-
-    }
-
 }
