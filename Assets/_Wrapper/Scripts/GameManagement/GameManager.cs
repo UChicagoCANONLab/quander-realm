@@ -9,7 +9,10 @@ namespace Wrapper
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get { return _instance; } }
+
         private static GameManager _instance;
+        private GameObject loadingScreenGO = null;
+        private const string introSequenceID = "W_Intro";
 
         [SerializeField] private float loadingToggleDelay = 0.5f;
         [SerializeField] private GameObject loginScreen;
@@ -20,14 +23,13 @@ namespace Wrapper
         public readonly string rewardsPath = "_Wrapper/Rewards/RewardAssets/";
         public RewardAsset[] rewardAssets;
         
-        private GameObject loadingScreenGO = null;
-
         #region Unity Functions
 
         private void Awake()
         {
             InitSingleton();
             InitRewardAssetArray();
+            Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?
         }
 
         private void Start()
@@ -86,6 +88,7 @@ namespace Wrapper
 
             //todo: call a function that creates the card and displays it in the reward card panel
             Debug.LogFormat("Won Reward {0} in game {1} at level {2}", levelReward.rewardID, game, level);
+                Routine.Start(DestroyLoadingScreen()); //todo: debug, delete later
         }
 
         #region Helpers
@@ -111,6 +114,18 @@ namespace Wrapper
         private void InitRewardAssetArray()
         {
             rewardAssets = Resources.LoadAll<RewardAsset>(rewardsPath);
+        }
+
+        private IEnumerator IntroDialogueRoutine()
+        {
+            while (!(saveManager.isUserLoggedIn) || !(saveManager.currentUserSave != null))
+                yield return null;
+
+            if (saveManager.HasPlayerSeenIntroDialogue())
+                yield break;
+
+            Events.StartDialogueSequence?.Invoke(introSequenceID);
+            saveManager.ToggleIntroDialogueSeen(true);
         }
 
         #endregion
