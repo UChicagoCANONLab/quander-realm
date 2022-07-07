@@ -1,18 +1,22 @@
-using Firebase;
-using Firebase.Database;
 using System.Collections;
 using UnityEngine;
 using BeauRoutine;
 using System;
+#if !UNITY_WEBGL
+using Firebase;
+using Firebase.Database;
+#endif
 
 namespace Wrapper
 {
     public class SaveManager : MonoBehaviour
     {
         private bool isDatabaseReady = false;
+#if !UNITY_WEBGL
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
+#endif
         
         [HideInInspector] public bool isUserLoggedIn = false;
         public UserSave currentUserSave = null;
@@ -54,7 +58,8 @@ namespace Wrapper
             return currentUserSave.HasReward(rewardID);
         }
 
-        private IEnumerator InitFirebase()
+#if !UNITY_WEBGL
+        public IEnumerator InitFirebase()
         {
             bool isFirebaseReady = false;
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
@@ -78,7 +83,12 @@ namespace Wrapper
             dbReference = FirebaseDatabase.DefaultInstance.RootReference;
             dbReference.KeepSynced(true);
         }
-
+#else
+        public IEnumerator InitFirebase()
+        {
+            yield return null;
+        }
+#endif
         #region Login
 
         private void Login(string researchCode)
@@ -208,5 +218,13 @@ namespace Wrapper
         }
 
         #endregion
+
+#if UNITY_WEBL
+        [DllImport("__Internal")]
+        private static extern string SaveData(string json);
+
+        [DllImport("__Internal")]
+        private static extern string LoadData();
+#endif
     }
 }
