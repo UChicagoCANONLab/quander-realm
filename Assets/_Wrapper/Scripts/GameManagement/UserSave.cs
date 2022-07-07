@@ -9,6 +9,7 @@ namespace Wrapper
         public string id = string.Empty;
         public string[] minigameSaves;
         public List<string> rewards;
+        public bool introDialogueSeen = false;
 
         public UserSave(string idString = "", string rewardID = "")
         {
