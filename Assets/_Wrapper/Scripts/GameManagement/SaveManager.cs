@@ -58,9 +58,9 @@ namespace Wrapper
             return currentUserSave.HasReward(rewardID);
         }
 
-#if !UNITY_WEBGL
-        public IEnumerator InitFirebase()
+        private IEnumerator InitFirebase()
         {
+#if !UNITY_WEBGL
             bool isFirebaseReady = false;
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
             {
@@ -82,13 +82,11 @@ namespace Wrapper
 
             dbReference = FirebaseDatabase.DefaultInstance.RootReference;
             dbReference.KeepSynced(true);
-        }
-#else
-        public IEnumerator InitFirebase()
-        {
+#else   // Is WebGL
             yield return null;
-        }
 #endif
+        }
+
         #region Login
 
         private void Login(string researchCode)
@@ -100,7 +98,7 @@ namespace Wrapper
 
         private IEnumerator LoginRoutine(string researchCode)
         {
-            yield return Routine.Start(GetDatabaseSnapshot());
+            yield return GetDatabaseSnapshot();
             if(!(isDatabaseReady))
             {
                 Debug.LogError("Error: Could not retrieve database snapshot");
@@ -116,6 +114,7 @@ namespace Wrapper
                 yield break;
             }
 
+#if !UNITY_WEBGL
             bool isUserVerified = databaseSnapshot.Child("researchCodes").HasChild(formattedCode);
             if (!(isUserVerified))
             {
@@ -138,13 +137,16 @@ namespace Wrapper
 
             currentUserSave = JsonUtility.FromJson<UserSave>(
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
-
+#else
+            yield return null;
+#endif
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             isUserLoggedIn = true;
         }
 
         private IEnumerator GetDatabaseSnapshot()
         {
+#if !UNITY_WEBGL
             if (dbReference == null)
                 yield break;
 
@@ -163,6 +165,10 @@ namespace Wrapper
             yield return Routine.Race(
                 Routine.WaitCondition(() => isDatabaseReady),
                 Routine.WaitSeconds(5));
+#else
+            isDatabaseReady = true;
+            yield return null;
+#endif
         }
 
         #endregion
@@ -188,6 +194,7 @@ namespace Wrapper
 
         private bool UpdateRemoteSave()
         {
+#if !UNITY_WEBGL
             if (dbReference == null)
             {
                 Debug.LogError("No database reference on save");
@@ -203,6 +210,9 @@ namespace Wrapper
 
             dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
             return true;
+#else
+            return true;
+#endif
         }
 
         //todo: merge intro dialogue methods or make it a property with get/set
