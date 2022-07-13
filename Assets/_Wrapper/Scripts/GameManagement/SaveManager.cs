@@ -5,6 +5,8 @@ using System;
 #if !UNITY_WEBGL
 using Firebase;
 using Firebase.Database;
+#else
+using System.Runtime.InteropServices;
 #endif
 
 namespace Wrapper
@@ -132,7 +134,7 @@ namespace Wrapper
                     Routine.WaitCondition(() => UpdateRemoteSave()),
                     Routine.WaitSeconds(5));
 
-                yield return Routine.Start(GetDatabaseSnapshot());
+                yield return GetDatabaseSnapshot();
             }
 
             currentUserSave = JsonUtility.FromJson<UserSave>(
@@ -229,12 +231,17 @@ namespace Wrapper
 
         #endregion
 
-#if UNITY_WEBL
+#if UNITY_WEBGL && !UNITY_EDITOR
         [DllImport("__Internal")]
         private static extern string SaveData(string json);
 
         [DllImport("__Internal")]
-        private static extern string LoadData();
+        private static extern string DoesResearchCodeExist(string codeString);
+
+        public void LoadCallback(string str)
+        {
+            Debug.Log("Got string back from javascript: " + str);
+        }
 #endif
     }
 }
