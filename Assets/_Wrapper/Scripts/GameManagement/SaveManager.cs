@@ -32,6 +32,7 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.AddReward += AddReward;
+            Events.ClearSaveFile += ClearSave;
             Events.SubmitResearchCode += Login;
             Events.IsRewardUnlocked += IsRewardUnlocked;
             Events.UpdateRemoteSave += UpdateRemoteSave;
@@ -42,6 +43,7 @@ namespace Wrapper
         private void OnDisable()
         {
             Events.AddReward -= AddReward;
+            Events.ClearSaveFile -= ClearSave;
             Events.SubmitResearchCode -= Login;
             Events.IsRewardUnlocked -= IsRewardUnlocked;
             Events.UpdateRemoteSave -= UpdateRemoteSave;
@@ -193,6 +195,13 @@ namespace Wrapper
 
             dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
             return true;
+        }
+
+        private void ClearSave()
+        {
+            string id = currentUserSave.id;
+            currentUserSave = new UserSave(id);
+            UpdateRemoteSave();
         }
 
         //todo: merge intro dialogue methods or make it a property with get/set

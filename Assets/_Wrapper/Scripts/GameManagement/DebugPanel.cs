@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Wrapper;
 
@@ -11,17 +12,21 @@ public class DebugPanel : MonoBehaviour
     {
         Add_Reward,
         ToggleLoadingScreen,
-        Open_Dialog_UI,
+        Start_Dialogue_Sequence,
         Close_Dialog_UI,
+        Clear_Save_File,
         BB_Goto_Level,
         BB_Toggle_Debug,
         BB_Clear_Markers
     };
 
-    public TMP_Dropdown dropDown;
+    public GameObject toggleContainer;
+    public GameObject togglePrefab;
     public TMP_InputField inputField;
     public Button submitButton;
     public TextMeshProUGUI consoleLog;
+
+    private Option currentOption;
     
     private void Awake()
     {
@@ -69,66 +74,39 @@ public class DebugPanel : MonoBehaviour
 
     private void SetupOptions()
     {
-        List<TMP_Dropdown.OptionData> optionsList = new List<TMP_Dropdown.OptionData>();
         foreach (Option option in Enum.GetValues(typeof(Option)))
-            optionsList.Add(new TMP_Dropdown.OptionData(option.ToString()));
-
-        dropDown.AddOptions(optionsList);
+        {
+            GameObject toggleGO = Instantiate(togglePrefab, toggleContainer.transform);
+            toggleGO.GetComponent<Toggle>().onValueChanged.AddListener((isOn) => SetCurrentOption(option, isOn));
+            toggleGO.GetComponentInChildren<TextMeshProUGUI>().text = option.ToString();
+        }
     }
 
     private void SubmitCommand()
     {
         string fieldText = inputField.text.Trim();
-        string dropDownText = dropDown.captionText.text;
-        Option commandType = Enum.Parse<Option>(dropDownText);
 
-        switch(commandType)
+        switch(currentOption)
         {
-            case Option.ToggleLoadingScreen:
-                ToggleLoadingScreen();
-                break;            
-            case Option.Add_Reward:
-                AddReward(fieldText);
-                break;
-            case Option.Open_Dialog_UI:
-                OpenDialogueSequence(fieldText);
-                break;
-            case Option.Close_Dialog_UI:
-                CloseDialogueUI();
-                break;
-            case Option.BB_Goto_Level:
-                Events.BBGotoLevel?.Invoke(fieldText);
-                break;
-            case Option.BB_Toggle_Debug:
-                Events.BBToggleDebug?.Invoke();
-                break;
-            case Option.BB_Clear_Markers:
-                Events.BBClearMarkers?.Invoke();
-                break;
+            case Option.ToggleLoadingScreen:     Events.ToggleLoadingScreen?.Invoke(); break;            
+            case Option.Add_Reward:              Events.AddReward?.Invoke(fieldText); break;
+            case Option.Start_Dialogue_Sequence: Events.StartDialogueSequence?.Invoke(fieldText); break;
+            case Option.Close_Dialog_UI:         Events.CloseDialogueView?.Invoke(); break;
+            case Option.Clear_Save_File:         Events.ClearSaveFile?.Invoke(); break;
+            case Option.BB_Goto_Level:           Events.BBGotoLevel?.Invoke(fieldText); break;
+            case Option.BB_Toggle_Debug:         Events.BBToggleDebug?.Invoke(); break;
+            case Option.BB_Clear_Markers:        Events.BBClearMarkers?.Invoke(); break;
         }
 
-
-        Debug.LogFormat("Entered Command {0} {1}", dropDownText, fieldText);
+        Debug.LogFormat("Entered Command: <b>{0}</b> with parameter <b>{1}</b>", currentOption.ToString(), fieldText);
         gameObject.SetActive(false);
     }
 
-    static private void OpenDialogueSequence(string sequenceID)
+    private void SetCurrentOption(Option option, bool isOn)
     {
-        Events.StartDialogueSequence?.Invoke(sequenceID);
-    }
+        if (!(isOn))
+            return;
 
-    static private void CloseDialogueUI()
-    {
-        Events.CloseDialogueView?.Invoke();
-    }
-
-    static private void AddReward(string rewardID)
-    {
-        Events.AddReward?.Invoke(rewardID);
-    }
-
-    static private void ToggleLoadingScreen()
-    {
-        Events.ToggleLoadingScreen?.Invoke();
+        currentOption = option;
     }
 }
