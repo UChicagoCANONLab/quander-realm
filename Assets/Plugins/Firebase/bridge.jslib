@@ -1,13 +1,15 @@
 mergeInto(LibraryManager.library, {
 
-  SaveData: function(json){
-    json = Pointer_stringify(json);
-    var str = email.toLowerCase();
-    var emailNoPeriod = str.split('.').join(',')
-    database.ref('users/' + emailNoPeriod).set(JSON.parse(json));
-  },
-
   DoesResearchCodeExist: function(codeString) {
     JSDoesResearchCodeExist(UTF8ToString(codeString));
+  },
+
+  SaveData: function(codeString, json){
+    JSSaveData(UTF8ToString(codeString), UTF8ToString(json));
+  },
+
+  LoadData: function(codeString){
+    JSLoadData(UTF8ToString(codeString));
   }
+
 });
