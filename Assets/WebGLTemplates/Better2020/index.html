@@ -74,6 +74,7 @@
 #endif
       loadingCover.style.display = "";
 
+      var GameInstance;
       const script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
@@ -82,6 +83,7 @@
           progressBarEmpty.style.display = "";
           progressBarFull.style.width = `${100 * progress}%`;
         }).then((unityInstance) => {
+          GameInstance = unityInstance;
           loadingCover.style.display = "none";
           if (canFullscreen) {
             if (!hideFullScreenButton) {
@@ -98,8 +100,11 @@
       document.body.appendChild(script);
     </script>
 	
-
-    <script type="text/javascript" src="fbBridge.js"></script>
+	
+    <script type="text/javascript">
+      var DCE;
+    </script>
+    <script type="module" src="fbBridge.js"></script>
 
   </body>
 </html>

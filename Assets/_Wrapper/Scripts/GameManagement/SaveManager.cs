@@ -14,6 +14,7 @@ namespace Wrapper
     public class SaveManager : MonoBehaviour
     {
         private bool isDatabaseReady = false;
+        private bool gotCallback = false;
 #if !UNITY_WEBGL
         private FirebaseApp app;
         private DatabaseReference dbReference;
@@ -140,6 +141,9 @@ namespace Wrapper
             currentUserSave = JsonUtility.FromJson<UserSave>(
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
 #else
+            DoesResearchCodeExist(formattedCode);
+            while(!gotCallback)
+                yield return null;
             yield return null;
 #endif
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
@@ -231,16 +235,17 @@ namespace Wrapper
 
         #endregion
 
-#if UNITY_WEBGL && !UNITY_EDITOR
+#if UNITY_WEBGL
         [DllImport("__Internal")]
         private static extern string SaveData(string json);
 
         [DllImport("__Internal")]
-        private static extern string DoesResearchCodeExist(string codeString);
+        private static extern bool DoesResearchCodeExist(string codeString);
 
         public void LoadCallback(string str)
         {
             Debug.Log("Got string back from javascript: " + str);
+            gotCallback = true;
         }
 #endif
     }

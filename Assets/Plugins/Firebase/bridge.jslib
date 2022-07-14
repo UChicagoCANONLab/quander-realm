@@ -8,13 +8,6 @@ mergeInto(LibraryManager.library, {
   },
 
   DoesResearchCodeExist: function(codeString) {
-    database.ref('researchCodes/' + codeString).once('value').then(function(snapshot) {
-      console.log(snapshot.val());
-      SendMessage('SaveManager', 'LoadCallback', JSON.stringify(snapshot.val()));
-    }, function (error) {
-       console.log("Error: " + error.code);
-    }
-    
-    );
+    return DCE(UTF8ToString(codeString));
   }
 });
