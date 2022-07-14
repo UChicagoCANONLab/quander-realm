@@ -8,6 +8,6 @@ mergeInto(LibraryManager.library, {
   },
 
   DoesResearchCodeExist: function(codeString) {
-    return DCE(UTF8ToString(codeString));
+    JSDoesResearchCodeExist(UTF8ToString(codeString));
   }
 });

@@ -14,11 +14,12 @@ namespace Wrapper
     public class SaveManager : MonoBehaviour
     {
         private bool isDatabaseReady = false;
-        private bool gotCallback = false;
 #if !UNITY_WEBGL
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
+#else
+        private string researchCodeExists = "";
 #endif
         
         [HideInInspector] public bool isUserLoggedIn = false;
@@ -142,9 +143,18 @@ namespace Wrapper
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
 #else
             DoesResearchCodeExist(formattedCode);
-            while(!gotCallback)
+            while(string.IsNullOrEmpty(researchCodeExists))
                 yield return null;
-            yield return null;
+
+            if(researchCodeExists == "F")
+            {
+                researchCodeExists = "";
+                Debug.LogErrorFormat("Error: Could not find user {0} in database", formattedCode);
+                yield break;
+            }
+            researchCodeExists = "";
+
+
 #endif
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             isUserLoggedIn = true;
@@ -240,12 +250,11 @@ namespace Wrapper
         private static extern string SaveData(string json);
 
         [DllImport("__Internal")]
-        private static extern bool DoesResearchCodeExist(string codeString);
+        private static extern void DoesResearchCodeExist(string codeString);
 
-        public void LoadCallback(string str)
+        public void ResearchCodeCallback(string str)
         {
-            Debug.Log("Got string back from javascript: " + str);
-            gotCallback = true;
+            researchCodeExists = str;
         }
 #endif
     }
