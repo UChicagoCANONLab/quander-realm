@@ -2,15 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Data {
+namespace Labyrinth 
+{ 
+        
+    public class Data {
 
-    public int[] StarsWon;
-    // public float[] TimePlayed;
-    public object[] PreviousSave; // {level #, stars, time, hints used #}
-    
-    public Data(SaveData save) {
-        StarsWon = save.starsPerLevel;
-        // TimePlayed = save.timePerLevel;
-        PreviousSave = save.previousSave;
+        public int[] MaxStarsPerLevel;
+        // public float[] TimePlayed;
+        public int Level;
+        public int NumStars;
+        public float Time;
+        public int HintsUsed;
+        // public object[] PreviousSave; // {level #, stars, time, hints used #}
+        
+        public Data(SaveData save) {
+            MaxStarsPerLevel = save.starsPerLevel;
+            // TimePlayed = save.timePerLevel;
+            //PreviousSave = save.previousSave;
+            Level = save.level;
+            NumStars = save.numStars;
+            Time = save.time;
+            HintsUsed = save.hintsUsed;
+
+        }
     }
 }
