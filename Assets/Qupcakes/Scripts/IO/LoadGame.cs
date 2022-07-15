@@ -11,10 +11,11 @@ namespace Qupcakery
     public class LoadGame : MonoBehaviour
     {
         public GameObject ResumeButton;
-
+        
+#if UNITY_WEBGL == true && UNITY_EDITOR == false
         [DllImport("__Internal")]
         private static extern void QupcakesGameLoaded(string callback);
-
+#endif
         public static int Load()
         {
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
