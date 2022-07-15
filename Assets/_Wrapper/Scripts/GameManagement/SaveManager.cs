@@ -5,6 +5,8 @@ using System;
 #if !UNITY_WEBGL
 using Firebase;
 using Firebase.Database;
+#else
+using System.Runtime.InteropServices;
 #endif
 
 namespace Wrapper
@@ -16,6 +18,9 @@ namespace Wrapper
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
+#else
+        private string researchCodeExists = "";
+        private string loadDataJson = "";
 #endif
         
         [HideInInspector] public bool isUserLoggedIn = false;
@@ -132,13 +137,36 @@ namespace Wrapper
                     Routine.WaitCondition(() => UpdateRemoteSave()),
                     Routine.WaitSeconds(5));
 
-                yield return Routine.Start(GetDatabaseSnapshot());
+                yield return GetDatabaseSnapshot();
             }
 
             currentUserSave = JsonUtility.FromJson<UserSave>(
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
-#else
-            yield return null;
+#else // is Unity WebGL
+            DoesResearchCodeExist(formattedCode);
+            while(string.IsNullOrEmpty(researchCodeExists))
+                yield return null;
+
+            // Check if code exists
+            if(researchCodeExists == "F")
+            {
+                researchCodeExists = "";
+                Debug.LogErrorFormat("Error: Could not find user {0} in database", formattedCode);
+                yield break;
+            }
+            researchCodeExists = "";
+
+            // Code exists, great. Now let's see if they have save data already
+            LoadData(formattedCode);
+            while(string.IsNullOrEmpty(loadDataJson))
+                yield return null;
+            
+            Debug.Log(loadDataJson);
+            if(loadDataJson == "none")
+            {
+                Debug.LogWarning("User doesn't exist, creating it now.");
+            }
+            currentUserSave = JsonUtility.FromJson<UserSave>(loadDataJson);
 #endif
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             isUserLoggedIn = true;
@@ -165,7 +193,7 @@ namespace Wrapper
             yield return Routine.Race(
                 Routine.WaitCondition(() => isDatabaseReady),
                 Routine.WaitSeconds(5));
-#else
+#else // is Unity WebGL
             isDatabaseReady = true;
             yield return null;
 #endif
@@ -210,7 +238,14 @@ namespace Wrapper
 
             dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
             return true;
-#else
+#else   // is Unity WebGL
+            string json = JsonUtility.ToJson(currentUserSave);
+            if (json.Equals(string.Empty))
+            {
+                Debug.LogError("Empty UserSave");
+                return false;
+            }
+            SaveData(currentUserSave.id, json);
             return true;
 #endif
         }
@@ -229,12 +264,23 @@ namespace Wrapper
 
         #endregion
 
-#if UNITY_WEBL
-        [DllImport("__Internal")]
-        private static extern string SaveData(string json);
+#if UNITY_WEBGL
 
         [DllImport("__Internal")]
-        private static extern string LoadData();
+        private static extern void DoesResearchCodeExist(string codeString);
+        [DllImport("__Internal")]
+        private static extern void LoadData(string codeString);
+        [DllImport("__Internal")]
+        private static extern void SaveData(string codeString, string json);
+        public void ResearchCodeCallback(string str)
+        {
+            researchCodeExists = str;
+        }
+
+        public void LoadDataCallback(string str)
+        {
+            loadDataJson = str;
+        }
 #endif
     }
 }
