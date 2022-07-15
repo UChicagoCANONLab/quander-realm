@@ -9,9 +9,10 @@ public class DebugPanel : MonoBehaviour
 {
     private enum Option
     {
+        Add_Reward,
+        ToggleLoadingScreen,
         Open_Dialog_UI,
         Close_Dialog_UI,
-        Add_Reward,
         BB_Goto_Level,
         BB_Toggle_Debug,
         BB_Clear_Markers
@@ -20,6 +21,7 @@ public class DebugPanel : MonoBehaviour
     public TMP_Dropdown dropDown;
     public TMP_InputField inputField;
     public Button submitButton;
+    public TextMeshProUGUI consoleLog;
     
     private void Awake()
     {
@@ -33,6 +35,36 @@ public class DebugPanel : MonoBehaviour
     private void OnEnable()
     {
         inputField.text = "";
+        Application.logMessageReceived += UpdateLog;
+    }
+
+    private void OnDisable()
+    {
+        Application.logMessageReceived += UpdateLog;
+    }
+
+    private void UpdateLog(string condition, string stackTrace, LogType type)
+    {
+        if (condition.Contains("[BeauRoutine]"))
+            return;
+
+        consoleLog.text = condition;
+
+        Color color;
+        switch (type)
+        {
+            case LogType.Error:
+            case LogType.Exception:
+                color = Color.red;
+                break;
+            case LogType.Warning:
+                color = Color.yellow;
+                break;
+            default:
+                color = Color.white;
+                break;
+        }
+        consoleLog.color = color;
     }
 
     private void SetupOptions()
@@ -52,14 +84,17 @@ public class DebugPanel : MonoBehaviour
 
         switch(commandType)
         {
+            case Option.ToggleLoadingScreen:
+                ToggleLoadingScreen();
+                break;            
+            case Option.Add_Reward:
+                AddReward(fieldText);
+                break;
             case Option.Open_Dialog_UI:
                 OpenDialogueSequence(fieldText);
                 break;
             case Option.Close_Dialog_UI:
                 CloseDialogueUI();
-                break;
-            case Option.Add_Reward:
-                AddReward(fieldText);
                 break;
             case Option.BB_Goto_Level:
                 Events.BBGotoLevel?.Invoke(fieldText);
@@ -90,5 +125,10 @@ public class DebugPanel : MonoBehaviour
     static private void AddReward(string rewardID)
     {
         Events.AddReward?.Invoke(rewardID);
+    }
+
+    static private void ToggleLoadingScreen()
+    {
+        Events.ToggleLoadingScreen?.Invoke();
     }
 }
