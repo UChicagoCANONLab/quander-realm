@@ -9,7 +9,7 @@ public static class GameData
 
     public static int CurrLevel { get; set; } = 0;
     public static int max_level = 20;
-    public static bool[] completedLevels = new bool[Constants.N_LEVELS];
+    public static bool[] completedLevels = new bool[CTConstants.N_LEVELS];
 
     private static bool tutorialShown = false;
 

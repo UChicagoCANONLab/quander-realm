@@ -14,8 +14,8 @@ public class LevelSelectorBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        buttons = new LevelButtonBehavior[Constants.N_LEVELS];
-        for (int i = 0; i < Constants.N_LEVELS; i++)
+        buttons = new LevelButtonBehavior[CTConstants.N_LEVELS];
+        for (int i = 0; i < CTConstants.N_LEVELS; i++)
         {
             GameObject newButton = Instantiate(buttonPrefab);
             newButton.transform.SetParent(content.transform);
@@ -29,7 +29,7 @@ public class LevelSelectorBehavior : MonoBehaviour
 
     public void updateLevels()
     {
-        for (int i = 0; i < Constants.N_LEVELS; i++)
+        for (int i = 0; i < CTConstants.N_LEVELS; i++)
         {
             buttons[i].init(i, GameData.completedLevels[i], this);
         }
