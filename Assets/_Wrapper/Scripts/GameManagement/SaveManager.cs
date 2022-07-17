@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using BeauRoutine;
 using System;
-#if !UNITY_WEBGL
+#if !UNITY_WEBGL || UNITY_EDITOR
 using Firebase;
 using Firebase.Database;
 #else
@@ -14,7 +14,7 @@ namespace Wrapper
     public class SaveManager : MonoBehaviour
     {
         private bool isDatabaseReady = false;
-#if !UNITY_WEBGL
+#if !UNITY_WEBGL || UNITY_EDITOR
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
@@ -65,7 +65,7 @@ namespace Wrapper
 
         private IEnumerator InitFirebase()
         {
-#if !UNITY_WEBGL
+#if !UNITY_WEBGL || UNITY_EDITOR
             bool isFirebaseReady = false;
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
             {
@@ -119,7 +119,7 @@ namespace Wrapper
                 yield break;
             }
 
-#if !UNITY_WEBGL
+#if !UNITY_WEBGL || UNITY_EDITOR
             bool isUserVerified = databaseSnapshot.Child("researchCodes").HasChild(formattedCode);
             if (!(isUserVerified))
             {
@@ -174,7 +174,7 @@ namespace Wrapper
 
         private IEnumerator GetDatabaseSnapshot()
         {
-#if !UNITY_WEBGL
+#if !UNITY_WEBGL || UNITY_EDITOR
             if (dbReference == null)
                 yield break;
 
@@ -222,7 +222,7 @@ namespace Wrapper
 
         private bool UpdateRemoteSave()
         {
-#if !UNITY_WEBGL
+#if !UNITY_WEBGL || UNITY_EDITOR
             if (dbReference == null)
             {
                 Debug.LogError("No database reference on save");
@@ -264,7 +264,7 @@ namespace Wrapper
 
         #endregion
 
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
 
         [DllImport("__Internal")]
         private static extern void DoesResearchCodeExist(string codeString);
