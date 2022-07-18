@@ -1,4 +1,6 @@
+#if UNITY_IOS
 using UnityEditor.iOS.Xcode;
+#endif
 using UnityEditor;
 using UnityEditor.Callbacks;
 
@@ -6,6 +8,7 @@ namespace Editor
 {
     public static class XcodeSwiftVersionPostProcess
     {
+#if UNITY_IOS
         [PostProcessBuild(999)]
         public static void OnPostProcessBuild(BuildTarget buildTarget, string path)
         {
@@ -31,5 +34,6 @@ namespace Editor
  
             project.WriteToFile(projPath);
         }
+#endif
     }
 }
