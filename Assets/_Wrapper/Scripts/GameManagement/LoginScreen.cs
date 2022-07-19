@@ -13,10 +13,9 @@ namespace Wrapper
 
         [Header("Error Text")]
         [SerializeField] private string connectionErrorText = "Login failed: Please check your internet connection and try again.";
-        [SerializeField] private string formatErrorText = "Login failed: Research codes must be 6 characters long and only contain alphanumerics.";
+        [SerializeField] private string formatErrorText = "Login failed: Research codes must be 6 characters long and only contain alphanumerics. (Codes are case-sensitive)";
         [SerializeField] private string databaseErrorText = "Login failed: Could not connect to the user database. Please check your internet connection and try again.";
-        [SerializeField] private string retrievalErrorText = "Login failed: Could not retrieve this user's save file. Please check your internet connection and try again.";
-        [SerializeField] private string nonexistentUserErrorText = "Login failed: There is no user associated with this research code. Please verify your code and try again.";
+        [SerializeField] private string nonexistentUserErrorText = "Login failed: There is no user associated with this research code. Please verify your code and try again. (Codes are case-sensitive)";
 
 
         private void Awake()
@@ -62,7 +61,6 @@ namespace Wrapper
                 case LoginStatus.Success: animator.SetBool("On", false); break;
                 case LoginStatus.FormatError: DisplayError(formatErrorText); break;
                 case LoginStatus.DatabaseError: DisplayError(databaseErrorText); break;
-                case LoginStatus.RetrievalError: DisplayError(retrievalErrorText); break;
                 case LoginStatus.ConnectionError: DisplayError(connectionErrorText); break;
                 case LoginStatus.NonExistentUserError: DisplayError(nonexistentUserErrorText); break;
             }

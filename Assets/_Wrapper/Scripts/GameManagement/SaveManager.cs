@@ -3,6 +3,7 @@ using UnityEngine;
 using BeauRoutine;
 using System;
 using UnityEngine.Networking;
+using System.Linq;
 #if !UNITY_WEBGL
 using Firebase;
 using Firebase.Database;
@@ -125,10 +126,10 @@ namespace Wrapper
                 yield break;
             }
 
-            string formattedCode = researchCode.Trim().ToLower();
-            if (researchCode.Length != researchCodeLength)
+            string formattedCode = researchCode.Trim();
+            if (researchCode.Length != researchCodeLength || !(researchCode.All(char.IsLetterOrDigit)))
             {
-                Debug.LogErrorFormat("Error: Research code must be a {0} character long, lowercase, alphanumeric", researchCodeLength);
+                Debug.LogErrorFormat("Error: Research code must be a {0} character long alphanumeric string", researchCodeLength);
                 Events.UpdateLoginStatus?.Invoke(LoginStatus.FormatError);
                 yield break;
             }

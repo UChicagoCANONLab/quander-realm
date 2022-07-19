@@ -56,7 +56,6 @@ namespace Wrapper
         Success,
         FormatError,
         DatabaseError,
-        RetrievalError,
         ConnectionError,
         NonExistentUserError
     };
