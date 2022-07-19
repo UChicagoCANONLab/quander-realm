@@ -2,7 +2,9 @@ using System.Collections;
 using UnityEngine;
 using BeauRoutine;
 using System;
-#if !UNITY_WEBGL || UNITY_EDITOR
+using UnityEngine.Networking;
+using System.Linq;
+#if !UNITY_WEBGL
 using Firebase;
 using Firebase.Database;
 #else
@@ -13,8 +15,15 @@ namespace Wrapper
 {
     public class SaveManager : MonoBehaviour
     {
+        [HideInInspector] public bool isUserLoggedIn = false;
+        public UserSave currentUserSave = null;
+        public int researchCodeLength = 6;
+
+        private float networkRequestTimeout = 7f;
+        private bool isConnectedToInternet = false;
         private bool isDatabaseReady = false;
-#if !UNITY_WEBGL || UNITY_EDITOR
+
+#if !UNITY_WEBGL
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
@@ -22,20 +31,18 @@ namespace Wrapper
         private string researchCodeExists = "";
         private string loadDataJson = "";
 #endif
-        
-        [HideInInspector] public bool isUserLoggedIn = false;
-        public UserSave currentUserSave = null;
-        public int researchCodeLength = 6;
 
 #if PRODUCTION_FB
         public static readonly string firebaseURL = "https://quander-production-default-rtdb.firebaseio.com/";
+        public readonly string testConnectionURL = "https://console.firebase.google.com/project/quander-production/database/quander-production-default-rtdb/data";
 #else
         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
+        public readonly string testConnectionURL = "https://console.firebase.google.com/project/filament-zombies/database/filament-zombies-default-rtdb/data";
 #endif
 
         private void Awake()
         {
-            Routine.Start(InitFirebase());   
+            Routine.Start(InitFirebase());
         }
 
         private void OnEnable()
@@ -65,7 +72,7 @@ namespace Wrapper
 
         private IEnumerator InitFirebase()
         {
-#if !UNITY_WEBGL || UNITY_EDITOR
+#if !UNITY_WEBGL
             bool isFirebaseReady = false;
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
             {
@@ -83,7 +90,7 @@ namespace Wrapper
 
             yield return Routine.Race(
                 Routine.WaitCondition(() => isFirebaseReady),
-                Routine.WaitSeconds(5));
+                Routine.WaitSeconds(networkRequestTimeout));
 
             dbReference = FirebaseDatabase.DefaultInstance.RootReference;
             dbReference.KeepSynced(true);
@@ -103,23 +110,31 @@ namespace Wrapper
 
         private IEnumerator LoginRoutine(string researchCode)
         {
+            yield return TestInternetConnection();
+            if (!(isConnectedToInternet))
+            {
+                Debug.LogError("Error: Internet connection issue");
+                Events.UpdateLoginStatus?.Invoke(LoginStatus.ConnectionError);
+                yield break;
+            }
+
             yield return GetDatabaseSnapshot();
-            if(!(isDatabaseReady))
+            if (!(isDatabaseReady))
             {
                 Debug.LogError("Error: Could not retrieve database snapshot");
                 Events.UpdateLoginStatus?.Invoke(LoginStatus.DatabaseError);
                 yield break;
             }
 
-            string formattedCode = researchCode.Trim().ToLower();
-            if (researchCode.Length != researchCodeLength)
+            string formattedCode = researchCode.Trim();
+            if (researchCode.Length != researchCodeLength || !(researchCode.All(char.IsLetterOrDigit)))
             {
-                Debug.LogErrorFormat("Error: Research code must be a {0} character long, lowercase, alphanumeric", researchCodeLength);
+                Debug.LogErrorFormat("Error: Research code must be a {0} character long alphanumeric string", researchCodeLength);
                 Events.UpdateLoginStatus?.Invoke(LoginStatus.FormatError);
                 yield break;
             }
 
-#if !UNITY_WEBGL || UNITY_EDITOR
+#if !UNITY_WEBGL
             bool isUserVerified = databaseSnapshot.Child("researchCodes").HasChild(formattedCode);
             if (!(isUserVerified))
             {
@@ -135,7 +150,7 @@ namespace Wrapper
 
                 yield return Routine.Race(
                     Routine.WaitCondition(() => UpdateRemoteSave()),
-                    Routine.WaitSeconds(5));
+                    Routine.WaitSeconds(networkRequestTimeout));
 
                 yield return GetDatabaseSnapshot();
             }
@@ -174,15 +189,15 @@ namespace Wrapper
 
         private IEnumerator GetDatabaseSnapshot()
         {
-#if !UNITY_WEBGL || UNITY_EDITOR
+#if !UNITY_WEBGL
             if (dbReference == null)
                 yield break;
 
             dbReference.GetValueAsync().ContinueWith(task =>
             {
                 if (task.IsFaulted)
-                    Debug.LogError("db snapshot task is faulted");
-                
+                    Debug.LogErrorFormat("db snapshot task is faulted: {0}", task.Exception);
+
                 else if (task.IsCompleted)
                 {
                     databaseSnapshot = task.Result;
@@ -192,11 +207,23 @@ namespace Wrapper
 
             yield return Routine.Race(
                 Routine.WaitCondition(() => isDatabaseReady),
-                Routine.WaitSeconds(5));
+                Routine.WaitSeconds(networkRequestTimeout));
 #else // is Unity WebGL
             isDatabaseReady = true;
             yield return null;
 #endif
+        }
+
+        private IEnumerator TestInternetConnection()
+        {
+            isConnectedToInternet = false;
+
+            UnityWebRequest request = new UnityWebRequest(testConnectionURL);
+            request.timeout = (int)networkRequestTimeout;
+            yield return request.SendWebRequest();
+
+            if (request.error == null && request.result != UnityWebRequest.Result.ConnectionError)
+                isConnectedToInternet = true;
         }
 
         #endregion
@@ -222,7 +249,7 @@ namespace Wrapper
 
         private bool UpdateRemoteSave()
         {
-#if !UNITY_WEBGL || UNITY_EDITOR
+#if !UNITY_WEBGL
             if (dbReference == null)
             {
                 Debug.LogError("No database reference on save");
@@ -264,8 +291,9 @@ namespace Wrapper
 
         #endregion
 
-#if UNITY_WEBGL && !UNITY_EDITOR
+        #region WebGL dll imports
 
+#if UNITY_WEBGL
         [DllImport("__Internal")]
         private static extern void DoesResearchCodeExist(string codeString);
         [DllImport("__Internal")]
@@ -282,5 +310,7 @@ namespace Wrapper
             loadDataJson = str;
         }
 #endif
+
+        #endregion
     }
 }
