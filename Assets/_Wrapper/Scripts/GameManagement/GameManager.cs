@@ -39,8 +39,12 @@ namespace Wrapper
         private void Start()
         {
             if (!(saveManager.isUserLoggedIn))
+            {
                 loginScreen.SetActive(true);
+                Events.OpenLoginScreen?.Invoke();
+            }
         }
+
         private void OnEnable()
         {
             Events.OpenMinigame += OpenMinigame;

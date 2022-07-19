@@ -17,7 +17,7 @@ namespace Wrapper
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
 
             if (!(idString.Equals(string.Empty)))
-                id = FormatString(idString);
+                id = idString.Trim();
 
             AddReward(rewardID);
         }
