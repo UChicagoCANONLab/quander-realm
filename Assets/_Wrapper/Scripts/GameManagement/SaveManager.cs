@@ -65,11 +65,6 @@ namespace Wrapper
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
         }
 
-        private bool IsRewardUnlocked(string rewardID)
-        {
-            return currentUserSave.HasReward(rewardID);
-        }
-
         private IEnumerator InitFirebase()
         {
 #if !UNITY_WEBGL
@@ -110,6 +105,7 @@ namespace Wrapper
 
         private IEnumerator LoginRoutine(string researchCode)
         {
+#if !UNITY_WEBGL
             yield return TestInternetConnection();
             if (!(isConnectedToInternet))
             {
@@ -117,7 +113,7 @@ namespace Wrapper
                 Events.UpdateLoginStatus?.Invoke(LoginStatus.ConnectionError);
                 yield break;
             }
-
+#endif
             yield return GetDatabaseSnapshot();
             if (!(isDatabaseReady))
             {
@@ -234,6 +230,11 @@ namespace Wrapper
         {
             currentUserSave.AddReward(rewardID);
             UpdateRemoteSave();
+        }
+
+        private bool IsRewardUnlocked(string rewardID)
+        {
+            return currentUserSave.HasReward(rewardID);
         }
 
         private string GetMinigameSaveData(Game game)
