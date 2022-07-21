@@ -11,8 +11,8 @@ public class DebugPanel : MonoBehaviour
     private enum Option
     {
         Add_Reward,
-        ToggleLoadingScreen,
-        Start_Dialogue_Sequence,
+        Toggle_Loading_Scr,
+        Open_Dialog,
         Close_Dialog_UI,
         Clear_Save_File,
         BB_Goto_Level,
@@ -78,6 +78,7 @@ public class DebugPanel : MonoBehaviour
         {
             GameObject toggleGO = Instantiate(togglePrefab, toggleContainer.transform);
             toggleGO.GetComponent<Toggle>().onValueChanged.AddListener((isOn) => SetCurrentOption(option, isOn));
+            toggleGO.GetComponent<Toggle>().group = toggleContainer.GetComponent<ToggleGroup>();
             toggleGO.GetComponentInChildren<TextMeshProUGUI>().text = option.ToString();
         }
     }
@@ -88,14 +89,14 @@ public class DebugPanel : MonoBehaviour
 
         switch(currentOption)
         {
-            case Option.ToggleLoadingScreen:     Events.ToggleLoadingScreen?.Invoke(); break;            
-            case Option.Add_Reward:              Events.AddReward?.Invoke(fieldText); break;
-            case Option.Start_Dialogue_Sequence: Events.StartDialogueSequence?.Invoke(fieldText); break;
-            case Option.Close_Dialog_UI:         Events.CloseDialogueView?.Invoke(); break;
-            case Option.Clear_Save_File:         Events.ClearSaveFile?.Invoke(); break;
-            case Option.BB_Goto_Level:           Events.BBGotoLevel?.Invoke(fieldText); break;
-            case Option.BB_Toggle_Debug:         Events.BBToggleDebug?.Invoke(); break;
-            case Option.BB_Clear_Markers:        Events.BBClearMarkers?.Invoke(); break;
+            case Option.Toggle_Loading_Scr: Events.ToggleLoadingScreen?.Invoke(); break;            
+            case Option.Add_Reward:         Events.AddReward?.Invoke(fieldText); break;
+            case Option.Open_Dialog:        Events.StartDialogueSequence?.Invoke(fieldText); break;
+            case Option.Close_Dialog_UI:    Events.CloseDialogueView?.Invoke(); break;
+            case Option.Clear_Save_File:    Events.ClearSaveFile?.Invoke(); break;
+            case Option.BB_Goto_Level:      Events.BBGotoLevel?.Invoke(fieldText); break;
+            case Option.BB_Toggle_Debug:    Events.BBToggleDebug?.Invoke(); break;
+            case Option.BB_Clear_Markers:   Events.BBClearMarkers?.Invoke(); break;
         }
 
         Debug.LogFormat("Entered Command: <b>{0}</b> with parameter <b>{1}</b>", currentOption.ToString(), fieldText);
