@@ -9,6 +9,7 @@ namespace Wrapper
         public static Action<Minigame> OpenMinigame;
         public static Action MinigameClosed;
         public static Action ToggleLoadingScreen;
+        public static Action OpenLoginScreen;
 
         /// Save System ///
         public static Action<string> SubmitResearchCode;
