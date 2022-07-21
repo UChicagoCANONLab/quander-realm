@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using Wrapper;
 
-public class DebugPanel : MonoBehaviour
+public class DebugScreen : MonoBehaviour
 {
     private enum Option
     {
@@ -100,7 +100,7 @@ public class DebugPanel : MonoBehaviour
         }
 
         Debug.LogFormat("Entered Command: <b>{0}</b> with parameter <b>{1}</b>", currentOption.ToString(), fieldText);
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     private void SetCurrentOption(Option option, bool isOn)
