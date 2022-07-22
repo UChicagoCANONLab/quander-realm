@@ -18,6 +18,7 @@ namespace Wrapper
         public static Action<Game, object> UpdateMinigameSaveData;
         public static Func<Game, string> GetMinigameSaveData;
         public static Func<bool> UpdateRemoteSave;
+        public static Action ClearSaveFile;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;
