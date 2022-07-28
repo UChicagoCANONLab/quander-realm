@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -47,23 +46,21 @@ namespace Wrapper
         private Color nameBGColorListener;
 
         private Character charLeft = Character.None;
-        //private Expression expressionLeft;
         private Animator animatorCharLeft;
 
         private Character charRight = Character.None;
-        //private Expression expressionRight;
         private Animator animatorCharRight;
         
         private string contextImagePath;
         private string tempDialogueText; //todo: refactor this?
 
-        //On main animator
+        // Main animator layer indexes
         private const int contextImagePosLayerIndex = 2;
         private const int contextImageShakeLayerIndex = 3;
         private const int leftCharAnimLayerIndex = 5;
         private const int rightCharAnimLayerIndex = 6;
         
-        //On character animators
+        // Character animator layer indexes
         private const int charAnimExpressionLayerIndex = 2;
         private const int charAnimSpeakingLayerIndex = 3;
 
@@ -108,9 +105,7 @@ namespace Wrapper
         private IEnumerator CloseRoutine()
         {
             animator.SetBool("View/On", false);
-            Debug.Log("CloseRoutine");
             yield return animator.WaitToCompleteAnimation();
-            Debug.Log("Done CloseRoutine");
             gameObject.SetActive(false);
         }
 
@@ -159,6 +154,7 @@ namespace Wrapper
             }
 
             yield return UpdateCharacters(dialogue);
+            yield return ClearNoneCharacters(dialogue);
             InitiateDialogueAnimation(dialogue, step);
 
             yield return Routine.Combine(
@@ -178,7 +174,7 @@ namespace Wrapper
             if (!speakerIsNone && !speakerPresent)
             {
                 if (listenerIsNone)
-                    yield return NewCharacter(dialogue.speaker, Side.Left);     // speaker spawns on the left
+                    yield return NewCharacter(dialogue.speaker, Side.Left); // by default, speaker spawns on the left
                 else
                 {
                     // choose which side the SPEAKER spawns based on where the listener is
@@ -197,7 +193,7 @@ namespace Wrapper
             if (!listenerIsNone && !listenerPresent)
             {
                 if (speakerIsNone)
-                    yield return NewCharacter(dialogue.listener, Side.Right);   // listener spawns on the right
+                    yield return NewCharacter(dialogue.listener, Side.Right); // by default, listener spawns on the right
                 else
                 {
                     // choose which side the LISTENER spawns based on where the speaker is
@@ -221,9 +217,7 @@ namespace Wrapper
                 if (animator.GetBool("CharacterLeft/On"))
                 {
                     animator.SetBool("CharacterLeft/On", false);
-                    Debug.Log("NewCharacterLeft");
                     yield return animator.WaitToCompleteAnimation(leftCharAnimLayerIndex);
-                    Debug.Log("Done NewCharacterLeft");
                 }
 
                 charLeft = character;
@@ -240,9 +234,7 @@ namespace Wrapper
                 if (animator.GetBool("CharacterRight/On"))
                 {
                     animator.SetBool("CharacterRight/On", false);
-                    Debug.Log("NewCharacterRight");
                     yield return animator.WaitToCompleteAnimation(rightCharAnimLayerIndex);
-                    Debug.Log("Done NewCharacterRight");
                 }
 
                 charRight = character;
@@ -292,13 +284,11 @@ namespace Wrapper
                 }
             }
 
-            Debug.Log("UpdateHighlight");
             if (animatorCharLeft != null)
                 yield return animatorCharLeft.WaitToCompleteAnimation(charAnimSpeakingLayerIndex);
 
             if (animatorCharRight != null)
                 yield return animatorCharRight.WaitToCompleteAnimation(charAnimSpeakingLayerIndex);
-            Debug.Log("Done UpdateHighlight");
         }
 
         private IEnumerator UpdateExpressions(Dialogue dialogue)
@@ -321,13 +311,11 @@ namespace Wrapper
                     animatorCharRight.SetInteger("Expression", (int)dialogue.speakerExpression);
             }
 
-            Debug.Log("UpdateExpression");
             if (animatorCharLeft != null)
                 yield return animatorCharLeft.WaitToCompleteAnimation(charAnimExpressionLayerIndex);
 
             if (animatorCharRight != null)
                 yield return animatorCharRight.WaitToCompleteAnimation(charAnimExpressionLayerIndex);
-            Debug.Log("Done UpdateExpression");
         }
 
         private IEnumerator UpdateContextImage(Dialogue dialogue)
@@ -349,11 +337,9 @@ namespace Wrapper
 
             animator.SetBool("ContextImage/On", true);
 
-            Debug.Log("UpdateContext");
             yield return Routine.Combine(
                 animator.WaitToCompleteAnimation(contextImagePosLayerIndex),
                 animator.WaitToCompleteAnimation(contextImageShakeLayerIndex));
-            Debug.Log("Done UpdateContext");
         }
 
         /// <summary>
@@ -421,6 +407,18 @@ namespace Wrapper
                 side = Side.Right;
 
             return side;
+        }
+
+        private IEnumerator ClearNoneCharacters(Dialogue dialogue)
+        {
+            if (charLeft != dialogue.speaker && charLeft != dialogue.listener)
+                animator.SetBool("CharacterLeft/On", false);
+
+            if (charRight != dialogue.speaker && charRight != dialogue.listener)
+                animator.SetBool("CharacterRight/On", false);
+            
+            yield return animator.WaitToCompleteAnimation(leftCharAnimLayerIndex);
+            yield return animator.WaitToCompleteAnimation(rightCharAnimLayerIndex);
         }
     }
 }
