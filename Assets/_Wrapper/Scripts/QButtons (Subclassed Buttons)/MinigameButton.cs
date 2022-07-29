@@ -7,6 +7,8 @@ namespace Wrapper
 
         protected override void OnClickedHandler()
         {
+            base.OnClickedHandler();
+
             Events.OpenMinigame?.Invoke(minigame);
         }
     }

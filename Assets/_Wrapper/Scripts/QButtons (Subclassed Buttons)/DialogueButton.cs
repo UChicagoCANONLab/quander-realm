@@ -26,6 +26,8 @@ namespace Wrapper
 
         protected override void OnClickedHandler()
         {
+            base.OnClickedHandler();
+
             Events.ChangeDialogue?.Invoke((int)step);
         }
     }

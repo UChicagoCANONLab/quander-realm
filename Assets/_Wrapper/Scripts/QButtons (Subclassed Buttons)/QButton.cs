@@ -12,7 +12,7 @@ namespace Wrapper
 
         protected virtual void OnClickedHandler()
         {
-
+            Events.PlaySound("ButtonClick");
         }
     }
 }

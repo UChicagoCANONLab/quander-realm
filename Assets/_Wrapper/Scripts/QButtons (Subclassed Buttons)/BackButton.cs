@@ -6,6 +6,8 @@ namespace Wrapper
     {
         protected override void OnClickedHandler()
         {
+            base.OnClickedHandler();
+
             if (SceneManager.GetActiveScene().buildIndex == 0)
                 return;
 
