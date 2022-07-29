@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Wrapper
 {
@@ -24,9 +25,9 @@ namespace Wrapper
             interactable = isOn;
         }
 
-        protected override void OnClickedHandler()
+        public override void OnPointerClick(PointerEventData eventData)
         {
-            base.OnClickedHandler();
+            base.OnPointerClick(eventData);
 
             Events.ChangeDialogue?.Invoke((int)step);
         }

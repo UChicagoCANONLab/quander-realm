@@ -148,6 +148,7 @@ namespace Wrapper
         /// </summary>
         private IEnumerator SwitchCardsRoutine(JournalPage newPage)
         {
+            Events.PlaySound("PageFlip");
             animator.SetTrigger(GetPageFlipTrigger(newPage));
             yield return animator.WaitToCompleteAnimation(3);
 
