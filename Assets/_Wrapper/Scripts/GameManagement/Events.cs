@@ -18,6 +18,7 @@ namespace Wrapper
         public static Action<Game, object> UpdateMinigameSaveData;
         public static Func<Game, string> GetMinigameSaveData;
         public static Func<bool> UpdateRemoteSave;
+        public static Action ClearSaveFile;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;
@@ -40,6 +41,11 @@ namespace Wrapper
         public static Action UnselectAllCards;
         public static Action<JournalPage> UpdateTab;
         public static Action<Game, int> CollectAndDisplayReward;
+
+        /// Audio System ///
+        public static Action<string> PlayMusic;
+        public static Action StopMusic;
+        public static Action<string> PlaySound;
 
         /// Debug ///
         public static Action<string> BBGotoLevel;

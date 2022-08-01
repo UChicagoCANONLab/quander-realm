@@ -17,7 +17,7 @@ namespace Wrapper
 
         [SerializeField] private float loadingToggleDelay = 0.5f;
         [SerializeField] private GameObject loginScreen;
-        [SerializeField] private GameObject debugPanel;
+        [SerializeField] private GameObject debugScreen;
         [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private GameObject loadingScreenPrefab;
@@ -32,8 +32,9 @@ namespace Wrapper
             InitSingleton();
             InitRewardAssetArray();
             Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?
-            debugButton.onClick.AddListener(() => debugPanel.SetActive(!(debugPanel.activeInHierarchy))); //todo: debug, delete later
+            debugButton.onClick.AddListener(() => debugScreen.SetActive(!(debugScreen.activeInHierarchy))); //todo: debug, delete later
             Input.multiTouchEnabled = false;
+            Events.PlayMusic("WrapperTheme");
         }
 
         private void Start()
