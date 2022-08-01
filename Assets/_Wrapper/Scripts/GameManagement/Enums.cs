@@ -75,4 +75,11 @@ namespace Wrapper
         Featured,
         InJournal
     };
+
+    /// Audio ///
+    public enum AudioType
+    {
+        Music,
+        SFX
+    }
 }

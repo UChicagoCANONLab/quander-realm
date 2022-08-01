@@ -593,7 +593,7 @@ GameObject:
   - component: {fileID: 3228915677516427245}
   - component: {fileID: 7553748830377134025}
   - component: {fileID: 3245798370933010491}
-  - component: {fileID: 3431898354662363492}
+  - component: {fileID: 4582405812110377841}
   m_Layer: 5
   m_Name: Reward
   m_TagString: Untagged
@@ -657,7 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7553748830377134025}
-  button: {fileID: 3431898354662363492}
+  button: {fileID: 4582405812110377841}
   cardTypeTextFront: {fileID: 3228915679265441537}
   cardTypeColorFront: {fileID: 3228915679268625449}
   titleFront: {fileID: 3228915679279405508}
@@ -668,7 +668,7 @@ MonoBehaviour:
   titleBack: {fileID: 3847567266045375147}
   backText: {fileID: 2039508811467544421}
   game: 0
---- !u!114 &3431898354662363492
+--- !u!114 &4582405812110377841
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -677,7 +677,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3228915677516427250}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: f5199c6fd9a0c6a46a9216da59e1a6db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -712,6 +712,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  audioName: RewardCardClick
 --- !u!1 &3228915677863135632
 GameObject:
   m_ObjectHideFlags: 0
@@ -2339,7 +2340,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1493630674337717048}
-  - component: {fileID: 4065189559849884811}
+  - component: {fileID: 8089363089818238209}
   - component: {fileID: 7273552629819626801}
   m_Layer: 5
   m_Name: Container
@@ -2370,7 +2371,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4065189559849884811
+--- !u!114 &8089363089818238209
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2379,7 +2380,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5907062103198293797}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: f5199c6fd9a0c6a46a9216da59e1a6db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -2414,6 +2415,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  audioName: 
 --- !u!225 &7273552629819626801
 CanvasGroup:
   m_ObjectHideFlags: 0
