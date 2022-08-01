@@ -34,6 +34,7 @@ namespace Wrapper
             Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?
             debugButton.onClick.AddListener(() => debugScreen.SetActive(!(debugScreen.activeInHierarchy))); //todo: debug, delete later
             Input.multiTouchEnabled = false;
+            Events.PlayMusic("WrapperTheme");
         }
 
         private void Start()

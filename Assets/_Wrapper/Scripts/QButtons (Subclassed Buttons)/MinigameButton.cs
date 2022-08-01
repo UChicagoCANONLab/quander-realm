@@ -1,3 +1,4 @@
+using UnityEngine.EventSystems;
 
 namespace Wrapper
 {
@@ -5,8 +6,10 @@ namespace Wrapper
     {
         public Minigame minigame;
 
-        protected override void OnClickedHandler()
+        public override void OnPointerClick(PointerEventData eventData)
         {
+            base.OnPointerClick(eventData);
+
             Events.OpenMinigame?.Invoke(minigame);
         }
     }

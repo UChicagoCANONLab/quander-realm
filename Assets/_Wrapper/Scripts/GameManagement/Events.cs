@@ -42,6 +42,11 @@ namespace Wrapper
         public static Action<JournalPage> UpdateTab;
         public static Action<Game, int> CollectAndDisplayReward;
 
+        /// Audio System ///
+        public static Action<string> PlayMusic;
+        public static Action StopMusic;
+        public static Action<string> PlaySound;
+
         /// Debug ///
         public static Action<string> BBGotoLevel;
         public static Action BBToggleDebug;
