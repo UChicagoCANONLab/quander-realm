@@ -85,7 +85,7 @@ namespace BlackBox
         private void OnDisable()
         {
             BBEvents.GotoLevel -= NextLevel; // Debug
-            BBEvents.IsDebug += GetDebugBool; // Debug
+            BBEvents.IsDebug -= GetDebugBool; // Debug
             BBEvents.ToggleDebug -= ToggleDebug; // Debug
             BBEvents.StartNextLevel -= NextLevel;
             BBEvents.CheckWinState -= CheckWinState;

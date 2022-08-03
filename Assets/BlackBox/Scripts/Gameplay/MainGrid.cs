@@ -26,7 +26,7 @@ namespace BlackBox
         {
             BBEvents.FireRay -= FireRay;
             BBEvents.ToggleFlag -= ToggleFlag;            
-            BBEvents.ClearMarkers += ResetEnergy; // Debug
+            BBEvents.ClearMarkers -= ResetEnergy; // Debug
         }
 
         public void Create(int width, int height, int numEnergyUnits)
