@@ -14,7 +14,6 @@ namespace Wrapper
         /// Save System ///
         public static Action<string> SubmitResearchCode;
         public static Action<LoginStatus> UpdateLoginStatus;
-        public static Action<string> AddReward;
         public static Action<Game, object> UpdateMinigameSaveData;
         public static Func<Game, string> GetMinigameSaveData;
         public static Func<bool> UpdateRemoteSave;
@@ -32,6 +31,7 @@ namespace Wrapper
         public static Action<bool> TogglePreviousButton;
 
         /// Reward System ///
+        public static Action<string> AddReward;
         public static Func<string, bool> IsRewardUnlocked;
         public static Action<JournalPage> OpenJournalPage;
         public static Action<string> FeatureCard;

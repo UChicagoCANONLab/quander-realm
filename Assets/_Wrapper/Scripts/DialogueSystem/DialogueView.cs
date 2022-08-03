@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using BeauRoutine;
 using System.Collections;
+using System;
 
 namespace Wrapper
 {
@@ -94,6 +95,8 @@ namespace Wrapper
         {
             dialogueBody.text = "";
             animator.SetBool("View/On", true);
+            SwitchNextButton(false);
+            Events.TogglePreviousButton?.Invoke(false);
             UpdateView(dialogue);
         }
 
@@ -153,8 +156,8 @@ namespace Wrapper
                 yield break;
             }
 
-            yield return UpdateCharacters(dialogue);
             yield return ClearNoneCharacters(dialogue);
+            yield return UpdateCharacters(dialogue);
             InitiateDialogueAnimation(dialogue, step);
 
             yield return Routine.Combine(
@@ -168,8 +171,8 @@ namespace Wrapper
             bool speakerIsNone = dialogue.speaker == Character.None;
             bool listenerIsNone = dialogue.listener == Character.None;
 
-            bool speakerPresent = IsCharacterInView(dialogue.speaker) != Side.None;
-            bool listenerPresent = IsCharacterInView(dialogue.listener) != Side.None;
+            bool speakerPresent = dialogue.speaker == charLeft || dialogue.speaker == charRight;
+            bool listenerPresent = dialogue.listener == charLeft || dialogue.listener == charRight;
             
             if (!speakerIsNone && !speakerPresent)
             {
@@ -177,14 +180,14 @@ namespace Wrapper
                     yield return NewCharacter(dialogue.speaker, Side.Left); // by default, speaker spawns on the left
                 else
                 {
-                    // choose which side the SPEAKER spawns based on where the listener is
-                    switch (IsCharacterInView(dialogue.listener))
+                    switch (GetCharacterPosition(dialogue.listener))
                     {
                         case Side.Left:                                                 // listener on the left
                             yield return NewCharacter(dialogue.speaker, Side.Right);    // speaker spawns on the right
                             break;
                         case Side.Right:                                                // listener on the right
-                            yield return NewCharacter(dialogue.speaker, Side.Left);     // speaker spawns on the left
+                        default:
+                            yield return NewCharacter(dialogue.speaker, Side.Left);     // by default, speaker spawns on the left
                             break;
                     }
                 }
@@ -197,13 +200,14 @@ namespace Wrapper
                 else
                 {
                     // choose which side the LISTENER spawns based on where the speaker is
-                    switch (IsCharacterInView(dialogue.speaker))
+                    switch (GetCharacterPosition(dialogue.speaker))
                     {
                         case Side.Right:                                                // speaker on the right
                             yield return NewCharacter(dialogue.listener, Side.Left);    // listener spawns on the left
                             break;
                         case Side.Left:                                                 // speaker on the left
-                            yield return NewCharacter(dialogue.listener, Side.Right);   // listener spawns on the right
+                        default:
+                            yield return NewCharacter(dialogue.listener, Side.Right);   // by default, listener spawns on the right
                             break;
                     }
                 }
@@ -293,7 +297,6 @@ namespace Wrapper
 
         private IEnumerator UpdateExpressions(Dialogue dialogue)
         {
-
             if (dialogue.speaker == charLeft)
             {
                 if (dialogue.speaker != Character.None)
@@ -397,7 +400,7 @@ namespace Wrapper
                 Destroy(child.gameObject);
         }
 
-        private Side IsCharacterInView(Character character)
+        private Side GetCharacterPosition(Character character)
         {
             Side side = Side.None;
 
@@ -411,14 +414,29 @@ namespace Wrapper
 
         private IEnumerator ClearNoneCharacters(Dialogue dialogue)
         {
-            if (charLeft != dialogue.speaker && charLeft != dialogue.listener)
+            if (charLeft != dialogue.speaker && charLeft != dialogue.listener && 
+                animator.GetBool("CharacterLeft/On"))
+            {
                 animator.SetBool("CharacterLeft/On", false);
+                yield return animator.WaitToCompleteAnimation(leftCharAnimLayerIndex);
 
-            if (charRight != dialogue.speaker && charRight != dialogue.listener)
+                charLeft = Character.None;
+                //ClearChildren(charMountLeft);
+                charNameTextLeft.text = "";
+                animatorCharLeft = null;
+            }
+
+            if (charRight != dialogue.speaker && charRight != dialogue.listener &&
+                animator.GetBool("CharacterRight/On"))
+            {
                 animator.SetBool("CharacterRight/On", false);
-            
-            yield return animator.WaitToCompleteAnimation(leftCharAnimLayerIndex);
-            yield return animator.WaitToCompleteAnimation(rightCharAnimLayerIndex);
+                yield return animator.WaitToCompleteAnimation(rightCharAnimLayerIndex);
+
+                charRight = Character.None;
+                //ClearChildren(charMountRight);
+                charNameTextRight.text = "";
+                animatorCharRight = null;
+            }
         }
     }
 }
