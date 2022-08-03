@@ -45,7 +45,7 @@ public class DebugScreen : MonoBehaviour
 
     private void OnDisable()
     {
-        Application.logMessageReceived += UpdateLog;
+        Application.logMessageReceived -= UpdateLog;
     }
 
     private void UpdateLog(string condition, string stackTrace, LogType type)
