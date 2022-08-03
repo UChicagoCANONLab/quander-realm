@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using BeauRoutine;
 using System.Collections;
+using System;
 
 namespace Wrapper
 {
@@ -46,24 +46,22 @@ namespace Wrapper
         private Color nameBGColorSpeaker = Color.white;
         private Color nameBGColorListener;
 
-        private Character charLeft;
-        private Expression expressionLeft;
+        private Character charLeft = Character.None;
         private Animator animatorCharLeft;
 
-        private Character charRight;
-        private Expression expressionRight;
+        private Character charRight = Character.None;
         private Animator animatorCharRight;
         
         private string contextImagePath;
         private string tempDialogueText; //todo: refactor this?
 
-        //On main animator
+        // Main animator layer indexes
         private const int contextImagePosLayerIndex = 2;
         private const int contextImageShakeLayerIndex = 3;
         private const int leftCharAnimLayerIndex = 5;
         private const int rightCharAnimLayerIndex = 6;
         
-        //On character animators
+        // Character animator layer indexes
         private const int charAnimExpressionLayerIndex = 2;
         private const int charAnimSpeakingLayerIndex = 3;
 
@@ -97,7 +95,7 @@ namespace Wrapper
         {
             dialogueBody.text = "";
             animator.SetBool("View/On", true);
-            Routine.Start(InitCharacters(dialogue));
+            SwitchNextButton(false);
             UpdateView(dialogue);
         }
 
@@ -108,6 +106,7 @@ namespace Wrapper
 
         private IEnumerator CloseRoutine()
         {
+            Events.TogglePreviousButton?.Invoke(false);
             animator.SetBool("View/On", false);
             yield return animator.WaitToCompleteAnimation();
             gameObject.SetActive(false);
@@ -116,42 +115,6 @@ namespace Wrapper
         #endregion
 
         #region Initialization
-
-        private IEnumerator InitCharacters(Dialogue dialogue)
-        {
-            // if switching characters mid-sequence
-            if (animator.GetBool("CharacterLeft/On") && animator.GetBool("CharacterRight/On"))
-            {
-                animator.SetBool("CharacterLeft/On", false);
-                animator.SetBool("CharacterRight/On", false);
-
-                yield return animator.WaitToCompleteAnimation(leftCharAnimLayerIndex);
-                yield return animator.WaitToCompleteAnimation(rightCharAnimLayerIndex);
-            }
-
-            //on init, start with initial speaker on the left, initial listener on the right
-            charLeft = dialogue.speaker;
-            charRight = dialogue.listener;
-
-            ClearChildren(charMountLeft);
-            ClearChildren(charMountRight);
-
-            charNameTextLeft.text = dialogue.speaker.ToString().Replace("_", " ");
-            charNameTextRight.text = dialogue.listener.ToString().Replace("_", " ");
-
-            GameObject charLeftGO = Instantiate(charDictionary[dialogue.speaker], charMountLeft.transform);
-            GameObject charRightGO = Instantiate(charDictionary[dialogue.listener], charMountRight.transform);
-
-            animator.SetBool("CharacterLeft/On", true);
-            animator.SetBool("CharacterRight/On", true);
-
-            animatorCharLeft = charLeftGO.GetComponentInChildren<Animator>();
-            animatorCharRight = charRightGO.GetComponentInChildren<Animator>();
-
-            animatorCharLeft.SetBool("Speaking", false);
-            animatorCharRight.SetBool("Speaking", false);
-            animatorCharRight.SetBool("CharacterRight", true);
-        }
 
         private void InitCharacterDictionary()
         {
@@ -193,38 +156,61 @@ namespace Wrapper
                 yield break;
             }
 
+            yield return ClearNoneCharacters(dialogue);
             yield return UpdateCharacters(dialogue);
             InitiateDialogueAnimation(dialogue, step);
-            yield return Routine.Combine
-            (
-                UpdateExpressions(dialogue),
-                UpdateContextImage(dialogue),
-                UpdateSpeakerHighlight(dialogue)
-            );
+
+            yield return Routine.Combine(
+                UpdateExpressions(dialogue), 
+                UpdateContextImage(dialogue), 
+                UpdateSpeakerHighlight(dialogue));
         }
 
         private IEnumerator UpdateCharacters(Dialogue dialogue)
         {
-            // If both characters are already present, return
-            if (IsCharacterInView(dialogue.speaker) != Side.None && IsCharacterInView(dialogue.listener) != Side.None)
-                yield break;
+            bool speakerIsNone = dialogue.speaker == Character.None;
+            bool listenerIsNone = dialogue.listener == Character.None;
 
-            // Otherwise, we need to replace one or both characters
-            if (IsCharacterInView(dialogue.speaker) == Side.None && IsCharacterInView(dialogue.listener) == Side.None) // replace both
-                yield return InitCharacters(dialogue);
-            else
+            bool speakerPresent = dialogue.speaker == charLeft || dialogue.speaker == charRight;
+            bool listenerPresent = dialogue.listener == charLeft || dialogue.listener == charRight;
+            
+            if (!speakerIsNone && !speakerPresent)
             {
-                if (IsCharacterInView(dialogue.speaker) == Side.Left) // speaker is on the left
-                    yield return NewCharacter(dialogue.listener, Side.Right); // new char on right
+                if (listenerIsNone)
+                    yield return NewCharacter(dialogue.speaker, Side.Left); // by default, speaker spawns on the left
+                else
+                {
+                    switch (GetCharacterPosition(dialogue.listener))
+                    {
+                        case Side.Left:                                                 // listener on the left
+                            yield return NewCharacter(dialogue.speaker, Side.Right);    // speaker spawns on the right
+                            break;
+                        case Side.Right:                                                // listener on the right
+                        default:
+                            yield return NewCharacter(dialogue.speaker, Side.Left);     // by default, speaker spawns on the left
+                            break;
+                    }
+                }
+            }
 
-                else if (IsCharacterInView(dialogue.speaker) == Side.Right) // speaker is on the right
-                    yield return NewCharacter(dialogue.listener, Side.Left); // new char on left
-
-                else if (IsCharacterInView(dialogue.listener) == Side.Left) // listener is on the left
-                    yield return NewCharacter(dialogue.speaker, Side.Right); // new char on the right
-                
-                else if (IsCharacterInView(dialogue.listener) == Side.Right) // listener is on the right
-                    yield return NewCharacter(dialogue.speaker, Side.Left); // new char on the left
+            if (!listenerIsNone && !listenerPresent)
+            {
+                if (speakerIsNone)
+                    yield return NewCharacter(dialogue.listener, Side.Right); // by default, listener spawns on the right
+                else
+                {
+                    // choose which side the LISTENER spawns based on where the speaker is
+                    switch (GetCharacterPosition(dialogue.speaker))
+                    {
+                        case Side.Right:                                                // speaker on the right
+                            yield return NewCharacter(dialogue.listener, Side.Left);    // listener spawns on the left
+                            break;
+                        case Side.Left:                                                 // speaker on the left
+                        default:
+                            yield return NewCharacter(dialogue.listener, Side.Right);   // by default, listener spawns on the right
+                            break;
+                    }
+                }
             }
         }
 
@@ -232,8 +218,11 @@ namespace Wrapper
         {
             if (side == Side.Left)
             {
-                animator.SetBool("CharacterLeft/On", false);
-                yield return animator.WaitToCompleteAnimation(leftCharAnimLayerIndex);
+                if (animator.GetBool("CharacterLeft/On"))
+                {
+                    animator.SetBool("CharacterLeft/On", false);
+                    yield return animator.WaitToCompleteAnimation(leftCharAnimLayerIndex);
+                }
 
                 charLeft = character;
                 ClearChildren(charMountLeft);
@@ -246,8 +235,11 @@ namespace Wrapper
             }
             else
             {
-                animator.SetBool("CharacterRight/On", false);
-                yield return animator.WaitToCompleteAnimation(rightCharAnimLayerIndex);
+                if (animator.GetBool("CharacterRight/On"))
+                {
+                    animator.SetBool("CharacterRight/On", false);
+                    yield return animator.WaitToCompleteAnimation(rightCharAnimLayerIndex);
+                }
 
                 charRight = character;
                 ClearChildren(charMountRight);
@@ -265,50 +257,68 @@ namespace Wrapper
         {
             if (dialogue.speaker == charLeft)
             {
-                animatorCharLeft.SetBool("Speaking", true);
-                charNameTextLeft.color = nameTextColorSpeaker;
-                charNameBGLeft.color = nameBGColorSpeaker;
-                
-                animatorCharRight.SetBool("Speaking", false);
-                charNameTextRight.color = nameTextColorListener;
-                charNameBGRight.color = nameBGColorListener;          
+                if (dialogue.speaker != Character.None)
+                {
+                    animatorCharLeft.SetBool("Speaking", true);
+                    charNameTextLeft.color = nameTextColorSpeaker;
+                    charNameBGLeft.color = nameBGColorSpeaker;
+                }
+
+                if (dialogue.listener != Character.None)
+                {
+                    animatorCharRight.SetBool("Speaking", false);
+                    charNameTextRight.color = nameTextColorListener;
+                    charNameBGRight.color = nameBGColorListener;
+                }
             }
             else
             {
-                animatorCharRight.SetBool("Speaking", true);
-                charNameTextRight.color = nameTextColorSpeaker;
-                charNameBGRight.color = nameBGColorSpeaker;
+                if (dialogue.speaker != Character.None)
+                {
+                    animatorCharRight.SetBool("Speaking", true);
+                    charNameTextRight.color = nameTextColorSpeaker;
+                    charNameBGRight.color = nameBGColorSpeaker;
+                }
 
-                animatorCharLeft.SetBool("Speaking", false);
-                charNameTextLeft.color = nameTextColorListener;
-                charNameBGLeft.color = nameBGColorListener;
+                if (dialogue.listener != Character.None)
+                {
+                    animatorCharLeft.SetBool("Speaking", false);
+                    charNameTextLeft.color = nameTextColorListener;
+                    charNameBGLeft.color = nameBGColorListener;
+                }
             }
 
-            yield return animatorCharLeft.WaitToCompleteAnimation(charAnimSpeakingLayerIndex);
-            yield return animatorCharRight.WaitToCompleteAnimation(charAnimSpeakingLayerIndex);            
+            if (animatorCharLeft != null)
+                yield return animatorCharLeft.WaitToCompleteAnimation(charAnimSpeakingLayerIndex);
+
+            if (animatorCharRight != null)
+                yield return animatorCharRight.WaitToCompleteAnimation(charAnimSpeakingLayerIndex);
         }
 
         private IEnumerator UpdateExpressions(Dialogue dialogue)
         {
             if (dialogue.speaker == charLeft)
             {
-                animatorCharLeft.SetInteger("Expression", (int)dialogue.speakerExpression);
-                expressionLeft = dialogue.speakerExpression;
+                if (dialogue.speaker != Character.None)
+                    animatorCharLeft.SetInteger("Expression", (int)dialogue.speakerExpression);
 
-                animatorCharRight.SetInteger("Expression", (int)dialogue.listenerExpression);
-                expressionRight = dialogue.listenerExpression;
+                if (dialogue.listener != Character.None)
+                    animatorCharRight.SetInteger("Expression", (int)dialogue.listenerExpression);
             }
             else
             {
-                animatorCharLeft.SetInteger("Expression", (int)dialogue.listenerExpression);
-                expressionLeft = dialogue.listenerExpression;
+                if (dialogue.listener != Character.None)
+                    animatorCharLeft.SetInteger("Expression", (int)dialogue.listenerExpression);
 
-                animatorCharRight.SetInteger("Expression", (int)dialogue.speakerExpression);
-                expressionRight = dialogue.speakerExpression;
+                if (dialogue.speaker != Character.None)
+                    animatorCharRight.SetInteger("Expression", (int)dialogue.speakerExpression);
             }
 
-            yield return animatorCharLeft.WaitToCompleteAnimation(charAnimExpressionLayerIndex);
-            yield return animatorCharRight.WaitToCompleteAnimation(charAnimExpressionLayerIndex);
+            if (animatorCharLeft != null)
+                yield return animatorCharLeft.WaitToCompleteAnimation(charAnimExpressionLayerIndex);
+
+            if (animatorCharRight != null)
+                yield return animatorCharRight.WaitToCompleteAnimation(charAnimExpressionLayerIndex);
         }
 
         private IEnumerator UpdateContextImage(Dialogue dialogue)
@@ -329,11 +339,10 @@ namespace Wrapper
             contextImage.sprite = sprite;
 
             animator.SetBool("ContextImage/On", true);
-            yield return Routine.Combine
-            (
+
+            yield return Routine.Combine(
                 animator.WaitToCompleteAnimation(contextImagePosLayerIndex),
-                animator.WaitToCompleteAnimation(contextImageShakeLayerIndex)
-            );
+                animator.WaitToCompleteAnimation(contextImageShakeLayerIndex));
         }
 
         /// <summary>
@@ -391,7 +400,7 @@ namespace Wrapper
                 Destroy(child.gameObject);
         }
 
-        private Side IsCharacterInView(Character character)
+        private Side GetCharacterPosition(Character character)
         {
             Side side = Side.None;
 
@@ -401,6 +410,34 @@ namespace Wrapper
                 side = Side.Right;
 
             return side;
+        }
+
+        private IEnumerator ClearNoneCharacters(Dialogue dialogue)
+        {
+            bool clearLeft = false;
+            bool clearRight = false;
+
+            if (charLeft != dialogue.speaker && charLeft != dialogue.listener && animator.GetBool("CharacterLeft/On"))
+            {
+                clearLeft = true;
+                animator.SetBool("CharacterLeft/On", false);
+                charLeft = Character.None;
+                charNameTextLeft.text = "";
+                animatorCharLeft = null;
+            }
+
+            if (charRight != dialogue.speaker && charRight != dialogue.listener && animator.GetBool("CharacterRight/On"))
+            {
+                clearRight = true;
+                animator.SetBool("CharacterRight/On", false);
+                charRight = Character.None;
+                charNameTextRight.text = "";
+                animatorCharRight = null;
+            }
+
+            yield return Routine.Combine(
+                animator.WaitToCompleteAnimation(leftCharAnimLayerIndex),
+                animator.WaitToCompleteAnimation(rightCharAnimLayerIndex));
         }
     }
 }
