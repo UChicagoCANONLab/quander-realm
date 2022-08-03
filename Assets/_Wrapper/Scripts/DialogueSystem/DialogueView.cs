@@ -96,7 +96,6 @@ namespace Wrapper
             dialogueBody.text = "";
             animator.SetBool("View/On", true);
             SwitchNextButton(false);
-            Events.TogglePreviousButton?.Invoke(false);
             UpdateView(dialogue);
         }
 
@@ -107,6 +106,7 @@ namespace Wrapper
 
         private IEnumerator CloseRoutine()
         {
+            Events.TogglePreviousButton?.Invoke(false);
             animator.SetBool("View/On", false);
             yield return animator.WaitToCompleteAnimation();
             gameObject.SetActive(false);
