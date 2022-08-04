@@ -62,6 +62,8 @@ namespace Qupcakery
         public void CreateNewGame()
         {
             game = new Game();
+            // Set up tutorial
+            TutorialManager.UpdateAvailability();
         }
 
         // A game instance has been created

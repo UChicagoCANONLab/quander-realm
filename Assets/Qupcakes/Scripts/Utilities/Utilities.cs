@@ -8,23 +8,10 @@ namespace Qupcakery
     {
         public static List<Sprite> helpMenuSprites = new List<Sprite> { };
 
-        // Tutorial Management
-        public static SortedList<int, List<Sprite>> tutorialSprites = new SortedList<int, List<Sprite>>();
-        public static List<int> completedTutorials = new List<int>();
-
         // Add levels that have tutorials
-        // TODO: refactor help, remove tutorials
         public static void InitializeTutorialAndHelpMenu()
         {
             LoadSprites(helpMenuSprites, "Sprites/Help");
-
-            int[] tutorialLevelNum = {};
-            foreach (int i in tutorialLevelNum)
-            {
-                LoadTutorialSprites(i);
-            }
-
-            completedTutorials.Clear();
         }
 
         static void LoadSprites(List<Sprite> list, string folder)
@@ -34,12 +21,6 @@ namespace Qupcakery
             {
                 list.Add(obj);
             }
-        }
-
-        static void LoadTutorialSprites(int tutorialLevel)
-        {
-            tutorialSprites.Add(tutorialLevel, new List<Sprite>());
-            LoadSprites(tutorialSprites[tutorialLevel], "Sprites/Tutorial/Level" + tutorialLevel.ToString());
         }
 
         public static string GetStringFrom2DIntArray(int[,] arr, int rowCnt, int colCnt)

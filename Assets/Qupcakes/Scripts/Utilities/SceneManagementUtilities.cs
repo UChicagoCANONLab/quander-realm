@@ -14,6 +14,18 @@ namespace Qupcakery
         public static void LoadGameScene()
         {
             SceneManager.LoadScene("Level");
+            // If tutorial available, start tutorial sequence
+            int levelInd = GameManagement.Instance.game.CurrLevelInd;
+            if (TutorialManager.tutorialAvailable[levelInd])
+            {
+                if (levelInd == 1)
+                {
+                    Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level0");
+                    TutorialManager.UpdateAvailability(0);
+                }
+                Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level"+levelInd.ToString());
+                TutorialManager.UpdateAvailability(levelInd);
+            }
         }
 
         public static void LoadHomePage()
@@ -24,7 +36,6 @@ namespace Qupcakery
         public static void LoadModeSelectionScene()
         {
             // SceneManager.LoadScene("ModeSelection");
-            // #IMPORTANT: temporary change for quantime
             SceneManager.LoadScene("LevelSelection");
         }
 

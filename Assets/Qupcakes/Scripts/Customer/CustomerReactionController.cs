@@ -12,11 +12,6 @@ namespace Qupcakery
 {
     public class CustomerReactionController : MonoBehaviour
     {
-        public enum Situation
-        {
-            Waiting, ReceivedCake, PatienceRunOut, Done
-        }
-
         private enum Expression
         {
             Happy, Sad
@@ -33,8 +28,6 @@ namespace Qupcakery
 
         [SerializeField]
         private CustomerReactionData reactionData;
-        private Situation customerStatus = Situation.Waiting;
-
         private GameObject cakeBox;
         private int customerOrder;
 
@@ -75,7 +68,6 @@ namespace Qupcakery
                 PrepareCustomerToLeave(gameObject);
             }
 
-            customerStatus = Situation.Done;
             OnReactionEnded();
         }
 
@@ -87,7 +79,6 @@ namespace Qupcakery
                 new WaitForSeconds(reactionData.WaitTimeAfterSpawningExpression);
             PrepareCustomerToLeave(gameObject);
 
-            customerStatus = Situation.Done;
             OnReactionEnded();
         }
 
@@ -97,14 +88,12 @@ namespace Qupcakery
             Debug.Log("recevived result!");
             if (!gameObject.activeSelf) return;
 
-            customerStatus = Situation.ReceivedCake;
             StartCoroutine(ProcessReceivedCake(results[customerManager.BeltInd]));
         }
 
         // Event listener - once patience runs out
         public void OnPatienceEnded()
         {
-            customerStatus = Situation.PatienceRunOut;
             StartCoroutine(ProcessPatienceRunOut());
         }
 
@@ -129,26 +118,6 @@ namespace Qupcakery
                 .SetMeasuredCakeType(measuredCakeType);
             return measuredCakeType;
         }
-
-        //// Checks if the cake box matches order
-        //private bool CompareCakeToOrder(GameCakeType cakeType,
-        //    int order)
-        //{
-        //    GameCakeType orderCakeType = order.GetGameCakeType();
-
-        //    switch (orderCakeType)
-        //    {
-        //        case GameCakeType.Vanilla50_Chocolate50:
-        //            return true;
-        //        case GameCakeType.Vanilla50_Chocolate50_Neg:
-        //            return true;
-        //        default: // Vanilla or Chocolate
-        //            if (orderCakeType == cakeType)
-        //                return true;
-        //            else
-        //                return false;
-        //    }
-        //}
 
         // Deactive patience object, bubble
         // Flip customer-sprite facing direction
