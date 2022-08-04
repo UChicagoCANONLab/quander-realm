@@ -124,7 +124,7 @@ namespace Wrapper
                 { Character.Tangle, tanglePrefab },
                 { Character.Byte, bytePrefab },
                 { Character.Wolfie, wolfiePrefab },
-                { Character.Wayne, waynePrefab },
+                { Character.Wane, waynePrefab },
                 { Character.Fran, franPrefab },
                 { Character.Ken, kenPrefab },
                 { Character.Franken_Twins, franken_twinsPrefab },
