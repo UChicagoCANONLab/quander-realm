@@ -77,6 +77,7 @@ namespace Wrapper
                     break;
                 case DisplayType.CardPopup:
                 default:
+                    button.interactable = false;
                     break;
             }
         }
