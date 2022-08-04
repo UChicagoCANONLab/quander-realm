@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Wrapper
@@ -14,10 +15,10 @@ namespace Wrapper
         /// Save System ///
         public static Action<string> SubmitResearchCode;
         public static Action<LoginStatus> UpdateLoginStatus;
-        public static Action<string> AddReward;
         public static Action<Game, object> UpdateMinigameSaveData;
         public static Func<Game, string> GetMinigameSaveData;
         public static Func<bool> UpdateRemoteSave;
+        public static Action ClearSaveFile;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;
@@ -31,6 +32,7 @@ namespace Wrapper
         public static Action<bool> TogglePreviousButton;
 
         /// Reward System ///
+        public static Func<string, bool> AddReward;
         public static Func<string, bool> IsRewardUnlocked;
         public static Action<JournalPage> OpenJournalPage;
         public static Action<string> FeatureCard;
@@ -40,10 +42,17 @@ namespace Wrapper
         public static Action UnselectAllCards;
         public static Action<JournalPage> UpdateTab;
         public static Action<Game, int> CollectAndDisplayReward;
+        public static Func<RewardAsset, GameObject, DisplayType, GameObject> CreatRewardCard;
+
+        /// Audio System ///
+        public static Action<string> PlayMusic;
+        public static Action StopMusic;
+        public static Action<string> PlaySound;
 
         /// Debug ///
         public static Action<string> BBGotoLevel;
         public static Action BBToggleDebug;
         public static Action BBClearMarkers;
+        public static Action<string> ShowCardPopup;
     }
 }
