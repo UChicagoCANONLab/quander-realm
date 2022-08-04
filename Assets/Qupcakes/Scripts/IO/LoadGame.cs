@@ -50,11 +50,6 @@ namespace Qupcakery
                     GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i, (int)starCnt);
                 }
             }
-            else
-            {
-                // #TODO: modify for non-webgl
-                ResumeButton.GetComponent<ResumeButton>().DeactiveResumeButton();
-            }
         }
     }
 }

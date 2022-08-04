@@ -23,7 +23,7 @@ namespace Qupcakery
                     Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level0");
                     TutorialManager.UpdateAvailability(0);
                 }
-                Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level"+levelInd.ToString());
+                //Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level"+levelInd.ToString());
                 TutorialManager.UpdateAvailability(levelInd);
             }
         }
