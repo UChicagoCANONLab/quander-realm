@@ -10,7 +10,7 @@ namespace Wrapper
         Tangle,
         Byte,
         Wolfie,
-        Wayne,
+        Wane,
         Fran,
         Ken,
         Franken_Twins,
