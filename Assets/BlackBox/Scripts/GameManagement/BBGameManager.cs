@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using Wrapper;
+using BeauRoutine;
 
 namespace BlackBox
 {
@@ -11,6 +13,7 @@ namespace BlackBox
         #region Inspector Variables
 
         [SerializeField] private string firstLevelID = "L01"; // todo: refactor
+        [SerializeField] private float rewardPopupDelay = 0.5f;
 
         [Header("Grid Containers")]
         [SerializeField] private GameObject mainGridGO = null;
@@ -85,7 +88,7 @@ namespace BlackBox
         private void OnDisable()
         {
             BBEvents.GotoLevel -= NextLevel; // Debug
-            BBEvents.IsDebug += GetDebugBool; // Debug
+            BBEvents.IsDebug -= GetDebugBool; // Debug
             BBEvents.ToggleDebug -= ToggleDebug; // Debug
             BBEvents.StartNextLevel -= NextLevel;
             BBEvents.CheckWinState -= CheckWinState;
@@ -181,7 +184,18 @@ namespace BlackBox
             }
 
             WinState winState = new(totalNodes, numCorrect, levelWon, level.number, livesRemaining);
+            Routine.Start(DisplayPlayerFeedBack(winState));
+        }
+
+        private IEnumerator DisplayPlayerFeedBack(WinState winState)
+        {
             BBEvents.UpdateEndPanel?.Invoke(winState);
+
+            if (winState.levelWon)
+            { 
+                yield return rewardPopupDelay;
+                Events.CollectAndDisplayReward?.Invoke(Game.BlackBox, level.number);
+            }
         }
 
         #endregion

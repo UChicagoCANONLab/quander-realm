@@ -23,10 +23,14 @@ namespace Wrapper
         private void ToggleInteractable(bool isOn)
         {
             interactable = isOn;
+            animator.SetTrigger(interactable ? "Normal" : "Disabled");
         }
 
         public override void OnPointerClick(PointerEventData eventData)
         {
+            if (!interactable)
+                return;
+
             base.OnPointerClick(eventData);
 
             Events.ChangeDialogue?.Invoke((int)step);

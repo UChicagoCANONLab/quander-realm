@@ -30,7 +30,7 @@ namespace BlackBox
 
         private void OnDisable()
         {
-            BBEvents.ClearMarkers += InitEnergyBar; // Debug
+            BBEvents.ClearMarkers -= InitEnergyBar; // Debug
             BBEvents.InitEnergyBar -= InitEnergyBar;
             BBEvents.IndicateEmptyMeter -= IndicateEmpty;
             BBEvents.DecrementEnergy -= DecrementEnergy;
