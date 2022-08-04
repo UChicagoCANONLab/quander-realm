@@ -11,6 +11,7 @@ public class DebugScreen : MonoBehaviour
     private enum Option
     {
         Add_Reward,
+        Show_Reward_Popup,
         Toggle_Loading_Scr,
         Open_Dialog,
         Close_Dialog_UI,
@@ -95,6 +96,10 @@ public class DebugScreen : MonoBehaviour
             case Option.Add_Reward:         
                 if (!(string.IsNullOrEmpty(fieldText))) 
                     Events.AddReward?.Invoke(fieldText); 
+                break;
+            case Option.Show_Reward_Popup:
+                if (!(string.IsNullOrEmpty(fieldText))) 
+                    Events.ShowCardPopup?.Invoke(fieldText);
                 break;
             case Option.Open_Dialog:        
                 if (!(string.IsNullOrEmpty(fieldText))) 

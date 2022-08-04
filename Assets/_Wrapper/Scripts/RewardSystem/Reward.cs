@@ -67,10 +67,18 @@ namespace Wrapper
 
         private void SetupButton()
         {
-            if (displayType == DisplayType.Featured)
-                button.onClick.AddListener(() => animator.SetTrigger(triggerFlip));
-            else
-                button.onClick.AddListener(() => Routine.Start(SelectCard()));
+            switch(displayType)
+            {
+                case DisplayType.Featured:
+                    button.onClick.AddListener(() => animator.SetTrigger(triggerFlip));
+                    break;
+                case DisplayType.InJournal:
+                    button.onClick.AddListener(() => Routine.Start(SelectCard()));
+                    break;
+                case DisplayType.CardPopup:
+                default:
+                    break;
+            }
         }
 
         private void SetFrontImage(RewardAsset rAsset)

@@ -73,7 +73,8 @@ namespace Wrapper
     public enum DisplayType
     {
         Featured,
-        InJournal
+        InJournal,
+        CardPopup
     };
 
     /// Audio ///

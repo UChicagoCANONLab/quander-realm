@@ -278,10 +278,12 @@ namespace Wrapper
 
         #region UserSave
 
-        private void AddReward(string rewardID)
+        private bool AddReward(string rewardID)
         {
-            currentUserSave.AddReward(rewardID);
+            bool rewardAdded = currentUserSave.AddReward(rewardID);
             UpdateRemoteSave();
+
+            return rewardAdded;
         }
 
         private bool IsRewardUnlocked(string rewardID)

@@ -414,12 +414,8 @@ namespace Wrapper
 
         private IEnumerator ClearNoneCharacters(Dialogue dialogue)
         {
-            bool clearLeft = false;
-            bool clearRight = false;
-
             if (charLeft != dialogue.speaker && charLeft != dialogue.listener && animator.GetBool("CharacterLeft/On"))
             {
-                clearLeft = true;
                 animator.SetBool("CharacterLeft/On", false);
                 charLeft = Character.None;
                 charNameTextLeft.text = "";
@@ -428,7 +424,6 @@ namespace Wrapper
 
             if (charRight != dialogue.speaker && charRight != dialogue.listener && animator.GetBool("CharacterRight/On"))
             {
-                clearRight = true;
                 animator.SetBool("CharacterRight/On", false);
                 charRight = Character.None;
                 charNameTextRight.text = "";

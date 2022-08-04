@@ -22,16 +22,17 @@ namespace Wrapper
             AddReward(rewardID);
         }
 
-        public void AddReward(string rewardID)
+        public bool AddReward(string rewardID)
         {
             if (rewardID.Equals(string.Empty))
-                return;
+                return false;
 
             string formatted = FormatString(rewardID);
             if (rewards.Contains(formatted))
-                return;
+                return false;
 
             rewards.Add(formatted);
+            return true;
         }
 
         public bool HasReward(string rewardID)
