@@ -19,13 +19,6 @@ namespace Wrapper
         [SerializeField] private GameObject hiddenRewardsMount;
         [SerializeField] private GameObject featuredCardMount;
 
-        [Header("Card Prefabs")]
-        [SerializeField] private GameObject BBRewardPrefab;
-        [SerializeField] private GameObject CTRewardPrefab;
-        [SerializeField] private GameObject LARewardPrefab;
-        [SerializeField] private GameObject QBRewardPrefab;
-        [SerializeField] private GameObject QURewardPrefab;
-
         [Header("Section Tabs")]
         [SerializeField] private GameObject BBTab;
         [SerializeField] private GameObject CTTab;
@@ -38,8 +31,6 @@ namespace Wrapper
         [SerializeField] private Button nextButton;
         [SerializeField] private Toggle[] navDots;
 
-        private Dictionary<CardType, Color> colorDict;
-        private Dictionary<Game, GameObject> prefabDict;
         private Dictionary<Game, JournalSection> journal;
 
         private const string featuredCardParam = "FeaturedCard";
@@ -54,8 +45,6 @@ namespace Wrapper
         void Awake()
         {
             //Events.ToggleLoadingScreen?.Invoke();
-            InitColorDict();
-            InitPrefabDict();
             InitJournal();
             InitPrevNextButtons();
         }
@@ -92,15 +81,16 @@ namespace Wrapper
 
             if (featuredCardMount.transform.childCount == 0)
             {
-                InstantiateFeaturedCard();
+                Routine.Start(DisplayFeaturedCard());
                 return;
             }
 
             animator.SetBool(featuredCardParam, false);
         }
 
-        private void InstantiateFeaturedCard()
+        private IEnumerator DisplayFeaturedCard()
         {
+            featuredCardGO = null;
             foreach (Transform transform in featuredCardMount.transform)
                 Destroy(transform.gameObject);
 
@@ -108,15 +98,12 @@ namespace Wrapper
             if (rAsset == null)
             {
                 Debug.LogErrorFormat("Could not find card {0} to feature", featuredCardID);
-                return;
+                yield break;
             }
 
-            featuredCardGO = CreateCard(rAsset, featuredCardMount, DisplayType.Featured);
-            DisplayNewFeaturedCard();
-        }
+            featuredCardGO = Events.CreatRewardCard?.Invoke(rAsset, featuredCardMount, DisplayType.Featured);
+            yield return Routine.WaitCondition(() => featuredCardGO != null);
 
-        private void DisplayNewFeaturedCard()
-        {
             animator.SetBool(featuredCardParam, true);
             Routine.Start(featuredCardGO.GetComponent<Reward>().UpdateAnimationState());
         }
@@ -188,14 +175,6 @@ namespace Wrapper
 
         #endregion
 
-        private GameObject CreateCard(RewardAsset rAsset, GameObject mount, DisplayType displayType)
-        {
-            GameObject rewardGO = Instantiate(prefabDict[rAsset.game], mount.transform);
-            rewardGO.GetComponent<Reward>().SetContent(rAsset, colorDict[rAsset.cardType], displayType);
-
-            return rewardGO;
-        }
-
         private Toggle GetNavDot(int pageNumber)
         {
             return navDots[pageNumber];
@@ -215,34 +194,6 @@ namespace Wrapper
         }
 
         #region Initialize
-
-        private void InitColorDict()
-        {
-            ColorUtility.TryParseHtmlString("#89d7ff", out Color visualColor);
-            ColorUtility.TryParseHtmlString("#ffe698", out Color charColor);
-            ColorUtility.TryParseHtmlString("#ff8062", out Color conceptColor);
-            ColorUtility.TryParseHtmlString("#97fb9b", out Color compPartColor);
-
-            colorDict = new Dictionary<CardType, Color>
-            {
-                { CardType.Visual, visualColor },
-                { CardType.Character, charColor },
-                { CardType.Concept, conceptColor },
-                { CardType.Computer_Part, compPartColor }
-            };
-        }
-
-        private void InitPrefabDict()
-        {
-            prefabDict = new Dictionary<Game, GameObject>
-            {
-                { Game.BlackBox,  BBRewardPrefab },
-                { Game.Circuits,  CTRewardPrefab },
-                { Game.Labyrinth, LARewardPrefab },
-                { Game.QueueBits, QBRewardPrefab },
-                { Game.Qupcakes,  QURewardPrefab }
-            };
-        }
 
         private void InitJournal()
         {
@@ -274,7 +225,7 @@ namespace Wrapper
         {
             foreach (RewardAsset rAsset in GameManager.Instance.rewardAssets)
             {
-                GameObject rewardGO = CreateCard(rAsset, hiddenRewardsMount, DisplayType.InJournal);
+                GameObject rewardGO = Events.CreatRewardCard(rAsset, hiddenRewardsMount, DisplayType.InJournal);
                 journal[rAsset.game].AddCard(rewardGO);
             }
         }

@@ -5,6 +5,7 @@ namespace Wrapper
     
     public enum Character
     {
+        None,
         Molly,
         Tangle,
         Byte,
@@ -13,8 +14,7 @@ namespace Wrapper
         Fran,
         Ken,
         Franken_Twins,
-        Chef,
-        None
+        Chef
     };
 
     public enum Expression
@@ -35,9 +35,9 @@ namespace Wrapper
 
     public enum Side
     {
+        None,
         Left,
-        Right,
-        None
+        Right
     };
 
     /// Save System ///
@@ -73,7 +73,8 @@ namespace Wrapper
     public enum DisplayType
     {
         Featured,
-        InJournal
+        InJournal,
+        CardPopup
     };
 
     /// Audio ///
