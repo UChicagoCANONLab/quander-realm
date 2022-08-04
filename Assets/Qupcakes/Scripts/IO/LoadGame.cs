@@ -11,11 +11,10 @@ namespace Qupcakery
     public class LoadGame : MonoBehaviour
     {
         public GameObject ResumeButton;
-        
-#if UNITY_WEBGL == true && UNITY_EDITOR == false
+
         [DllImport("__Internal")]
         private static extern void QupcakesGameLoaded(string callback);
-#endif
+
         public static int Load()
         {
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
@@ -33,23 +32,26 @@ namespace Qupcakery
 
             if (data.Length > 0)
             {
-                GameManagement.Instance.CreateNewGame();
+                GameUtilities.CreateNewGame();
 
                 // If there is data
                 GameStat gameStat = JsonUtility.FromJson<GameStat>(data);
                 GameManagement.Instance.game.gameStat.TotalEarning = gameStat.TotalEarning;
                 GameManagement.Instance.game.gameStat.MaxLevelCompleted = gameStat.MaxLevelCompleted;
-                PlayerPrefs.SetInt("Earning", (int)gameStat.TotalEarning);
+                Debug.Log("(data received) Max level completed is : " + gameStat.MaxLevelCompleted);
 
-                for (int i = 1; i <= GameManagement.Instance.GetTotalLevelCnt(); i++)
+                for (int i = 1; i <= gameStat.MaxLevelCompleted; i++)
                 {
                     int starCnt = (int)gameStat.GetLevelPerformance(i);
                     string level = "Level" + i;
-                    PlayerPrefs.SetInt(level, starCnt);
-
                     GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i, (int)starCnt);
                 }
             }
+            //else
+            //{
+            //    // #TODO: modify for non-webgl
+            //    ResumeButton.GetComponent<ResumeButton>().DeactiveResumeButton();
+            //}
         }
     }
 }

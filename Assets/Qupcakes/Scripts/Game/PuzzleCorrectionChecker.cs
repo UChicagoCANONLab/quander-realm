@@ -113,7 +113,7 @@ namespace Qupcakery
 
             // Update GameStat
             GameManagement.Instance.game.gameStat.SetPuzzleResult(lm.currentBatchNum, result);
-            Debug.Log("Results is checked");
+
             if (ResultChecked != null) ResultChecked(PuzzleResult);
         }
     }

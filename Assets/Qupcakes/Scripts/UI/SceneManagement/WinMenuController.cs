@@ -12,11 +12,7 @@ namespace Qupcakery
 
         void Start()
         {
-            string level = "Level" + (GameManagement.Instance.GetCurrentLevelInd()).ToString();
-            int starCnt = GameUtilities.GetLevelResult(level);
-
-            // Testing
-            Wrapper.Events.CollectAndDisplayReward(Wrapper.Game.Qupcakes, 0);
+            int starCnt = GameUtilities.GetLevelResult(GameManagement.Instance.GetCurrentLevelInd());
 
             switch (starCnt)
             {
