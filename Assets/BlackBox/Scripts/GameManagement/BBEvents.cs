@@ -35,5 +35,7 @@ namespace BlackBox
         public static Action<int> UpdateHUDWolfieLives;
         public static Action<WinState> UpdateEndPanel;
         public static Action StartNextLevel;
+        public static Action RestartLevel;
+        public static Action QuitBlackBox;
     }
 }

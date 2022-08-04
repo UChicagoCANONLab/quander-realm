@@ -45,16 +45,27 @@ namespace BlackBox
 
         private void SetupButtonFunctionality()
         {
-            restartLevelGO.GetComponent<Button>().onClick.AddListener(() => animator.SetBool("On", false));
-            quitGO.GetComponent<Button>().onClick.AddListener(() => animator.SetBool("On", false));
-            keepPlayingGO.GetComponent<Button>().onClick.AddListener(() => animator.SetBool("On", false));
+            restartLevelGO.GetComponent<Button>().onClick.AddListener(RestartLevel);
+            quitGO.GetComponent<Button>().onClick.AddListener(QuitBlackBox);
+            keepPlayingGO.GetComponent<Button>().onClick.AddListener(() => TogglePanel(false));
             nextLevelGO.GetComponent<Button>().onClick.AddListener(StartNextLevel);
+        }
+
+        private void RestartLevel()
+        {
+            TogglePanel(false);
+            BBEvents.RestartLevel?.Invoke();
+        }
+
+        private void QuitBlackBox()
+        {
+            TogglePanel(false);
+            BBEvents.QuitBlackBox?.Invoke();
         }
 
         private void StartNextLevel()
         {
-            animator.SetBool("On", false);
-            Wrapper.Events.CollectAndDisplayReward(Wrapper.Game.BlackBox, level);
+            TogglePanel(false);
             BBEvents.StartNextLevel?.Invoke();
         }
 
@@ -65,12 +76,16 @@ namespace BlackBox
         private void UpdatePanel(WinState winState)
         {
             DisableAllElements();
-            animator.SetBool("On", true);
+            TogglePanel(true);
 
             if (winState.levelWon)
             {
                 level = winState.level;
-                SetInfo(winImage, headerText: "We did it!", subHeaderText: "We found all of the items!", nextLevelGO);
+                SetInfo(
+                    winImage,
+                    headerText: "We did it!",
+                    subHeaderText: "We found all of the items!",
+                    new GameObject[] { quitGO, nextLevelGO });
             }
 
             else
@@ -79,22 +94,30 @@ namespace BlackBox
 
                 if (winState.livesRemaining > 0)
                 {
-                    SetInfo(notYetImage, headerText: "Not Quite…",
+                    SetInfo(
+                        notYetImage,
+                        headerText: "Not Quite…",
                         subHeaderText: "We found " + winState.numCorrect + " out of " + winState.numNodes + " items",
-                        keepPlayingGO);
+                        new GameObject[] { quitGO, keepPlayingGO });
                 }
                 else
-                    SetInfo(loseImage, headerText: "Game Over", subHeaderText: "You ran out of lives"); 
+                {
+                    SetInfo(
+                        loseImage, 
+                        headerText: "Game Over", 
+                        subHeaderText: "You ran out of lives",
+                        new GameObject[] { quitGO, restartLevelGO }); 
+                }
             }
         }
 
-        private void SetInfo(GameObject imageGO, string headerText, string subHeaderText, GameObject buttonGO = null)
+        private void SetInfo(GameObject imageGO, string headerText, string subHeaderText, GameObject[] buttons)
         {
             imageGO.SetActive(true);
             header.text = headerText;
             subHeader.text = subHeaderText;
 
-            if (buttonGO != null)
+            foreach (GameObject buttonGO in buttons)
                 buttonGO.SetActive(true);
         }
 
@@ -108,6 +131,11 @@ namespace BlackBox
             winImage.SetActive(false);
             notYetImage.SetActive(false);
             loseImage.SetActive(false);
+        }
+
+        private void TogglePanel(bool isOn)
+        {
+            animator.SetBool("On", isOn);
         }
 
         #endregion

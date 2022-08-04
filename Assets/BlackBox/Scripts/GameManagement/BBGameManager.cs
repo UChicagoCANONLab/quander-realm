@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Wrapper;
 using BeauRoutine;
+using UnityEngine.SceneManagement;
 
 namespace BlackBox
 {
@@ -75,10 +76,12 @@ namespace BlackBox
 
         private void OnEnable()
         {
+            BBEvents.QuitBlackBox += Quit;
             BBEvents.GotoLevel += NextLevel; // Debug
             BBEvents.IsDebug += GetDebugBool; // Debug
             BBEvents.ToggleDebug += ToggleDebug; // Debug
             BBEvents.StartNextLevel += NextLevel;
+            BBEvents.RestartLevel += StartLevel;
             BBEvents.CheckWinState += CheckWinState;
             BBEvents.GetFrontMount += GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits += GetNumEnergyUnits;
@@ -87,10 +90,12 @@ namespace BlackBox
 
         private void OnDisable()
         {
+            BBEvents.StartNextLevel -= Quit;
             BBEvents.GotoLevel -= NextLevel; // Debug
             BBEvents.IsDebug -= GetDebugBool; // Debug
             BBEvents.ToggleDebug -= ToggleDebug; // Debug
             BBEvents.StartNextLevel -= NextLevel;
+            BBEvents.StartNextLevel -= StartLevel;
             BBEvents.CheckWinState -= CheckWinState;
             BBEvents.GetFrontMount -= GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits -= GetNumEnergyUnits;
@@ -122,6 +127,7 @@ namespace BlackBox
             string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
         }
+
         private void StartLevel()
         {
             CreateAllGrids(level.gridSize);
@@ -165,6 +171,12 @@ namespace BlackBox
 
             level = tempLevel;
             StartLevel();
+        }
+
+        private void Quit()
+        {
+            SceneManager.LoadScene(0);
+            Events.MinigameClosed?.Invoke();
         }
 
         private void CheckWinState()
@@ -250,6 +262,12 @@ namespace BlackBox
 
         private void ClearChildren(GameObject parent)
         {
+            //if (parent == null)
+            //{
+            //    Debug.LogFormat("GO {0} is null", parent); 
+            //    return;
+            //}
+
             foreach (Transform cell in parent.transform)
                 Destroy(cell.gameObject);
         }
