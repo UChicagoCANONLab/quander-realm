@@ -27,30 +27,25 @@ namespace Qupcakery
 
         public void QupcakesLoadData(string data)
         {
-            Debug.Log("I just got this data:");
-            Debug.Log(data);
+            //Debug.Log("I just got this data:");
+            //Debug.Log(data);
 
-            if (data.Length > 0)
-            {
-                GameUtilities.CreateNewGame();
-
-                // If there is data
-                GameStat gameStat = JsonUtility.FromJson<GameStat>(data);
-                GameManagement.Instance.game.gameStat.TotalEarning = gameStat.TotalEarning;
-                GameManagement.Instance.game.gameStat.MaxLevelCompleted = gameStat.MaxLevelCompleted;
-                Debug.Log("(data received) Max level completed is : " + gameStat.MaxLevelCompleted);
-
-                for (int i = 1; i <= gameStat.MaxLevelCompleted; i++)
-                {
-                    int starCnt = (int)gameStat.GetLevelPerformance(i);
-                    string level = "Level" + i;
-                    GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i, (int)starCnt);
-                }
-            }
-            //else
+            //if (data.Length > 0)
             //{
-            //    // #TODO: modify for non-webgl
-            //    ResumeButton.GetComponent<ResumeButton>().DeactiveResumeButton();
+            //    GameUtilities.CreateNewGame();
+
+            //    // If there is data
+            //    GameStat gameStat = JsonUtility.FromJson<GameStat>(data);
+            //    GameManagement.Instance.game.gameStat.TotalEarning = gameStat.TotalEarning;
+            //    GameManagement.Instance.game.gameStat.MaxLevelCompleted = gameStat.MaxLevelCompleted;
+            //    Debug.Log("(data received) Max level completed is : " + gameStat.MaxLevelCompleted);
+
+            //    for (int i = 1; i <= gameStat.MaxLevelCompleted; i++)
+            //    {
+            //        int starCnt = (int)gameStat.GetLevelPerformance(i);
+            //        string level = "Level" + i;
+            //        GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i, (int)starCnt);
+            //    }
             //}
         }
     }

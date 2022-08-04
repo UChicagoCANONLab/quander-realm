@@ -14,12 +14,12 @@ namespace Qupcakery
 
         public static int Save()
         {
-            Debug.Log("Saving game");
-            string dataJson = JsonUtility.ToJson(GameManagement.Instance.game.gameStat);
-            Debug.Log(dataJson);
-#if UNITY_WEBGL == true && UNITY_EDITOR == false
-                QupcakesGameSaved(dataJson);
-#endif
+//            Debug.Log("Saving game");
+//            string dataJson = JsonUtility.ToJson(GameManagement.Instance.game.gameStat);
+//            Debug.Log(dataJson);
+//#if UNITY_WEBGL == true && UNITY_EDITOR == false
+//                QupcakesGameSaved(dataJson);
+//#endif
             return 0;
         }
     }
