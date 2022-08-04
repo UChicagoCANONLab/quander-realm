@@ -33,13 +33,18 @@ namespace Wrapper
             InitRewardAssetArray();
             Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?
             debugButton.onClick.AddListener(() => debugPanel.SetActive(!(debugPanel.activeInHierarchy))); //todo: debug, delete later
+            Input.multiTouchEnabled = false;
         }
 
         private void Start()
         {
             if (!(saveManager.isUserLoggedIn))
+            {
                 loginScreen.SetActive(true);
+                Events.OpenLoginScreen?.Invoke();
+            }
         }
+
         private void OnEnable()
         {
             Events.OpenMinigame += OpenMinigame;
