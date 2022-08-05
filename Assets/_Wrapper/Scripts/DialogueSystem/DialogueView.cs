@@ -102,6 +102,7 @@ namespace Wrapper
         private void Close()
         {
             Routine.Start(CloseRoutine());
+            Events.DialogueSequenceEnded?.Invoke();
         }
 
         private IEnumerator CloseRoutine()
@@ -109,7 +110,6 @@ namespace Wrapper
             Events.TogglePreviousButton?.Invoke(false);
             animator.SetBool("View/On", false);
             yield return animator.WaitToCompleteAnimation();
-            Events.DialogueSequenceEnded?.Invoke();
             gameObject.SetActive(false);
         }
 
