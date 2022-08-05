@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,8 +24,9 @@ namespace BlackBox
         {
             BBEvents.ClearMarkers += InitEnergyBar; // Debug
             BBEvents.InitEnergyBar += InitEnergyBar;
-            BBEvents.IndicateEmptyMeter += IndicateEmpty;
             BBEvents.DecrementEnergy += DecrementEnergy;
+            BBEvents.IndicateEmptyMeter += IndicateEmpty;
+            BBEvents.ToggleWolfieButton += ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives += UpdateWolfieLives;
         }
 
@@ -34,12 +36,18 @@ namespace BlackBox
             BBEvents.InitEnergyBar -= InitEnergyBar;
             BBEvents.IndicateEmptyMeter -= IndicateEmpty;
             BBEvents.DecrementEnergy -= DecrementEnergy;
+            BBEvents.ToggleWolfieButton -= ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives -= UpdateWolfieLives;
         }
 
         private void UpdateWolfieLives(int livesRemaining)
         {
             HUDAnimator.SetInteger("Lives", livesRemaining);
+        }
+
+        private void ToggleWolfieButton(bool isOn)
+        {
+            wolfieButton.interactable = isOn;
         }
 
         #region Energy Bar

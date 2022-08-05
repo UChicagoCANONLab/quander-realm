@@ -80,9 +80,10 @@ namespace BlackBox
             BBEvents.GotoLevel += NextLevel; // Debug
             BBEvents.IsDebug += GetDebugBool; // Debug
             BBEvents.ToggleDebug += ToggleDebug; // Debug
-            BBEvents.StartNextLevel += NextLevel;
             BBEvents.RestartLevel += StartLevel;
+            BBEvents.StartNextLevel += NextLevel;
             BBEvents.CheckWinState += CheckWinState;
+            BBEvents.CheckWolfieReady += CheckWolfieReady;
             BBEvents.GetFrontMount += GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits += GetNumEnergyUnits;
             BBEvents.ReturnLanternHome += ReturnLanternHome;
@@ -90,13 +91,14 @@ namespace BlackBox
 
         private void OnDisable()
         {
-            BBEvents.StartNextLevel -= Quit;
+            BBEvents.QuitBlackBox -= Quit;
             BBEvents.GotoLevel -= NextLevel; // Debug
             BBEvents.IsDebug -= GetDebugBool; // Debug
             BBEvents.ToggleDebug -= ToggleDebug; // Debug
+            BBEvents.RestartLevel -= StartLevel;
             BBEvents.StartNextLevel -= NextLevel;
-            BBEvents.StartNextLevel -= StartLevel;
             BBEvents.CheckWinState -= CheckWinState;
+            BBEvents.CheckWolfieReady = CheckWolfieReady;
             BBEvents.GetFrontMount -= GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits -= GetNumEnergyUnits;
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
@@ -137,6 +139,7 @@ namespace BlackBox
             livesRemaining = totalLives;
 
             BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
+            BBEvents.ToggleWolfieButton?.Invoke(false);
             BBEvents.InitEnergyBar?.Invoke();
 
             InitializeLanterns(level.nodePositions.Length);
@@ -262,12 +265,6 @@ namespace BlackBox
 
         private void ClearChildren(GameObject parent)
         {
-            //if (parent == null)
-            //{
-            //    Debug.LogFormat("GO {0} is null", parent); 
-            //    return;
-            //}
-
             foreach (Transform cell in parent.transform)
                 Destroy(cell.gameObject);
         }
@@ -305,7 +302,6 @@ namespace BlackBox
             foreach (GameObject mountGO in lanternMounts)
             {
                 LanternMount mount = mountGO.GetComponent<LanternMount>();
-
                 if (mount.isEmpty)
                 {
                     lanternGO.transform.SetParent(mount.transform);
@@ -314,6 +310,23 @@ namespace BlackBox
                     break;
                 }
             } 
+        }
+
+        private void CheckWolfieReady()
+        {
+            bool isWolfieReady = true;
+
+            foreach (GameObject mountGO in lanternMounts)
+            {
+                LanternMount mount = mountGO.GetComponent<LanternMount>();
+                if (mountGO.activeInHierarchy && !(mount.isEmpty))
+                {
+                    isWolfieReady = false;
+                    break;
+                }
+            }
+
+            BBEvents.ToggleWolfieButton?.Invoke(isWolfieReady);
         }
 
         private Transform GetLanternFrontMount()

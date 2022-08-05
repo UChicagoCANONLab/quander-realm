@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using BeauRoutine;
 
 namespace BlackBox
 {
@@ -53,7 +54,7 @@ namespace BlackBox
 
             canvasGroup.blocksRaycasts = true;
             BBEvents.ToggleLanternHeld?.Invoke(false);
-            StartCoroutine("ReturnHomeIfUnmounted");
+            Routine.Start(ReturnHomeIfUnmounted());
         }
 
         #endregion

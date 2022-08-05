@@ -32,6 +32,8 @@ namespace BlackBox
 
         /// Level Submission
         public static Action CheckWinState;
+        public static Action CheckWolfieReady;
+        public static Action<bool> ToggleWolfieButton;
         public static Action<int> UpdateHUDWolfieLives;
         public static Action<WinState> UpdateEndPanel;
         public static Action StartNextLevel;
