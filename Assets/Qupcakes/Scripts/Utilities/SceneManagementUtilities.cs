@@ -16,6 +16,7 @@ namespace Qupcakery
             SceneManager.LoadScene("Level");
             // If tutorial available, start tutorial sequence
             int levelInd = GameManagement.Instance.game.CurrLevelInd;
+
             if (TutorialManager.tutorialAvailable[levelInd])
             {
                 Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level"+levelInd.ToString());

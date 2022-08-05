@@ -11,6 +11,7 @@ namespace Qupcakery
         // Add levels that have tutorials
         public static void InitializeTutorialAndHelpMenu()
         {
+            TutorialManager.UpdateAvailability(-1);
             LoadSprites(helpMenuSprites, "Sprites/Help");
         }
 

@@ -22,6 +22,12 @@ namespace Qupcakery
         // Start is called before the first frame update
         void Start()
         {
+            if (!TutorialManager.IntroPlayed)
+            {
+                Wrapper.Events.StartDialogueSequence?.Invoke("QU_Start");
+                TutorialManager.IntroPlayed = false;
+            }
+
             numberOfLevels = GameManagement.Instance.GetTotalLevelCnt();
 
             panelDimensions = levelHolder.GetComponent<RectTransform>().rect;
