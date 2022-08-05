@@ -14,14 +14,6 @@ namespace Qupcakery
         public static void LoadGameScene()
         {
             SceneManager.LoadScene("Level");
-            // If tutorial available, start tutorial sequence
-            int levelInd = GameManagement.Instance.game.CurrLevelInd;
-
-            if (TutorialManager.tutorialAvailable[levelInd])
-            {
-                Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level"+levelInd.ToString());
-                TutorialManager.UpdateAvailability(levelInd);
-            }
         }
 
         public static void LoadHomePage()
@@ -42,6 +34,10 @@ namespace Qupcakery
 
         public static void LoadLevelSelectionMenu()
         {
+            if (GameManagement.Instance.game.gameStat.MaxLevelCompleted
+                == GameManagement.Instance.GetTotalLevelCnt())
+                Wrapper.Events.StartDialogueSequence?.Invoke("QU_End");
+
             SceneManager.LoadScene("LevelSelection");
         }
 

@@ -135,6 +135,12 @@ namespace Qupcakery
                 case 25:
                     SetLevel25();
                     break;
+                case 26:
+                    SetLevel26();
+                    break;
+                case 27:
+                    SetLevel27();
+                    break;
                 default:
                     throw new ArgumentException("Invalid level index: " + LevelInd);
             }

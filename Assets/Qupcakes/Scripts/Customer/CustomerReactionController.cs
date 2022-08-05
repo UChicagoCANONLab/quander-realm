@@ -34,9 +34,17 @@ namespace Qupcakery
         private void Start()
         {
             customerManager = gameObject.GetComponent<CustomerManager>();
-            // Subscribe to result checked publisher
-            PuzzleCorrectionChecker.ResultChecked += OnResultReceived;
             cakeBox = GameObjectsManagement.CakeBoxes[customerManager.BeltInd];
+        }
+
+        private void OnEnable()
+        {
+            PuzzleCorrectionChecker.ResultChecked += OnResultReceived;
+        }
+
+        private void OnDisable()
+        {
+            PuzzleCorrectionChecker.ResultChecked -= OnResultReceived;
         }
 
         // Opens box, compares order, and react accordingly

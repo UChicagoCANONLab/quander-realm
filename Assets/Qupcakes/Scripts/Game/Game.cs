@@ -12,9 +12,9 @@ namespace Qupcakery
         public GameStat gameStat;
         public int CurrLevelInd { get; private set; } = 0;
 
-        public int MaxLevelCnt { get; } = 25;
-        public int maxPuzzleCnt { get; } = 10;
-        const int maxGateCnt = 5; // gate type
+        public int MaxLevelCnt { get; } = Constants.MaxLevelCnt;
+        public int maxPuzzleCnt { get; } = Constants.MaxPuzzleCnt;
+        const int maxGateCnt = Constants.MaxGateTypeCnt; // gate type
 
         private Level level;
 

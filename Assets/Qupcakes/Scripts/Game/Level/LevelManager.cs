@@ -25,10 +25,23 @@ namespace Qupcakery
         public delegate void LevelEndedHandler();
         public LevelEndedHandler LevelEnded;
 
+        private bool hasTutorial = false;
+
         private void Awake()
         {
             GameManagement.Instance.SetGameMode(GameManagement.GameMode.Regular);
             level = GameManagement.Instance.GetCurrentLevel();
+
+            // If tutorial available, start tutorial sequence
+            int levelInd = level.LevelInd;
+
+            if (TutorialManager.tutorialAvailable[levelInd])
+            {
+                hasTutorial = true; 
+                Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level" + levelInd.ToString());
+                TutorialManager.UpdateAvailability(levelInd);
+                Wrapper.Events.DialogueSequenceEnded += StartLevel;
+            }
 
             /* Create timer */
             timer = new Timer(level.TimeLimit);
@@ -45,8 +58,32 @@ namespace Qupcakery
             GameManagement.Instance.game.gameStat.SetLevelJustAttempted(level.LevelInd);
         }
 
+        private void StartLevel()
+        {
+            Debug.Log("Starting level");
+
+            /* Subscribe to events that trigger level to end */
+            timer.TimerEnded += OnLevelEnded;
+            Dispatcher.AllBatchDonePublisher += OnLevelEnded;
+            Dispatcher.NewBatchDispatchedPublisher += OnNewBatchDispatched;
+
+            /* Set up UI */
+            timer.TimerClicked += UIClockController.Instance.OnTimerClicked;
+            UIProgressBar.Instance.SetGoal(level.Goal);
+
+            /* Dispatch first batch */
+            Dispatcher.DispatchNewBatch();
+
+            Wrapper.Events.DialogueSequenceEnded -= StartLevel;
+
+            hasTutorial = false;
+        }
+
         private void Start()
         {
+            //if (hasTutorial)
+            //    return;
+
             /* Subscribe to events that trigger level to end */
             timer.TimerEnded += OnLevelEnded;
             Dispatcher.AllBatchDonePublisher += OnLevelEnded;
@@ -63,6 +100,9 @@ namespace Qupcakery
         // Update is called once per frame
         void Update()
         {
+            //if (hasTutorial)
+            //    return;
+
             if (levelEnded)
                 return;
 

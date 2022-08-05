@@ -25,7 +25,7 @@ namespace Qupcakery
             if (!TutorialManager.IntroPlayed)
             {
                 Wrapper.Events.StartDialogueSequence?.Invoke("QU_Start");
-                TutorialManager.IntroPlayed = false;
+                TutorialManager.IntroPlayed = true;
             }
 
             numberOfLevels = GameManagement.Instance.GetTotalLevelCnt();

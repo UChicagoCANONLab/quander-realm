@@ -12,7 +12,8 @@ namespace Qupcakery
 
         void Start()
         {
-            int starCnt = GameUtilities.GetLevelResult(GameManagement.Instance.GetCurrentLevelInd());
+            int levelInd = GameManagement.Instance.GetCurrentLevelInd();
+            int starCnt = GameUtilities.GetLevelResult(levelInd);
 
             switch (starCnt)
             {
@@ -28,6 +29,14 @@ namespace Qupcakery
                     star2.sprite = fullStar;
                     star3.sprite = fullStar;
                     break;
+            }
+
+            if (RewardManager.rewardsInd.ContainsKey(levelInd))
+            {
+                bool isUnlocked = Wrapper.Events.IsRewardUnlocked?
+                    .Invoke(RewardManager.rewardsInd[levelInd]) ?? false;
+                if (! isUnlocked)
+                    Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.Qupcakes, levelInd);
             }
         }
     }
