@@ -27,6 +27,7 @@ namespace Wrapper
         public static Action<Dialogue> OpenDialogueView;
         public static Action<Dialogue, int> UpdateDialogueView;
         public static Action CloseDialogueView;
+        public static Action DialogueSequenceEnded;
         public static Action<int> ChangeDialogue;
         public static Action<bool> SwitchNextButton;
         public static Action<bool> TogglePreviousButton;
