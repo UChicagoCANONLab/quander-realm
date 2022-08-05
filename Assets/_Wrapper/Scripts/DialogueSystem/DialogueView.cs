@@ -102,17 +102,14 @@ namespace Wrapper
         private void Close()
         {
             Routine.Start(CloseRoutine());
+            Events.DialogueSequenceEnded?.Invoke();
         }
 
         private IEnumerator CloseRoutine()
         {
             Events.TogglePreviousButton?.Invoke(false);
             animator.SetBool("View/On", false);
-            Debug.Log("DialogueSequenceEnded should have been called");
-
             yield return animator.WaitToCompleteAnimation();
-            Events.DialogueSequenceEnded?.Invoke();
-            Debug.Log("DialogueSequenceEnded should have been called");
             gameObject.SetActive(false);
         }
 
