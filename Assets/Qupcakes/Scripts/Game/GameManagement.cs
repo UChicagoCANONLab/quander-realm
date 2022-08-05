@@ -42,13 +42,24 @@ namespace Qupcakery
                 Destroy(gameObject);
         }
 
-        private void Start()
+        private void OnEnable()
         {
+            Wrapper.Events.MinigameClosed += GameObjectsManagement.DeleteGameObjects;
+            Wrapper.Events.MinigameClosed += OnExitGame;
+        }
+
+        private void OnExitGame()
+        {
+            Wrapper.Events.MinigameClosed -= GameObjectsManagement.DeleteGameObjects;
+            Wrapper.Events.MinigameClosed -= OnExitGame;
+            Object.Destroy(gameObject);
         }
 
         public void CreateNewGame()
         {
             game = new Game();
+            // Set up tutorial
+            TutorialManager.UpdateAvailability();
         }
 
         // A game instance has been created
