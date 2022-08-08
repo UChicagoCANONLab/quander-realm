@@ -268,9 +268,9 @@ namespace Qupcakery
             AvailableGates[(int)GateType.CNOT] = 1;
 
             Puzzles[0].UpdatePuzzle(0, 1, 1, 1);
-            Puzzles[1].UpdatePuzzle(1, 1, 0, 1);
+            Puzzles[1].UpdatePuzzle(1, 0, 1, 1);
             Puzzles[2].UpdatePuzzle(0, 1, 1, 1);
-            Puzzles[3].UpdatePuzzle(1, 1, 0, 1);
+            Puzzles[3].UpdatePuzzle(1, 0, 1, 1);
 
             TotalPuzzleCnt = 4;
         }
@@ -281,13 +281,13 @@ namespace Qupcakery
             UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 80, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.CNOT] = 1;
 
-            Puzzles[0].UpdatePuzzle(1, 0, 1, 1);
-            Puzzles[1].UpdatePuzzle(1, 1, 1, 0);
-            Puzzles[2].UpdatePuzzle(0, 1, 1, 1);
-            Puzzles[3].UpdatePuzzle(1, 0, 1, 1);
+            Puzzles[0].UpdatePuzzle(1, 1, 1, 0);
+            Puzzles[1].UpdatePuzzle(1, 0, 1, 1);
+            Puzzles[2].UpdatePuzzle(1, 1, 0, 1);
+            Puzzles[3].UpdatePuzzle(1, 1, 1, 0);
 
-            Puzzles[4].UpdatePuzzle(1, 1, 0, 1);
-            Puzzles[5].UpdatePuzzle(1, 1, 1, 0);
+            Puzzles[4].UpdatePuzzle(1, 0, 1, 1);
+            Puzzles[5].UpdatePuzzle(1, 1, 0, 1);
 
             TotalPuzzleCnt = 6;
         }
@@ -342,7 +342,7 @@ namespace Qupcakery
 
         private void SetLevel13()
         {
-            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 50, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 40, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.H] = 1;
 
             Puzzles[0].UpdatePuzzle(1, 3);
@@ -350,11 +350,7 @@ namespace Qupcakery
             Puzzles[2].UpdatePuzzle(1, 2);
             Puzzles[3].UpdatePuzzle(0, 3);
 
-            Puzzles[4].UpdatePuzzle(0, 3);
-            Puzzles[5].UpdatePuzzle(1, 2);
-            Puzzles[6].UpdatePuzzle(1, 3);
-            Puzzles[7].UpdatePuzzle(0, 2);
-            TotalPuzzleCnt = 8;
+            TotalPuzzleCnt = 4;
         }
 
         // Use H to unwrap

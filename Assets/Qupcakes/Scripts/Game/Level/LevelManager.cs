@@ -81,8 +81,8 @@ namespace Qupcakery
 
         private void Start()
         {
-            //if (hasTutorial)
-            //    return;
+            if (hasTutorial)
+                return;
 
             /* Subscribe to events that trigger level to end */
             timer.TimerEnded += OnLevelEnded;
@@ -100,8 +100,8 @@ namespace Qupcakery
         // Update is called once per frame
         void Update()
         {
-            //if (hasTutorial)
-            //    return;
+            if (hasTutorial)
+                return;
 
             if (levelEnded)
                 return;
