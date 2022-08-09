@@ -4,6 +4,7 @@ using BeauRoutine;
 using System;
 using UnityEngine.Networking;
 using System.Linq;
+using System.Threading.Tasks;
 
 #if !UNITY_WEBGL
 using Firebase;
@@ -16,8 +17,11 @@ namespace Wrapper
 {
     public class SaveManager : MonoBehaviour
     {
+        [SerializeField] private GameObject UploadFailurePopup;
+        [SerializeField] private Animator uploadPopupAnimator;
+
         [HideInInspector] public bool isUserLoggedIn = false;
-        public UserSave currentUserSave = null;
+        [HideInInspector] public UserSave currentUserSave = null;
         public int researchCodeLength = 6;
 
         private float networkRequestTimeout = 7f;
@@ -305,21 +309,35 @@ namespace Wrapper
 #if !UNITY_WEBGL
         private bool UpdateRemoteSave()
         {
+            bool saved = true;
+
             if (dbReference == null)
             {
                 Debug.LogError("No database reference on save");
-                return false;
+                saved = false;
             }
 
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
                 Debug.LogError("Empty UserSave");
-                return false;
+                saved = false;
             }
 
-            dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
-            return true;
+            try
+            {
+                Task t = dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
+                uploadPopupAnimator.SetBool("On", false);
+            }
+            catch (Exception e)
+            {
+                saved = false;
+                Debug.Log(e.Message);
+                Debug.Log("no internet");
+                uploadPopupAnimator.SetBool("On", true);
+            }
+
+            return saved;
         }
 #else
         private bool UpdateRemoteSave()
