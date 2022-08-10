@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,8 +18,9 @@ namespace Wrapper
         public static Action<LoginStatus> UpdateLoginStatus;
         public static Action<Game, object> UpdateMinigameSaveData;
         public static Func<Game, string> GetMinigameSaveData;
-        public static Func<bool> UpdateRemoteSave;
+        public static Action UpdateRemoteSave;
         public static Action ClearSaveFile;
+        public static Action<bool> ToggleUploadFailurePopup;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;

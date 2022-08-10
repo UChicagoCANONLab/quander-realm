@@ -17,15 +17,13 @@ namespace Wrapper
 {
     public class SaveManager : MonoBehaviour
     {
-        [SerializeField] private GameObject UploadFailurePopup;
-        [SerializeField] private Animator uploadPopupAnimator;
-
         [HideInInspector] public bool isUserLoggedIn = false;
         [HideInInspector] public UserSave currentUserSave = null;
         public int researchCodeLength = 6;
 
         private float networkRequestTimeout = 7f;
         private bool isDatabaseReady = false;
+        private bool uploadSuccess = false;
 
 #if !UNITY_WEBGL
         private FirebaseApp app;
@@ -158,9 +156,15 @@ namespace Wrapper
             {
                 currentUserSave.id = formattedCode;
 
+                UpdateRemoteSave(); 
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => UpdateRemoteSave()),
+                    Routine.WaitCondition(() => uploadSuccess == true), 
                     Routine.WaitSeconds(networkRequestTimeout));
+
+                //yield return Routine.Race(
+                //    UpdateRemoteSave(),
+                //    Routine.WaitCondition(() => uploadSuccess == true),
+                //    Routine.WaitSeconds(networkRequestTimeout));
 
                 yield return GetDatabaseSnapshot();
             }
@@ -218,8 +222,10 @@ namespace Wrapper
             if (loadDataJson == "none")
             {
                 currentUserSave.id = formattedCode;
+
+                UpdateRemoteSave(); 
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => UpdateRemoteSave()),
+                    Routine.WaitCondition(() => uploadSuccess == true), 
                     Routine.WaitSeconds(networkRequestTimeout));
 
                 loadDataJson = "";
@@ -307,37 +313,52 @@ namespace Wrapper
         }
 
 #if !UNITY_WEBGL
-        private bool UpdateRemoteSave()
+        private void UpdateRemoteSave()
         {
-            bool saved = true;
+            Routine.Start(UpdateRemoteSaveRoutine());
+        }
+
+        private IEnumerator UpdateRemoteSaveRoutine()
+        {
+            uploadSuccess = false;
 
             if (dbReference == null)
             {
                 Debug.LogError("No database reference on save");
-                saved = false;
+                yield break;
             }
 
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
                 Debug.LogError("Empty UserSave");
-                saved = false;
+                yield break;
             }
 
-            try
+            Task uploadTask = dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
+
+            yield return Routine.Race(
+                Routine.WaitCondition(() => uploadTask.Status == TaskStatus.RanToCompletion),
+                Routine.WaitSeconds(networkRequestTimeout));
+
+            //while (uploadTask.Status == TaskStatus.WaitingForActivation
+            //    || uploadTask.Status == TaskStatus.WaitingToRun
+            //    || uploadTask.Status == TaskStatus.Running)
+            //    yield return null;
+
+            if (uploadTask.Status == TaskStatus.RanToCompletion)
             {
-                Task t = dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
-                uploadPopupAnimator.SetBool("On", false);
+                Events.ToggleUploadFailurePopup?.Invoke(false);
+                Debug.Log("succeeded");
+                uploadSuccess = true;
             }
-            catch (Exception e)
+            else
             {
-                saved = false;
-                Debug.Log(e.Message);
-                Debug.Log("no internet");
-                uploadPopupAnimator.SetBool("On", true);
+                Events.ToggleUploadFailurePopup?.Invoke(true);
+                Debug.Log("failed");
             }
 
-            return saved;
+            Debug.LogFormat("Upload Status {0}", uploadTask.Status);
         }
 #else
         private bool UpdateRemoteSave()
