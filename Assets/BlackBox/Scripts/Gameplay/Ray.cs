@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BlackBox
@@ -15,6 +16,9 @@ namespace BlackBox
 
         private Vector3Int destination;
         private Dir destDirection;
+
+        private static int detourPairNumber = 1;
+        private static int maxDetourPairNumber = 9;
 
         public Ray(Vector3Int origin, Dir dir, int width, int height)
         {
@@ -50,34 +54,21 @@ namespace BlackBox
                 if (origin == destination)
                 {
                     if (directHit)
-                    {
-                        //Hit
-                        BBEvents.MarkUnits?.Invoke("H", originDirection, origin);
-                    }
+                        BBEvents.MarkUnits?.Invoke(Marker.Hit, originDirection, origin);
                     else // only other case for returning to the same cell is a reflection
-                    {
-                        //Reflect
-                        BBEvents.MarkUnits?.Invoke("R", originDirection, origin);
-                    }
+                        BBEvents.MarkUnits?.Invoke(Marker.Reflect, originDirection, origin);
                 }
                 else // different cell
-                {
-                    //Detour
-                    BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination);
-                }
+                    BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination, GetDetourPairNumber());
             }
             else // diff entry/exit direction
             {
                 if (rayDetoured)
-                {
-                    //Detour
-                    BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination);
-                }
+                    BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination, GetDetourPairNumber());
                 else // straight through
                 {
-                    //Miss
-                    BBEvents.MarkUnits?.Invoke("M", originDirection, origin);
-                    BBEvents.MarkUnits?.Invoke("M", destDirection, destination);
+                    BBEvents.MarkUnits?.Invoke(Marker.Miss, originDirection, origin);
+                    BBEvents.MarkUnits?.Invoke(Marker.Miss, destDirection, destination);
                 }
             }
         }
@@ -169,6 +160,16 @@ namespace BlackBox
             }
 
             Flip();
+        }
+
+        private int GetDetourPairNumber()
+        {
+            detourPairNumber++;
+
+            if (detourPairNumber > maxDetourPairNumber) // reset
+                detourPairNumber = 1;
+
+            return detourPairNumber;
         }
     }
 }

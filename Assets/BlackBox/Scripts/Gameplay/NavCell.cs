@@ -21,21 +21,20 @@ namespace BlackBox
             BBEvents.FireRay?.Invoke(gridPosition, direction);
         }
 
-        public void SetValue(string value)
+        public void SetValue(Marker marker)
         {
             animator.SetBool("NavCell/Measurement", true);
+            animator.SetInteger("PathType", (int)marker);
             background.gameObject.SetActive(true);
-            markerText.text = value;
             isMarked = true;
         }
 
-        public void SetValue(string value, Color color, Dir linkedCellDirection, Vector3Int linkedCellPosition)
+        public void SetValue(Marker marker, int pathNumber, Dir linkedCellDirection, Vector3Int linkedCellPosition)
         {
             animator.SetBool("NavCell/Measurement", true);
+            animator.SetInteger("PathType", (int)marker);
+            animator.SetInteger("PathNumber", pathNumber);
             background.gameObject.SetActive(true);
-
-            markerText.color = color;
-            markerText.text = value;
 
             isMarked = true;
             isLinked = true;

@@ -9,13 +9,6 @@ namespace BlackBox
         private Dir direction = Dir.None;
         private NavCell[,] cellArray = null;
 
-        private static int colorIndex = -1;
-        private static readonly Color[] colorArray = new Color[] 
-        {
-            Color.red, Color.blue, Color.green, Color.magenta,
-            Color.cyan, Color.black, Color.grey, Color.yellow 
-        };
-
         private void OnEnable()
         {
             BBEvents.MarkUnits += MarkUnit; //todo: creating new grids re-registers
@@ -46,31 +39,23 @@ namespace BlackBox
             }
         }
 
-        private void MarkUnit(string text, Dir gridDirection, Vector3Int destPosition)
+        private void MarkUnit(Marker marker, Dir gridDirection, Vector3Int destPosition)
         {
             if (direction != gridDirection)
                 return;
 
-            cellArray[destPosition.x, destPosition.y].SetValue(text);
+            cellArray[destPosition.x, destPosition.y].SetValue(marker);
         }
 
-        //todo: clean up?
-        private void MarkLinkedUnits(Dir entryDirection, Vector3Int entryPosition, Dir exitDirection, Vector3Int exitPosition)
+        private void MarkLinkedUnits(Dir entryDirection, Vector3Int entryPosition, Dir exitDirection, Vector3Int exitPosition, int detourPairNumber)
         {
             //Entry Cell
             if (entryDirection == direction)
-            {
-                //if (colorIndex == colorArray.Length - 1) //temp: reset if last color
-                //    colorIndex = -1;
-
-                //colorIndex++; // todo: this isn't guaranteed to happen before the exit part of the function
-
-                cellArray[entryPosition.x, entryPosition.y].SetValue("D", Color.white, exitDirection, exitPosition);
-            }
+                cellArray[entryPosition.x, entryPosition.y].SetValue(Marker.Detour, detourPairNumber, exitDirection, exitPosition);
 
             //Exit Cell
             if (exitDirection == direction)
-                cellArray[exitPosition.x, exitPosition.y].SetValue("D", Color.white, entryDirection, entryPosition);
+                cellArray[exitPosition.x, exitPosition.y].SetValue(Marker.Detour, detourPairNumber, entryDirection, entryPosition);
         }
     }
 }

@@ -14,8 +14,8 @@ namespace BlackBox
 
         /// Ray and Markers
         public static Action<Vector3Int, Dir> FireRay;
-        public static Action<string, Dir, Vector3Int> MarkUnits;
-        public static Action<Dir, Vector3Int, Dir, Vector3Int> MarkDetourUnits;
+        public static Action<Marker, Dir, Vector3Int> MarkUnits;
+        public static Action<Dir, Vector3Int, Dir, Vector3Int, int> MarkDetourUnits;
         public static Action<string, Dir, Vector3Int> ToggleLinkedHighlight;
 
         /// Flags/Lanterns

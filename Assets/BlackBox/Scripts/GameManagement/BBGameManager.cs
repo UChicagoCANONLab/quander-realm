@@ -150,6 +150,7 @@ namespace BlackBox
             if (level.nextLevelID == string.Empty)
             {
                 Debug.LogFormat("Next level not set for the level: {0}", level.levelID);
+                Quit();
                 return;
             }   
 
