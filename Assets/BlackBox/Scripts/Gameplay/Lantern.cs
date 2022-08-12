@@ -10,10 +10,11 @@ namespace BlackBox
         private CanvasGroup canvasGroup;
         private LanternMount parentMount;
         private RectTransform rectTransform;
-        private Vector2 currentMousePos;
 
         [SerializeField] private Canvas canvas;
         [SerializeField] private Animator animator;
+
+        private float directionVelocityThreshold = 0.23f;
 
         private void Awake()
         {
@@ -21,12 +22,6 @@ namespace BlackBox
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
         }
-
-        //private void Update()
-        //{
-        //    if (animator.GetBool("Hold"))
-        //        UpdateAnimator();
-        //}
 
         #region Interface Functions
 
@@ -70,38 +65,20 @@ namespace BlackBox
 
         private void UpdateAnimator(PointerEventData eventData)
         {
-            float currentVelocity = animator.GetFloat("Velocity");
-
             Vector2 oldPosition = rectTransform.anchoredPosition;
             rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
             Vector2 newPosition = rectTransform.anchoredPosition;
+
+            float currentVelocity = animator.GetFloat("Velocity");
 
             animator.SetInteger("DragDirection", GetDirection(oldPosition, newPosition));
             animator.SetFloat("Velocity", GetVelocity(oldPosition, newPosition, currentVelocity));
         }
 
-        //private void UpdateAnimator()
-        //{
-        //    float currentVelocity = animator.GetFloat("Velocity");
-        //    Vector2 oldPosition = rectTransform.anchoredPosition;
-        //    Vector2 delta = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        //    //rectTransform.anchoredPosition += delta / canvas.scaleFactor;
-        //    rectTransform.anchoredPosition = delta;
-        //    Vector2 newPosition = rectTransform.anchoredPosition;
-
-        //    animator.SetInteger("DragDirection", GetDirection(oldPosition, newPosition));
-        //    animator.SetFloat("Velocity", GetVelocity(oldPosition, newPosition, currentVelocity));
-        //}
-
         private float GetVelocity(Vector2 oldPosition, Vector2 newPosition, float currentVelocity)
         {
-            float newVelocity = 1 - (1 / (Vector2.Distance(newPosition, oldPosition) / 2));
+            float newVelocity = Mathf.Clamp(1 - (1 / (Vector2.Distance(newPosition, oldPosition) / 2)), 0, 1);
             float delta = 1 - (1 / (Vector2.Distance(newPosition, oldPosition) * 4));
-
-
-            Debug.LogFormat("vel: {0}, del: {1}", newVelocity, delta);
-            if (newVelocity <= 0.01)
-                return 0;
 
             return Mathf.Lerp(currentVelocity, newVelocity, 1 - delta);
         }
@@ -109,12 +86,8 @@ namespace BlackBox
         private int GetDirection(Vector2 oldPosition, Vector2 newPosition)
         {
             float newVelocity = 1 - (1 / (Vector2.Distance(newPosition, oldPosition) / 2));
-
-
-            //Debug.LogFormat("dirVel {0}", newVelocity);
-
-            //if (newVelocity <= 0.45)
-            //    return 0;
+            if (newVelocity <= directionVelocityThreshold)
+                return 0;
 
             return (int)Mathf.Sign(newPosition.x - oldPosition.x);
         }
