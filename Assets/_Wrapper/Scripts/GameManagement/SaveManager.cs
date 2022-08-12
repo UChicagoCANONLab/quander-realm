@@ -21,18 +21,19 @@ namespace Wrapper
         [HideInInspector] public UserSave currentUserSave = null;
         public int researchCodeLength = 6;
 
-        private float networkRequestTimeout = 7f;
+        private float networkRequestTimeout = 5f;
         private bool isDatabaseReady = false;
-        private bool uploadSuccess = false;
 
 #if !UNITY_WEBGL
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
         private bool isConnectedToInternet = false;
+        private bool uploadSuccess = false;
 #else
         private string researchCodeExists = "";
         private string loadDataJson = "";
+        private bool webGLUploadSuccess = false;
 #endif
 
 #if PRODUCTION_FB
@@ -225,7 +226,7 @@ namespace Wrapper
 
                 UpdateRemoteSave(); 
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => uploadSuccess == true), 
+                    Routine.WaitCondition(() => webGLUploadSuccess == true), 
                     Routine.WaitSeconds(networkRequestTimeout));
 
                 loadDataJson = "";
@@ -312,11 +313,12 @@ namespace Wrapper
             UpdateRemoteSave();
         }
 
-#if !UNITY_WEBGL
         private void UpdateRemoteSave()
         {
             Routine.Start(UpdateRemoteSaveRoutine());
         }
+
+#if !UNITY_WEBGL
 
         private IEnumerator UpdateRemoteSaveRoutine()
         {
@@ -341,36 +343,37 @@ namespace Wrapper
                 Routine.WaitCondition(() => uploadTask.Status == TaskStatus.RanToCompletion),
                 Routine.WaitSeconds(networkRequestTimeout));
 
-            //while (uploadTask.Status == TaskStatus.WaitingForActivation
-            //    || uploadTask.Status == TaskStatus.WaitingToRun
-            //    || uploadTask.Status == TaskStatus.Running)
-            //    yield return null;
-
             if (uploadTask.Status == TaskStatus.RanToCompletion)
             {
                 Events.ToggleUploadFailurePopup?.Invoke(false);
-                Debug.Log("succeeded");
                 uploadSuccess = true;
             }
             else
-            {
                 Events.ToggleUploadFailurePopup?.Invoke(true);
-                Debug.Log("failed");
-            }
-
-            Debug.LogFormat("Upload Status {0}", uploadTask.Status);
         }
 #else
-        private bool UpdateRemoteSave()
+        private IEnumerator UpdateRemoteSaveRoutine()
         {
+            webGLUploadSuccess = false;
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
                 Debug.LogError("Empty UserSave");
-                return false;
+                yield break;
             }
+
+            // Call the JS SaveData function
             SaveData(currentUserSave.id, json);
-            return true;
+
+            // Wait for whichever completes first: the SaveData callback function or the network timeout 
+            yield return Routine.Race(
+                Routine.WaitCondition(() => webGLUploadSuccess == true),
+                Routine.WaitSeconds(networkRequestTimeout));
+
+            if (webGLUploadSuccess)
+                Events.ToggleUploadFailurePopup?.Invoke(false);
+            else
+                Events.ToggleUploadFailurePopup?.Invoke(true);
         }
 #endif
 
@@ -413,6 +416,11 @@ namespace Wrapper
         public void LoadDataCallback(string str)
         {
             loadDataJson = str;
+        }
+
+        public void SaveDataCallback(string str)
+        {
+            webGLUploadSuccess = str.Equals("success") ? true : false;
         }
 #endif
 
