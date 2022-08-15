@@ -11,7 +11,7 @@ namespace Wrapper
         {
             base.OnPointerDown(eventData);
 
-            Events.PlaySound(audioName.Equals(string.Empty)? "ButtonClick" : audioName);
+            Events.PlaySound?.Invoke(audioName.Equals(string.Empty)? "ButtonClick" : audioName);
         }
 
         public override void OnPointerClick(PointerEventData eventData)
