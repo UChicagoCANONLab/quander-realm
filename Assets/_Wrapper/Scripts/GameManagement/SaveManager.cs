@@ -319,7 +319,6 @@ namespace Wrapper
         }
 
 #if !UNITY_WEBGL
-
         private IEnumerator UpdateRemoteSaveRoutine()
         {
             uploadSuccess = false;

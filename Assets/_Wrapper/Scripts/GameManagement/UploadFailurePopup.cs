@@ -43,21 +43,16 @@ namespace Wrapper
 
         private IEnumerator ShowRoutine()
         {
-            if (animator.GetBool("On"))
-                yield break;
-
             container.SetActive(true);
             while (!container.activeInHierarchy)
                 yield return null;
 
             animator.SetBool("On", true);
+            animator.SetTrigger("Error");
         }
 
         private IEnumerator HideRoutine()
         {
-            if (!(animator.GetBool("On")))
-                yield break;
-
             animator.SetBool("On", false);
             yield return animator.WaitToCompleteAnimation();
 
