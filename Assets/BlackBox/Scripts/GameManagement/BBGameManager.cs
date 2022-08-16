@@ -16,6 +16,9 @@ namespace BlackBox
         [SerializeField] private string firstLevelID = "L01"; // todo: refactor
         [SerializeField] private float rewardPopupDelay = 0.5f;
 
+        [Header("Tutorial Buttons")]
+        [SerializeField] private QButton[] tutorialButtons;
+
         [Header("Grid Containers")]
         [SerializeField] private GameObject mainGridGO = null;
         [SerializeField] private GameObject leftGridGO = null;
@@ -54,6 +57,7 @@ namespace BlackBox
         private int livesRemaining;
         private int totalNodes;
         private Level level = null;
+        private const string tutorialSequenceID = "BB_Tutorial";
         private bool debug = false;
 
         #region Unity Functions
@@ -62,6 +66,7 @@ namespace BlackBox
         {
             InitSaveData();
             InitLevel();
+            InitTutorialButtons();
             StartLevel();
         }
 
@@ -130,8 +135,51 @@ namespace BlackBox
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
         }
 
+        private void InitTutorialButtons()
+        {
+            foreach(QButton button in tutorialButtons)
+            {
+                button.onClick.AddListener(() =>
+                {
+                    Events.StartDialogueSequence?.Invoke(
+                        tutorialSequenceID + Array.IndexOf(tutorialButtons, button).ToString());
+                });
+            }
+        }
+
+        private void ShowTutorial()
+        {
+            try
+            {
+                bool tutorialSeen = saveData.tutorialsSeen[level.tutorialNumber];
+            }
+            catch (Exception)
+            {
+                BBSaveData data = new BBSaveData
+                {
+                    gameID = saveData.gameID,
+                    currentLevelID = saveData.currentLevelID
+                };
+
+                saveData = data;
+                Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+            }
+            finally
+            {
+                bool tutorialSeen = saveData.tutorialsSeen[level.tutorialNumber];
+                if (!(tutorialSeen))
+                {
+                    Events.StartDialogueSequence(tutorialSequenceID + level.tutorialNumber.ToString());
+                    saveData.tutorialsSeen[level.tutorialNumber] = true;
+                }
+
+                ToggleTutorialButtons();
+            }
+        }
+
         private void StartLevel()
         {
+            ShowTutorial();
             CreateAllGrids(level.gridSize);
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
 
@@ -345,6 +393,15 @@ namespace BlackBox
         private bool GetDebugBool()
         {
             return debug;
+        }
+
+        private void ToggleTutorialButtons()
+        {
+            for (int i = 0; i < saveData.tutorialsSeen.Length; i++)
+            {
+                bool tutorialSeen = saveData.tutorialsSeen[i];
+                tutorialButtons[i].gameObject.SetActive(tutorialSeen);
+            }
         }
 
         private void ToggleDebug()
