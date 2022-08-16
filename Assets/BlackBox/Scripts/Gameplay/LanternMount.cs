@@ -87,6 +87,7 @@ namespace BlackBox
             if (nodeCellAnimator != null)
                 nodeCellAnimator.SetBool("NodeCell/Flagged", true); // animator will be set if this mount belongs to a cell
 
+            BBEvents.CheckWolfieReady?.Invoke();
         }
 
         public void UnFlag()
@@ -98,7 +99,9 @@ namespace BlackBox
                 BBEvents.ToggleFlag.Invoke(gridPosition, false);
 
             if (nodeCellAnimator != null)
-                nodeCellAnimator.SetBool("NodeCell/Flagged", false); 
+                nodeCellAnimator.SetBool("NodeCell/Flagged", false);
+
+            BBEvents.CheckWolfieReady?.Invoke();
         }
     }
 }

@@ -102,6 +102,7 @@ namespace Wrapper
         private void Close()
         {
             Routine.Start(CloseRoutine());
+            Events.DialogueSequenceEnded?.Invoke();
         }
 
         private IEnumerator CloseRoutine()

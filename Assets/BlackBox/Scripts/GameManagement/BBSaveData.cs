@@ -6,6 +6,6 @@ namespace BlackBox
     {
         public Wrapper.Game gameID = Wrapper.Game.BlackBox;
         public string currentLevelID = string.Empty;
-        public bool IntroDialogueSeen = false;
+        public bool[] tutorialsSeen = new bool[] { false, false, false };
     }
 }

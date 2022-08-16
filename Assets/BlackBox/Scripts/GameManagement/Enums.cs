@@ -11,10 +11,11 @@ namespace BlackBox
 
     public enum Marker
     {
+        None,
+        Detour,
         Miss,
         Hit,
-        Reflect,
-        Detour
+        Reflect
     };
 
     public enum CellType

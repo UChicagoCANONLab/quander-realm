@@ -1,17 +1,20 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using BeauRoutine;
 
 namespace BlackBox
 {
     public class Lantern : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IPointerUpHandler
     {
-        private CanvasGroup canvasGroup = null;
-        private LanternMount parentMount = null;
-        private RectTransform rectTransform = null;
+        private CanvasGroup canvasGroup;
+        private LanternMount parentMount;
+        private RectTransform rectTransform;
 
-        [SerializeField] private Canvas canvas = null;
-        [SerializeField] private Animator animator = null;
+        [SerializeField] private Canvas canvas;
+        [SerializeField] private Animator animator;
+
+        private float directionVelocityThreshold = 0.23f;
 
         private void Awake()
         {
@@ -53,12 +56,41 @@ namespace BlackBox
 
             canvasGroup.blocksRaycasts = true;
             BBEvents.ToggleLanternHeld?.Invoke(false);
-            StartCoroutine("ReturnHomeIfUnmounted");
+            Routine.Start(ReturnHomeIfUnmounted());
         }
 
         #endregion
 
         #region Helpers
+
+        private void UpdateAnimator(PointerEventData eventData)
+        {
+            Vector2 oldPosition = rectTransform.anchoredPosition;
+            rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+            Vector2 newPosition = rectTransform.anchoredPosition;
+
+            float currentVelocity = animator.GetFloat("Velocity");
+
+            animator.SetInteger("DragDirection", GetDirection(oldPosition, newPosition));
+            animator.SetFloat("Velocity", GetVelocity(oldPosition, newPosition, currentVelocity));
+        }
+
+        private float GetVelocity(Vector2 oldPosition, Vector2 newPosition, float currentVelocity)
+        {
+            float newVelocity = Mathf.Clamp(1 - (1 / (Vector2.Distance(newPosition, oldPosition) / 2)), 0, 1);
+            float delta = 1 - (1 / (Vector2.Distance(newPosition, oldPosition) * 4));
+
+            return Mathf.Lerp(currentVelocity, newVelocity, 1 - delta);
+        }
+
+        private int GetDirection(Vector2 oldPosition, Vector2 newPosition)
+        {
+            float newVelocity = 1 - (1 / (Vector2.Distance(newPosition, oldPosition) / 2));
+            if (newVelocity <= directionVelocityThreshold)
+                return 0;
+
+            return (int)Mathf.Sign(newPosition.x - oldPosition.x);
+        }
 
         private IEnumerator ReturnHomeIfUnmounted()
         {
@@ -85,35 +117,6 @@ namespace BlackBox
             return transform.parent.GetComponent<LanternMount>();
         }
 
-        private void UpdateAnimator(PointerEventData eventData)
-        {
-            Vector2 oldPosition = rectTransform.anchoredPosition;
-            rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-            Vector2 newPosition = rectTransform.anchoredPosition;
-
-            animator.SetInteger("DragDirection", GetDirection(oldPosition, newPosition));
-            animator.SetFloat("Velocity", GetVelocity(oldPosition, newPosition));
-        }
-
-        //todo: fix this
-        private float GetVelocity(Vector2 oldPosition, Vector2 newPosition)
-        {
-            return 1;
-
-            //if (oldPosition == newPosition)
-            //    return 0;
-
-            //Debug.Log(Vector2.Distance(newPosition, oldPosition));
-            //return Mathf.Lerp(1f, 0f, 1 / Vector2.Distance(newPosition, oldPosition));
-        }
-
-        private int GetDirection(Vector2 oldPosition, Vector2 newPosition)
-        {
-            if (oldPosition == newPosition)
-                return 0;
-
-            return (int)Mathf.Sign(newPosition.x - oldPosition.x);
-        }
 
         #endregion
     }

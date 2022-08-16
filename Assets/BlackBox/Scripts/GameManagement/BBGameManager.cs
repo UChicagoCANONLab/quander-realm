@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Wrapper;
 using BeauRoutine;
+using UnityEngine.SceneManagement;
 
 namespace BlackBox
 {
@@ -14,6 +15,9 @@ namespace BlackBox
 
         [SerializeField] private string firstLevelID = "L01"; // todo: refactor
         [SerializeField] private float rewardPopupDelay = 0.5f;
+
+        [Header("Tutorial Buttons")]
+        [SerializeField] private QButton[] tutorialButtons;
 
         [Header("Grid Containers")]
         [SerializeField] private GameObject mainGridGO = null;
@@ -53,6 +57,7 @@ namespace BlackBox
         private int livesRemaining;
         private int totalNodes;
         private Level level = null;
+        private const string tutorialSequenceID = "BB_Tutorial";
         private bool debug = false;
 
         #region Unity Functions
@@ -61,6 +66,7 @@ namespace BlackBox
         {
             InitSaveData();
             InitLevel();
+            InitTutorialButtons();
             StartLevel();
         }
 
@@ -75,11 +81,14 @@ namespace BlackBox
 
         private void OnEnable()
         {
+            BBEvents.QuitBlackBox += Quit;
             BBEvents.GotoLevel += NextLevel; // Debug
             BBEvents.IsDebug += GetDebugBool; // Debug
             BBEvents.ToggleDebug += ToggleDebug; // Debug
+            BBEvents.RestartLevel += StartLevel;
             BBEvents.StartNextLevel += NextLevel;
             BBEvents.CheckWinState += CheckWinState;
+            BBEvents.CheckWolfieReady += CheckWolfieReady;
             BBEvents.GetFrontMount += GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits += GetNumEnergyUnits;
             BBEvents.ReturnLanternHome += ReturnLanternHome;
@@ -87,11 +96,14 @@ namespace BlackBox
 
         private void OnDisable()
         {
+            BBEvents.QuitBlackBox -= Quit;
             BBEvents.GotoLevel -= NextLevel; // Debug
             BBEvents.IsDebug -= GetDebugBool; // Debug
             BBEvents.ToggleDebug -= ToggleDebug; // Debug
+            BBEvents.RestartLevel -= StartLevel;
             BBEvents.StartNextLevel -= NextLevel;
             BBEvents.CheckWinState -= CheckWinState;
+            BBEvents.CheckWolfieReady = CheckWolfieReady;
             BBEvents.GetFrontMount -= GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits -= GetNumEnergyUnits;
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
@@ -122,8 +134,52 @@ namespace BlackBox
             string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
         }
+
+        private void InitTutorialButtons()
+        {
+            foreach(QButton button in tutorialButtons)
+            {
+                button.onClick.AddListener(() =>
+                {
+                    Events.StartDialogueSequence?.Invoke(
+                        tutorialSequenceID + Array.IndexOf(tutorialButtons, button).ToString());
+                });
+            }
+        }
+
+        private void ShowTutorial()
+        {
+            try
+            {
+                bool tutorialSeen = saveData.tutorialsSeen[level.tutorialNumber];
+            }
+            catch (Exception)
+            {
+                BBSaveData data = new BBSaveData
+                {
+                    gameID = saveData.gameID,
+                    currentLevelID = saveData.currentLevelID
+                };
+
+                saveData = data;
+                Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+            }
+            finally
+            {
+                bool tutorialSeen = saveData.tutorialsSeen[level.tutorialNumber];
+                if (!(tutorialSeen))
+                {
+                    Events.StartDialogueSequence(tutorialSequenceID + level.tutorialNumber.ToString());
+                    saveData.tutorialsSeen[level.tutorialNumber] = true;
+                }
+
+                ToggleTutorialButtons();
+            }
+        }
+
         private void StartLevel()
         {
+            ShowTutorial();
             CreateAllGrids(level.gridSize);
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
 
@@ -131,6 +187,7 @@ namespace BlackBox
             livesRemaining = totalLives;
 
             BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
+            BBEvents.ToggleWolfieButton?.Invoke(false);
             BBEvents.InitEnergyBar?.Invoke();
 
             InitializeLanterns(level.nodePositions.Length);
@@ -141,6 +198,7 @@ namespace BlackBox
             if (level.nextLevelID == string.Empty)
             {
                 Debug.LogFormat("Next level not set for the level: {0}", level.levelID);
+                Quit();
                 return;
             }   
 
@@ -165,6 +223,12 @@ namespace BlackBox
 
             level = tempLevel;
             StartLevel();
+        }
+
+        private void Quit()
+        {
+            SceneManager.LoadScene(0);
+            Events.MinigameClosed?.Invoke();
         }
 
         private void CheckWinState()
@@ -287,7 +351,6 @@ namespace BlackBox
             foreach (GameObject mountGO in lanternMounts)
             {
                 LanternMount mount = mountGO.GetComponent<LanternMount>();
-
                 if (mount.isEmpty)
                 {
                     lanternGO.transform.SetParent(mount.transform);
@@ -296,6 +359,23 @@ namespace BlackBox
                     break;
                 }
             } 
+        }
+
+        private void CheckWolfieReady()
+        {
+            bool isWolfieReady = true;
+
+            foreach (GameObject mountGO in lanternMounts)
+            {
+                LanternMount mount = mountGO.GetComponent<LanternMount>();
+                if (mountGO.activeInHierarchy && !(mount.isEmpty))
+                {
+                    isWolfieReady = false;
+                    break;
+                }
+            }
+
+            BBEvents.ToggleWolfieButton?.Invoke(isWolfieReady);
         }
 
         private Transform GetLanternFrontMount()
@@ -313,6 +393,15 @@ namespace BlackBox
         private bool GetDebugBool()
         {
             return debug;
+        }
+
+        private void ToggleTutorialButtons()
+        {
+            for (int i = 0; i < saveData.tutorialsSeen.Length; i++)
+            {
+                bool tutorialSeen = saveData.tutorialsSeen[i];
+                tutorialButtons[i].gameObject.SetActive(tutorialSeen);
+            }
         }
 
         private void ToggleDebug()

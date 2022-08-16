@@ -7,7 +7,7 @@ namespace BlackBox
     {
         public string levelID;
         public int number;
-        public int module;
+        public int tutorialNumber;
         public string nextLevelID;
 
         [Range(10, 25)] public int numEnergyUnits;

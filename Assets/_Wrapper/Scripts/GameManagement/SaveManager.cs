@@ -4,6 +4,7 @@ using BeauRoutine;
 using System;
 using UnityEngine.Networking;
 using System.Linq;
+using System.Threading.Tasks;
 
 #if !UNITY_WEBGL
 using Firebase;
@@ -17,10 +18,10 @@ namespace Wrapper
     public class SaveManager : MonoBehaviour
     {
         [HideInInspector] public bool isUserLoggedIn = false;
-        public UserSave currentUserSave = null;
+        [HideInInspector] public UserSave currentUserSave = null;
         public int researchCodeLength = 6;
 
-        private float networkRequestTimeout = 7f;
+        private float networkRequestTimeout = 5f;
         private bool isDatabaseReady = false;
 
 #if !UNITY_WEBGL
@@ -28,9 +29,11 @@ namespace Wrapper
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
         private bool isConnectedToInternet = false;
+        private bool uploadSuccess = false;
 #else
         private string researchCodeExists = "";
         private string loadDataJson = "";
+        private bool webGLUploadSuccess = false;
 #endif
 
 #if PRODUCTION_FB
@@ -154,9 +157,15 @@ namespace Wrapper
             {
                 currentUserSave.id = formattedCode;
 
+                UpdateRemoteSave(); 
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => UpdateRemoteSave()),
+                    Routine.WaitCondition(() => uploadSuccess == true), 
                     Routine.WaitSeconds(networkRequestTimeout));
+
+                //yield return Routine.Race(
+                //    UpdateRemoteSave(),
+                //    Routine.WaitCondition(() => uploadSuccess == true),
+                //    Routine.WaitSeconds(networkRequestTimeout));
 
                 yield return GetDatabaseSnapshot();
             }
@@ -214,8 +223,10 @@ namespace Wrapper
             if (loadDataJson == "none")
             {
                 currentUserSave.id = formattedCode;
+
+                UpdateRemoteSave(); 
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => UpdateRemoteSave()),
+                    Routine.WaitCondition(() => webGLUploadSuccess == true), 
                     Routine.WaitSeconds(networkRequestTimeout));
 
                 loadDataJson = "";
@@ -302,36 +313,66 @@ namespace Wrapper
             UpdateRemoteSave();
         }
 
-#if !UNITY_WEBGL
-        private bool UpdateRemoteSave()
+        private void UpdateRemoteSave()
         {
+            Routine.Start(UpdateRemoteSaveRoutine());
+        }
+
+#if !UNITY_WEBGL
+        private IEnumerator UpdateRemoteSaveRoutine()
+        {
+            uploadSuccess = false;
+
             if (dbReference == null)
             {
                 Debug.LogError("No database reference on save");
-                return false;
+                yield break;
             }
 
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
                 Debug.LogError("Empty UserSave");
-                return false;
+                yield break;
             }
 
-            dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
-            return true;
+            Task uploadTask = dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
+
+            yield return Routine.Race(
+                Routine.WaitCondition(() => uploadTask.Status == TaskStatus.RanToCompletion),
+                Routine.WaitSeconds(networkRequestTimeout));
+
+            if (uploadTask.Status == TaskStatus.RanToCompletion)
+            {
+                Events.ToggleUploadFailurePopup?.Invoke(false);
+                uploadSuccess = true;
+            }
+            else
+                Events.ToggleUploadFailurePopup?.Invoke(true);
         }
 #else
-        private bool UpdateRemoteSave()
+        private IEnumerator UpdateRemoteSaveRoutine()
         {
+            webGLUploadSuccess = false;
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
                 Debug.LogError("Empty UserSave");
-                return false;
+                yield break;
             }
+
+            // Call the JS SaveData function
             SaveData(currentUserSave.id, json);
-            return true;
+
+            // Wait for whichever completes first: the SaveData callback function or the network timeout 
+            yield return Routine.Race(
+                Routine.WaitCondition(() => webGLUploadSuccess == true),
+                Routine.WaitSeconds(networkRequestTimeout));
+
+            if (webGLUploadSuccess)
+                Events.ToggleUploadFailurePopup?.Invoke(false);
+            else
+                Events.ToggleUploadFailurePopup?.Invoke(true);
         }
 #endif
 
@@ -374,6 +415,11 @@ namespace Wrapper
         public void LoadDataCallback(string str)
         {
             loadDataJson = str;
+        }
+
+        public void SaveDataCallback(string str)
+        {
+            webGLUploadSuccess = str.Equals("success") ? true : false;
         }
 #endif
 
