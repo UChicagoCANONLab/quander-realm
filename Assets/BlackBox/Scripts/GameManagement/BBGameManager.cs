@@ -57,7 +57,7 @@ namespace BlackBox
         private int livesRemaining;
         private int totalNodes;
         private Level level = null;
-        private const string tutorialSequenceID = "BB_Tutorial";
+        private const string tutorialSequenceID = "BB_Tutorial_";
         private bool debug = false;
 
         #region Unity Functions
