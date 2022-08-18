@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using System.Threading.Tasks;
 using System.Threading;
+using UnityEngine.SceneManagement;
 
 //using System;
 //using MySql.Data.MySqlClient;
@@ -34,6 +35,14 @@ namespace QueueBits
 
 		public float dropTime = 4f;
 
+		// star system
+		public bool starUpdated = false;
+		public GameObject starFilled;
+		public GameObject starEmpty;
+		public GameObject Star1;
+		public GameObject Star2;
+		public GameObject Star3;
+
 		// Gameobjects 
 		public GameObject pieceRed;
 		public GameObject pieceBlue;
@@ -44,6 +53,9 @@ namespace QueueBits
 		public GameObject piece25;
 		public GameObject piece50;
 		public GameObject piece75;
+		public GameObject piece25red_turn;
+		public GameObject piece50red_turn;
+		public GameObject piece75red_turn;
 		public GameObject playerTurnText;
 
 		//Piece Count Displays
@@ -81,17 +93,181 @@ namespace QueueBits
 		Dictionary<int, int> redProbs = new Dictionary<int, int>();
 		Dictionary<int, int> blueProbs = new Dictionary<int, int>();
 
+		// define prefilled board
+		List<(Piece, int, int)> prefilledBoard = new List<(Piece piece, int col, int row)>();
+
+		Dictionary<int, List<(Piece, int, int)>> prefilledBoardList = new Dictionary<int, List<(Piece, int, int)>>
+		{
+		{0, new List<(Piece piece, int col, int row)> // 5.2 flipped
+			{
+				(Piece.Red, 3, 5),
+				(Piece.Blue, 3, 4),
+				(Piece.Red, 2, 5),
+				(Piece.Blue, 4, 5),
+				(Piece.Red, 3, 3),
+				(Piece.Blue, 4, 4),
+				(Piece.Red, 4, 3),
+				(Piece.Blue, 2, 4),
+				(Piece.Red, 6, 5),
+				(Piece.Blue, 6, 4),
+				(Piece.Red, 3, 2),
+				(Piece.Blue, 6, 3),
+				(Piece.Red, 3, 1),
+				(Piece.Blue, 3, 0)
+			}
+		},
+		{1, new List<(Piece piece, int col, int row)> //5.1
+			{
+				(Piece.Red, 3, 5),
+				(Piece.Blue, 3, 4),
+				(Piece.Red, 2, 5),
+				(Piece.Blue, 4, 5),
+				(Piece.Red, 2, 4),
+				(Piece.Blue, 2, 3),
+				(Piece.Red, 1, 5),
+				(Piece.Blue, 0, 5),
+				(Piece.Red, 0, 4),
+				(Piece.Blue, 1, 4),
+				(Piece.Red, 0, 3),
+				(Piece.Blue, 0, 2),
+				(Piece.Red, 4, 4),
+				(Piece.Blue, 2, 2)
+			}
+		},
+		{2, new List<(Piece piece, int col, int row)> //5.2
+			{
+				(Piece.Red, 3, 5),
+				(Piece.Blue, 3, 4),
+				(Piece.Red, 4, 5),
+				(Piece.Blue, 2, 5),
+				(Piece.Red, 3, 3),
+				(Piece.Blue, 2, 4),
+				(Piece.Red, 2, 3),
+				(Piece.Blue, 4, 4),
+				(Piece.Red, 0, 5),
+				(Piece.Blue, 0, 4),
+				(Piece.Red, 3, 2),
+				(Piece.Blue, 0, 3),
+				(Piece.Red, 3, 1),
+				(Piece.Blue, 3, 0)
+			}
+		},
+		{3, new List<(Piece piece, int col, int row)> //5.3
+			{
+				(Piece.Red, 3, 5),
+				(Piece.Blue, 3, 4),
+				(Piece.Red, 3, 3),
+				(Piece.Blue, 3, 2),
+				(Piece.Red, 3, 1),
+				(Piece.Blue, 1, 5),
+				(Piece.Red, 1, 4),
+				(Piece.Blue, 1, 3),
+				(Piece.Red, 2, 5),
+				(Piece.Blue, 4, 5),
+				(Piece.Red, 1, 2),
+				(Piece.Blue, 4, 4),
+				(Piece.Red, 4, 3),
+				(Piece.Blue, 4, 2)
+			}
+		},
+		{4, new List<(Piece piece, int col, int row)> //5.4
+			{
+				(Piece.Red, 3, 5),
+				(Piece.Blue, 3, 4),
+				(Piece.Red, 2, 5),
+				(Piece.Blue, 4, 5),
+				(Piece.Red, 0, 5),
+				(Piece.Blue, 1, 5),
+				(Piece.Red, 4, 4),
+				(Piece.Blue, 2, 4),
+				(Piece.Red, 1, 4),
+				(Piece.Blue, 3, 3),
+				(Piece.Red, 1, 3),
+				(Piece.Blue, 5, 5),
+				(Piece.Red, 5, 4),
+				(Piece.Blue, 0, 4)
+			}
+		},
+		{5, new List<(Piece piece, int col, int row)> //5.5
+			{
+				(Piece.Red, 3, 5),
+				(Piece.Blue, 4, 5),
+				(Piece.Red, 2, 5),
+				(Piece.Blue, 3, 4),
+				(Piece.Red, 2, 4),
+				(Piece.Blue, 3, 3),
+				(Piece.Red, 1, 5),
+				(Piece.Blue, 0, 5),
+				(Piece.Red, 2, 3),
+				(Piece.Blue, 2, 2),
+				(Piece.Red, 3, 2),
+				(Piece.Blue, 0, 4),
+				(Piece.Red, 4, 4),
+				(Piece.Blue, 3, 1)
+			}
+		},
+		{6, new List<(Piece piece, int col, int row)> //5.6
+			{
+				(Piece.Red, 4, 5),
+				(Piece.Blue, 1, 5),
+				(Piece.Red, 3, 5),
+				(Piece.Blue, 5, 5),
+				(Piece.Red, 1, 4),
+				(Piece.Blue, 4, 4),
+				(Piece.Red, 5, 4),
+				(Piece.Blue, 4, 3),
+				(Piece.Red, 4, 2),
+				(Piece.Blue, 3, 4),
+				(Piece.Red, 3, 3),
+				(Piece.Blue, 3, 2),
+				(Piece.Red, 1, 3),
+				(Piece.Blue, 3, 1)
+			}
+		},
+		{7, new List<(Piece piece, int col, int row)> //5.3 flipped
+			{
+				(Piece.Red, 3, 5),
+				(Piece.Blue, 3, 4),
+				(Piece.Red, 3, 3),
+				(Piece.Blue, 3, 2),
+				(Piece.Red, 3, 1),
+				(Piece.Blue, 5, 5),
+				(Piece.Red, 5, 4),
+				(Piece.Blue, 5, 3),
+				(Piece.Red, 4, 5),
+				(Piece.Blue, 2, 5),
+				(Piece.Red, 5, 2),
+				(Piece.Blue, 2, 4),
+				(Piece.Red, 2, 3),
+				(Piece.Blue, 2, 2)
+			}
+		}
+	};
+
+		// Select Tokens
+		GameObject SelectTokenText;
+		GameObject choice50;
+		GameObject choice50text;
+		GameObject choice75;
+		GameObject choice75text;
+		GameObject choice100;
+		GameObject choice100text;
+		bool SelectMenuGenerated = false;
+		int choice;
+
 		int bturns = 0;
 
 		public GameObject winningText;
 
 		public GameObject playerTurnObject;
 
-		public string playerWonText = "Yellow Won!";
+		public GameObject resultBG;
+		public string playerWonText = "You Won!";
 		public string playerLoseText = "Red Won!";
 		public string drawText = "Draw!";
 
 		public GameObject probText;
+		public GameObject starText;
 
 		public GameObject btnPlayAgain;
 		bool btnPlayAgainTouching = false;
@@ -118,21 +294,74 @@ namespace QueueBits
 
 		bool gameOver = false;
 		bool isCheckingForWinner = false;
-
+		
 		string state = "000000000000000000000000000000000000000000";
 		int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
 		HashSet<(int, int)> visited = new HashSet<(int, int)>();
 
+		//public GameObject tutorial_text;
+		//public GameObject tutorial_button;
+		//public bool tutorial_button_touching = false;
+		//public bool tutorial_phase = false;
+		//public GameObject tutorial_background;
+
+		public GameObject btnNextLevel;
+		bool btnNextLevelTouching = false;
+		//Shivani Puli Data Collection
+		Data mydata = new Data();
+		int turn = 0;
+
 		// Use this for initialization
 		void Start()
 		{
-			redProbs.Add(50, 6);
-			redProbs.Add(75, 7);
-			redProbs.Add(100, 8);
+			ShowStarSystem();
 
-			blueProbs.Add(50, 6);
-			blueProbs.Add(75, 7);
-			blueProbs.Add(100, 8);
+			int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
+            prefilledBoard = prefilledBoardList[board_num];
+
+			//Shivani Puli Data Collection
+			mydata.level = 3;
+			mydata.prefilledBoard = board_num;
+			mydata.placement_order = new int[numColumns * numRows];
+			mydata.superposition = new int[numColumns * numRows];
+			mydata.reveal_order = new int[numColumns * numRows];
+			mydata.outcome = new int[numColumns * numRows];
+			for (int i = 0; i < numColumns * numRows; i++)
+			{
+				mydata.placement_order[i] = 0;
+				mydata.superposition[i] = 0;
+				mydata.reveal_order[i] = 0;
+				mydata.outcome[i] = 0;
+
+			}
+			foreach ((Piece pi, int c, int r) in prefilledBoard)
+			{
+				turn++;
+				int index = r * numColumns + c;
+				mydata.placement_order[index] = turn;
+				mydata.superposition[index] = 100;
+				mydata.reveal_order[index] = turn;
+				if (pi == Piece.Blue)//if Yellow
+				{
+					mydata.outcome[index] = 1;
+					playMove(c, "1");
+					//state = state.Substring(0, index) + "1" + state.Substring(index + 1);
+				}
+				else
+				{
+					mydata.outcome[index] = 2;
+					playMove(c, "2");
+					//state = state.Substring(0, index) + "2" + state.Substring(index + 1);
+				}
+			}
+
+			//Shivani Puli Data collection
+
+			redProbs.Add(75, 8);
+			redProbs.Add(100, 6);
+
+			blueProbs.Add(75, 8);
+			blueProbs.Add(100, 6);
 
 			int max = Mathf.Max(numRows, numColumns);
 
@@ -141,17 +370,19 @@ namespace QueueBits
 
 			CreateField();
 
-			isPlayersTurn = System.Convert.ToBoolean(Random.Range(0, 2));
-			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Yellow's Turn" : "Red's Turn";
+			isPlayersTurn = false;
+			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+			GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
+			levelText.GetComponent<TextMesh>().text = "Level 3";
 
 			if (isPlayersTurn)
 			{
-				playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6, 1), Quaternion.identity) as GameObject;
+				playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
 				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 			}
 			else
 			{
-				playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6, 1), Quaternion.identity) as GameObject;
+				playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
 				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 			}
 
@@ -163,8 +394,33 @@ namespace QueueBits
 		/// </summary>
 		void CreateField()
 		{
+//			// TUTORIAL
+//			tutorial_background.transform.localScale += new Vector3(0.5f, 0.5f, 0);
+//			//Color tempcolor = tutorial_background.GetComponent<MeshRenderer>().material.color;
+//			//tempcolor.a = .5f;
+//			//tutorial_background.GetComponent<Renderer>().material.color = tempcolor;
+//			tutorial_background.GetComponent<Renderer>().sortingOrder = 14;
+//			//tutorial_background.GetComponent<SpriteRenderer>().size = new Vector2(2000, 2000);
+//			tutorial_background.SetActive(true);
+
+//			tutorial_text = Instantiate(pieceCounterText, new Vector3(-3.0f, -1.0f, -1), Quaternion.identity) as GameObject;
+//			tutorial_text.GetComponent<TextMesh>().color = Color.black;
+//			tutorial_text.GetComponent<TextMesh>().text = "Welcome to Level 3! \nThe rules of this game are the same as \nin Level 1 and 2 — but with a twist! \n Instead of having purely red or yellow pieces, \nyou will now drop pieces that have a \nprobability of being red or yellow. You will have \n75 % yellow tokens and 100 % yellow tokens, \nbut you can’t place two 100 % tokens in a row.";
+//			tutorial_text.GetComponent<TextMesh>().alignment = TextAlignment.Center;
+//			tutorial_text.GetComponent<Renderer>().sortingOrder = 15;
+//			tutorial_text.SetActive(true);
+
+//			tutorial_button.transform.position = new Vector3(
+//(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 2, tutorial_button.transform.position.z);
+//			tutorial_button.GetComponent<TextMesh>().color = Color.black;
+//			tutorial_button.GetComponent<TextMesh>().text = "OK";
+//			tutorial_button.GetComponent<TextMesh>().fontSize = 70;
+//			tutorial_button.GetComponent<Renderer>().sortingOrder = 15;
+//			tutorial_button.SetActive(true);
+
 			winningText.SetActive(false);
-			btnPlayAgain.SetActive(true);
+			btnPlayAgain.SetActive(false);
+			btnNextLevel.SetActive(false);
 			playerTurnText.SetActive(true);
 			playerTurnText.GetComponent<Renderer>().sortingOrder = 4;
 
@@ -179,13 +435,31 @@ namespace QueueBits
 
 			// create an empty field and instantiate the cells
 			field = new int[numColumns, numRows];
+
+			// initialize the wood board image
+			GameObject g = Instantiate(pieceField, new Vector3(3, -2.8f, 1), Quaternion.identity) as GameObject;
+			g.transform.parent = gameObjectField.transform;
+
+			// initialize field for pieces
 			for (int x = 0; x < numColumns; x++)
 			{
 				for (int y = 0; y < numRows; y++)
 				{
 					field[x, y] = (int)Piece.Empty;
-					GameObject g = Instantiate(pieceField, new Vector3(x, -y, -1), Quaternion.identity) as GameObject;
-					g.transform.parent = gameObjectField.transform;
+				}
+			}
+
+			// initialize prefilled board
+			for (int i = 0; i < prefilledBoard.Count; i++)
+            {
+				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
+				if (prefilledBoard[i].Item1 == Piece.Blue)
+                {
+					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, - prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
+				}
+				else
+                {
+					GameObject obj = Instantiate(pieceRed, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
 				}
 			}
 
@@ -199,67 +473,54 @@ namespace QueueBits
 			winningText.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 1, winningText.transform.position.z);
 
-			//btnPlayAgain.transform.position = new Vector3(
-			//	(numColumns-1) / 2.0f, -((numRows-1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
+			btnNextLevel.transform.position = new Vector3(
+(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f), btnNextLevel.transform.position.z);
 
-			playerTurnText.transform.position = new Vector3(
-			(numColumns - 1) / 2.0f, -6, playerTurnText.transform.position.z);
+            //btnPlayAgain.transform.position = new Vector3(
+            //    (numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 3, btnPlayAgain.transform.position.z);
+
+            playerTurnText.transform.position = new Vector3(
+			(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
 
 			//Piece Count Displays
-			blueTitle.transform.position = new Vector3(-3, 1, 0);
+			blueTitle.transform.position = new Vector3(-4, 0, 0);
 			blueTitle.GetComponent<Renderer>().sortingOrder = 10;
 			blueTitle.SetActive(true);
 
-			redTitle.transform.position = new Vector3(6.75f, 1, 0);
+			redTitle.transform.position = new Vector3(7.75f, 0, 0);
 			redTitle.GetComponent<Renderer>().sortingOrder = 10;
 			redTitle.SetActive(true);
 
-			pieceBlue100 = Instantiate(pieceBlue, new Vector3(-1, 0, -1), Quaternion.identity) as GameObject;
+			pieceBlue100 = Instantiate(pieceBlue, new Vector3(-2, -1, -1), Quaternion.identity) as GameObject;
 			pieceBlue100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
-			pieceBlue75 = Instantiate(piece75, new Vector3(-1, -1, -1), Quaternion.identity) as GameObject;
+			pieceBlue75 = Instantiate(piece75, new Vector3(-2, -2, -1), Quaternion.identity) as GameObject;
 			pieceBlue75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
-			pieceBlue50 = Instantiate(piece50, new Vector3(-1, -2, -1), Quaternion.identity) as GameObject;
-			pieceBlue50.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-
 			//Piece Count Texts - BLUE
-			pieceBlue100Text = Instantiate(pieceCounterText, new Vector3(-1.75f, 0, -1), Quaternion.identity) as GameObject;
+			pieceBlue100Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -1, -1), Quaternion.identity) as GameObject;
 			pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
 			pieceBlue100Text.SetActive(true);
 
-			pieceBlue75Text = Instantiate(pieceCounterText, new Vector3(-1.75f, -1, -1), Quaternion.identity) as GameObject;
+			pieceBlue75Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -2, -1), Quaternion.identity) as GameObject;
 			pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
 			pieceBlue75Text.SetActive(true);
 
-			pieceBlue50Text = Instantiate(pieceCounterText, new Vector3(-1.75f, -2, -1), Quaternion.identity) as GameObject;
-			pieceBlue50Text.GetComponent<TextMesh>().text = blueProbs[50].ToString();
-			pieceBlue50Text.SetActive(true);
-
-
 			//Piece Count Displays - RED
-			pieceRed100 = Instantiate(pieceRed, new Vector3(7, 0, -1), Quaternion.identity) as GameObject;
+			pieceRed100 = Instantiate(pieceRed, new Vector3(8, -1, -1), Quaternion.identity) as GameObject;
 			pieceRed100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
-			pieceRed75 = Instantiate(piece25, new Vector3(7, -1, -1), Quaternion.identity) as GameObject;
+			pieceRed75 = Instantiate(piece25red_turn, new Vector3(8, -2, -1), Quaternion.identity) as GameObject;
 			pieceRed75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
-			pieceRed50 = Instantiate(piece50, new Vector3(7, -2, -1), Quaternion.identity) as GameObject;
-			pieceRed50.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-
-
 			//Piece Count Texts - RED
-			pieceRed100Text = Instantiate(pieceCounterText, new Vector3(7.5f, 0, -1), Quaternion.identity) as GameObject;
+			pieceRed100Text = Instantiate(pieceCounterText, new Vector3(8.5f, -1, -1), Quaternion.identity) as GameObject;
 			pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
 			pieceRed100Text.SetActive(true);
 
-			pieceRed75Text = Instantiate(pieceCounterText, new Vector3(7.5f, -1, -1), Quaternion.identity) as GameObject;
+			pieceRed75Text = Instantiate(pieceCounterText, new Vector3(8.5f, -2, -1), Quaternion.identity) as GameObject;
 			pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
 			pieceRed75Text.SetActive(true);
-
-			pieceRed50Text = Instantiate(pieceCounterText, new Vector3(7.5f, -2, -1), Quaternion.identity) as GameObject;
-			pieceRed50Text.GetComponent<TextMesh>().text = redProbs[50].ToString();
-			pieceRed50Text.SetActive(true);
 
 			pieceCounterText.SetActive(false);
 		}
@@ -310,6 +571,7 @@ namespace QueueBits
 			}
 			return score;
 		}
+
 
 		int evaluatePosition(string state, int r, int c, string color)
 		{
@@ -434,6 +696,106 @@ namespace QueueBits
 
 		}
 
+		int checkForWinner(string state, int r, int c)
+        {
+			int i = index(r, c);
+			char color = state[i];
+
+			//horizontal win
+			int horizontal = 1;
+			int searchInd = i + 1;
+			//look right
+			while ((searchInd % 7)!=0 && state[searchInd]==color)
+			{
+				horizontal++;
+				searchInd++;
+			}
+			//look left
+			searchInd = i - 1;
+			while ((searchInd % 7) != 6 && state[searchInd] == color)
+			{
+				horizontal++;
+				searchInd--;
+			}
+			if (horizontal == 4)
+			{
+				if (color == '2')
+					return 1;
+				else
+					return -1;
+			}
+
+			// look down
+			int vertical = 1;
+			searchInd = i - 7;
+			while (searchInd >= 0 && state[searchInd] == color)
+			{
+				vertical++;
+				searchInd -= 7;
+			}
+			//look up
+			searchInd = i + 7;
+			while (searchInd < state.Length && state[searchInd] == color)
+			{
+				vertical++;
+				searchInd += 7;
+			}
+			if (vertical == 4)
+			{
+				if (color == '2')
+					return 1;
+				else
+					return -1;
+			}
+
+			// look diagonal right-down
+			searchInd = i+8;
+			int diagright = 1;
+			while (searchInd < state.Length && state[searchInd]==color)
+			{
+				diagright++;
+				searchInd += 8;
+			}
+			//look diagonal up-left
+			searchInd = i - 8;
+			while (searchInd >= 0 && state[searchInd] == color)
+			{
+				diagright++;
+				searchInd -= 8;
+			}
+			if (diagright == 4)
+			{
+				if (color == '2')
+					return 1;
+				else
+					return -1;
+			}
+
+			// look diagonal left-down
+			searchInd = i + 6;
+			int leftdown = 1;
+			while (searchInd < state.Length && state[searchInd] == color)
+			{
+				leftdown++;
+				i += 6;
+			}
+			//look diagonal up-right
+			searchInd = i - 6;
+			while ((searchInd % 7) !=0 && state[searchInd] == color)
+			{
+				leftdown++;
+				i -= 6;
+			}
+			if (leftdown == 4)
+			{
+				if (color == '2')
+					return 1;
+				else
+					return -1;
+			}
+			return 0;
+		}
+
 		int findBestMove(string state, int[] cols)
 		{
 			int bestVal = int.MinValue;
@@ -449,10 +811,13 @@ namespace QueueBits
 					bestVal = value;
 					bestMove = column;
 				}
+				
 				reverseMove(column);
 			}
 			return bestMove;
 		}
+
+
 
 		int minimax(int depth, int maxDepth, bool isMaximizing)
 		{
@@ -460,7 +825,6 @@ namespace QueueBits
 
 			if (moves.Count == 0 || depth == maxDepth)
 				return evaluateState(state);
-
 			if (isMaximizing)
 			{
 				int bestVal = int.MinValue;
@@ -517,9 +881,7 @@ namespace QueueBits
 
 			if (isPlayersTurn)
 			{
-				int i = Random.Range(0, blueProbs.Keys.Count);
-				List<int> keyList = new List<int>(blueProbs.Keys);
-				prob = keyList[i];
+				prob = choice;
 				int freq = blueProbs[prob];
 
 				// delete probability from player's list
@@ -555,9 +917,9 @@ namespace QueueBits
 			}
 			else
 			{
-				int i = Random.Range(0, redProbs.Keys.Count);
+				int ind = Random.Range(0, redProbs.Keys.Count);
 				List<int> keyList = new List<int>(redProbs.Keys);
-				prob = keyList[i];
+				prob = keyList[ind];
 				int freq = redProbs[prob];
 
 				// delete probability from player's list
@@ -570,17 +932,17 @@ namespace QueueBits
 				}
 				else if (prob == 75)
 				{
-					pieceSuperposition = piece25;
+					pieceSuperposition = piece25red_turn;
 					pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
 				}
 				else if (prob == 50)
 				{
-					pieceSuperposition = piece50;
+					pieceSuperposition = piece50red_turn;
 					pieceRed50Text.GetComponent<TextMesh>().text = redProbs[50].ToString();
 				}
 				else
 				{
-					pieceSuperposition = piece75;
+					pieceSuperposition = piece75red_turn;
 					pieceRed25Text.GetComponent<TextMesh>().text = redProbs[25].ToString();
 				}
 
@@ -590,15 +952,27 @@ namespace QueueBits
 				}
 
 				probText.GetComponent<TextMesh>().text = prob.ToString() + "% RED";
-			}
 
-			List<int> moves = GetPossibleMoves();
 
-			if (moves.Count > 0)
-			{
-				int column = findBestMove(state, colPointers);
+				List<int> moves = GetPossibleMoves();
 
-				spawnPos = new Vector3(column, 0, 0);
+				/*for (int i = 0; i < numColumns; i++)
+				{
+					for (int j = 0; j < numRows; j++)
+					{
+						if (field[i, j] != 0)
+						{
+							colPointers[i] = j - 1;
+							break;
+						}
+					}
+				}*/
+
+				if (moves.Count > 0)
+				{
+					int column = findBestMove(state, colPointers);
+					spawnPos = new Vector3(column, 0, 0);
+				}
 			}
 
 			GameObject g = Instantiate(pieceSuperposition,
@@ -607,8 +981,8 @@ namespace QueueBits
 					gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
 					Quaternion.identity) as GameObject;
 
-			probText.transform.position = new Vector3(spawnPos.x + 1, gameObjectField.transform.position.y + 1, 0);
-			probText.transform.parent = g.transform;
+			probText.transform.position = new Vector3(1.5f, 2, -1);
+			// probText.transform.parent = g.transform;
 
 			probText.SetActive(true);
 
@@ -624,10 +998,17 @@ namespace QueueBits
 			if (isCheckingForWinner)
 				return;
 
+			//if (tutorial_phase)
+			//{
+			//	UpdateTutorialButton();
+			//	return;
+			//}
+
 			if (gameOver)
 			{
 				winningText.SetActive(true);
-				btnPlayAgain.SetActive(true);
+				btnPlayAgain.SetActive(false);
+				btnNextLevel.SetActive(false);
 
 				playerTurnText.SetActive(false);
 				playerTurnObject.SetActive(false);
@@ -640,6 +1021,7 @@ namespace QueueBits
 				btnPlayAgain.GetComponent<TextMesh>().fontSize = 70;
 
 				UpdatePlayAgainButton();
+				// UpdateNextLevelButton();
 
 				return;
 			}
@@ -650,7 +1032,108 @@ namespace QueueBits
 			{
 				if (gameObjectTurn == null)
 				{
-					(gameObjectTurn, probability, probText) = SpawnPiece();
+					if (!SelectMenuGenerated)
+                    {
+						SelectTokenText = Instantiate(pieceCounterText, new Vector3(1.5f, 2, -1), Quaternion.identity) as GameObject;
+						SelectTokenText.GetComponent<TextMesh>().text = "SELECT TOKEN";
+						SelectTokenText.GetComponent<TextMesh>().color = Color.blue;
+						SelectTokenText.SetActive(true);
+
+						if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
+                        {
+							choice100 = Instantiate(pieceBlue, new Vector3(-1f, 1, -1), Quaternion.identity) as GameObject;
+							choice100text = Instantiate(probText, new Vector3(-0.4f, 1, -1), Quaternion.identity) as GameObject;
+							choice100text.GetComponent<TextMesh>().text = "100% YELLOW";
+							choice100text.transform.localScale = new Vector3(0.04f, 0.04f, 0.05f);
+							choice100text.SetActive(true);
+						}
+						if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
+						{
+							choice75 = Instantiate(piece75, new Vector3(3, 1, -1), Quaternion.identity) as GameObject;
+							choice75text = Instantiate(probText, new Vector3(3.5f, 1, -1), Quaternion.identity) as GameObject;
+							choice75text.GetComponent<TextMesh>().text = "75% YELLOW";
+							choice75text.transform.localScale = new Vector3(0.04f, 0.04f, 0.05f);
+							choice75text.SetActive(true);
+						}
+						if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
+						{
+							choice50 = Instantiate(piece50, new Vector3(6.6f, 1, -1), Quaternion.identity) as GameObject;
+							choice50text = Instantiate(probText, new Vector3(7.15f, 1, -1), Quaternion.identity) as GameObject;
+							choice50text.GetComponent<TextMesh>().text = "50% YELLOW";
+							choice50text.transform.localScale = new Vector3(0.04f, 0.04f, 0.05f);
+							choice50text.SetActive(true);
+						}
+						SelectMenuGenerated = true;
+					}
+
+					if (Input.GetMouseButtonDown(0))
+                    {
+						Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+						RaycastHit hit;
+
+						if (Physics.Raycast(ray, out hit))
+						{
+							GameObject piece = hit.transform.gameObject;
+							int clickedObjectID = piece.GetInstanceID();
+							if (blueProbs.ContainsKey(100) && blueProbs[100] > 0 && clickedObjectID == choice100.GetInstanceID())
+                            {
+								choice = 100;
+								SelectTokenText.SetActive(false);
+								DestroyImmediate(choice100);
+								choice100text.SetActive(false);
+								if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
+								{
+									DestroyImmediate(choice75);
+									choice75text.SetActive(false);
+								}
+								if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
+								{
+									DestroyImmediate(choice50);
+									choice50text.SetActive(false);
+								}
+								(gameObjectTurn, probability, probText) = SpawnPiece();
+								SelectMenuGenerated = false;
+							}
+							if (blueProbs.ContainsKey(75) && blueProbs[75] > 0 && clickedObjectID == choice75.GetInstanceID())
+							{
+								choice = 75;
+								SelectTokenText.SetActive(false);
+								if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
+								{
+									DestroyImmediate(choice100);
+									choice100text.SetActive(false);
+								}
+								DestroyImmediate(choice75);
+								choice75text.SetActive(false);
+								if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
+								{
+									DestroyImmediate(choice50);
+									choice50text.SetActive(false);
+								}
+								(gameObjectTurn, probability, probText) = SpawnPiece();
+								SelectMenuGenerated = false;
+							}
+							if (blueProbs.ContainsKey(50) && blueProbs[50] > 0 && clickedObjectID == choice50.GetInstanceID())
+							{
+								choice = 50;
+								SelectTokenText.SetActive(false);
+								if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
+								{
+									DestroyImmediate(choice100);
+									choice100text.SetActive(false);
+								}
+								if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
+								{
+									DestroyImmediate(choice75);
+									choice75text.SetActive(false);
+								}
+								DestroyImmediate(choice50);
+								choice50text.SetActive(false);
+								(gameObjectTurn, probability, probText) = SpawnPiece();
+								SelectMenuGenerated = false;
+							}
+						}
+					}
 				}
 				else
 				{
@@ -690,6 +1173,7 @@ namespace QueueBits
 						probText.SetActive(false);
 						//Task.Delay(2000);
 						Thread.Sleep(1000);
+						Debug.Log(gameObjectTurn.transform.position.ToString());
 						StartCoroutine(dropPiece(gameObjectTurn, probText, probability));
 					}
 				}
@@ -703,8 +1187,20 @@ namespace QueueBits
 		/// <param name="gObject">Game Object.</param>
 		IEnumerator dropPiece(GameObject gObject, GameObject probText, int probability)
 		{
-
 			isDropping = true;
+			string s = "";
+
+			for (int j = 0; j< numRows; j++)
+			{
+				/*for (int p = 0; p < numColumns; p++)
+			{
+				
+					s += (int)field[p, j];
+				}*/
+				s += state.Substring(j * numColumns, numColumns);
+				s += "\n";
+			}
+			//Debug.Log(s);
 
 			Vector3 startPosition = gObject.transform.position;
 			Vector3 endPosition = new Vector3();
@@ -734,6 +1230,15 @@ namespace QueueBits
 								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
 								Quaternion.identity) as GameObject;
 							field[x, i] = (int)Piece.Blue;
+							//Shivani Puli data collection
+							int r = colPointers[x];
+							int index = r * numColumns + x;
+							turn++;
+							mydata.placement_order[index] = turn;
+							mydata.superposition[index] = probability;
+							mydata.reveal_order[index] = turn;
+							mydata.outcome[index] = 1;
+							// data collection
 							playMove(x, "1");
 						}
 						else
@@ -745,6 +1250,15 @@ namespace QueueBits
 								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
 								Quaternion.identity) as GameObject;
 							field[x, i] = (int)Piece.Red;
+							//Shivani Puli data collection
+							int r = colPointers[x];
+							int index = r * numColumns + x;
+							turn++;
+							mydata.placement_order[index] = turn;
+							mydata.superposition[index] = probability;
+							mydata.reveal_order[index] = turn;
+							mydata.outcome[index] = 2;
+							// data collection
 							playMove(x, "2");
 						}
 					}
@@ -760,6 +1274,15 @@ namespace QueueBits
 								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
 								Quaternion.identity) as GameObject;
 							field[x, i] = (int)Piece.Red;
+							//Shivani Puli data collection
+							int r = colPointers[x];
+							int index = r * numColumns + x;
+							turn++;
+							mydata.placement_order[index] = turn;
+							mydata.superposition[index] = probability;
+							mydata.reveal_order[index] = turn;
+							mydata.outcome[index] = 2;
+							// data collection
 							playMove(x, "2");
 						}
 						else
@@ -771,6 +1294,15 @@ namespace QueueBits
 								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
 								Quaternion.identity) as GameObject;
 							field[x, i] = (int)Piece.Blue;
+							//Shivani Puli data collection
+							int r = colPointers[x];
+							int index = r * numColumns + x;
+							turn++;
+							mydata.placement_order[index] = turn;
+							mydata.superposition[index] = probability;
+							mydata.reveal_order[index] = turn;
+							mydata.outcome[index] = 1;
+							// data collection
 							playMove(x, "1");
 						}
 					}
@@ -779,6 +1311,7 @@ namespace QueueBits
 
 					break;
 				}
+
 			}
 
 			if (foundFreeCell)
@@ -821,25 +1354,29 @@ namespace QueueBits
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Yellow's Turn" : "Red's Turn";
+				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
 
 				DestroyImmediate(playerTurnObject);
 
 				if (isPlayersTurn)
 				{
-					playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6, 1), Quaternion.identity) as GameObject;
+					playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
 					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 				}
 				else
 				{
-					playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6, 1), Quaternion.identity) as GameObject;
+					playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity) as GameObject;
 					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
 				}
 			}
+			else
+            {
+				probText.SetActive(true);
+				probText.transform.position = new Vector3(1.5f, 2, -1);
+			}
 
 			isDropping = false;
-
 			yield return 0;
 		}
 
@@ -933,21 +1470,136 @@ namespace QueueBits
 			// if Game Over update the winning text to show who has won
 			if (gameOver == true)
 			{
-				winningText.GetComponent<TextMesh>().text = blueWon ? playerWonText : playerLoseText;
+				//Shivani Puli Data Collection -> store winner
+				if (blueWon)
+					mydata.winner = 1;
+				else
+					mydata.winner = 2;
+				saveData.Save(mydata);
+				//Data Collection
+
+				// star system
+				if (!starUpdated)
+				{
+					starUpdated = true;
+					if (StarSystem.levelStarCount[3] + 1 <= 3)
+					{
+						StarSystem.levelStarCount[3] = StarSystem.levelStarCount[3] + 1;
+					}
+				}
+				// StarSystem
+				DestroyImmediate(Star1);
+				DestroyImmediate(Star2);
+				DestroyImmediate(Star3);
+				ShowStarSystem();
+
+				GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
+				winningText.GetComponent<TextMesh>().text = isPlayersTurn ? playerWonText : playerLoseText;
+				GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
+				if (StarSystem.levelStarCount[3] < 3)
+				{
+					star.GetComponent<TextMesh>().text = "Congrats! You got one star.\nPlay again to get more stars!";
+				}
+				else
+				{
+					star.GetComponent<TextMesh>().text = "WOW! You've gotten 3 stars.\nLet's explore other levels!";
+				}
 			}
 			else
 			{
 				// check if there are any empty cells left, if not set game over and update text to show a draw
 				if (!FieldContainsEmptyCell())
 				{
+					//Shivani Puli Data Collection
+					mydata.winner = 0;
+					saveData.Save(mydata);
+
+					// star system
+					if (!starUpdated)
+					{
+						starUpdated = true;
+						if (StarSystem.levelStarCount[3] + 1 <= 3)
+						{
+							StarSystem.levelStarCount[3] = StarSystem.levelStarCount[3] + 1;
+						}
+					}
+					// StarSystem
+					DestroyImmediate(Star1);
+					DestroyImmediate(Star2);
+					DestroyImmediate(Star3);
+					ShowStarSystem();
+
+					GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
 					gameOver = true;
 					winningText.GetComponent<TextMesh>().text = drawText;
+					GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
+					if (StarSystem.levelStarCount[3] < 3)
+					{
+						star.GetComponent<TextMesh>().text = "Congrats! You got one star.\nPlay again to get more stars!";
+					}
+					else
+					{
+						star.GetComponent<TextMesh>().text = "WOW! You've gotten 3 stars.\nLet's explore other levels!";
+					}
 				}
 			}
 
 			isCheckingForWinner = false;
 
 			yield return 0;
+		}
+
+		void UpdateNextLevelButton()
+		{
+			RaycastHit hit;
+			//ray shooting out of the camera from where the mouse is
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+			if (Physics.Raycast(ray, out hit) && hit.collider.name == btnNextLevel.name)
+			{
+				//check if the left mouse has been pressed down this frame
+				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnNextLevelTouching == false)
+				{
+					btnNextLevelTouching = true;
+
+					//CreateField();
+					SceneManager.LoadScene("level3");
+				}
+			}
+
+			if (Input.touchCount == 0)
+			{
+				btnNextLevelTouching = false;
+			}
+		}
+
+		void ShowStarSystem()
+		{
+			// Star System
+			if (StarSystem.levelStarCount[3] == 0)
+			{
+				Star1 = Instantiate(starEmpty, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
+			}
+			else if (StarSystem.levelStarCount[3] == 1)
+			{
+				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
+			}
+			else if (StarSystem.levelStarCount[3] == 2)
+			{
+				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
+			}
+			else if (StarSystem.levelStarCount[3] == 3)
+			{
+				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star3 = Instantiate(starFilled, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
+			}
 		}
 
 		void UpdatePlayAgainButton()
@@ -978,6 +1630,30 @@ namespace QueueBits
 				btnPlayAgainTouching = false;
 			}
 		}
+
+		//void UpdateTutorialButton()
+		//{
+		//	RaycastHit hit;
+		//	//ray shooting out of the camera from where the mouse is
+		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		//	if (Physics.Raycast(ray, out hit) && hit.collider.name == tutorial_button.name)
+		//	{
+		//		//check if the left mouse has been pressed down this frame
+		//		if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && tutorial_button_touching == false)
+		//		{
+		//			tutorial_button_touching = true;
+		//			tutorial_phase = false;
+		//			tutorial_button.SetActive(false);
+		//			tutorial_text.SetActive(false);
+		//			tutorial_background.SetActive(false);
+		//		}
+		//	}
+		//	if (Input.touchCount == 0)
+		//	{
+		//		tutorial_button_touching = false;
+		//	}
+		//}
 
 		/// <summary>
 		/// check if the field contains an empty cell
