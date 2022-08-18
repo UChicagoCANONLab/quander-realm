@@ -169,7 +169,7 @@ namespace BlackBox
                 bool tutorialSeen = saveData.tutorialsSeen[level.tutorialNumber];
                 if (!(tutorialSeen))
                 {
-                    Events.StartDialogueSequence(tutorialSequenceID + level.tutorialNumber.ToString());
+                    Events.StartDialogueSequence?.Invoke(tutorialSequenceID + level.tutorialNumber.ToString());
                     saveData.tutorialsSeen[level.tutorialNumber] = true;
                 }
 
