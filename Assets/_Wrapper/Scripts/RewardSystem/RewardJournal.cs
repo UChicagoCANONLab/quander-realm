@@ -135,7 +135,7 @@ namespace Wrapper
         /// </summary>
         private IEnumerator SwitchCardsRoutine(JournalPage newPage)
         {
-            Events.PlaySound("PageFlip");
+            Events.PlaySound?.Invoke("PageFlip");
             animator.SetTrigger(GetPageFlipTrigger(newPage));
             yield return animator.WaitToCompleteAnimation(3);
 
@@ -225,7 +225,7 @@ namespace Wrapper
         {
             foreach (RewardAsset rAsset in GameManager.Instance.rewardAssets)
             {
-                GameObject rewardGO = Events.CreatRewardCard(rAsset, hiddenRewardsMount, DisplayType.InJournal);
+                GameObject rewardGO = Events.CreatRewardCard?.Invoke(rAsset, hiddenRewardsMount, DisplayType.InJournal);
                 journal[rAsset.game].AddCard(rewardGO);
             }
         }

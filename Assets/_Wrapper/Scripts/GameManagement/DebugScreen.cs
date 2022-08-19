@@ -16,6 +16,7 @@ public class DebugScreen : MonoBehaviour
         Open_Dialog,
         Close_Dialog_UI,
         Clear_Save_File,
+        Attempt_Saving,
         BB_Goto_Level,
         BB_Toggle_Debug,
         BB_Clear_Markers
@@ -110,6 +111,9 @@ public class DebugScreen : MonoBehaviour
                 break;
             case Option.Clear_Save_File:    
                 Events.ClearSaveFile?.Invoke(); 
+                break;
+            case Option.Attempt_Saving:
+                Events.UpdateRemoteSave?.Invoke();
                 break;
             case Option.BB_Goto_Level:      
                 if (!(string.IsNullOrEmpty(fieldText))) 
