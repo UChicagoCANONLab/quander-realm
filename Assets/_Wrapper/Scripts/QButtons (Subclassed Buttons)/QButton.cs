@@ -1,18 +1,28 @@
+using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace Wrapper
 {
     public class QButton : Button
     {
-        protected override void Awake()
+        [SerializeField] protected string audioName = string.Empty;
+        public override void OnPointerDown(PointerEventData eventData)
         {
-            base.Awake();
-            onClick.AddListener(OnClickedHandler);
+            base.OnPointerDown(eventData);
+
+            Events.PlaySound?.Invoke(audioName.Equals(string.Empty)? "ButtonClick" : audioName);
         }
 
-        protected virtual void OnClickedHandler()
+        public override void OnPointerClick(PointerEventData eventData)
         {
-
+            base.OnPointerClick(eventData);
         }
+
+        //public override void OnPointerUp(PointerEventData eventData)
+        //{
+        //    base.OnPointerUp(eventData);
+        //    OnUp.Invoke();
+        //}
     }
 }
