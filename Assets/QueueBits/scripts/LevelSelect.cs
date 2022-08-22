@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace QueueBits
 {
-    public class LevelSelector : MonoBehaviour
+    public class LevelSelect : MonoBehaviour
     {
         public GameObject levelHolder;
         public GameObject iconStar0;
@@ -57,6 +57,12 @@ namespace QueueBits
             amountPerPage = maxInARow * maxInACol;
             int totalPages = Mathf.CeilToInt((float)StarSystem.levelStarCount.Keys.Count / amountPerPage);
             LoadPanels(totalPages);
+
+            if (!DialogueManager.IntroPlayed)
+            {
+                Wrapper.Events.StartDialogueSequence?.Invoke("QB_Intro");
+                DialogueManager.IntroPlayed = true;
+            }
         }
         void LoadPanels(int numberOfPanels)
         {

@@ -120,6 +120,12 @@ namespace QueueBits
 			levelText.GetComponent<TextMesh>().text = "Level 1";
 
 			btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
+
+			if (!DialogueManager.Level1Played)
+			{
+				Wrapper.Events.StartDialogueSequence?.Invoke("QB_Level1");
+				DialogueManager.Level1Played = true;
+			}
 		}
 
 		/// <summary>
