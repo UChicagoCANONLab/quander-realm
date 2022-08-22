@@ -1,4 +1,5 @@
-using System.Collections;
+using System;
+//using Wrapper;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,10 +23,13 @@ namespace QueueBits
         private Rect iconDimensions;
         private int amountPerPage;
         private int currentLevelCount;
+        QBSaveData saveData;
 
         // Start is called before the first frame update
         void Start()
         {
+            InitQueueBitsSaveData();
+            /*
             // star system
             if (Object.Equals(StarSystem.levelStarCount, default(string[])))
             {
@@ -63,6 +67,13 @@ namespace QueueBits
             {
                 Wrapper.Events.StartDialogueSequence?.Invoke("QB_Intro");
                 DialogueManager.playDialogue[0] = false;
+            }*/
+            if (saveData.playDialogue[0] == true)
+            {
+                Wrapper.Events.StartDialogueSequence?.Invoke("QB_Intro");
+                saveData.playDialogue[0] = false;
+                DialogueManager.playDialogue[0] = false;
+                Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.QueueBits, saveData);
             }
 
             panelDimensions = levelHolder.GetComponent<RectTransform>().rect;
@@ -73,6 +84,24 @@ namespace QueueBits
             int totalPages = Mathf.CeilToInt((float)StarSystem.levelStarCount.Keys.Count / amountPerPage);
             LoadPanels(totalPages);
         }
+
+        void InitQueueBitsSaveData()
+        {
+            try
+            {
+                string saveString = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.QueueBits);
+                saveData = JsonUtility.FromJson<QBSaveData>(saveString);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+
+            if (saveData == null)
+                saveData = new QBSaveData();
+        }
+
+
         void LoadPanels(int numberOfPanels)
         {
             GameObject panelClone = Instantiate(levelHolder) as GameObject;
@@ -128,7 +157,7 @@ namespace QueueBits
                     icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
                     string chosenLevel = "Level"+i;
                     icon.GetComponent<Button>().onClick.AddListener(delegate { SceneManager.LoadScene(chosenLevel); });
-                }
+                //}
             }
         }
 
