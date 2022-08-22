@@ -13,7 +13,8 @@ namespace Wrapper
         #region Variables
 
         [Header("DialogueView Parts")]
-        [SerializeField] private Animator animator;
+        public Animator animator;
+
         [SerializeField] private TextMeshProUGUI dialogueBody;
         [SerializeField] private TextMeshProUGUI dupePage;
         [SerializeField] private Image contextImage; //todo: might have to work with container object instead of image
