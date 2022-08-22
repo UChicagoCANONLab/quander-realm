@@ -85,10 +85,12 @@ namespace QueueBits
 		// dialogue
 		bool dialoguePhase = false;
 
+		/*
 		// Shivani Puli Data Collection
 		int turn = 0;
 		Data mydata = new Data();
 		//Shivani Puli Data Collection
+		*/
 
 		// Use this for initialization
 		void Start () 
@@ -104,7 +106,7 @@ namespace QueueBits
 				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
             }
 
-			//Shivani Puli Data Collection
+			/*Shivani Puli Data Collection
 			mydata.level = 1;
 			mydata.prefilledBoard = -1;
 			mydata.placement_order = new int[numColumns * numRows];
@@ -119,7 +121,7 @@ namespace QueueBits
 				mydata.outcome[i] = 0;
 
 			}
-			//Shivani Puli Data collection
+			//Shivani Puli Data collection */
 
 			int max = Mathf.Max (numRows, numColumns);
 
@@ -429,6 +431,7 @@ namespace QueueBits
 				if (moves.Count > 0)
 				{
 					int column = moves[Random.Range(0, moves.Count)];
+					/*
 					//Shivani Puli changed for data collection
 					int r = colPointers[column];
 					int index = r * numColumns + column;
@@ -438,6 +441,7 @@ namespace QueueBits
 					mydata.reveal_order[index] = turn;
 					mydata.outcome[index] = 2;
 					// data collection
+					*/
 					playMove(column, "2");
 					spawnPos = new Vector3(column, 0, 0);
 				}
@@ -592,7 +596,7 @@ namespace QueueBits
 						List<int> moves = GetPossibleMoves();
 						if (moves.Contains(column))
                         {
-							//Shivani Puli Data Collection
+							/*Shivani Puli Data Collection
 							int r = colPointers[column];
 							int index = r * numColumns + column;
 							turn++;
@@ -600,7 +604,7 @@ namespace QueueBits
 							mydata.superposition[index] = 100;
 							mydata.reveal_order[index] = turn;
 							mydata.outcome[index] = 1;
-							//Shivani Puli Data collection
+							*/
 							playMove(column, "1");
 							StartCoroutine(dropPiece(gameObjectTurn));
 						}
@@ -801,13 +805,13 @@ namespace QueueBits
 			// if Game Over update the winning text to show who has won
 			if(gameOver == true)
 			{
-				//Shivani Puli Data Collection -> store winner
+				/*Shivani Puli Data Collection -> store winner
 				if (isPlayersTurn)
 					mydata.winner = 1;
 				else
 					mydata.winner = 2;
 				saveData.Save(mydata);
-				//Data Collection
+				*/
 
 				// star system
 				if (!starUpdated)
@@ -841,10 +845,10 @@ namespace QueueBits
 				// check if there are any empty cells left, if not set game over and update text to show a draw
 				if(!FieldContainsEmptyCell())
 				{
-					//Shivani Puli Data Collection -> store winner
+					/*Shivani Puli Data Collection -> store winner
 					mydata.winner = 0;
 					saveData.Save(mydata);
-					//Data Collection
+					*/
 
 					// star system
 					if (!starUpdated)
