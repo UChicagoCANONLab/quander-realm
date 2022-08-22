@@ -27,49 +27,36 @@ namespace QueueBits
         void Start()
         {
             // star system
-            if (Object.Equals(StarSystem.levelStarCount, default(Dictionary<int, int>)))
+            if (Object.Equals(StarSystem.levelStarCount, default(string[])))
             {
                 Debug.Log("initialize star system");
-                StarSystem.levelStarCount = new Dictionary<int, int>
+                StarSystem.levelStarCount = new int[15+1];
+                for (int i = 0; i < StarSystem.levelStarCount.Length; i++)
                 {
-                    {1,0},
-                    {2,0},
-                    {3,0},
-                    {4,0},
-                    {5,0},
-                    {6,0},
-                    {7,0},
-                    {8,0},
-                    {9,0},
-                    {10,0},
-                    {11,0},
-                    {12,0},
-                    {13,0},
-                    {14,0},
-                    {15,0}
-                };
+                    StarSystem.levelStarCount[i] = 0;
+                }
             }
             // dialogue
-            if (Object.Equals(DialogueManager.playDialogue, default(Dictionary<int, bool>)))
+            if (Object.Equals(DialogueManager.playDialogue, default(bool[])))
             {
-                DialogueManager.playDialogue = new Dictionary<int, bool>
+                DialogueManager.playDialogue = new bool[]
                 {
-                    {0,true},
-                    {1,true},
-                    {2,true},
-                    {3,true},
-                    {4,true},
-                    {5,true},
-                    {6,true},
-                    {7,true},
-                    {8,true},
-                    {9,true},
-                    {10,true},
-                    {11,true},
-                    {12,true},
-                    {13,true},
-                    {14,true},
-                    {15,true}
+                    true, // level select
+                    true, // level 1
+                    true, // level 2
+                    true, // level 3
+                    true, // level 4
+                    true, // level 5
+                    true, // level 6
+                    true, // level 7
+                    true, // level 8
+                    true, // level 9
+                    true, // level 10
+                    true, // level 11
+                    true, // level 12
+                    true, // level 13
+                    true, // level 14
+                    true, // level 15
                 };
             }
             if (DialogueManager.playDialogue[0])

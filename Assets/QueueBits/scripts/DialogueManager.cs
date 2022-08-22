@@ -8,7 +8,7 @@ namespace QueueBits
     public class DialogueManager : MonoBehaviour
     {
         // dialogue system
-        public static Dictionary<int, bool> playDialogue;
+        public static bool[] playDialogue;
 
         // Start is called before the first frame update
         void Start()

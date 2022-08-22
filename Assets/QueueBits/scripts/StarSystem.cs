@@ -6,7 +6,7 @@ namespace QueueBits
     public class StarSystem : MonoBehaviour
     {
         // star system
-        public static Dictionary<int, int> levelStarCount;
+        public static int[] levelStarCount;
         
         // Start is called before the first frame update
         void Start()
