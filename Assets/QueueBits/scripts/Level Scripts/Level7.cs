@@ -303,6 +303,9 @@ namespace QueueBits
 		int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
 		HashSet<(int, int)> visited = new HashSet<(int, int)>();
 
+		// dialogue
+		bool dialoguePhase = false;
+
 		//Shivani Puli Data Collection
 		Data mydata = new Data();
 		int turn = 0;
@@ -312,6 +315,15 @@ namespace QueueBits
 		void Start()
 		{
 			ShowStarSystem();
+
+			// dialogue
+			if (DialogueManager.playDialogue[7])
+			{
+				dialoguePhase = true;
+				Wrapper.Events.StartDialogueSequence?.Invoke("QB_Level7");
+				DialogueManager.playDialogue[7] = false;
+				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
+			}
 
 			int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
 			prefilledBoard = prefilledBoardList[board_num];
@@ -388,6 +400,13 @@ namespace QueueBits
 			}
 
 			btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
+		}
+
+		// dialogue
+		void updateDialoguePhase()
+		{
+			dialoguePhase = false;
+			Wrapper.Events.DialogueSequenceEnded -= updateDialoguePhase;
 		}
 
 		/// <summary>
@@ -910,6 +929,9 @@ namespace QueueBits
 		void Update()
 		{
 			if (isLoading)
+				return;
+
+			if (dialoguePhase)
 				return;
 
 			if (revealingProbs)

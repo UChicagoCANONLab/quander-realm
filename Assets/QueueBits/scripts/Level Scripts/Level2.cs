@@ -82,6 +82,9 @@ namespace QueueBits
 		int[] colPointers = {5, 5, 5, 5, 5, 5, 5};
 		HashSet<(int, int)> visited = new HashSet<(int, int)>();
 
+		// dialogue
+		bool dialoguePhase = false;
+
 		// Shivani Puli Data Collection
 		int turn = 0;
 		Data mydata = new Data();
@@ -92,6 +95,15 @@ namespace QueueBits
 		void Start () 
 		{
 			ShowStarSystem();
+
+			// dialogue
+			if (DialogueManager.playDialogue[2])
+			{
+				dialoguePhase = true;
+				Wrapper.Events.StartDialogueSequence?.Invoke("QB_Level2");
+				DialogueManager.playDialogue[2] = false;
+				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
+			}
 
 			//Shivani Puli Data Collection
 			mydata.level = 2;
@@ -121,6 +133,13 @@ namespace QueueBits
 			levelText.GetComponent<TextMesh>().text = "Level 2";
 
 			btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
+		}
+
+		// dialogue
+		void updateDialoguePhase()
+		{
+			dialoguePhase = false;
+			Wrapper.Events.DialogueSequenceEnded -= updateDialoguePhase;
 		}
 
 		/// <summary>
@@ -526,7 +545,10 @@ namespace QueueBits
 			if(isLoading)
 				return;
 
-			if(isCheckingForWinner)
+			if (dialoguePhase)
+				return;
+
+			if (isCheckingForWinner)
 				return;
 
 			if(gameOver)

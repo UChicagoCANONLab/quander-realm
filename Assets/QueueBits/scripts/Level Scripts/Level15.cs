@@ -312,6 +312,9 @@ namespace QueueBits
 		bool gameOver = false;
 		bool isCheckingForWinner = false;
 
+		// dialogue
+		bool dialoguePhase = false;
+
 		//Shivani Puli Data Collection
 		Data mydata = new Data();
 		int turn = 0;
@@ -325,6 +328,15 @@ namespace QueueBits
 		void Start()
 		{
 			ShowStarSystem();
+
+			// dialogue
+			if (DialogueManager.playDialogue[15])
+			{
+				dialoguePhase = true;
+				Wrapper.Events.StartDialogueSequence?.Invoke("QB_Level15");
+				DialogueManager.playDialogue[15] = false;
+				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
+			}
 
 			int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
 			prefilledBoard = prefilledBoardList[board_num];
@@ -402,6 +414,13 @@ namespace QueueBits
 			}
 
 			btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
+		}
+
+		// dialogue
+		void updateDialoguePhase()
+		{
+			dialoguePhase = false;
+			Wrapper.Events.DialogueSequenceEnded -= updateDialoguePhase;
 		}
 
 		/// <summary>
@@ -930,6 +949,9 @@ namespace QueueBits
 		void Update()
 		{
 			if (isLoading)
+				return;
+
+			if (dialoguePhase)
 				return;
 
 			if (revealingProbs)

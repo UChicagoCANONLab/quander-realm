@@ -7,11 +7,6 @@ namespace QueueBits
     {
         // star system
         public static Dictionary<int, int> levelStarCount;
-
-        public void updateLevelStarCount (Dictionary<int, int> newLevelStarCount)
-        {
-            levelStarCount = newLevelStarCount;
-        }
         
         // Start is called before the first frame update
         void Start()

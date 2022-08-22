@@ -29,7 +29,7 @@ namespace QueueBits
             // star system
             if (Object.Equals(StarSystem.levelStarCount, default(Dictionary<int, int>)))
             {
-                Debug.Log("initialize");
+                Debug.Log("initialize star system");
                 StarSystem.levelStarCount = new Dictionary<int, int>
                 {
                     {1,0},
@@ -49,6 +49,34 @@ namespace QueueBits
                     {15,0}
                 };
             }
+            // dialogue
+            if (Object.Equals(DialogueManager.playDialogue, default(Dictionary<int, bool>)))
+            {
+                DialogueManager.playDialogue = new Dictionary<int, bool>
+                {
+                    {0,true},
+                    {1,true},
+                    {2,true},
+                    {3,true},
+                    {4,true},
+                    {5,true},
+                    {6,true},
+                    {7,true},
+                    {8,true},
+                    {9,true},
+                    {10,true},
+                    {11,true},
+                    {12,true},
+                    {13,true},
+                    {14,true},
+                    {15,true}
+                };
+            }
+            if (DialogueManager.playDialogue[0])
+            {
+                Wrapper.Events.StartDialogueSequence?.Invoke("QB_Intro");
+                DialogueManager.playDialogue[0] = false;
+            }
 
             panelDimensions = levelHolder.GetComponent<RectTransform>().rect;
             iconDimensions = iconStar3.GetComponent<RectTransform>().rect;
@@ -57,12 +85,6 @@ namespace QueueBits
             amountPerPage = maxInARow * maxInACol;
             int totalPages = Mathf.CeilToInt((float)StarSystem.levelStarCount.Keys.Count / amountPerPage);
             LoadPanels(totalPages);
-
-            if (!DialogueManager.IntroPlayed)
-            {
-                Wrapper.Events.StartDialogueSequence?.Invoke("QB_Intro");
-                DialogueManager.IntroPlayed = true;
-            }
         }
         void LoadPanels(int numberOfPanels)
         {
