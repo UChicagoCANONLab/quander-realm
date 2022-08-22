@@ -4,6 +4,8 @@ using BeauRoutine;
 using System;
 using UnityEngine.Networking;
 using System.Linq;
+using System.Threading.Tasks;
+
 #if !UNITY_WEBGL
 using Firebase;
 using Firebase.Database;
@@ -16,20 +18,22 @@ namespace Wrapper
     public class SaveManager : MonoBehaviour
     {
         [HideInInspector] public bool isUserLoggedIn = false;
-        public UserSave currentUserSave = null;
+        [HideInInspector] public UserSave currentUserSave = null;
         public int researchCodeLength = 6;
 
-        private float networkRequestTimeout = 7f;
-        private bool isConnectedToInternet = false;
+        private float networkRequestTimeout = 5f;
         private bool isDatabaseReady = false;
 
 #if !UNITY_WEBGL
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
+        private bool isConnectedToInternet = false;
+        private bool uploadSuccess = false;
 #else
         private string researchCodeExists = "";
         private string loadDataJson = "";
+        private bool webGLUploadSuccess = false;
 #endif
 
 #if PRODUCTION_FB
@@ -48,6 +52,7 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.AddReward += AddReward;
+            Events.ClearSaveFile += ClearSave;
             Events.SubmitResearchCode += Login;
             Events.IsRewardUnlocked += IsRewardUnlocked;
             Events.UpdateRemoteSave += UpdateRemoteSave;
@@ -58,6 +63,7 @@ namespace Wrapper
         private void OnDisable()
         {
             Events.AddReward -= AddReward;
+            Events.ClearSaveFile -= ClearSave;
             Events.SubmitResearchCode -= Login;
             Events.IsRewardUnlocked -= IsRewardUnlocked;
             Events.UpdateRemoteSave -= UpdateRemoteSave;
@@ -65,14 +71,9 @@ namespace Wrapper
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
         }
 
-        private bool IsRewardUnlocked(string rewardID)
-        {
-            return currentUserSave.HasReward(rewardID);
-        }
-
+#if !UNITY_WEBGL
         private IEnumerator InitFirebase()
         {
-#if !UNITY_WEBGL
             bool isFirebaseReady = false;
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
             {
@@ -94,10 +95,13 @@ namespace Wrapper
 
             dbReference = FirebaseDatabase.DefaultInstance.RootReference;
             dbReference.KeepSynced(true);
-#else   // Is WebGL
-            yield return null;
-#endif
         }
+#else
+        private IEnumerator InitFirebase()
+        {
+            yield return null;
+        }
+#endif
 
         #region Login
 
@@ -108,8 +112,10 @@ namespace Wrapper
             Routine.Start(LoginRoutine(researchCode));
         }
 
+#if !UNITY_WEBGL
         private IEnumerator LoginRoutine(string researchCode)
         {
+            // Test internet connection
             yield return TestInternetConnection();
             if (!(isConnectedToInternet))
             {
@@ -118,6 +124,7 @@ namespace Wrapper
                 yield break;
             }
 
+            // Get Database Snapshot
             yield return GetDatabaseSnapshot();
             if (!(isDatabaseReady))
             {
@@ -126,6 +133,7 @@ namespace Wrapper
                 yield break;
             }
 
+            // Check Research Code format
             string formattedCode = researchCode.Trim();
             if (researchCode.Length != researchCodeLength || !(researchCode.All(char.IsLetterOrDigit)))
             {
@@ -134,7 +142,7 @@ namespace Wrapper
                 yield break;
             }
 
-#if !UNITY_WEBGL
+            // Check if user exists
             bool isUserVerified = databaseSnapshot.Child("researchCodes").HasChild(formattedCode);
             if (!(isUserVerified))
             {
@@ -143,53 +151,99 @@ namespace Wrapper
                 yield break;
             }
 
+            // Check if user's save data exists, create new save file if not
             bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;
 
+                UpdateRemoteSave(); 
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => UpdateRemoteSave()),
+                    Routine.WaitCondition(() => uploadSuccess == true), 
                     Routine.WaitSeconds(networkRequestTimeout));
+
+                //yield return Routine.Race(
+                //    UpdateRemoteSave(),
+                //    Routine.WaitCondition(() => uploadSuccess == true),
+                //    Routine.WaitSeconds(networkRequestTimeout));
 
                 yield return GetDatabaseSnapshot();
             }
 
+            // Load save file and complete login
             currentUserSave = JsonUtility.FromJson<UserSave>(
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
-#else // is Unity WebGL
-            DoesResearchCodeExist(formattedCode);
-            while(string.IsNullOrEmpty(researchCodeExists))
-                yield return null;
+
+            Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            isUserLoggedIn = true;
+        }
+#else
+        private IEnumerator LoginRoutine(string researchCode)
+        {
+            // Get Database Snapshot
+            yield return GetDatabaseSnapshot();
+            if (!(isDatabaseReady))
+            {
+                Debug.LogError("Error: Could not retrieve database snapshot");
+                Events.UpdateLoginStatus?.Invoke(LoginStatus.DatabaseError);
+                yield break;
+            }
+
+            // Check Research Code format
+            string formattedCode = researchCode.Trim();
+            if (researchCode.Length != researchCodeLength || !(researchCode.All(char.IsLetterOrDigit)))
+            {
+                Debug.LogErrorFormat("Error: Research code must be a {0} character long alphanumeric string", researchCodeLength);
+                Events.UpdateLoginStatus?.Invoke(LoginStatus.FormatError);
+                yield break;
+            }
 
             // Check if code exists
-            if(researchCodeExists == "F")
+            DoesResearchCodeExist(formattedCode);
+            while (string.IsNullOrEmpty(researchCodeExists))
+                yield return null;
+
+            if (researchCodeExists == "F")
             {
                 researchCodeExists = "";
                 Debug.LogErrorFormat("Error: Could not find user {0} in database", formattedCode);
+                Events.UpdateLoginStatus?.Invoke(LoginStatus.NonExistentUserError);
                 yield break;
             }
             researchCodeExists = "";
 
             // Code exists, great. Now let's see if they have save data already
+            loadDataJson = "";
             LoadData(formattedCode);
-            while(string.IsNullOrEmpty(loadDataJson))
+            while (string.IsNullOrEmpty(loadDataJson))
                 yield return null;
-            
+
+            // Save file doesn't exist, create a new one
             Debug.Log(loadDataJson);
-            if(loadDataJson == "none")
+            if (loadDataJson == "none")
             {
-                Debug.LogWarning("User doesn't exist, creating it now.");
+                currentUserSave.id = formattedCode;
+
+                UpdateRemoteSave(); 
+                yield return Routine.Race(
+                    Routine.WaitCondition(() => webGLUploadSuccess == true), 
+                    Routine.WaitSeconds(networkRequestTimeout));
+
+                loadDataJson = "";
+                LoadData(formattedCode);
+                while (string.IsNullOrEmpty(loadDataJson))
+                    yield return null;
             }
+
             currentUserSave = JsonUtility.FromJson<UserSave>(loadDataJson);
-#endif
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             isUserLoggedIn = true;
         }
+#endif
 
+#if !UNITY_WEBGL
         private IEnumerator GetDatabaseSnapshot()
         {
-#if !UNITY_WEBGL
             if (dbReference == null)
                 yield break;
 
@@ -208,12 +262,16 @@ namespace Wrapper
             yield return Routine.Race(
                 Routine.WaitCondition(() => isDatabaseReady),
                 Routine.WaitSeconds(networkRequestTimeout));
-#else // is Unity WebGL
+        }
+#else
+        private IEnumerator GetDatabaseSnapshot()
+        {
             isDatabaseReady = true;
             yield return null;
-#endif
         }
+#endif
 
+#if !UNITY_WEBGL
         private IEnumerator TestInternetConnection()
         {
             isConnectedToInternet = false;
@@ -225,15 +283,23 @@ namespace Wrapper
             if (request.error == null && request.result != UnityWebRequest.Result.ConnectionError)
                 isConnectedToInternet = true;
         }
+#endif
 
         #endregion
 
         #region UserSave
 
-        private void AddReward(string rewardID)
+        private bool AddReward(string rewardID)
         {
-            currentUserSave.AddReward(rewardID);
+            bool rewardAdded = currentUserSave.AddReward(rewardID);
             UpdateRemoteSave();
+
+            return rewardAdded;
+        }
+
+        private bool IsRewardUnlocked(string rewardID)
+        {
+            return currentUserSave.HasReward(rewardID);
         }
 
         private string GetMinigameSaveData(Game game)
@@ -247,34 +313,74 @@ namespace Wrapper
             UpdateRemoteSave();
         }
 
-        private bool UpdateRemoteSave()
+        private void UpdateRemoteSave()
         {
+            Routine.Start(UpdateRemoteSaveRoutine());
+        }
+
 #if !UNITY_WEBGL
+        private IEnumerator UpdateRemoteSaveRoutine()
+        {
+            uploadSuccess = false;
+
             if (dbReference == null)
             {
                 Debug.LogError("No database reference on save");
-                return false;
+                yield break;
             }
 
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
                 Debug.LogError("Empty UserSave");
-                return false;
+                yield break;
             }
 
-            dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
-            return true;
-#else   // is Unity WebGL
+            Task uploadTask = dbReference.Child("userData").Child(currentUserSave.id).SetRawJsonValueAsync(json);
+
+            yield return Routine.Race(
+                Routine.WaitCondition(() => uploadTask.Status == TaskStatus.RanToCompletion),
+                Routine.WaitSeconds(networkRequestTimeout));
+
+            if (uploadTask.Status == TaskStatus.RanToCompletion)
+            {
+                Events.ToggleUploadFailurePopup?.Invoke(false);
+                uploadSuccess = true;
+            }
+            else
+                Events.ToggleUploadFailurePopup?.Invoke(true);
+        }
+#else
+        private IEnumerator UpdateRemoteSaveRoutine()
+        {
+            webGLUploadSuccess = false;
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
                 Debug.LogError("Empty UserSave");
-                return false;
+                yield break;
             }
+
+            // Call the JS SaveData function
             SaveData(currentUserSave.id, json);
-            return true;
+
+            // Wait for whichever completes first: the SaveData callback function or the network timeout 
+            yield return Routine.Race(
+                Routine.WaitCondition(() => webGLUploadSuccess == true),
+                Routine.WaitSeconds(networkRequestTimeout));
+
+            if (webGLUploadSuccess)
+                Events.ToggleUploadFailurePopup?.Invoke(false);
+            else
+                Events.ToggleUploadFailurePopup?.Invoke(true);
+        }
 #endif
+
+        private void ClearSave()
+        {
+            string id = currentUserSave.id;
+            currentUserSave = new UserSave(id);
+            UpdateRemoteSave();
         }
 
         //todo: merge intro dialogue methods or make it a property with get/set
@@ -300,6 +406,7 @@ namespace Wrapper
         private static extern void LoadData(string codeString);
         [DllImport("__Internal")]
         private static extern void SaveData(string codeString, string json);
+
         public void ResearchCodeCallback(string str)
         {
             researchCodeExists = str;
@@ -308,6 +415,11 @@ namespace Wrapper
         public void LoadDataCallback(string str)
         {
             loadDataJson = str;
+        }
+
+        public void SaveDataCallback(string str)
+        {
+            webGLUploadSuccess = str.Equals("success") ? true : false;
         }
 #endif
 

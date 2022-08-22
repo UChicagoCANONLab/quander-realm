@@ -20,11 +20,11 @@ const analytics = getAnalytics(app);
 
 JSDoesResearchCodeExist = function(codeString) {
 	const dbRef = ref(getDatabase());
-	get(child(dbRef, `researchCodes/` + codeString)).then((snapshot) => {
+	get(child(dbRef, 'researchCodes/' + codeString)).then((snapshot) => {
 	  if (snapshot.exists()) {
-		GameInstance.SendMessage('SaveManager', 'ResearchCodeCallback', 'T');
+			GameInstance.SendMessage('SaveManager', 'ResearchCodeCallback', 'T');
 	  } else {
-		GameInstance.SendMessage('SaveManager', 'ResearchCodeCallback', 'F');
+			GameInstance.SendMessage('SaveManager', 'ResearchCodeCallback', 'F');
 	  }
 	}).catch((error) => {
 	  console.error(error);
@@ -34,16 +34,20 @@ JSDoesResearchCodeExist = function(codeString) {
 
 JSSaveData = function(codeString, json) {
     const dbRef = getDatabase();
-    set(ref(dbRef, 'userData/' + codeString), JSON.parse(json));
+    set(ref(dbRef, 'userData/' + codeString), JSON.parse(json)).then(() => {
+			GameInstance.SendMessage('SaveManager', 'SaveDataCallback', 'success');
+		}).catch((error) => {
+			GameInstance.SendMessage('SaveManager', 'SaveDataCallback', 'failure');
+		});
 }
 
 JSLoadData = function(codeString) {
 	const dbRef = ref(getDatabase());
-	get(child(dbRef, `userData/` + codeString)).then((snapshot) => {
+	get(child(dbRef, 'userData/' + codeString)).then((snapshot) => {
 	  if (snapshot.exists()) {
-		GameInstance.SendMessage('SaveManager', 'LoadDataCallback', JSON.stringify(snapshot.val()));
+			GameInstance.SendMessage('SaveManager', 'LoadDataCallback', JSON.stringify(snapshot.val()));
 	  } else {
-		GameInstance.SendMessage('SaveManager', 'LoadDataCallback', 'none');
+			GameInstance.SendMessage('SaveManager', 'LoadDataCallback', 'none');
 	  }
 	}).catch((error) => {
 	  console.error(error);
