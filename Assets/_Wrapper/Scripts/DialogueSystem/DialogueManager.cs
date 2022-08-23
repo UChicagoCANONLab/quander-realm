@@ -10,7 +10,6 @@ namespace Wrapper
         public DialogueView dialogueView = null;
 
         private const string dialoguePath = "_Wrapper/Dialogue";
-        private const int dialogueViewLayerIndex = 1;
         private DialogueSequence currentSequence = null;
         private Dictionary<string, DialogueSequence> dialogueDictionary;
 

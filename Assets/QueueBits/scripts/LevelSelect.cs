@@ -28,10 +28,9 @@ namespace QueueBits
         // Start is called before the first frame update
         void Start()
         {
-            InitQueueBitsSaveData();
-            /*
+            // InitQueueBitsSaveData();
             // star system
-            if (Object.Equals(StarSystem.levelStarCount, default(string[])))
+            if (StarSystem.levelStarCount == null)
             {
                 Debug.Log("initialize star system");
                 StarSystem.levelStarCount = new int[15+1];
@@ -41,7 +40,7 @@ namespace QueueBits
                 }
             }
             // dialogue
-            if (Object.Equals(DialogueManager.playDialogue, default(bool[])))
+            if (DialogueManager.playDialogue == null)
             {
                 DialogueManager.playDialogue = new bool[]
                 {
@@ -67,13 +66,14 @@ namespace QueueBits
             {
                 Wrapper.Events.StartDialogueSequence?.Invoke("QB_Intro");
                 DialogueManager.playDialogue[0] = false;
-            }*/
-            if (saveData.playDialogue[0] == true)
+            }
+
+            if (DialogueManager.playDialogue[0] == true)
             {
                 Wrapper.Events.StartDialogueSequence?.Invoke("QB_Intro");
-                saveData.playDialogue[0] = false;
+                // saveData.playDialogue[0] = false;
                 DialogueManager.playDialogue[0] = false;
-                Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.QueueBits, saveData);
+                // Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.QueueBits, saveData);
             }
 
             panelDimensions = levelHolder.GetComponent<RectTransform>().rect;
@@ -81,7 +81,7 @@ namespace QueueBits
             int maxInARow = Mathf.FloorToInt((panelDimensions.width + iconSpacing.x) / (iconDimensions.width + iconSpacing.x));
             int maxInACol = Mathf.FloorToInt((panelDimensions.height + iconSpacing.y) / (iconDimensions.height + iconSpacing.y));
             amountPerPage = maxInARow * maxInACol;
-            int totalPages = Mathf.CeilToInt((float)StarSystem.levelStarCount.Keys.Count / amountPerPage);
+            int totalPages = Mathf.CeilToInt((float)(StarSystem.levelStarCount.Length - 1)/ amountPerPage);
             LoadPanels(totalPages);
         }
 
@@ -114,7 +114,7 @@ namespace QueueBits
                 panel.name = "Page-" + i;
                 panel.GetComponent<RectTransform>().localPosition = new Vector2(panelDimensions.width * (i - 1), 0);
                 SetUpGrid(panel);
-                int numberOfIcons = i == numberOfPanels ? StarSystem.levelStarCount.Keys.Count - currentLevelCount : amountPerPage;
+                int numberOfIcons = i == numberOfPanels ? (StarSystem.levelStarCount.Length - 1) - currentLevelCount : amountPerPage;
                 LoadIcons(numberOfIcons, panel);
             }
             Destroy(panelClone);
@@ -131,33 +131,30 @@ namespace QueueBits
             for (int i = 1; i <= numberOfIcons; i++)
             {
                 currentLevelCount++;
-                int currentLevelStar;
+                int currentLevelStar = StarSystem.levelStarCount[currentLevelCount];
                 GameObject icon;
-                if (StarSystem.levelStarCount.TryGetValue(currentLevelCount, out currentLevelStar))
+                if (currentLevelStar == 3)
                 {
-                    if (currentLevelStar == 3)
-                    {
-                        icon = Instantiate(iconStar3) as GameObject;
-                    }
-                    else if (currentLevelStar == 2)
-                    {
-                        icon = Instantiate(iconStar2) as GameObject;
-                    }
-                    else if (currentLevelStar == 1)
-                    {
-                        icon = Instantiate(iconStar1) as GameObject;
-                    }
-                    else
-                    {
-                        icon = Instantiate(iconStar0) as GameObject;
-                    }
-                    icon.transform.SetParent(thisCanvas.transform, false);
-                    icon.transform.SetParent(parentObject.transform);
-                    icon.name = "Level" + i;
-                    icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
-                    string chosenLevel = "Level"+i;
-                    icon.GetComponent<Button>().onClick.AddListener(delegate { SceneManager.LoadScene(chosenLevel); });
-                //}
+                    icon = Instantiate(iconStar3) as GameObject;
+                }
+                else if (currentLevelStar == 2)
+                {
+                    icon = Instantiate(iconStar2) as GameObject;
+                }
+                else if (currentLevelStar == 1)
+                {
+                    icon = Instantiate(iconStar1) as GameObject;
+                }
+                else
+                {
+                    icon = Instantiate(iconStar0) as GameObject;
+                }
+                icon.transform.SetParent(thisCanvas.transform, false);
+                icon.transform.SetParent(parentObject.transform);
+                icon.name = "Level" + i;
+                icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
+                string chosenLevel = "Level"+i;
+                icon.GetComponent<Button>().onClick.AddListener(delegate { SceneManager.LoadScene(chosenLevel); });
             }
         }
 
