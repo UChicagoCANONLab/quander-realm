@@ -50,9 +50,9 @@ namespace Qupcakery
                     .GetComponent<CakeBoxController>().cake.cakeState;
                 order = GameObjectsManagement.Customers[i]
                     .GetComponent<CustomerManager>().order;
-                Debug.Log("Order is " + order + " Cakestate is (" + cakeState.probabilities[0] + ","
-                    + cakeState.probabilities[1] + "," + cakeState.probabilities[2] + "," + cakeState.probabilities[3] +
-                    "), phase: " + cakeState.phase);
+                //Debug.Log("Order is " + order + " Cakestate is (" + cakeState.probabilities[0] + ","
+                //    + cakeState.probabilities[1] + "," + cakeState.probabilities[2] + "," + cakeState.probabilities[3] +
+                //    "), phase: " + cakeState.phase);
                 switch (order)
                 {
                     case 0:

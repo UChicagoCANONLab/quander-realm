@@ -50,7 +50,6 @@ namespace Qupcakery
         // Opens box, compares order, and react accordingly
         private IEnumerator ProcessReceivedCake(bool success)
         {
-            Debug.Log("Received cake!");
             yield return
                 new WaitForSeconds(reactionData.WaitTimeAfterReceivingBox);
             GameCakeType cakeType = OpenCakeBox(cakeBox);
@@ -93,7 +92,6 @@ namespace Qupcakery
         // Event listener
         private void OnResultReceived(bool[] results)
         {
-            Debug.Log("recevived result!");
             if (!gameObject.activeSelf) return;
 
             StartCoroutine(ProcessReceivedCake(results[customerManager.BeltInd]));

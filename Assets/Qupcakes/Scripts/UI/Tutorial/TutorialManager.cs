@@ -17,8 +17,13 @@ namespace Qupcakery
             {
                 foreach (int ind in tutorialInd)
                 {
-                    tutorialAvailable[ind] = true;
+                    if (ind > GameManagement.Instance.game.gameStat.MaxLevelCompleted)
+                        tutorialAvailable[ind] = true;
+                    else
+                        tutorialAvailable[ind] = false;
                 }
+                if (GameManagement.Instance.game.gameStat.MaxLevelCompleted >= 1)
+                    IntroPlayed = true;
             }
             else
             {             

@@ -8,15 +8,12 @@ namespace Qupcakery
     {
         public void StartGame()
         {
-            if (GameManagement.Instance.GameInProgress())
+            if (!GameManagement.Instance.GameInProgress())
             {
-                SceneManagementUtilities.LoadModeSelectionScene();
+                LoadGame.Load();
             }
-            else
-            {
-                GameUtilities.CreateNewGame();
-                SceneManagementUtilities.LoadModeSelectionScene();
-            }            
+
+            SceneManagementUtilities.LoadModeSelectionScene();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Qupcakery
     public class Game
     {
         public GameStat gameStat;
+        public GameData gameData; 
         public int CurrLevelInd { get; private set; } = 0;
 
         public int MaxLevelCnt { get; } = Constants.MaxLevelCnt;

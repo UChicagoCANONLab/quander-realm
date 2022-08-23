@@ -1,52 +1,48 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
 /*
- * Loads game from file/database
+ * Loads game data from file/database
  */
 
 namespace Qupcakery
 {
-    public class LoadGame : MonoBehaviour
+    public static class LoadGame
     {
-        public GameObject ResumeButton;
+        public static GameData saveData;
 
-        [DllImport("__Internal")]
-        private static extern void QupcakesGameLoaded(string callback);
-
-        public static int Load()
+        public static void Load()
         {
-#if UNITY_WEBGL == true && UNITY_EDITOR == false
-                QupcakesGameLoaded ("QupcakesLoadData");
-#endif
-            //string data = File.ReadAllText(Application.dataPath + "/test.txt");
-            //QupcakesloadData(data);
-            return 0;
-        }
+            GameUtilities.CreateNewGame();
 
-        public void QupcakesLoadData(string data)
-        {
-            //Debug.Log("I just got this data:");
-            //Debug.Log(data);
+            try
+            {
+                string saveString = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Qupcakes);
+                saveData = JsonUtility.FromJson<GameData>(saveString);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
 
-            //if (data.Length > 0)
-            //{
-            //    GameUtilities.CreateNewGame();
+            if (saveData == null)
+                saveData = new GameData();
+            else // Update gamestat accordingly
+            {
+                GameManagement.Instance.game.gameStat.TotalEarning = saveData.TotalEarning;
+                GameManagement.Instance.game.gameStat.MaxLevelCompleted = saveData.MaxLevelCompleted;
+                // Debug.Log("(data received) Max level completed is : " + saveData.MaxLevelCompleted);
 
-            //    // If there is data
-            //    GameStat gameStat = JsonUtility.FromJson<GameStat>(data);
-            //    GameManagement.Instance.game.gameStat.TotalEarning = gameStat.TotalEarning;
-            //    GameManagement.Instance.game.gameStat.MaxLevelCompleted = gameStat.MaxLevelCompleted;
-            //    Debug.Log("(data received) Max level completed is : " + gameStat.MaxLevelCompleted);
+                for (int i = 0; i < saveData.MaxLevelCompleted; i++)
+                {
+                    int starCnt = (int)saveData.levelPerformance[i];
+                    GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i+1, (int)starCnt);
+                }
+            }
 
-            //    for (int i = 1; i <= gameStat.MaxLevelCompleted; i++)
-            //    {
-            //        int starCnt = (int)gameStat.GetLevelPerformance(i);
-            //        string level = "Level" + i;
-            //        GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i, (int)starCnt);
-            //    }
-            //}
+            Utilities.InitializeTutorialAndHelpMenu();
         }
     }
 }

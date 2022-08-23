@@ -40,17 +40,17 @@ namespace Qupcakery
         // Set level accessibility
         public void SetAvailability(bool available)
         {
-            //if (!available)
-            //{
-            //    levelAvailable = false;
-            //    Image iconImage = gameObject.transform.Find("RegularIcon").gameObject.GetComponent<Image>();
-            //    Color imageColor = iconImage.color;
-            //    iconImage.color = new Color(imageColor.r, imageColor.g, imageColor.b, 0.4f);
+            if (!available)
+            {
+                levelAvailable = false;
+                Image iconImage = gameObject.transform.Find("RegularIcon").gameObject.GetComponent<Image>();
+                Color imageColor = iconImage.color;
+                iconImage.color = new Color(imageColor.r, imageColor.g, imageColor.b, 0.4f);
 
-            //    TextMeshProUGUI text = gameObject.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-            //    Color32 textColor = text.color;
-            //    text.color = new Color(textColor.r, textColor.g, textColor.b, 0.4f);
-            //}           
+                TextMeshProUGUI text = gameObject.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
+                Color32 textColor = text.color;
+                text.color = new Color(textColor.r, textColor.g, textColor.b, 0.4f);
+            }
         }
 
         // Set icon sprite for given game mode

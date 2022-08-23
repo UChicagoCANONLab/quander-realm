@@ -13,8 +13,6 @@ namespace Qupcakery
         // Called to erase all previous data and start game anew, keep previously loaded resources (sprite/prefab)
         public static void CreateNewGame()
         {
-            //Utilities.tutorialSprites.Clear();
-            Utilities.InitializeTutorialAndHelpMenu();
             GameManagement.Instance.CreateNewGame();
         }
 
