@@ -832,12 +832,11 @@ namespace QueueBits
 				GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
 				winningText.GetComponent<TextMesh>().text = isPlayersTurn ? playerWonText : playerLoseText;
 				GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
-				if (StarSystem.levelStarCount[1] < 3)
+
+				// Reward System
+				if (RewardManager.rewardManager[1])
                 {
-					star.GetComponent<TextMesh>().text = "Congrats! You got one star.\nPlay again to get more stars!";
-				} else
-                {
-					star.GetComponent<TextMesh>().text = "WOW! You've gotten 3 stars.\nLet's explore other levels!";
+					Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 1);
 				}
 			}
 			else 
@@ -869,13 +868,11 @@ namespace QueueBits
 					gameOver = true;
 					winningText.GetComponent<TextMesh>().text = drawText;
 					GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
-					if (StarSystem.levelStarCount[1] < 3)
+				
+					// Reward System
+					if (RewardManager.rewardManager[1])
 					{
-						star.GetComponent<TextMesh>().text = "Congrats! You got one star.\nPlay again to get more stars!";
-					}
-					else
-					{
-						star.GetComponent<TextMesh>().text = "WOW! You've gotten 3 stars.\nLet's explore other levels!";
+						Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 1);
 					}
 				}
 			}
