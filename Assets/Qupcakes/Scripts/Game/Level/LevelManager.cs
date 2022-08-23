@@ -37,8 +37,6 @@ namespace Qupcakery
 
             if (TutorialManager.tutorialAvailable[levelInd])
             {
-                if (GameManagement.Instance.game.gameStat.MaxLevelCompleted > levelInd)
-
                 hasTutorial = true; 
                 Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level" + levelInd.ToString());
                 TutorialManager.UpdateAvailability(levelInd);

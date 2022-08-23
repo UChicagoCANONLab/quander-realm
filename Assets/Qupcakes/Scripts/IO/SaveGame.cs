@@ -9,8 +9,8 @@ namespace Qupcakery
 {
     public class SaveGame : MonoBehaviour
     {
-        [DllImport("__Internal")]
-        private static extern void QupcakesGameSaved(string data);
+        //[DllImport("__Internal")]
+        //private static extern void QupcakesGameSaved(string data);
 
         public static int Save()
         {
