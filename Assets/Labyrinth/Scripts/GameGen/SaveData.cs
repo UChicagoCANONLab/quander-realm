@@ -14,6 +14,9 @@ namespace Labyrinth
         public int Degree;
         public int CurrentLevel; //current level the user is playing
         
+        public bool NeedTutorial1 = true; //turns off once they receive the tutorial
+        public bool NeedTutorial2 = true; //turns off once they receive the tutorial
+
         // What we're actually saving as research data
         public int[] starsPerLevel; //15 levels, all w 0-3 stars
         // public float[] timePerLevel; //how long each level took in seconds
@@ -22,7 +25,8 @@ namespace Labyrinth
         public int numStars;
         public float time;
         public int hintsUsed;
-        public object[] previousSave; // {level #, stars, time, hints used #}
+        public bool winner = false;
+        // public object[] previousSave; // {level #, stars, time, hints used #}
         
         public static SaveData Instance;
 
@@ -49,7 +53,10 @@ namespace Labyrinth
             /* if (CurrentLevel == levelUnlocked) {
                 levelUnlocked = CurrentLevel + 1;
             } */
-            if (gb.numStars > starsPerLevel[CurrentLevel - 1]) {
+            if (CurrentLevel == 0) {
+                return;
+            }
+            else if (gb.numStars > starsPerLevel[CurrentLevel - 1]) {
                 starsPerLevel[CurrentLevel - 1] = gb.numStars;
             }
             /* if (gb.timePlayed > timePerLevel[CurrentLevel - 1]) {
@@ -59,6 +66,7 @@ namespace Labyrinth
             numStars = gb.numStars;
             time = gb.timePlayed;
             hintsUsed = gb.hintsUsed;
+            
             //previousSave = new object[] {CurrentLevel, gb.numStars, gb.timePlayed, gb.hintsUsed};
         }
 

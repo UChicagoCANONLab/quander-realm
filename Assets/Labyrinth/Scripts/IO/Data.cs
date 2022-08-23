@@ -13,6 +13,7 @@ namespace Labyrinth
         public int NumStars;
         public float Time;
         public int HintsUsed;
+        public bool Winner;
         // public object[] PreviousSave; // {level #, stars, time, hints used #}
         
         public Data(SaveData save) {
@@ -23,6 +24,7 @@ namespace Labyrinth
             NumStars = save.numStars;
             Time = save.time;
             HintsUsed = save.hintsUsed;
+            Winner = save.winner;
 
         }
     }

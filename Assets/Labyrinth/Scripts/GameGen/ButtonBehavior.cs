@@ -16,6 +16,11 @@ namespace Labyrinth
         public Button[] buttons;
 
         void Start() {
+            if (SaveData.Instance.NeedTutorial1 == true) {
+                Wrapper.Events.StartDialogueSequence?.Invoke("LA_Intro");
+                SaveData.Instance.NeedTutorial1 = false;
+            }
+
             if (buttons == null) {
                 return;
             }
@@ -45,12 +50,25 @@ namespace Labyrinth
 
         public void LoadLevelSelectMenu() {
             Time.timeScale = 1f;
-            SceneManager.LoadScene("LevelSelect");
+            Load.LoadGame();
+
+            if (SaveData.Instance.NeedTutorial2 == true) {
+                LevelSelect(0);
+            }
+            else {
+                SceneManager.LoadScene("LA_LevelSelect");
+            }
         }
+
+        /* public void InitialLoadLevelSelectMenu() {
+            Time.timeScale = 1f;
+            Load.LoadGame();
+            SceneManager.LoadScene("LevelSelect");
+        } */
 
         public void LoadMainMenu() {
             Time.timeScale = 1f;
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene("LA_MainMenu");
         }
 
         public void Exit() {
@@ -60,7 +78,10 @@ namespace Labyrinth
         }
 
         public void Win(int goalsCollected) {      
-            Save.SaveGame();
+            SaveData.Instance.winner = true;
+            if (SaveData.Instance.CurrentLevel > 0) {
+                Save.SaveGame();
+            }
     
             winScreen.SetActive(true);
             gameplayButtons.SetActive(false);
@@ -70,6 +91,8 @@ namespace Labyrinth
         }
 
         public void UndoWin(int goalsCollected) {
+            SaveData.Instance.winner = false;
+
             winScreen.SetActive(false);
             gameplayButtons.SetActive(true);
             gameplayObjects.SetActive(true);
@@ -82,68 +105,77 @@ namespace Labyrinth
             SaveData.Instance.CurrentLevel = sel;
 
             switch(sel) {
+                case 0:
+                    Wrapper.Events.StartDialogueSequence?.Invoke("LA_Easy1");
+                    SaveData.Instance.Degree = 0;
+                    currScene = "LA_Tutorial";
+                    SaveData.Instance.NeedTutorial2 = false;
+                    break;
                 case < 3:
                     SaveData.Instance.Degree = 0;
-                    currScene = "4x4";
+                    currScene = "LA_4x4";
                     break;
                 case < 5:
                     SaveData.Instance.Degree = 0;
-                    currScene = "5x5";
+                    currScene = "LA_5x5";
                     break;
                 case 5:
                     SaveData.Instance.Degree = 0;
-                    currScene = "6x6";
+                    currScene = "LA_6x6";
                     break;
 
 
                 case < 8:
                     SaveData.Instance.Degree = 180;
-                    currScene = "4x4";
+                    currScene = "LA_4x4";
                     break;
                 case < 10:
                     SaveData.Instance.Degree = 180;
-                    currScene = "5x5";
+                    currScene = "LA_5x5";
                     break;
                 case 10:
                     SaveData.Instance.Degree = 180;
-                    currScene = "6x6";
+                    currScene = "LA_6x6";
                     break;
 
 
                 case < 13:
                     SaveData.Instance.Degree = 90;
-                    currScene = "4x4";
+                    currScene = "LA_4x4";
                     break;
                 case < 15:
                     SaveData.Instance.Degree = 90;
-                    currScene = "5x5";
+                    currScene = "LA_5x5";
                     break;
                 case 15:
                     SaveData.Instance.Degree = 90;
-                    currScene = "6x6";
+                    currScene = "LA_6x6";
                     break;
                 
 
                 default:
-                    currScene = "LevelSelect";
+                    currScene = "LA_LevelSelect";
                     break;
             }
             SceneManager.LoadScene(currScene);
         }
 
         // ~~~~~~~~~~~~~~~ Enabled in Filament Environment ~~~~~~~~~~~~~~~
-        
-        // public static Action MinigameClosed;
 
         private void OnEnable() {
             Wrapper.Events.MinigameClosed += DestroyDataObject;
+            Wrapper.Events.DialogueSequenceEnded += FinishDialogue;
         }
         private void OnDisable(){
             Wrapper.Events.MinigameClosed -= DestroyDataObject;
+            Wrapper.Events.DialogueSequenceEnded -= FinishDialogue;
         }
         private void DestroyDataObject() {
             Time.timeScale = 1f;
             Destroy(GameObject.Find("ProfileData"));
+        }
+        private void FinishDialogue() {
+            return;
         }
 
     }

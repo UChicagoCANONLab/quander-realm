@@ -56,13 +56,22 @@ namespace Labyrinth
             Time.timeScale = 1f;
             initTime = Time.time;
 
-            maze = GameObject.Find("MazeGen").GetComponent<Maze>();
             pm = GameObject.Find("Players").GetComponent<PlayerMovement>();
-            // cam = GameObject.Find("Main Camera").GetComponent<Camera>();
             btn = GameObject.Find("GameManagerLocal").GetComponent<ButtonBehavior>();
+            maze = GameObject.Find("MazeGen").GetComponent<Maze>();
+            
+            pm.StartPM();
+            maze.StartMaze();
 
-            string imagePath = $"Canvases/CanvasUnder/LevelNumbers/Level{SaveData.Instance.CurrentLevel}";
-            GameObject.Find(imagePath).SetActive(true);
+            if (SaveData.Instance.CurrentLevel == 0) {
+                pathLength = 8;
+            }
+            else {
+                string imagePath = $"Canvases/CanvasUnder/LevelNumbers/Level{SaveData.Instance.CurrentLevel}";
+                GameObject.Find(imagePath).SetActive(true);
+                pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
+            }
+
 
             /* if (size == 4) {
                 cam.orthographicSize = 4;    
@@ -76,13 +85,6 @@ namespace Labyrinth
             if (size%2 == 0) {
                 cam.transform.position += new Vector3(0.5f,0.5f,0);
             } */
-            
-            pm.StartPM();
-            maze.StartMaze();
-            
-            pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
-
-            Instance = this;
         }
 
         void Update() {
@@ -199,6 +201,16 @@ namespace Labyrinth
         } */
 
         public void Restart() {
+            // Saving restart data
+            SaveData.Instance.winner = false;
+            endTime = Time.time;
+            timePlayed = endTime - initTime;
+            SaveData.Instance.updateSave(this);
+            if (SaveData.Instance.CurrentLevel > 0) {
+                Save.SaveGame();
+            }
+
+            // Resetting level
             initTime = Time.time;
 
             pm.player1.returnPlayer();
@@ -233,8 +245,12 @@ namespace Labyrinth
         }
 
         public void NextLevel() {
-            int nextLev = SaveData.Instance.CurrentLevel + 1;
-            btn.LevelSelect(nextLev);
+            if (SaveData.Instance.CurrentLevel == 5) {
+                Wrapper.Events.StartDialogueSequence?.Invoke("LA_Easy5");
+            }
+
+            SaveData.Instance.CurrentLevel += 1;
+            btn.LevelSelect(SaveData.Instance.CurrentLevel);
         }
     }
 }
