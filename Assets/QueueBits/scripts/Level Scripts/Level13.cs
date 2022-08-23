@@ -188,9 +188,9 @@ namespace QueueBits
 				(Piece.Blue, 3, 3, 50),
 				(Piece.Red, 5, 5, 100),
 				(Piece.Blue, 6, 5, 50),
-				(Piece.Red, 4, 3, 75),
-				(Piece.Blue, 4, 2, 75),
-				(Piece.Red, 3, 2, 50),
+				(Piece.Red, 3, 2, 75),
+				(Piece.Blue, 4, 3, 75),
+				(Piece.Red, 4, 2, 50),
 				(Piece.Blue, 6, 4, 100),
 				(Piece.Red, 2, 4, 50),
 				(Piece.Blue, 3, 1, 100)

@@ -173,10 +173,10 @@ namespace QueueBits
 				(Piece.Blue, 3, 3, 75),
 				(Piece.Red, 5, 5, 100),
 				(Piece.Blue, 6, 5, 50),
-				(Piece.Red, 4, 3, 100),
-				(Piece.Blue, 4, 2, 100),
+				(Piece.Red, 6, 4, 100),
+				(Piece.Blue, 4, 3, 100),
 				(Piece.Red, 3, 2, 100),
-				(Piece.Blue, 6, 4, 100),
+				(Piece.Blue, 4, 2, 100),
 				(Piece.Red, 2, 4, 75),
 				(Piece.Blue, 3, 1, 100)
 			}
@@ -211,10 +211,10 @@ namespace QueueBits
 				(Piece.Blue, 3, 1, 100),
 				(Piece.Red, 0, 5, 50),
 				(Piece.Blue, 1, 4, 50),
-				(Piece.Red, 5, 4, 100),
+				(Piece.Red, 4, 4, 100),
 				(Piece.Blue, 6, 5, 75),
-				(Piece.Red, 4, 4, 75),
-				(Piece.Blue, 6, 4, 100)
+				(Piece.Red,6, 4, 75),
+				(Piece.Blue, 5, 4, 100)
 			}
 		},
 			{7, new List<(Piece piece, int col, int row, int prob)> //7.8 flipped
