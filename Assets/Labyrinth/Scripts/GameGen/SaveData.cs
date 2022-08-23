@@ -14,8 +14,10 @@ namespace Labyrinth
         public int Degree;
         public int CurrentLevel; //current level the user is playing
         
-        public bool NeedTutorial1 = true; //turns off once they receive the tutorial
-        public bool NeedTutorial2 = true; //turns off once they receive the tutorial
+        public Dictionary<int, bool> levelDialogue = new Dictionary<int, bool>()
+        { {-1, true}, {0, true}, {5, true}, {6, true}, {10, true}, {11, true}, {15, true} };
+        // public bool NeedTutorial1 = false; //turns off once they receive intro
+        // public bool NeedTutorial2 = false; //turns off once they receive tutorial
 
         // What we're actually saving as research data
         public int[] starsPerLevel; //15 levels, all w 0-3 stars

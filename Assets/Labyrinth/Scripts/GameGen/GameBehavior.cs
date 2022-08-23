@@ -245,10 +245,6 @@ namespace Labyrinth
         }
 
         public void NextLevel() {
-            if (SaveData.Instance.CurrentLevel == 5) {
-                Wrapper.Events.StartDialogueSequence?.Invoke("LA_Easy5");
-            }
-
             SaveData.Instance.CurrentLevel += 1;
             btn.LevelSelect(SaveData.Instance.CurrentLevel);
         }

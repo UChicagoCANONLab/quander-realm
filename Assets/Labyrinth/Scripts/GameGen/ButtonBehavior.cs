@@ -16,9 +16,9 @@ namespace Labyrinth
         public Button[] buttons;
 
         void Start() {
-            if (SaveData.Instance.NeedTutorial1 == true) {
+            if (SaveData.Instance.levelDialogue[-1] == true) {
                 Wrapper.Events.StartDialogueSequence?.Invoke("LA_Intro");
-                SaveData.Instance.NeedTutorial1 = false;
+                SaveData.Instance.levelDialogue[-1] = false;
             }
 
             if (buttons == null) {
@@ -52,7 +52,7 @@ namespace Labyrinth
             Time.timeScale = 1f;
             Load.LoadGame();
 
-            if (SaveData.Instance.NeedTutorial2 == true) {
+            if (SaveData.Instance.levelDialogue[0] == true) {
                 LevelSelect(0);
             }
             else {
@@ -87,7 +87,12 @@ namespace Labyrinth
             gameplayButtons.SetActive(false);
             gameplayObjects.SetActive(false);
             starsWon[goalsCollected].SetActive(true);
-            Time.timeScale = 0f;
+            // Time.timeScale = 0f;
+
+            if ((SaveData.Instance.CurrentLevel % 5 == 0) 
+            && (SaveData.Instance.CurrentLevel != 0)) {
+                doDialogue(SaveData.Instance.CurrentLevel);
+            }
         }
 
         public void UndoWin(int goalsCollected) {
@@ -106,10 +111,9 @@ namespace Labyrinth
 
             switch(sel) {
                 case 0:
-                    Wrapper.Events.StartDialogueSequence?.Invoke("LA_Easy1");
+                    doDialogue(sel);
                     SaveData.Instance.Degree = 0;
                     currScene = "LA_Tutorial";
-                    SaveData.Instance.NeedTutorial2 = false;
                     break;
                 case < 3:
                     SaveData.Instance.Degree = 0;
@@ -126,6 +130,7 @@ namespace Labyrinth
 
 
                 case < 8:
+                    doDialogue(sel);
                     SaveData.Instance.Degree = 180;
                     currScene = "LA_4x4";
                     break;
@@ -140,6 +145,7 @@ namespace Labyrinth
 
 
                 case < 13:
+                    doDialogue(sel);
                     SaveData.Instance.Degree = 90;
                     currScene = "LA_4x4";
                     break;
@@ -160,22 +166,27 @@ namespace Labyrinth
             SceneManager.LoadScene(currScene);
         }
 
+        public void doDialogue(int level) {
+            Debug.Log("Outside");
+            if (SaveData.Instance.levelDialogue.ContainsKey(level) &&
+            SaveData.Instance.levelDialogue[level] == true) {
+                Debug.Log("Inside");
+                Wrapper.Events.StartDialogueSequence?.Invoke("LA_Level"+level);
+                SaveData.Instance.levelDialogue[level] = false;
+            }
+        }
+
         // ~~~~~~~~~~~~~~~ Enabled in Filament Environment ~~~~~~~~~~~~~~~
 
         private void OnEnable() {
             Wrapper.Events.MinigameClosed += DestroyDataObject;
-            Wrapper.Events.DialogueSequenceEnded += FinishDialogue;
         }
         private void OnDisable(){
             Wrapper.Events.MinigameClosed -= DestroyDataObject;
-            Wrapper.Events.DialogueSequenceEnded -= FinishDialogue;
         }
         private void DestroyDataObject() {
             Time.timeScale = 1f;
             Destroy(GameObject.Find("ProfileData"));
-        }
-        private void FinishDialogue() {
-            return;
         }
 
     }
