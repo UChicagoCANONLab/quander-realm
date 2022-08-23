@@ -312,11 +312,12 @@ namespace QueueBits
 			ShowStarSystem();
 
 			// dialogue
-			if (DialogueManager.playDialogue[4])
+			if (GameManager.saveData.dialogueSystem[4])
 			{
 				dialoguePhase = true;
 				Wrapper.Events.StartDialogueSequence?.Invoke("QB_Level4");
-				DialogueManager.playDialogue[4] = false;
+				GameManager.saveData.dialogueSystem[4] = false;
+				GameManager.Save();
 				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
 			}
 
@@ -1373,9 +1374,10 @@ namespace QueueBits
 				if (!starUpdated)
 				{
 					starUpdated = true;
-					if (StarSystem.levelStarCount[4] + 1 <= 3)
+					if (GameManager.saveData.starSystem[4] + 1 <= 3)
 					{
-						StarSystem.levelStarCount[4] = StarSystem.levelStarCount[4] + 1;
+						GameManager.saveData.starSystem[4] = GameManager.saveData.starSystem[4] + 1;
+						GameManager.Save();
 					}
 				}
 				// StarSystem
@@ -1408,9 +1410,10 @@ namespace QueueBits
 					if (!starUpdated)
 					{
 						starUpdated = true;
-						if (StarSystem.levelStarCount[4] + 1 <= 3)
+						if (GameManager.saveData.starSystem[4] + 1 <= 3)
 						{
-							StarSystem.levelStarCount[4] = StarSystem.levelStarCount[4] + 1;
+							GameManager.saveData.starSystem[4] = GameManager.saveData.starSystem[4] + 1;
+							GameManager.Save();
 						}
 					}
 					// StarSystem
@@ -1440,25 +1443,25 @@ namespace QueueBits
 		void ShowStarSystem()
 		{
 			// Star System
-			if (StarSystem.levelStarCount[4] == 0)
+			if (GameManager.saveData.starSystem[4] == 0)
 			{
 				Star1 = Instantiate(starEmpty, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
 				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
 				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
 			}
-			else if (StarSystem.levelStarCount[4] == 1)
+			else if (GameManager.saveData.starSystem[4] == 1)
 			{
 				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
 				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
 				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
 			}
-			else if (StarSystem.levelStarCount[4] == 2)
+			else if (GameManager.saveData.starSystem[4] == 2)
 			{
 				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
 				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
 				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
 			}
-			else if (StarSystem.levelStarCount[4] == 3)
+			else if (GameManager.saveData.starSystem[4] == 3)
 			{
 				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
 				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;

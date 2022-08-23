@@ -23,57 +23,17 @@ namespace QueueBits
         private Rect iconDimensions;
         private int amountPerPage;
         private int currentLevelCount;
-        QBSaveData saveData;
 
         // Start is called before the first frame update
         void Start()
         {
-            // InitQueueBitsSaveData();
-            // star system
-            if (StarSystem.levelStarCount == null)
-            {
-                Debug.Log("initialize star system");
-                StarSystem.levelStarCount = new int[15+1];
-                for (int i = 0; i < StarSystem.levelStarCount.Length; i++)
-                {
-                    StarSystem.levelStarCount[i] = 0;
-                }
-            }
-            // dialogue
-            if (DialogueManager.playDialogue == null)
-            {
-                DialogueManager.playDialogue = new bool[]
-                {
-                    true, // level select
-                    true, // level 1
-                    true, // level 2
-                    true, // level 3
-                    true, // level 4
-                    true, // level 5
-                    true, // level 6
-                    true, // level 7
-                    true, // level 8
-                    true, // level 9
-                    true, // level 10
-                    true, // level 11
-                    true, // level 12
-                    true, // level 13
-                    true, // level 14
-                    true, // level 15
-                };
-            }
-            if (DialogueManager.playDialogue[0])
-            {
-                Wrapper.Events.StartDialogueSequence?.Invoke("QB_Intro");
-                DialogueManager.playDialogue[0] = false;
-            }
+            GameManager.Load();
 
-            if (DialogueManager.playDialogue[0] == true)
+            if (GameManager.saveData.dialogueSystem[0])
             {
                 Wrapper.Events.StartDialogueSequence?.Invoke("QB_Intro");
-                // saveData.playDialogue[0] = false;
-                DialogueManager.playDialogue[0] = false;
-                // Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.QueueBits, saveData);
+                GameManager.saveData.dialogueSystem[0] = false;
+                GameManager.Save();
             }
 
             panelDimensions = levelHolder.GetComponent<RectTransform>().rect;
@@ -81,26 +41,9 @@ namespace QueueBits
             int maxInARow = Mathf.FloorToInt((panelDimensions.width + iconSpacing.x) / (iconDimensions.width + iconSpacing.x));
             int maxInACol = Mathf.FloorToInt((panelDimensions.height + iconSpacing.y) / (iconDimensions.height + iconSpacing.y));
             amountPerPage = maxInARow * maxInACol;
-            int totalPages = Mathf.CeilToInt((float)(StarSystem.levelStarCount.Length - 1)/ amountPerPage);
+            int totalPages = Mathf.CeilToInt((float)(GameManager.saveData.starSystem.Length - 1)/ amountPerPage);
             LoadPanels(totalPages);
         }
-
-        void InitQueueBitsSaveData()
-        {
-            try
-            {
-                string saveString = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.QueueBits);
-                saveData = JsonUtility.FromJson<QBSaveData>(saveString);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e.Message);
-            }
-
-            if (saveData == null)
-                saveData = new QBSaveData();
-        }
-
 
         void LoadPanels(int numberOfPanels)
         {
@@ -114,7 +57,7 @@ namespace QueueBits
                 panel.name = "Page-" + i;
                 panel.GetComponent<RectTransform>().localPosition = new Vector2(panelDimensions.width * (i - 1), 0);
                 SetUpGrid(panel);
-                int numberOfIcons = i == numberOfPanels ? (StarSystem.levelStarCount.Length - 1) - currentLevelCount : amountPerPage;
+                int numberOfIcons = i == numberOfPanels ? (GameManager.saveData.starSystem.Length - 1) - currentLevelCount : amountPerPage;
                 LoadIcons(numberOfIcons, panel);
             }
             Destroy(panelClone);
@@ -131,7 +74,7 @@ namespace QueueBits
             for (int i = 1; i <= numberOfIcons; i++)
             {
                 currentLevelCount++;
-                int currentLevelStar = StarSystem.levelStarCount[currentLevelCount];
+                int currentLevelStar = GameManager.saveData.starSystem[currentLevelCount];
                 GameObject icon;
                 if (currentLevelStar == 3)
                 {

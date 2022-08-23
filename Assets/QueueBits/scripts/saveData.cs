@@ -11,7 +11,7 @@ public class saveData : MonoBehaviour
 	public static int Save(Data mydata)
 	{
 		string dataJson = JsonUtility.ToJson(mydata);
-		Debug.Log(dataJson);
+		// Debug.Log(dataJson);
 #if UNITY_WEBGL == true && UNITY_EDITOR == false
 	QueueBitsGameSaved(dataJson);
 #endif
