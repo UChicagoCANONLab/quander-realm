@@ -1,11 +1,14 @@
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 namespace Wrapper
 {
     public class BackButton : QButton
     {
-        protected override void OnClickedHandler()
+        public override void OnPointerClick(PointerEventData eventData)
         {
+            base.OnPointerClick(eventData);
+
             if (SceneManager.GetActiveScene().buildIndex == 0)
                 return;
 
