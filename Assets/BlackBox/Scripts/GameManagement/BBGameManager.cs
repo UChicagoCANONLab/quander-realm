@@ -17,17 +17,17 @@ namespace BlackBox
         [SerializeField] private float rewardPopupDelay = 0.5f;
 
         [Header("Grid Containers")]
-        [SerializeField] private GameObject mainGridGO = null;
-        [SerializeField] private GameObject leftGridGO = null;
-        [SerializeField] private GameObject botGridGO = null;
-        [SerializeField] private GameObject rightGridGO = null;
-        [SerializeField] private GameObject topGridGO = null;
+        [SerializeField] private GameObject mainGridGO;
+        [SerializeField] private GameObject leftGridGO;
+        [SerializeField] private GameObject botGridGO;
+        [SerializeField] private GameObject rightGridGO;
+        [SerializeField] private GameObject topGridGO;
 
         [Header("Lantern and Mounts")]
-        public Transform lanternFrontMount = null;
+        public Transform lanternFrontMount;
 
-        [SerializeField] private GameObject lanternPrefab = null;
-        [SerializeField] private GameObject[] lanternMounts = null;
+        [SerializeField] private GameObject lanternPrefab;
+        [SerializeField] private GameObject[] lanternMounts;
 
         [Header("Grid and Cell Size")]
         [Tooltip("This will determine which values from the below arrays we'll use for: \n\ngrid size (e.g 5x5, 6x6, or 7x7) \ncell size (e.g 200f, 166f, 142f)")]
@@ -53,7 +53,7 @@ namespace BlackBox
         private const int totalLives = 3;
         private int livesRemaining;
         private int totalNodes;
-        private Level level = null;
+        private Level level;
         private bool debug = false;
 
         #region Unity Functions
@@ -98,7 +98,7 @@ namespace BlackBox
             BBEvents.RestartLevel -= StartLevel;
             BBEvents.StartNextLevel -= NextLevel;
             BBEvents.CheckWinState -= CheckWinState;
-            BBEvents.CheckWolfieReady = CheckWolfieReady;
+            BBEvents.CheckWolfieReady -= CheckWolfieReady;
             BBEvents.GetFrontMount -= GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits -= GetNumEnergyUnits;
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
