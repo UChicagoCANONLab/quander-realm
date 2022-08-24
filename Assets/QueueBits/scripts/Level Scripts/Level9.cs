@@ -1556,7 +1556,7 @@ namespace QueueBits
 				ShowStarSystem();
 
 				GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
-				winningText.GetComponent<TextMesh>().text = isPlayersTurn ? playerWonText : playerLoseText;
+				winningText.GetComponent<TextMesh>().text = blueWon ? playerWonText : playerLoseText;
 				GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
 
 				// Reward System
