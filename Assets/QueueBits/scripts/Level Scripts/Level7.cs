@@ -123,8 +123,8 @@ namespace QueueBits
 				(Piece.Blue, 0, 4, 100),
 				(Piece.Red, 3, 2, 100),
 				(Piece.Blue, 0, 3, 50),
-				(Piece.Red, 3, 1, 50),
-				(Piece.Blue, 3, 0, 75)
+				(Piece.Red, 0, 2, 50),
+				(Piece.Blue, 3, 1, 75)
 				}
 			},
 			{2, new List<(Piece piece, int col, int row, int prob)> //7.3
