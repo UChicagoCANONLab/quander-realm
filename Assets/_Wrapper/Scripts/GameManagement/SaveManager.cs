@@ -56,6 +56,7 @@ namespace Wrapper
             Events.SubmitResearchCode += Login;
             Events.IsRewardUnlocked += IsRewardUnlocked;
             Events.UpdateRemoteSave += UpdateRemoteSave;
+            Events.GetPlayerResearchCode += GetResearchCode;
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
         }
@@ -67,6 +68,7 @@ namespace Wrapper
             Events.SubmitResearchCode -= Login;
             Events.IsRewardUnlocked -= IsRewardUnlocked;
             Events.UpdateRemoteSave -= UpdateRemoteSave;
+            Events.GetPlayerResearchCode -= GetResearchCode;
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
         }
@@ -393,6 +395,11 @@ namespace Wrapper
         {
             currentUserSave.introDialogueSeen = hasSeen;
             UpdateRemoteSave();
+        }
+
+        private string GetResearchCode()
+        {
+            return currentUserSave.id;
         }
 
         #endregion
