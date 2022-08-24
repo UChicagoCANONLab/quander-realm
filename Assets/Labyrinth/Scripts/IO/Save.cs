@@ -27,12 +27,14 @@ namespace Labyrinth
             return;
         } */
 
-        public static void SaveGame() {
+        public static void SaveTTSaveData() {
             // FILL IN RESEARCH DATA LATER
 
-            Load.saveData = new TTSaveData(SaveData.Instance);
-            Wrapper.Events.UpdateMinigameSaveData?.Invoke(Game.Labyrinth, TTSaveData);
-
+            Load.LoadTTSaveData();
+            Load.saveData.updateTTSaveData(SaveData.Instance);
+            Debug.Log(Load.saveData.TTSDtoString());
+            // Wrapper.Events.UpdateMinigameSaveData?.Invoke(Game.Labyrinth, TTSaveData);
+            Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.Labyrinth, Load.saveData);
 
         }
         

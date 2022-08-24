@@ -15,8 +15,8 @@ namespace Labyrinth
         public int CurrentLevel; //current level the user is playing
         
         // Dialogue needed per level offered
-        public Dictionary<int, bool> levelDialogue = new Dictionary<int, bool>()
-        { {-1, true}, {0, true}, {5, true}, {6, true}, {10, true}, {11, true}, {15, true} };
+        // public Dictionary<int, bool> levelDialogue = new Dictionary<int, bool>()
+        // { {-1, false}, {0, false}, {5, true}, {6, true}, {10, true}, {11, true}, {15, true} };
         // public bool NeedTutorial1 = false; //turns off once they receive intro
         // public bool NeedTutorial2 = false; //turns off once they receive tutorial
 

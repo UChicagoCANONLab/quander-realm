@@ -16,9 +16,9 @@ namespace Labyrinth
         public Button[] buttons;
 
         void Start() {
-            if (SaveData.Instance.levelDialogue[-1] == true) {
+            if (DialogueAndRewards.Instance.levelDialogue[-1] == true) {
                 Wrapper.Events.StartDialogueSequence?.Invoke("LA_Intro");
-                SaveData.Instance.levelDialogue[-1] = false;
+                DialogueAndRewards.Instance.levelDialogue[-1] = false;
             }
 
             if (buttons == null) {
@@ -50,9 +50,9 @@ namespace Labyrinth
 
         public void LoadLevelSelectMenu() {
             Time.timeScale = 1f;
-            Load.LoadGame();
+            // Load.LoadGame();
 
-            if (SaveData.Instance.levelDialogue[0] == true) {
+            if (DialogueAndRewards.Instance.levelDialogue[0] == true) {
                 LevelSelect(0);
             }
             else {
@@ -68,6 +68,7 @@ namespace Labyrinth
 
         public void LoadMainMenu() {
             Time.timeScale = 1f;
+            Load.LoadTTSaveData();
             SceneManager.LoadScene("LA_MainMenu");
         }
 
@@ -80,7 +81,7 @@ namespace Labyrinth
         public void Win(int goalsCollected) {      
             SaveData.Instance.winner = true;
             if (SaveData.Instance.CurrentLevel > 0) {
-                Save.SaveGame();
+                // Save.SaveTTSaveData();
             }
     
             winScreen.SetActive(true);
@@ -91,8 +92,9 @@ namespace Labyrinth
 
             if ((SaveData.Instance.CurrentLevel % 5 == 0) 
             && (SaveData.Instance.CurrentLevel != 0)) {
-                doDialogue(SaveData.Instance.CurrentLevel);
+                DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
             }
+            DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
         }
 
         public void UndoWin(int goalsCollected) {
@@ -111,7 +113,7 @@ namespace Labyrinth
 
             switch(sel) {
                 case 0:
-                    doDialogue(sel);
+                    DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 0;
                     currScene = "LA_Tutorial";
                     break;
@@ -130,7 +132,7 @@ namespace Labyrinth
 
 
                 case < 8:
-                    doDialogue(sel);
+                    DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 180;
                     currScene = "LA_4x4";
                     break;
@@ -145,7 +147,7 @@ namespace Labyrinth
 
 
                 case < 13:
-                    doDialogue(sel);
+                    DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 90;
                     currScene = "LA_4x4";
                     break;
@@ -166,15 +168,19 @@ namespace Labyrinth
             SceneManager.LoadScene(currScene);
         }
 
-        public void doDialogue(int level) {
-            Debug.Log("Outside");
+        /* public void doDialogue(int level) {
             if (SaveData.Instance.levelDialogue.ContainsKey(level) &&
             SaveData.Instance.levelDialogue[level] == true) {
-                Debug.Log("Inside");
                 Wrapper.Events.StartDialogueSequence?.Invoke("LA_Level"+level);
                 SaveData.Instance.levelDialogue[level] = false;
             }
         }
+
+        public void giveReward(int level) {
+            if (Events.IsRewardUnlocked?.Invoke(levelRewards[level]) == false) {
+                Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.Labyrinth, level);
+            }
+        } */
 
         // ~~~~~~~~~~~~~~~ Enabled in Filament Environment ~~~~~~~~~~~~~~~
 

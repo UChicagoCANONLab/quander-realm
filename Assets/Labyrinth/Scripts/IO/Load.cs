@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-// using System.IO;
+using System;
+using System.IO;
 using System.Runtime.InteropServices;
+
 
 namespace Labyrinth 
 { 
@@ -39,20 +40,23 @@ namespace Labyrinth
             }
         } */
 
-        TTSaveData saveData;
+        public static TTSaveData saveData;
 
-        public void InitTwinTanglementSaveData() {
+        public static void LoadTTSaveData() {
             try {
-                string saveString = Events.GetMinigameSaveData?.Invoke(Game.Labyrinth);
+                string saveString = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Labyrinth);
                 saveData = JsonUtility.FromJson<TTSaveData>(saveString);
             }
             catch (Exception e) {
+                Debug.Log("ERROR");
                 Debug.LogError(e.Message);
             }
 
             if (saveData == null) {
                 saveData = new TTSaveData();
             }
+
+            Debug.Log("Yeah "+saveData.TTSDtoString());
         }
 
     }

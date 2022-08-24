@@ -98,7 +98,7 @@ namespace Labyrinth
                 btn.Win(numStars);
             } */
             /* if (Input.GetKeyDown(KeyCode.Escape)) {
-                btn.LoadMainMenu();
+                btn.MainMenu();
             } */
             if (Input.GetKeyDown(KeyCode.Space)) {
                 pm.SwitchPlayer();
@@ -207,7 +207,7 @@ namespace Labyrinth
             timePlayed = endTime - initTime;
             SaveData.Instance.updateSave(this);
             if (SaveData.Instance.CurrentLevel > 0) {
-                Save.SaveGame();
+                // Save.SaveTTSaveData();
             }
 
             // Resetting level
