@@ -8,7 +8,8 @@ namespace Labyrinth
 { 
     public class Save : MonoBehaviour
     {
-        [DllImport("__Internal")]
+        /* [DllImport("__Internal")]
+        
         private static extern void TwinTanglementSave(string data);
 
         public static void SaveGame()
@@ -24,6 +25,15 @@ namespace Labyrinth
             #endif
             
             return;
+        } */
+
+        public static void SaveGame() {
+            // FILL IN RESEARCH DATA LATER
+
+            Load.saveData = new TTSaveData(SaveData.Instance);
+            Wrapper.Events.UpdateMinigameSaveData?.Invoke(Game.Labyrinth, TTSaveData);
+
+
         }
         
     }

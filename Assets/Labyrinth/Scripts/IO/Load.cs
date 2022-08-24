@@ -10,8 +10,8 @@ namespace Labyrinth
 { 
     public class Load : MonoBehaviour
     {
-        [DllImport("__Internal")]
-        private static extern void TwinTanglementLoad(string callback);
+        // [DllImport("__Internal")]
+        // private static extern void TwinTanglementLoad(string callback);
 
         /* private void Start() {
             #if UNITY_WEBGL == true && UNITY_EDITOR == false
@@ -19,7 +19,7 @@ namespace Labyrinth
             #endif
         } */
 
-        public static void LoadGame() {
+        /* public static void LoadGame() {
             #if UNITY_WEBGL == true && UNITY_EDITOR == false
                 TwinTanglementLoad ("loadData");
             #endif
@@ -36,6 +36,22 @@ namespace Labyrinth
                 for (int i=0; i<15; i++) {
                     SaveData.Instance.starsPerLevel[i] = tempData.MaxStarsPerLevel[i];
                 }
+            }
+        } */
+
+        TTSaveData saveData;
+
+        public void InitTwinTanglementSaveData() {
+            try {
+                string saveString = Events.GetMinigameSaveData?.Invoke(Game.Labyrinth);
+                saveData = JsonUtility.FromJson<TTSaveData>(saveString);
+            }
+            catch (Exception e) {
+                Debug.LogError(e.Message);
+            }
+
+            if (saveData == null) {
+                saveData = new TTSaveData();
             }
         }
 

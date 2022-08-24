@@ -4,19 +4,17 @@ using UnityEngine;
 
 namespace Labyrinth 
 { 
-        
-    public class Data {
+    [System.Serializable]
+    public class TTSaveData {
 
         public int[] MaxStarsPerLevel;
-        // public float[] TimePlayed;
         public int Level;
         public int NumStars;
         public float Time;
         public int HintsUsed;
         public bool Winner;
-        // public object[] PreviousSave; // {level #, stars, time, hints used #}
         
-        public Data(SaveData save) {
+        public TTSaveData(SaveData save) {
             MaxStarsPerLevel = save.starsPerLevel;
             // TimePlayed = save.timePerLevel;
             //PreviousSave = save.previousSave;
@@ -27,5 +25,10 @@ namespace Labyrinth
             Winner = save.winner;
 
         }
+
+        public Wrapper.Game gameID = Wrapper.Game.Labyrinth;
+        public string currentLevelID = string.Empty;
+        // public bool[] tutorialsSeen = new bool[] { false, false, false, false, false };
+
     }
 }
