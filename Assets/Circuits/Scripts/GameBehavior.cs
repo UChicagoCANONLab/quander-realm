@@ -21,6 +21,8 @@ public class GameBehavior : MonoBehaviour
     public GameObject gatesObject;
     public GameObject canvasObject;
 
+    //public GameObject[] stars;
+
     public Camera camera;
 
     public GameObject sparkPrefab;
@@ -116,6 +118,7 @@ public class GameBehavior : MonoBehaviour
     }
     private void Start()
     {
+        GameData.levelStart();
         selection = new HashSet<BaseGateBehavior>();
         String[] gatesToSample;
         String[] allowedSubstitutions;
@@ -123,8 +126,16 @@ public class GameBehavior : MonoBehaviour
         int nGates;
         int nExpansions;
         List<List<String>> tempCircuit = null;
+        try
+        {
+			Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.Circuits, GameData.getCurrLevel());
+        }
+        catch (Exception ex)
+        {
 
-        if (GameData.CurrLevel <= 9)
+        }
+
+        if (GameData.getCurrLevel() <= 9)
         {
             String[] empty = new String[0];
             int startingSize = 9;
@@ -134,9 +145,10 @@ public class GameBehavior : MonoBehaviour
             const string H = "H-0";
             const string X = "X-0";
             const string Z = "Z-0";
-            switch (GameData.CurrLevel)
+            switch (GameData.getCurrLevel())
             {
                 case 0:
+                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
                     row.Add(H);
                     row.Add(H);
                     break;
@@ -172,7 +184,7 @@ public class GameBehavior : MonoBehaviour
                     row.Add(H);
                     row.Add(X);
                     row.Add(H);
-					row.Add(X);
+                    row.Add(X);
                     row.Add(H);
                     row.Add(X);
                     row.Add(H);
@@ -268,31 +280,31 @@ public class GameBehavior : MonoBehaviour
                 }
             }
         }
-        else if (GameData.CurrLevel <14)
+        else if (GameData.getCurrLevel() < 14)
         {
             System.Random rng = new System.Random();
             nLines = rng.Next(2, 5);
-            nGates = GameData.CurrLevel + rng.Next(4) + (int) (nLines / 2);
-            gatesToSample = new string[]{ "X", "Z" };
-            allowedSubstitutions = new string[]{ "X", "Z" };
+            nGates = GameData.getCurrLevel() + rng.Next(4) + (int)(nLines / 2);
+            gatesToSample = new string[] { "X", "Z" };
+            allowedSubstitutions = new string[] { "X", "Z" };
             nExpansions = 3 + rng.Next(4);
             tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
         }
-        else if (GameData.CurrLevel < 18)
+        else if (GameData.getCurrLevel() < 18)
         {
             System.Random rng = new System.Random();
             nLines = rng.Next(4, 5);
-            nGates = GameData.CurrLevel + rng.Next(4) + (int)(nLines / 2) - 5;
-            gatesToSample = new string[] { "X", "Z", "CZ"};
+            nGates = GameData.getCurrLevel() + rng.Next(4) + (int)(nLines / 2) - 5;
+            gatesToSample = new string[] { "X", "Z", "CZ" };
             allowedSubstitutions = new string[] { "X", "Z", "CZ" };
             nExpansions = 4 + rng.Next(4);
             tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
         }
-        else if (GameData.CurrLevel < 22)
+        else if (GameData.getCurrLevel() < 22)
         {
             System.Random rng = new System.Random();
             nLines = rng.Next(5, 7);
-            nGates = GameData.CurrLevel + rng.Next(4) + (int)(nLines / 2) - 8;
+            nGates = GameData.getCurrLevel() + rng.Next(4) + (int)(nLines / 2) - 8;
             gatesToSample = new string[] { "X", "Z", "CZ", "CX" };
             allowedSubstitutions = new string[] { "X", "Z", "CZ", "CX" };
             nExpansions = 5 + rng.Next(4);
@@ -302,7 +314,7 @@ public class GameBehavior : MonoBehaviour
         {
             System.Random rng = new System.Random();
             nLines = rng.Next(6, 7);
-            nGates = GameData.CurrLevel + rng.Next(4) + (int)(nLines / 2) - 10;
+            nGates = GameData.getCurrLevel() + rng.Next(4) + (int)(nLines / 2) - 10;
             gatesToSample = new string[] { "X", "Z", "CZ", "CX" };
             allowedSubstitutions = new string[] { "X", "Z", "CZ", "CX", "CX2" };
             nExpansions = 5 + rng.Next(4);
@@ -310,18 +322,18 @@ public class GameBehavior : MonoBehaviour
 
 
         }
-        sceneScale = Math.Min(Math.Min(1f, 6.5f / tempCircuit[0].Count), 3.5f/nLines);
+        sceneScale = Math.Min(Math.Min(1f, 6.5f / tempCircuit[0].Count), 3.5f / nLines);
         renderCircuit(tempCircuit);
 
         int nCols = circuit[0].Count;
         nLines = circuit.Count;
-        Vector3 offset = new Vector3((-nCols / 2) * CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h*sceneScale);
+        Vector3 offset = new Vector3((-nCols / 2) * CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h * sceneScale);
         for (int i = 0; i < circuit.Count; i++)
         {
             var currLine = Instantiate(linePrefab);
             LineRenderer lr = currLine.GetComponent<LineRenderer>();
             lr.SetWidth(sceneScale, sceneScale);
-            float yCord = (nLines - i) * CTConstants.gridResolution_h*sceneScale;
+            float yCord = (nLines - i) * CTConstants.gridResolution_h * sceneScale;
 
             Vector3[] positions = { new Vector3(-200, yCord) + offset, new Vector3(200, yCord) + offset };
             lr.SetPositions(positions);
@@ -385,23 +397,33 @@ public class GameBehavior : MonoBehaviour
         {
             return;
         }
+        List<string> subString = new List<string>();
         foreach (var gate in selection)
         {
             Tuple<int, int> cords = new Tuple<int, int>(gate.x, gate.y);
             selectedCords.Add(cords);
-        }
+            subString.Add(string.Format("({0}:{1},{2})", circuit[gate.y][gate.x], gate.x, gate.y));
 
+        }
+        GameData.checkingSub(String.Join("_", subString));
         var simplifiedCircuit = LevelGenerator.checkSubstitution(selectedCords, circuit);
         if (simplifiedCircuit != null)
         {
+
+            GameData.correctSub();
             renderCircuit(simplifiedCircuit);
-            Debug.Log("Valid Substiution!");
+            Debug.Log("!Valid Substiution!");
+        }
+        else
+        {
+            GameData.incorrectSub();
         }
     }
 
 
     public void tryRun()
     {
+        GameData.levelRun();
         System.Random rng = new System.Random();
         simplified = true;
         for (int y = 0; y < circuit.Count; y++)
@@ -435,7 +457,7 @@ public class GameBehavior : MonoBehaviour
         {
 
 
-            Vector3 offset = new Vector3(-nSpark*CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h ) * sceneScale;
+            Vector3 offset = new Vector3(-nSpark * CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h) * sceneScale;
             for (int i = 0; i < circuit.Count; i++)
             {
                 float sparkOffset = 0;
@@ -480,6 +502,17 @@ public class GameBehavior : MonoBehaviour
                     var reductions = LevelGenerator.checkGateReduction(x, y, circuit);
                     if (reductions.Count > 0)
                     {
+                        //if (stars[0].active)
+                        //{
+                        //    stars[0].active = false;
+                        //}
+                        //else
+                        //{
+                        //    stars[1].active = false;
+                        //}/star
+
+
+                        GameData.hintRequested();
                         var reduction = reductions[0];
                         foreach (var keyvalue in reduction)
                         {
@@ -501,9 +534,7 @@ public class GameBehavior : MonoBehaviour
 
     public void loadNextLevel()
     {
-        GameData.completedLevels[GameData.CurrLevel] = true;
-        Debug.Log(GameData.completedLevels);
-        GameData.CurrLevel += 1;
+        GameData.levelPassed();
 
         SceneManager.LoadScene(GameData.getNextScene());
     }
