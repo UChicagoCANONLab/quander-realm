@@ -1,3 +1,4 @@
+using BeauRoutine;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Wrapper
         public DialogueView dialogueView = null;
 
         private const string dialoguePath = "_Wrapper/Dialogue";
+        private const int dialogueViewLayerIndex = 1;
         private DialogueSequence currentSequence = null;
         private Dictionary<string, DialogueSequence> dialogueDictionary;
 
@@ -57,6 +59,12 @@ namespace Wrapper
             {
                 Debug.LogFormat("Could not find dialogue sequence with ID {0}", sequenceID);
                 return;
+            }
+
+            if (dialogueView.animator.GetBool("View/On"))
+            {
+                dialogueView.animator.SetBool("View/On", false);
+                dialogueView.animator.WaitToCompleteAnimation(dialogueViewLayerIndex);
             }
 
             currentSequence = dialogueDictionary[sequenceID];
