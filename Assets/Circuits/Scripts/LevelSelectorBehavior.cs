@@ -21,7 +21,7 @@ public class LevelSelectorBehavior : MonoBehaviour
             newButton.transform.SetParent(content.transform);
             newButton.transform.localScale = Vector3.one;
             LevelButtonBehavior lb = newButton.GetComponent<LevelButtonBehavior>();
-            lb.init(i, GameData.completedLevels[i], this);
+            lb.init(i, GameData.getCompletedLevels()[i], this);
             buttons[i] = lb;
         }
 
@@ -31,13 +31,13 @@ public class LevelSelectorBehavior : MonoBehaviour
     {
         for (int i = 0; i < CTConstants.N_LEVELS; i++)
         {
-            buttons[i].init(i, GameData.completedLevels[i], this);
+            buttons[i].init(i, GameData.getCompletedLevels()[i], this);
         }
     }
 
     public void onLevelSelection(int l)
     {
-        GameData.CurrLevel = l;
+        GameData.setCurrLevel(l);
         string nextScene = GameData.getNextScene();
         SceneManager.LoadScene(nextScene);
 
