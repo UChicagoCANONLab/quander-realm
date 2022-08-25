@@ -1,6 +1,6 @@
-﻿using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /*
  * Saves a game to database
@@ -9,22 +9,51 @@ namespace Qupcakery
 {
     public class SaveGame : MonoBehaviour
     {
-        //[DllImport("__Internal")]
-        //private static extern void QupcakesGameSaved(string data);
+        public static SaveGame Instance;
 
-        public static int Save()
+        void Awake()
+        {
+            Instance = this;
+        }
+
+        public int Save()
         {
             // Save research data
-            //string dataJson = JsonUtility.ToJson(GameManagement.Instance.game.gameStat);
-            //QupcakesGameSaved(dataJson);
+            Data.researchData.UpdateResearchData(GameManagement.Instance.game.gameStat);
+            string dataJson = JsonUtility.ToJson(Data.researchData);
+            StartCoroutine(SaveResearchData(dataJson));
 
             // Save game data
-            LoadGame.saveData.UpdateGameData(GameManagement.Instance.game.gameStat);
-            //Debug.Log("Saving Data " + JsonUtility.ToJson(LoadGame.saveData));
-
+            Data.gameData.UpdateGameData(GameManagement.Instance.game.gameStat);
             Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.Qupcakes,
-                LoadGame.saveData); ;
+                Data.gameData);
             return 0;
+        }
+
+        IEnumerator SaveResearchData(string dataJson)
+        {
+            string username = "test"; // #TODO
+
+            //WWWForm form = new WWWForm();
+            //form.AddField("username", username);
+            //form.AddField("saveData", dataJson);
+
+            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(dataJson);
+            string url = "http://127.0.0.1:5000/qupcakes_save";
+            //UnityWebRequest www = UnityWebRequest.Post(url, form);
+
+            using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
+            {
+                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log(www.error);
+                }
+            }
         }
     }
 }

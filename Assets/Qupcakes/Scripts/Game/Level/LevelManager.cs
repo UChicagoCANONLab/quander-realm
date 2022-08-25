@@ -60,8 +60,6 @@ namespace Qupcakery
 
         private void StartLevel()
         {
-            Debug.Log("Starting level");
-
             /* Subscribe to events that trigger level to end */
             timer.TimerEnded += OnLevelEnded;
             Dispatcher.AllBatchDonePublisher += OnLevelEnded;
