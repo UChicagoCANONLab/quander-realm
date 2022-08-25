@@ -621,8 +621,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 969591632}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -633,7 +633,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 606, y: 378}
+  m_AnchoredPosition: {x: 438, y: 290}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &969591634
@@ -1128,9 +1128,8 @@ GameObject:
   - component: {fileID: 1793722265}
   - component: {fileID: 1793722264}
   - component: {fileID: 1793722263}
-  - component: {fileID: 1793722262}
-  - component: {fileID: 1793722268}
   - component: {fileID: 1793722269}
+  - component: {fileID: 1793722270}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1138,18 +1137,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1793722262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793722261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e3ab21d26c31b747a023bee28422ada, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!81 &1793722263
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1224,18 +1211,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1793722268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793722261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e73fb55478dca48df86a4dfcd14e4324, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1793722269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1255,3 +1230,15 @@ MonoBehaviour:
   iconStar3: {fileID: 3161413207277570135, guid: 15aa9dae8bbbb40b6ba237bf012d614b, type: 3}
   thisCanvas: {fileID: 1040613574}
   iconSpacing: {x: 150, y: 160}
+--- !u!114 &1793722270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793722261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e3ab21d26c31b747a023bee28422ada, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
