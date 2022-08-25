@@ -348,7 +348,6 @@ namespace QueueBits
 
 			int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
 			prefilledBoard = prefilledBoardList[board_num];
-
 			//Shivani Puli Data Collection
 			mydata.level = 11;
 			mydata.prefilledBoard = board_num;

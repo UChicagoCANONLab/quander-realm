@@ -106,68 +106,32 @@ namespace QueueBits
 
 		Dictionary<int, List<(Piece, int, int, int)>> prefilledBoardList = new Dictionary<int, List<(Piece, int, int, int)>>
 		{
-			{0, new List<(Piece piece, int col, int row, int prob)> //7.9 flipped
+			{0, new List<(Piece piece, int col, int row, int prob)> //7.9
 				{
 					(Piece.Red, 3, 5, 50),
-				(Piece.Blue, 4, 5, 75),
-				(Piece.Red, 4, 4, 75),
-				(Piece.Blue, 1, 5, 75),
-				(Piece.Red, 2, 5, 50),
-				(Piece.Blue, 3, 4, 50),
-				(Piece.Red, 3, 3, 100),
-				(Piece.Blue, 2, 4, 50),
-				(Piece.Red, 6, 5, 100),
-				(Piece.Blue, 3, 2, 100),
-				(Piece.Red, 4, 3, 100),
-				(Piece.Blue, 4, 2, 100),
-				(Piece.Red, 2, 3, 75),
-				(Piece.Blue, 6, 4, 100)
-				}
-			},
-			{1, new List<(Piece piece, int col, int row, int prob)> //7.10 flipped
-				{
-					(Piece.Red, 3, 5, 100),
-				(Piece.Blue, 3, 4, 100),
-				(Piece.Red, 3, 3, 75),
-				(Piece.Blue, 4, 5, 100),
-				(Piece.Red, 4, 4, 100),
-				(Piece.Blue, 2, 5, 100),
-				(Piece.Red, 4, 3, 50),
-				(Piece.Blue, 3, 2, 75),
-				(Piece.Red, 3, 1, 100),
-				(Piece.Blue, 2, 4, 75),
-				(Piece.Red, 2, 3, 75),
-				(Piece.Blue, 2, 2, 50),
-				(Piece.Red, 1, 5, 75),
-				(Piece.Blue, 4, 2, 75)
-				}
-			},
-			{2, new List<(Piece piece, int col, int row, int prob)> //8.9
-				{
-					(Piece.Red, 3, 5, 100),
 				(Piece.Blue, 2, 5, 75),
 				(Piece.Red, 2, 4, 75),
 				(Piece.Blue, 5, 5, 75),
 				(Piece.Red, 4, 5, 50),
-				(Piece.Blue, 3, 4, 75),
-				(Piece.Red, 3, 3, 50),
-				(Piece.Blue, 4, 4, 100),
+				(Piece.Blue, 3, 4, 50),
+				(Piece.Red, 3, 3, 100),
+				(Piece.Blue, 4, 4, 50),
 				(Piece.Red, 0, 5, 100),
 				(Piece.Blue, 3, 2, 100),
-				(Piece.Red, 2, 3, 75),
-				(Piece.Blue, 2, 2, 50),
+				(Piece.Red, 2, 3, 100),
+				(Piece.Blue, 2, 2, 100),
 				(Piece.Red, 4, 3, 75),
-				(Piece.Blue, 0, 4, 50)
+				(Piece.Blue, 0, 4, 100)
 				}
 			},
-			{3, new List<(Piece piece, int col, int row, int prob)> //8.10
+			{1, new List<(Piece piece, int col, int row, int prob)> //7.10
 				{
 					(Piece.Red, 3, 5, 100),
 				(Piece.Blue, 3, 4, 100),
 				(Piece.Red, 3, 3, 75),
-				(Piece.Blue, 2, 5, 75),
-				(Piece.Red, 2, 4, 75),
-				(Piece.Blue, 5, 5, 100),
+				(Piece.Blue, 2, 5, 100),
+				(Piece.Red, 2, 4, 100),
+				(Piece.Blue, 4, 5, 100),
 				(Piece.Red, 2, 3, 50),
 				(Piece.Blue, 3, 2, 75),
 				(Piece.Red, 3, 1, 100),
@@ -175,81 +139,117 @@ namespace QueueBits
 				(Piece.Red, 4, 3, 75),
 				(Piece.Blue, 4, 2, 50),
 				(Piece.Red, 5, 5, 75),
-				(Piece.Blue, 2, 2, 50)
+				(Piece.Blue, 2, 2, 75)
 				}
 			},
-			{4, new List<(Piece piece, int col, int row, int prob)> //7.5 flipped
-			{
+			{2, new List<(Piece piece, int col, int row, int prob)> //7.11
+				{
 				(Piece.Red, 3, 5, 100),
-				(Piece.Blue, 2, 5, 75),
-				(Piece.Red, 4, 5, 75),
 				(Piece.Blue, 3, 4, 100),
+				(Piece.Red, 3, 3, 75),
+				(Piece.Blue, 3, 2, 75),
+				(Piece.Red, 3, 1, 100),
+				(Piece.Blue, 4, 5, 50),
 				(Piece.Red, 4, 4, 50),
-				(Piece.Blue, 3, 3, 75),
-				(Piece.Red, 5, 5, 100),
-				(Piece.Blue, 6, 5, 50),
-				(Piece.Red, 6, 4, 100),
-				(Piece.Blue, 4, 3, 100),
-				(Piece.Red, 3, 2, 100),
-				(Piece.Blue, 4, 2, 100),
-				(Piece.Red, 2, 4, 75),
-				(Piece.Blue, 3, 1, 100)
-			}
-		},
-			{5, new List<(Piece piece, int col, int row, int prob)> //7.6 flipped
-			{
-				(Piece.Red, 2, 5, 40),
-				(Piece.Blue, 5, 5, 100),
-				(Piece.Red, 3, 5, 100),
-				(Piece.Blue, 1, 5, 100),
-				(Piece.Red, 5, 4, 50),
-				(Piece.Blue, 2, 4, 50),
-				(Piece.Red, 1, 4, 75),
-				(Piece.Blue, 2, 3, 75),
-				(Piece.Red, 2, 2, 75),
-				(Piece.Blue, 3, 4, 75),
-				(Piece.Red, 3, 3, 100),
-				(Piece.Blue, 3, 2, 100),
-				(Piece.Red, 5, 3, 100),
-				(Piece.Blue, 3, 1, 50)
-			}
-		},
-			{6, new List<(Piece piece, int col, int row, int prob)> //7.7 flipped
-			{
-				(Piece.Red, 4, 5, 75),
-				(Piece.Blue, 3, 5, 100),
-				(Piece.Red, 3, 4, 50),
-				(Piece.Blue, 3, 3, 75),
-				(Piece.Red, 3, 2, 100),
-				(Piece.Blue, 1, 5, 50),
-				(Piece.Red, 5, 5, 100),
-				(Piece.Blue, 3, 1, 100),
-				(Piece.Red, 0, 5, 50),
-				(Piece.Blue, 1, 4, 50),
-				(Piece.Red, 4, 4, 100),
-				(Piece.Blue, 6, 5, 75),
-				(Piece.Red, 6, 4, 75),
-				(Piece.Blue, 5, 4, 100)
-			}
-		},
-			{7, new List<(Piece piece, int col, int row, int prob)> //7.8 flipped
-			{
-				(Piece.Red, 3, 5, 75),
-				(Piece.Blue, 1, 5, 50),
-				(Piece.Red, 4, 5, 50),
+				(Piece.Blue, 2, 5, 100),
+				(Piece.Red, 4, 3, 50),
 				(Piece.Blue, 5, 5, 75),
-				(Piece.Red, 1, 4, 100),
-				(Piece.Blue, 3, 4, 75),
-				(Piece.Red, 3, 3, 100),
-				(Piece.Blue, 3, 2, 100),
-				(Piece.Red, 4, 4, 50),
-				(Piece.Blue, 4, 3, 100),
 				(Piece.Red, 5, 4, 100),
-				(Piece.Blue, 5, 3, 50),
-				(Piece.Red, 1, 3, 75),
+				(Piece.Blue, 2, 4, 50),
+				(Piece.Red, 0, 5, 75),
+				(Piece.Blue, 0, 4, 100)
+				}
+			},
+			{3, new List<(Piece piece, int col, int row, int prob)> //7.12
+				{
+					(Piece.Red, 3, 5, 100),
+				(Piece.Blue, 3, 4, 75),
+				(Piece.Red, 4, 5, 100),
+				(Piece.Blue, 2, 5, 100),
+				(Piece.Red, 3, 3, 50),
+				(Piece.Blue, 4, 4, 50),
+				(Piece.Red, 2, 4, 75),
+				(Piece.Blue, 1, 5, 50),
+				(Piece.Red, 4, 3, 50),
+				(Piece.Blue, 2, 3, 100),
+				(Piece.Red, 3, 2, 100),
+				(Piece.Blue, 4, 2, 75),
+				(Piece.Red, 2, 2, 75),
 				(Piece.Blue, 3, 1, 100)
+				}
+			},
+			{4, new List<(Piece piece, int col, int row, int prob)> //8.5
+				{
+					(Piece.Red, 3, 5, 75),
+				(Piece.Blue, 4, 5, 75),
+				(Piece.Red, 2, 5, 100),
+				(Piece.Blue, 3, 4, 100),
+				(Piece.Red, 2, 4, 100),
+				(Piece.Blue, 3, 3, 50),
+				(Piece.Red, 1, 5, 100),
+				(Piece.Blue, 0, 5, 50),
+				(Piece.Red, 3, 2, 75),
+				(Piece.Blue, 2, 3, 75),
+				(Piece.Red, 2, 2, 50),
+				(Piece.Blue, 0, 4, 100),
+				(Piece.Red, 4, 4, 50),
+				(Piece.Blue, 3, 1, 100)
+				}
+			},
+			{5, new List<(Piece piece, int col, int row, int prob)> //8.6
+				{
+					(Piece.Red, 4, 5, 50),
+					(Piece.Blue, 1, 5, 100),
+					(Piece.Red, 3, 5, 100),
+					(Piece.Blue, 5, 5, 100),
+					(Piece.Red, 1, 4, 75),
+					(Piece.Blue, 4, 4, 50),
+					(Piece.Red, 5, 4, 75),
+					(Piece.Blue, 4, 3, 75),
+					(Piece.Red, 4, 2, 75),
+					(Piece.Blue, 3, 4, 75),
+					(Piece.Red, 3, 3, 100),
+					(Piece.Blue, 3, 2, 75),
+					(Piece.Red, 1, 3, 50),
+					(Piece.Blue, 3, 1, 50)
+				}
+			},
+			{6, new List<(Piece piece, int col, int row, int prob)> //8.7
+				{
+					(Piece.Red, 2, 5, 75),
+				(Piece.Blue, 3, 5, 50),
+				(Piece.Red, 3, 4, 50),
+				(Piece.Blue, 3, 3, 100),
+				(Piece.Red, 3, 2, 75),
+				(Piece.Blue, 5, 5, 100),
+				(Piece.Red, 1, 5, 100),
+				(Piece.Blue, 3, 1, 75),
+				(Piece.Red, 6, 5, 50),
+				(Piece.Blue, 5, 4, 75),
+				(Piece.Red, 1, 4, 75),
+				(Piece.Blue, 0, 5, 75),
+				(Piece.Red, 2, 4, 100),
+				(Piece.Blue, 0, 4, 50)
+				}
+			},
+			{7, new List<(Piece piece, int col, int row, int prob)> //8.8
+				{
+					(Piece.Red, 3, 5, 75),
+				(Piece.Blue, 5, 5, 50),
+				(Piece.Red, 2, 5, 50),
+				(Piece.Blue, 1, 5, 75),
+				(Piece.Red, 5, 4, 50),
+				(Piece.Blue, 3, 4, 100),
+				(Piece.Red, 3, 3, 100),
+				(Piece.Blue, 3, 2, 75),
+				(Piece.Red, 2, 4, 100),
+				(Piece.Blue, 2, 3, 50),
+				(Piece.Red, 1, 4, 75),
+				(Piece.Blue, 1, 3, 75),
+				(Piece.Red, 5, 3, 75),
+				(Piece.Blue, 3, 1, 100)
+				}
 			}
-		}
 		};
 
 		// Select Tokens

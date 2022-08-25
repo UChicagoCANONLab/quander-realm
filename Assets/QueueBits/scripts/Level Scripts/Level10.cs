@@ -116,7 +116,7 @@ namespace QueueBits
 				(Piece.Red, 3, 3, 75),
 				(Piece.Blue, 2, 5, 75),
 				(Piece.Red, 2, 4, 75),
-				(Piece.Blue, 5, 5, 100),
+				(Piece.Blue, 4, 5, 100),
 				(Piece.Red, 2, 3, 50),
 				(Piece.Blue, 3, 2, 75),
 				(Piece.Red, 3, 1, 100),
@@ -183,20 +183,20 @@ namespace QueueBits
 			},
 			{5, new List<(Piece piece, int col, int row, int prob)> //8.6 flipped
 				{
-					(Piece.Red, 3, 5, 50),
-					(Piece.Blue, 3, 4, 100),
-					(Piece.Red, 3, 3, 100),
-					(Piece.Blue, 3, 2, 100),
-					(Piece.Red, 3, 1, 75),
-					(Piece.Blue, 5, 5, 50),
+					(Piece.Red, 2, 5, 50),
+					(Piece.Blue, 5, 5, 100),
+					(Piece.Red, 3, 5, 100),
+					(Piece.Blue, 1, 5, 100),
 					(Piece.Red, 5, 4, 75),
-					(Piece.Blue, 5, 3, 75),
-					(Piece.Red, 4, 5, 75),
-					(Piece.Blue, 2, 5, 75),
-					(Piece.Red, 5, 2, 100),
-					(Piece.Blue, 2, 4, 75),
-					(Piece.Red, 2, 3, 50),
-					(Piece.Blue, 2, 2, 50)
+					(Piece.Blue, 2, 4, 50),
+					(Piece.Red, 1, 4, 75),
+					(Piece.Blue, 2, 3, 75),
+					(Piece.Red, 2, 2, 75),
+					(Piece.Blue, 3, 4, 75),
+					(Piece.Red, 3, 3, 100),
+					(Piece.Blue, 3, 2, 75),
+					(Piece.Red, 5, 3, 50),
+					(Piece.Blue, 3, 1, 50)
 				}
 			},
 			{6, new List<(Piece piece, int col, int row, int prob)> //8.7 flipped
@@ -328,7 +328,6 @@ namespace QueueBits
 
 			int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
 			prefilledBoard = prefilledBoardList[board_num];
-
 			//Shivani Puli Data Collection
 			mydata.level = 10;
 			mydata.prefilledBoard = board_num;
