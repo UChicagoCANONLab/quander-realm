@@ -21,6 +21,7 @@ namespace Wrapper
         public static Action UpdateRemoteSave;
         public static Action ClearSaveFile;
         public static Action<bool> ToggleUploadFailurePopup;
+        public static Func<string> GetPlayerResearchCode;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;

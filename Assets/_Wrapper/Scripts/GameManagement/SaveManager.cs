@@ -56,6 +56,7 @@ namespace Wrapper
             Events.SubmitResearchCode += Login;
             Events.IsRewardUnlocked += IsRewardUnlocked;
             Events.UpdateRemoteSave += UpdateRemoteSave;
+            Events.GetPlayerResearchCode += GetResearchCode;
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
         }
@@ -67,6 +68,7 @@ namespace Wrapper
             Events.SubmitResearchCode -= Login;
             Events.IsRewardUnlocked -= IsRewardUnlocked;
             Events.UpdateRemoteSave -= UpdateRemoteSave;
+            Events.GetPlayerResearchCode -= GetResearchCode;
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
         }
@@ -329,6 +331,13 @@ namespace Wrapper
                 yield break;
             }
 
+            if (currentUserSave.id.Equals(string.Empty))
+            {
+                Debug.LogError("Aborting save attempt: Empty research code in current player's save file (UserSave.id). " +
+                    "Please make sure the player is logged in before saving.");
+                yield break;
+            }
+
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
@@ -393,6 +402,11 @@ namespace Wrapper
         {
             currentUserSave.introDialogueSeen = hasSeen;
             UpdateRemoteSave();
+        }
+
+        private string GetResearchCode()
+        {
+            return currentUserSave.id;
         }
 
         #endregion
