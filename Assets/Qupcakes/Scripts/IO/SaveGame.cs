@@ -32,11 +32,7 @@ namespace Qupcakery
 
         IEnumerator SaveResearchData(string dataJson)
         {
-            string username = "test"; // #TODO
-
-            //WWWForm form = new WWWForm();
-            //form.AddField("username", username);
-            //form.AddField("saveData", dataJson);
+            string username = Wrapper.Events.GetPlayerResearchCode?.Invoke();
 
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(dataJson);
             string url = "http://127.0.0.1:5000/qupcakes_save";
