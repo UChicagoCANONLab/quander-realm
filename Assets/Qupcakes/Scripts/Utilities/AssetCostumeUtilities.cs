@@ -31,9 +31,6 @@ namespace Qupcakery
             entanglementLabel.SetActive(false);
 
             GameObject box = cakeBox.transform.Find("Box").gameObject;
-
-            Debug.Log("Setting costume for " + cakeSpec.cakeState);
-
             switch (cakeState)
             {
                 case var _ when cakeState.ParamEquals(0):

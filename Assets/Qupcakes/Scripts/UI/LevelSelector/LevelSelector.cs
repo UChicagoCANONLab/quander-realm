@@ -17,11 +17,17 @@ namespace Qupcakery
 
         Rect panelDimensions, iconDimensions;
         int amountPerPage;
-        int currentLevelCount;
+        int currentLevelCount = 0;
 
         // Start is called before the first frame update
         void Start()
         {
+            if (!TutorialManager.IntroPlayed)
+            {
+                Wrapper.Events.StartDialogueSequence?.Invoke("QU_Start");
+                TutorialManager.IntroPlayed = true;
+            }
+
             numberOfLevels = GameManagement.Instance.GetTotalLevelCnt();
 
             panelDimensions = levelHolder.GetComponent<RectTransform>().rect;
@@ -76,10 +82,16 @@ namespace Qupcakery
                 m.SetMode(GameManagement.Instance.gameMode);
 
                 // If player has completed this level
-                if (PlayerPrefs.HasKey(icon.name))
+                if (currentLevelCount <= GameManagement.Instance.game.gameStat.MaxLevelCompleted)
                 {
-                    int starCnt = PlayerPrefs.GetInt(icon.name);
+                    int starCnt = GameManagement.Instance.game.gameStat.GetLevelPerformance(currentLevelCount);
+                    //Debug.Log("player has completed level " + currentLevelCount);
+                    //Debug.Log("max level completed " + GameManagement.Instance.game.gameStat.MaxLevelCompleted);
                     m.SetStar(starCnt);
+                } else // If player has not completed this level
+                {
+                    if (currentLevelCount != 1 + GameManagement.Instance.game.gameStat.MaxLevelCompleted)
+                        m.SetAvailability(false);
                 }
                 icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
             }

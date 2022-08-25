@@ -44,18 +44,6 @@ namespace Qupcakery
             CompressedPuzzles = new int[Constants.MaxNumberOfPuzzlePerLevel];
         }
 
-        // Constructor for loaded game
-        public GameStat(int newTotalEarning, int newTotalCompletedLevels,
-            int totalLevelCnt)
-        {
-            TotalEarning = newTotalEarning;
-            MaxLevelCompleted = newTotalCompletedLevels;
-            levelPerformance = new int[totalLevelCnt];
-            PuzzleResults = new bool[Constants.MaxNumberOfPuzzlePerLevel];
-            CompressedPuzzleSolutions = new long[Constants.MaxNumberOfPuzzlePerLevel];
-            CompressedPuzzles = new int[Constants.MaxNumberOfPuzzlePerLevel];
-        }
-
         public void SetLevelJustAttempted(int levelInd)
         {
             LevelJustAttempted = levelInd;
@@ -66,17 +54,6 @@ namespace Qupcakery
 
         void ResetOnNewLevel()
         {
-            Array.Clear(CompressedPuzzleSolutions, 0, CompressedPuzzleSolutions.Length);
-            Array.Clear(CompressedPuzzles, 0, CompressedPuzzles.Length);
-        }
-
-        public void Reset()
-        {
-            TotalEarning = 0;
-            MaxLevelCompleted = 0;
-            LevelJustAttempted = 0;
-            Array.Clear(levelPerformance, 0, levelPerformance.Length);
-            Array.Clear(PuzzleResults, 0, PuzzleResults.Length);
             Array.Clear(CompressedPuzzleSolutions, 0, CompressedPuzzleSolutions.Length);
             Array.Clear(CompressedPuzzles, 0, CompressedPuzzles.Length);
         }
@@ -98,6 +75,8 @@ namespace Qupcakery
         // Updates TotalCompletedLevels as needed
         public void SetLevelPerformance(int levelInd, int starCnt)
         {
+            //Debug.Log("setting level performance for level " + levelInd);
+
             // If player completes a brand new level
             if (levelInd > MaxLevelCompleted)
                 MaxLevelCompleted = levelInd;
@@ -111,7 +90,7 @@ namespace Qupcakery
         {
             Result = (int)result;
             /* Save to databse */
-            //SaveGame.Save();
+            SaveGame.Instance.Save();
         }
 
         public void SetPuzzleResult(int puzzleInd, bool result)
@@ -125,8 +104,8 @@ namespace Qupcakery
 
             int[,] decompressedPuzzle = DataCompression.DecompressPuzzle(CompressedPuzzles[puzzleInd]);
 
-            Debug.Log("Compressed puzzle: " + puzzle);
-            Debug.Log("Decompressed puzzle: " + Utilities.GetStringFrom2DIntArray(decompressedPuzzle, puzzle.Size, 2));
+            //Debug.Log("Compressed puzzle: " + puzzle);
+            //Debug.Log("Decompressed puzzle: " + Utilities.GetStringFrom2DIntArray(decompressedPuzzle, puzzle.Size, 2));
         }
 
         public void SetCompressedPuzzleSolution(int puzzleInd, int[,] solution, int puzzleSize)
@@ -134,10 +113,10 @@ namespace Qupcakery
             CompressedPuzzleSolutions[puzzleInd] =
                 DataCompression.CompressPuzzleSolution(solution, puzzleSize);
 
-            Debug.Log("Compressed puzzle solution: " + Utilities.GetStringFrom2DIntArray(solution, puzzleSize, 4));
+            //Debug.Log("Compressed puzzle solution: " + Utilities.GetStringFrom2DIntArray(solution, puzzleSize, 4));
 
             int[,] sln = DataCompression.DecrompressPuzzleSolution(CompressedPuzzleSolutions[puzzleInd]);
-            Debug.Log("Decompressed puzzle solution: " + Utilities.GetStringFrom2DIntArray(sln, puzzleSize, 4));
+            //Debug.Log("Decompressed puzzle solution: " + Utilities.GetStringFrom2DIntArray(sln, puzzleSize, 4));
         }
     }
 }

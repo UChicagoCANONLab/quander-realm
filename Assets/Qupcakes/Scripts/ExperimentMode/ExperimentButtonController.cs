@@ -7,9 +7,9 @@ namespace Qupcakery
 {
     public class ExperimentButtonController : ButtonController
     {
-        public new static ButtonController Instance { get; protected set; }
+        public static ExperimentButtonController Instance { get; protected set; }
 
-        private new void Awake()
+        private void Awake()
         {
             Instance = this;
             UpdateButtonState(ButtonState.CanNotBePressed);

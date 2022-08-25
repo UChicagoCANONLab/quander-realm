@@ -13,11 +13,6 @@ namespace Qupcakery
         // Called to erase all previous data and start game anew, keep previously loaded resources (sprite/prefab)
         public static void CreateNewGame()
         {
-            //Utilities.tutorialSprites.Clear();
-            Utilities.InitializeTutorialAndHelpMenu();
-            PlayerPrefs.DeleteAll();
-            PlayerPrefs.SetInt("Earning", 0);
-
             GameManagement.Instance.CreateNewGame();
         }
 
@@ -48,46 +43,39 @@ namespace Qupcakery
 
         public static void SaveLevelResult(int levelInd, int starCnt)
         {
+            Debug.Log("Saving level result: " + levelInd + " starcnt: "+starCnt);
             string level = "Level" + (levelInd).ToString();
-            if (PlayerPrefs.HasKey(level))
+
+            if (levelInd < GameManagement.Instance.game.gameStat.MaxLevelCompleted)
             {
-                int prevCnt = PlayerPrefs.GetInt(level);
+                int prevCnt = GameManagement.Instance.game.gameStat.GetLevelPerformance(levelInd);
                 if (prevCnt < starCnt)
                 {
-                    PlayerPrefs.SetInt(level, (int)starCnt);
                     GameManagement.Instance.game.gameStat.
                         SetLevelPerformance((int)levelInd, starCnt);
                 }
             }
             else
             {
-                PlayerPrefs.SetInt(level, (int)starCnt);
                 GameManagement.Instance.game.gameStat.
                         SetLevelPerformance((int)levelInd, starCnt);
             }
+            //string dataJson = JsonUtility.ToJson(GameManagement.Instance.game.gameStat);
+            //Debug.Log(dataJson);
         }
 
         // At the end of the level, update total earning tracker
         public static void UpdateTotalEarning(int currentLevelEarning)
         {
-            int BaseEarning = PlayerPrefs.GetInt("Earning");
+            int BaseEarning = GameManagement.Instance.game.gameStat.TotalEarning;
             int newTotalEarning = BaseEarning + currentLevelEarning;
-            PlayerPrefs.SetInt("Earning", newTotalEarning);
 
             GameManagement.Instance.game.gameStat.UpdateTotalEarning(newTotalEarning);
         }
 
-        public static int GetLevelResult(string level)
+        public static int GetLevelResult(int level)
         {
-            int starCnt = 0;
-
-            if (PlayerPrefs.HasKey(level))
-                starCnt = PlayerPrefs.GetInt(level);
-            else
-                throw new System.ArgumentException("WinMenu load unsuccessful: " +
-                                                    level + " result has not been" +
-                                                    " recorded.");
-            return starCnt;
+            return GameManagement.Instance.game.gameStat.GetLevelPerformance(level);
         }
 
         // Check win/lose condition and load corresponding transition scene
@@ -103,7 +91,7 @@ namespace Qupcakery
 
         public static int GetTotalEarning()
         {
-            return PlayerPrefs.GetInt("Earning");
+            return GameManagement.Instance.game.gameStat.TotalEarning;
         }
 
         public static Vector2 GetCustomerStartPosition(int beltIndex, int beltCnt)

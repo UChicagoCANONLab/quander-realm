@@ -18,12 +18,11 @@ namespace Qupcakery
 
         private void Start()
         {
-            UpdateCoinAmount(PlayerPrefs.GetInt("Earning"));
+            UpdateCoinAmount(GameManagement.Instance.game.gameStat.TotalEarning);
         }
 
         public void UpdateCoinAmount(int amount)
         {
-            PlayerPrefs.SetInt("Earning", amount);
             text.text = System.Convert.ToString(amount);
         }
     }

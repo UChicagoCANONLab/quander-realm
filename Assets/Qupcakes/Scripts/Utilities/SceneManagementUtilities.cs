@@ -24,7 +24,6 @@ namespace Qupcakery
         public static void LoadModeSelectionScene()
         {
             // SceneManager.LoadScene("ModeSelection");
-            // #IMPORTANT: temporary change for quantime
             SceneManager.LoadScene("LevelSelection");
         }
 
@@ -35,6 +34,10 @@ namespace Qupcakery
 
         public static void LoadLevelSelectionMenu()
         {
+            if (GameManagement.Instance.game.gameStat.MaxLevelCompleted
+                == GameManagement.Instance.GetTotalLevelCnt())
+                Wrapper.Events.StartDialogueSequence?.Invoke("QU_End");
+
             SceneManager.LoadScene("LevelSelection");
         }
 

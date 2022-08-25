@@ -16,6 +16,17 @@ using CT = Qupcakery.GameCakeType;
  * 6 - Opposite Entangled bit 0
  * 7 - Opposite Entangled bit 1
  */
+
+/*
+ * Level 1 - NOT
+ * Level 3 - SWAP
+ * Level 8 - CNOT
+ * Level 13 - H
+ * Level 14 - H unwrap
+ * Level 16 - Z
+ * Level 23 - same entanglement
+ * Level 24 - opposite entanglement
+ */
 namespace Qupcakery
 {
     public class Level
@@ -124,6 +135,12 @@ namespace Qupcakery
                 case 25:
                     SetLevel25();
                     break;
+                case 26:
+                    SetLevel26();
+                    break;
+                case 27:
+                    SetLevel27();
+                    break;
                 default:
                     throw new ArgumentException("Invalid level index: " + LevelInd);
             }
@@ -156,7 +173,7 @@ namespace Qupcakery
 
         private void SetLevel2()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 40, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 2;
 
             Puzzles[0].UpdatePuzzle(0, 0, 1, 0);
@@ -171,38 +188,38 @@ namespace Qupcakery
 
         private void SetLevel3()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 40, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 2;
             AvailableGates[(int)GateType.SWAP] = 1;
 
             Puzzles[0].UpdatePuzzle(0, 1, 1, 0);
-            Puzzles[1].UpdatePuzzle(0, 0, 1, 0);
-            Puzzles[2].UpdatePuzzle(0, 1, 1, 0);
+            Puzzles[1].UpdatePuzzle(0, 1, 0, 1);
+            Puzzles[2].UpdatePuzzle(1, 0, 1, 0);
             Puzzles[3].UpdatePuzzle(1, 0, 0, 1);
 
-            Puzzles[4].UpdatePuzzle(0, 0, 0, 1);
+            Puzzles[4].UpdatePuzzle(1, 0, 1, 0);
             Puzzles[5].UpdatePuzzle(0, 1, 0, 1);
             TotalPuzzleCnt = 6;
         }
 
         private void SetLevel4()
         {
-            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 40, levelTotalBeltCnt: 3);
-            AvailableGates[(int)GateType.NOT] = 3;
+            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 60, levelTotalBeltCnt: 3);
+            AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.SWAP] = 1;
 
             Puzzles[0].UpdatePuzzle(0, 1, 1, 0, 0, 1);
             Puzzles[1].UpdatePuzzle(1, 0, 1, 0, 0, 1);
-            Puzzles[2].UpdatePuzzle(0, 1, 0, 1, 0, 1);
+            Puzzles[2].UpdatePuzzle(0, 1, 0, 1, 1, 0);
             Puzzles[3].UpdatePuzzle(0, 1, 1, 0, 1, 0);
 
-            Puzzles[4].UpdatePuzzle(0, 1, 0, 1, 1, 0);
+            Puzzles[4].UpdatePuzzle(1, 0, 1, 0, 0, 1);
             TotalPuzzleCnt = 5;
         }
 
         private void SetLevel5()
         {
-            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 40, levelTotalBeltCnt: 3);
+            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 60, levelTotalBeltCnt: 3);
             AvailableGates[(int)GateType.NOT] = 2;
             AvailableGates[(int)GateType.SWAP] = 1;
 
@@ -217,7 +234,7 @@ namespace Qupcakery
 
         private void SetLevel6()
         {
-            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 30, levelTotalBeltCnt: 3);
+            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 60, levelTotalBeltCnt: 3);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.SWAP] = 1;
 
@@ -233,7 +250,7 @@ namespace Qupcakery
 
         private void SetLevel7()
         {
-            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 50, levelTotalBeltCnt: 3);
+            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 70, levelTotalBeltCnt: 3);
             AvailableGates[(int)GateType.SWAP] = 2;
 
             Puzzles[0].UpdatePuzzle(0, 1, 1, 1, 1, 0);
@@ -245,10 +262,39 @@ namespace Qupcakery
             TotalPuzzleCnt = 5;
         }
 
-        // #TODO: mybe remove swap from this level?
         private void SetLevel8()
         {
-            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 70, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            AvailableGates[(int)GateType.CNOT] = 1;
+
+            Puzzles[0].UpdatePuzzle(0, 1, 1, 1);
+            Puzzles[1].UpdatePuzzle(1, 0, 1, 1);
+            Puzzles[2].UpdatePuzzle(0, 1, 1, 1);
+            Puzzles[3].UpdatePuzzle(1, 0, 1, 1);
+
+            TotalPuzzleCnt = 4;
+        }
+
+        // Allow clicking to swap channels 
+        private void SetLevel9()
+        {
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 80, levelTotalBeltCnt: 2);
+            AvailableGates[(int)GateType.CNOT] = 1;
+
+            Puzzles[0].UpdatePuzzle(1, 1, 1, 0);
+            Puzzles[1].UpdatePuzzle(1, 0, 1, 1);
+            Puzzles[2].UpdatePuzzle(1, 1, 0, 1);
+            Puzzles[3].UpdatePuzzle(1, 1, 1, 0);
+
+            Puzzles[4].UpdatePuzzle(1, 0, 1, 1);
+            Puzzles[5].UpdatePuzzle(1, 1, 0, 1);
+
+            TotalPuzzleCnt = 6;
+        }
+
+        private void SetLevel10()
+        {
+            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 100, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.SWAP] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
 
@@ -263,10 +309,9 @@ namespace Qupcakery
             TotalPuzzleCnt = 7;
         }
 
-        // #TODO: mybe remove swap from this level?
-        private void SetLevel9()
+        private void SetLevel11()
         {
-            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 60, levelTotalBeltCnt: 3);
+            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 100, levelTotalBeltCnt: 3);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.SWAP] = 2;
             AvailableGates[(int)GateType.CNOT] = 1;
@@ -280,9 +325,9 @@ namespace Qupcakery
             TotalPuzzleCnt = 5;
         }
 
-        private void SetLevel10()
+        private void SetLevel12()
         {
-            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 60, levelTotalBeltCnt: 3);
+            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 100, levelTotalBeltCnt: 3);
             AvailableGates[(int)GateType.SWAP] = 1;
             AvailableGates[(int)GateType.CNOT] = 2;
 
@@ -295,23 +340,42 @@ namespace Qupcakery
             TotalPuzzleCnt = 5;
         }
 
-        private void SetLevel11()
+        private void SetLevel13()
         {
-            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 40, levelTotalBeltCnt: 2);
-            AvailableGates[(int)GateType.NOT] = 1;
-            AvailableGates[(int)GateType.H] = 2;
+            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 40, levelTotalBeltCnt: 1);
+            AvailableGates[(int)GateType.H] = 1;
 
-            Puzzles[0].UpdatePuzzle(1, 3, 0, 1);
-            Puzzles[1].UpdatePuzzle(1, 1, 0, 2);
-            Puzzles[2].UpdatePuzzle(0, 2, 1, 3);
-            Puzzles[3].UpdatePuzzle(1, 3, 0, 2);
+            Puzzles[0].UpdatePuzzle(1, 3);
+            Puzzles[1].UpdatePuzzle(0, 2);
+            Puzzles[2].UpdatePuzzle(1, 2);
+            Puzzles[3].UpdatePuzzle(0, 3);
 
             TotalPuzzleCnt = 4;
         }
 
-        private void SetLevel12()
+        // Use H to unwrap
+        private void SetLevel14()
         {
-            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 60, levelTotalBeltCnt: 1);
+            AvailableGates[(int)GateType.NOT] = 1;
+            AvailableGates[(int)GateType.H] = 1;
+
+            Puzzles[0].UpdatePuzzle(2, 0);
+            Puzzles[1].UpdatePuzzle(3, 1);
+            Puzzles[2].UpdatePuzzle(2, 1);
+            Puzzles[3].UpdatePuzzle(3, 0);
+
+            Puzzles[0].UpdatePuzzle(3, 1);
+            Puzzles[1].UpdatePuzzle(3, 0);
+            Puzzles[2].UpdatePuzzle(2, 1);
+            Puzzles[3].UpdatePuzzle(2, 0);
+
+            TotalPuzzleCnt = 4;
+        }
+
+        private void SetLevel15()
+        {
+            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 80, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.SWAP] = 1;
             AvailableGates[(int)GateType.H] = 2;
 
@@ -328,9 +392,9 @@ namespace Qupcakery
         }
 
         // Introduce Z gate
-        private void SetLevel13()
+        private void SetLevel16()
         {
-            UpdateLevelSpec(levelGoal: 50, levelTimeLimit: 40, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 50, levelTimeLimit: 60, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.H] = 1;
             AvailableGates[(int)GateType.Z] = 1;
 
@@ -346,9 +410,9 @@ namespace Qupcakery
             TotalPuzzleCnt = 8;
         }
 
-        private void SetLevel14()
+        private void SetLevel17()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 50, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 70, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.H] = 2;
             AvailableGates[(int)GateType.Z] = 2;
@@ -365,9 +429,25 @@ namespace Qupcakery
             TotalPuzzleCnt = 8;
         }
 
-        private void SetLevel15()
+        private void SetLevel18()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 90, levelTotalBeltCnt: 3);
+            AvailableGates[(int)GateType.SWAP] = 1;
+            AvailableGates[(int)GateType.H] = 3;
+            AvailableGates[(int)GateType.Z] = 2;
+
+            Puzzles[0].UpdatePuzzle(1, 0, 0, 1, 0, 2);
+            Puzzles[1].UpdatePuzzle(1, 2, 3, 1, 1, 1);
+            Puzzles[2].UpdatePuzzle(0, 3, 2, 3, 2, 1);
+            Puzzles[3].UpdatePuzzle(1, 2, 0, 3, 2, 1);
+
+            Puzzles[4].UpdatePuzzle(0, 3, 0, 2, 1, 0);
+            TotalPuzzleCnt = 5;
+        }
+
+        private void SetLevel19()
+        {
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 80, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.SWAP] = 1;
             AvailableGates[(int)GateType.H] = 2;
             AvailableGates[(int)GateType.Z] = 2;
@@ -382,26 +462,11 @@ namespace Qupcakery
             Puzzles[6].UpdatePuzzle(3, 0, 2, 3);
             TotalPuzzleCnt = 7;
         }
+       
 
-        private void SetLevel16()
+        private void SetLevel20()
         {
-            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 70, levelTotalBeltCnt: 3);
-            AvailableGates[(int)GateType.SWAP] = 1;
-            AvailableGates[(int)GateType.H] = 3;
-            AvailableGates[(int)GateType.Z] = 2;
-
-            Puzzles[0].UpdatePuzzle(1, 0, 0, 1, 0, 2);
-            Puzzles[1].UpdatePuzzle(1, 2, 3, 1, 1, 1);
-            Puzzles[2].UpdatePuzzle(0, 3, 2, 3, 2, 1);
-            Puzzles[3].UpdatePuzzle(1, 2, 0, 3, 2, 1);
-
-            Puzzles[4].UpdatePuzzle(0, 3, 0, 2, 1, 0);
-            TotalPuzzleCnt = 5;
-        }
-
-        private void SetLevel17()
-        {
-            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 50, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 70, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.H] = 3;
             AvailableGates[(int)GateType.Z] = 2;
 
@@ -416,9 +481,9 @@ namespace Qupcakery
             TotalPuzzleCnt = 7;
         }
 
-        private void SetLevel18()
+        private void SetLevel21()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 3);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 80, levelTotalBeltCnt: 3);
             AvailableGates[(int)GateType.NOT] = 2;
             AvailableGates[(int)GateType.H] = 3;
             AvailableGates[(int)GateType.Z] = 2;
@@ -433,9 +498,9 @@ namespace Qupcakery
             TotalPuzzleCnt = 6;
         }
 
-        private void SetLevel19()
+        private void SetLevel22()
         {
-            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 60, levelTotalBeltCnt: 3);
+            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 80, levelTotalBeltCnt: 3);
             AvailableGates[(int)GateType.SWAP] = 1;
             AvailableGates[(int)GateType.H] = 2;
             AvailableGates[(int)GateType.Z] = 1;
@@ -450,28 +515,10 @@ namespace Qupcakery
             TotalPuzzleCnt = 6;
         }
 
-        private void SetLevel20()
-        {
-            UpdateLevelSpec(levelGoal: 160, levelTimeLimit: 80, levelTotalBeltCnt: 3);
-            AvailableGates[(int)GateType.NOT] = 1;
-            AvailableGates[(int)GateType.SWAP] = 1;
-            AvailableGates[(int)GateType.H] = 3;
-            AvailableGates[(int)GateType.Z] = 1;
-
-            Puzzles[0].UpdatePuzzle(0, 1, 0, 1, 1, 0);
-            Puzzles[1].UpdatePuzzle(1, 2, 3, 1, 1, 0);
-            Puzzles[2].UpdatePuzzle(2, 1, 1, 2, 0, 1);
-            Puzzles[3].UpdatePuzzle(0, 2, 1, 0, 1, 0);
-
-            Puzzles[4].UpdatePuzzle(0, 1, 1, 0, 0, 1);
-            Puzzles[5].UpdatePuzzle(0, 3, 1, 0, 0, 1);
-            TotalPuzzleCnt = 6;
-        }
-
         // Introduce same entanglement
-        private void SetLevel21()
+        private void SetLevel23()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 40, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
@@ -488,9 +535,9 @@ namespace Qupcakery
         }
 
         // Introduce opposite entanglement
-        private void SetLevel22()
+        private void SetLevel24()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 40, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
@@ -506,9 +553,9 @@ namespace Qupcakery
         }
 
         // Not can be placed after entanglement
-        private void SetLevel23()
+        private void SetLevel25()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 80, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 100, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
@@ -524,9 +571,9 @@ namespace Qupcakery
             TotalPuzzleCnt = 7;
         }
 
-        private void SetLevel24()
+        private void SetLevel26()
         {
-            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 80, levelTotalBeltCnt: 3);
+            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 100, levelTotalBeltCnt: 3);
             AvailableGates[(int)GateType.NOT] = 2;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.SWAP] = 1;
@@ -542,9 +589,9 @@ namespace Qupcakery
             TotalPuzzleCnt = 6;
         }
 
-        private void SetLevel25()
+        private void SetLevel27()
         {
-            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 80, levelTotalBeltCnt: 3);
+            UpdateLevelSpec(levelGoal: 120, levelTimeLimit: 100, levelTotalBeltCnt: 3);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;

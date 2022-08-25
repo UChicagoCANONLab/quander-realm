@@ -12,11 +12,6 @@ namespace Qupcakery
 {
     public class CustomerReactionController : MonoBehaviour
     {
-        public enum Situation
-        {
-            Waiting, ReceivedCake, PatienceRunOut, Done
-        }
-
         private enum Expression
         {
             Happy, Sad
@@ -33,23 +28,28 @@ namespace Qupcakery
 
         [SerializeField]
         private CustomerReactionData reactionData;
-        private Situation customerStatus = Situation.Waiting;
-
         private GameObject cakeBox;
         private int customerOrder;
 
         private void Start()
         {
             customerManager = gameObject.GetComponent<CustomerManager>();
-            // Subscribe to result checked publisher
-            PuzzleCorrectionChecker.ResultChecked += OnResultReceived;
             cakeBox = GameObjectsManagement.CakeBoxes[customerManager.BeltInd];
+        }
+
+        private void OnEnable()
+        {
+            PuzzleCorrectionChecker.ResultChecked += OnResultReceived;
+        }
+
+        private void OnDisable()
+        {
+            PuzzleCorrectionChecker.ResultChecked -= OnResultReceived;
         }
 
         // Opens box, compares order, and react accordingly
         private IEnumerator ProcessReceivedCake(bool success)
         {
-            Debug.Log("Received cake!");
             yield return
                 new WaitForSeconds(reactionData.WaitTimeAfterReceivingBox);
             GameCakeType cakeType = OpenCakeBox(cakeBox);
@@ -75,7 +75,6 @@ namespace Qupcakery
                 PrepareCustomerToLeave(gameObject);
             }
 
-            customerStatus = Situation.Done;
             OnReactionEnded();
         }
 
@@ -87,24 +86,20 @@ namespace Qupcakery
                 new WaitForSeconds(reactionData.WaitTimeAfterSpawningExpression);
             PrepareCustomerToLeave(gameObject);
 
-            customerStatus = Situation.Done;
             OnReactionEnded();
         }
 
         // Event listener
         private void OnResultReceived(bool[] results)
         {
-            Debug.Log("recevived result!");
             if (!gameObject.activeSelf) return;
 
-            customerStatus = Situation.ReceivedCake;
             StartCoroutine(ProcessReceivedCake(results[customerManager.BeltInd]));
         }
 
         // Event listener - once patience runs out
         public void OnPatienceEnded()
         {
-            customerStatus = Situation.PatienceRunOut;
             StartCoroutine(ProcessPatienceRunOut());
         }
 
@@ -129,26 +124,6 @@ namespace Qupcakery
                 .SetMeasuredCakeType(measuredCakeType);
             return measuredCakeType;
         }
-
-        //// Checks if the cake box matches order
-        //private bool CompareCakeToOrder(GameCakeType cakeType,
-        //    int order)
-        //{
-        //    GameCakeType orderCakeType = order.GetGameCakeType();
-
-        //    switch (orderCakeType)
-        //    {
-        //        case GameCakeType.Vanilla50_Chocolate50:
-        //            return true;
-        //        case GameCakeType.Vanilla50_Chocolate50_Neg:
-        //            return true;
-        //        default: // Vanilla or Chocolate
-        //            if (orderCakeType == cakeType)
-        //                return true;
-        //            else
-        //                return false;
-        //    }
-        //}
 
         // Deactive patience object, bubble
         // Flip customer-sprite facing direction
