@@ -24,9 +24,9 @@ namespace Qupcakery
                     GameObjectsManagement.ResetAllGameObjects();
                     SceneManagementUtilities.LoadGameScene();
                     break;
-                case GameManagement.GameMode.Experiment:
-                    SceneManagementUtilities.LoadExperimentMode();
-                    break;
+                //case GameManagement.GameMode.Experiment:
+                //    SceneManagementUtilities.LoadExperimentMode();
+                //    break;
             }
         }
     }

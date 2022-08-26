@@ -13,7 +13,7 @@ namespace Qupcakery
 
         public static void LoadGameScene()
         {
-            SceneManager.LoadScene("Level");
+            SceneManager.LoadScene("QU_Level");
         }
 
         public static void LoadHomePage()
@@ -24,13 +24,13 @@ namespace Qupcakery
         public static void LoadModeSelectionScene()
         {
             // SceneManager.LoadScene("ModeSelection");
-            SceneManager.LoadScene("LevelSelection");
+            SceneManager.LoadScene("QU_LevelSelection");
         }
 
-        public static void LoadExperimentMode()
-        {
-            SceneManager.LoadScene("ExperimentMode");
-        }
+        //public static void LoadExperimentMode()
+        //{
+        //    SceneManager.LoadScene("ExperimentMode");
+        //}
 
         public static void LoadLevelSelectionMenu()
         {
@@ -38,17 +38,17 @@ namespace Qupcakery
                 == GameManagement.Instance.GetTotalLevelCnt())
                 Wrapper.Events.StartDialogueSequence?.Invoke("QU_End");
 
-            SceneManager.LoadScene("LevelSelection");
+            SceneManager.LoadScene("QU_LevelSelection");
         }
 
         public static void LoadLoseMenu()
         {
-            SceneManager.LoadScene("LoseMenu");
+            SceneManager.LoadScene("QU_LoseMenu");
         }
 
         public static void LoadWinMenu()
         {
-            SceneManager.LoadScene("WinMenu");
+            SceneManager.LoadScene("QU_WinMenu");
         }
     }
 }
