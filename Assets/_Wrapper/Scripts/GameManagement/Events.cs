@@ -22,6 +22,7 @@ namespace Wrapper
         public static Action ClearSaveFile;
         public static Action<bool> ToggleUploadFailurePopup;
         public static Func<string> GetPlayerResearchCode;
+        public static Action<Game, object> SaveMinigameResearchData;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;
