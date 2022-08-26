@@ -18,7 +18,7 @@ namespace Qupcakery
 
         public static void LoadHomePage()
         {
-            SceneManager.LoadScene("QupcakesStartScene");
+            SceneManager.LoadScene("QU_QupcakesStartScene");
         }
 
         public static void LoadModeSelectionScene()
