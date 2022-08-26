@@ -1,3 +1,9 @@
+/* Code by Srivathsan Prakash (Filament), Rob Frank (Filament), Tianle Liu (UChicago)
+ * 
+ * This class uploads/downloads players' save data by communicating with a firebase app
+ * It also sends analytics data to an AWS server hosted by UChicago (Implemented by Tianle)
+ *   All AWS related code is marked with a comments: "// AWS"
+ */
 using System.Collections;
 using UnityEngine;
 using BeauRoutine;
@@ -23,7 +29,8 @@ namespace Wrapper
 
         private float networkRequestTimeout = 5f;
         private bool isDatabaseReady = false;
-        private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"};
+        private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"}; // AWS
+        public readonly string awsURL = "https://backend-quantime.link/"; // AWS
 
 #if !UNITY_WEBGL
         private FirebaseApp app;
@@ -40,11 +47,9 @@ namespace Wrapper
 #if PRODUCTION_FB
         public static readonly string firebaseURL = "https://quander-production-default-rtdb.firebaseio.com/";
         public readonly string testConnectionURL = "https://console.firebase.google.com/project/quander-production/database/quander-production-default-rtdb/data";
-        public readonly string awsURL = "https://backend-quantime.link/";
 #else
         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
         public readonly string testConnectionURL = "https://console.firebase.google.com/project/filament-zombies/database/filament-zombies-default-rtdb/data";
-        public readonly string awsURL = "https://backend-quantime.link/";
 #endif
 
         private void Awake()
@@ -62,7 +67,9 @@ namespace Wrapper
             Events.GetPlayerResearchCode += GetResearchCode;
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
-            Events.SaveMinigameResearchData += SaveMinigameResearchData;
+#if !UNITY_WEBGL
+            Events.SaveMinigameResearchData += SaveMinigameResearchData; // AWS
+#endif
         }
 
         private void OnDisable()
@@ -75,7 +82,9 @@ namespace Wrapper
             Events.GetPlayerResearchCode -= GetResearchCode;
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
-            Events.SaveMinigameResearchData -= SaveMinigameResearchData;
+#if !UNITY_WEBGL
+            Events.SaveMinigameResearchData -= SaveMinigameResearchData; // AWS
+#endif
         }
 
 #if !UNITY_WEBGL
@@ -320,11 +329,6 @@ namespace Wrapper
             UpdateRemoteSave();
         }
 
-        private void SaveMinigameResearchData(Game game, object minigameSave)
-        {
-            StartCoroutine(SendResearchDataToRemote(game, minigameSave));
-        }
-
         private void UpdateRemoteSave()
         {
             Routine.Start(UpdateRemoteSaveRoutine());
@@ -362,28 +366,6 @@ namespace Wrapper
             else
                 Events.ToggleUploadFailurePopup?.Invoke(true);
         }
-
-        private IEnumerator SendResearchDataToRemote(Game game, object minigameSave)
-        {
-            string dataJson = JsonUtility.ToJson(minigameSave);
-            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(dataJson);
-
-            string url = awsURL + "/" + gameSaveURLs[(int)game] + "_save";
-
-            using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
-            {
-                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
-                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                www.SetRequestHeader("Content-Type", "application/json");
-                yield return www.SendWebRequest();
-
-                if (www.result != UnityWebRequest.Result.Success)
-                {
-                    Debug.Log("Sending research data to aws failed: " + www.error);
-                }
-            }
-        }
-
 #else
         private IEnumerator UpdateRemoteSaveRoutine()
         {
@@ -410,6 +392,38 @@ namespace Wrapper
         }
 #endif
 
+#if !UNITY_WEBGL
+        // AWS
+        private void SaveMinigameResearchData(Game game, object minigameSave)
+        {
+            StartCoroutine(SendResearchDataToRemote(game, minigameSave));
+        }
+
+        // AWS
+        private IEnumerator SendResearchDataToRemote(Game game, object minigameSave)
+        {
+            string dataJson = JsonUtility.ToJson(minigameSave);
+            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(dataJson);
+
+            string url = awsURL + "/" + gameSaveURLs[(int)game] + "_save";
+
+            using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
+            {
+                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log("Sending research data to aws failed: " + www.error);
+                }
+            }
+        }
+#else
+        ///webGL version of SaveMinigameResearchData()...
+#endif
+
         private void ClearSave()
         {
             string id = currentUserSave.id;
@@ -434,9 +448,9 @@ namespace Wrapper
             return currentUserSave.id;
         }
 
-        #endregion
+#endregion
 
-        #region WebGL dll imports
+#region WebGL dll imports
 
 #if UNITY_WEBGL
         [DllImport("__Internal")]
@@ -462,6 +476,6 @@ namespace Wrapper
         }
 #endif
 
-        #endregion
+#endregion
     }
 }
