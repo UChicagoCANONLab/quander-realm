@@ -83,10 +83,10 @@ namespace Qupcakery
         {
             if (starCnt > 0)
             {
-                SceneManager.LoadScene("WinMenu");
+                SceneManager.LoadScene("QU_WinMenu");
             }
             else
-                SceneManager.LoadScene("LoseMenu");
+                SceneManager.LoadScene("QU_LoseMenu");
         }
 
         public static int GetTotalEarning()
