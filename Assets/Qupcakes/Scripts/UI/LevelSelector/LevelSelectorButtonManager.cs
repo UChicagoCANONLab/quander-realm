@@ -23,10 +23,10 @@ namespace Qupcakery
                 int levelNum = System.Convert.ToInt32(iconName.Split(' ')[1]);
                 GameManagement.Instance.SetCurrentLevel(levelNum);
 
-                if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
-                    SceneManagementUtilities.LoadGameScene();
-                else
-                    SceneManagementUtilities.LoadExperimentMode();
+                //if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
+                SceneManagementUtilities.LoadGameScene();
+                //else
+                //    SceneManagementUtilities.LoadExperimentMode();
             }                   
         }
 
