@@ -8,11 +8,10 @@ namespace Labyrinth
 { 
     public class Save : MonoBehaviour
     {
-
-#if UNITY_WEBGL == true && UNITY_EDITOR == false
-        [DllImport("__Internal")]
+        /* [DllImport("__Internal")]
+        
         private static extern void TwinTanglementSave(string data);
-#endif
+
         public static void SaveGame()
         {
             // Data data = new Data(SaveData.Instance.starsPerLevel, SaveData.Instance.timePerLevel, SaveData.Instance.previousSave);
@@ -21,11 +20,22 @@ namespace Labyrinth
             Debug.Log(jsonData);
             
             // call when want to save data
-#if UNITY_WEBGL == true && UNITY_EDITOR == false
+            #if UNITY_WEBGL == true && UNITY_EDITOR == false
                 TwinTanglementSave(jsonData);
-#endif
+            #endif
             
             return;
+        } */
+
+        public static void SaveTTSaveData() {
+            // FILL IN RESEARCH DATA LATER
+
+            Load.LoadTTSaveData();
+            Load.saveData.updateTTSaveData(SaveData.Instance);
+            Debug.Log(Load.saveData.TTSDtoString());
+            // Wrapper.Events.UpdateMinigameSaveData?.Invoke(Game.Labyrinth, TTSaveData);
+            Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.Labyrinth, Load.saveData);
+
         }
         
     }

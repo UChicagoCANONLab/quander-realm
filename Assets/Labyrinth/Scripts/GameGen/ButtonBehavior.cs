@@ -16,6 +16,11 @@ namespace Labyrinth
         public Button[] buttons;
 
         void Start() {
+            if (DialogueAndRewards.Instance.levelDialogue[-1] == true) {
+                Wrapper.Events.StartDialogueSequence?.Invoke("LA_Intro");
+                DialogueAndRewards.Instance.levelDialogue[-1] = false;
+            }
+
             if (buttons == null) {
                 return;
             }
@@ -45,12 +50,26 @@ namespace Labyrinth
 
         public void LoadLevelSelectMenu() {
             Time.timeScale = 1f;
-            SceneManager.LoadScene("LevelSelect");
+            // Load.LoadGame();
+
+            if (DialogueAndRewards.Instance.levelDialogue[0] == true) {
+                LevelSelect(0);
+            }
+            else {
+                SceneManager.LoadScene("LA_LevelSelect");
+            }
         }
+
+        /* public void InitialLoadLevelSelectMenu() {
+            Time.timeScale = 1f;
+            Load.LoadGame();
+            SceneManager.LoadScene("LevelSelect");
+        } */
 
         public void LoadMainMenu() {
             Time.timeScale = 1f;
-            SceneManager.LoadScene("MainMenu");
+            Load.LoadTTSaveData();
+            SceneManager.LoadScene("LA_MainMenu");
         }
 
         public void Exit() {
@@ -60,16 +79,27 @@ namespace Labyrinth
         }
 
         public void Win(int goalsCollected) {      
-            Save.SaveGame();
+            SaveData.Instance.winner = true;
+            if (SaveData.Instance.CurrentLevel > 0) {
+                // Save.SaveTTSaveData();
+            }
     
             winScreen.SetActive(true);
             gameplayButtons.SetActive(false);
             gameplayObjects.SetActive(false);
             starsWon[goalsCollected].SetActive(true);
-            Time.timeScale = 0f;
+            // Time.timeScale = 0f;
+
+            if ((SaveData.Instance.CurrentLevel % 5 == 0) 
+            && (SaveData.Instance.CurrentLevel != 0)) {
+                DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
+            }
+            DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
         }
 
         public void UndoWin(int goalsCollected) {
+            SaveData.Instance.winner = false;
+
             winScreen.SetActive(false);
             gameplayButtons.SetActive(true);
             gameplayObjects.SetActive(true);
@@ -82,58 +112,77 @@ namespace Labyrinth
             SaveData.Instance.CurrentLevel = sel;
 
             switch(sel) {
+                case 0:
+                    DialogueAndRewards.Instance.doDialogue(sel);
+                    SaveData.Instance.Degree = 0;
+                    currScene = "LA_Tutorial";
+                    break;
                 case < 3:
                     SaveData.Instance.Degree = 0;
-                    currScene = "4x4";
+                    currScene = "LA_4x4";
                     break;
                 case < 5:
                     SaveData.Instance.Degree = 0;
-                    currScene = "5x5";
+                    currScene = "LA_5x5";
                     break;
                 case 5:
                     SaveData.Instance.Degree = 0;
-                    currScene = "6x6";
+                    currScene = "LA_6x6";
                     break;
 
 
                 case < 8:
+                    DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 180;
-                    currScene = "4x4";
+                    currScene = "LA_4x4";
                     break;
                 case < 10:
                     SaveData.Instance.Degree = 180;
-                    currScene = "5x5";
+                    currScene = "LA_5x5";
                     break;
                 case 10:
                     SaveData.Instance.Degree = 180;
-                    currScene = "6x6";
+                    currScene = "LA_6x6";
                     break;
 
 
                 case < 13:
+                    DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 90;
-                    currScene = "4x4";
+                    currScene = "LA_4x4";
                     break;
                 case < 15:
                     SaveData.Instance.Degree = 90;
-                    currScene = "5x5";
+                    currScene = "LA_5x5";
                     break;
                 case 15:
                     SaveData.Instance.Degree = 90;
-                    currScene = "6x6";
+                    currScene = "LA_6x6";
                     break;
                 
 
                 default:
-                    currScene = "LevelSelect";
+                    currScene = "LA_LevelSelect";
                     break;
             }
             SceneManager.LoadScene(currScene);
         }
 
+        /* public void doDialogue(int level) {
+            if (SaveData.Instance.levelDialogue.ContainsKey(level) &&
+            SaveData.Instance.levelDialogue[level] == true) {
+                Wrapper.Events.StartDialogueSequence?.Invoke("LA_Level"+level);
+                SaveData.Instance.levelDialogue[level] = false;
+            }
+        }
+
+        public void giveReward(int level) {
+            if (Events.IsRewardUnlocked?.Invoke(levelRewards[level]) == false) {
+                Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.Labyrinth, level);
+            }
+        } */
+
         // ~~~~~~~~~~~~~~~ Enabled in Filament Environment ~~~~~~~~~~~~~~~
-        
-        // public static Action MinigameClosed;
 
         private void OnEnable() {
             Wrapper.Events.MinigameClosed += DestroyDataObject;

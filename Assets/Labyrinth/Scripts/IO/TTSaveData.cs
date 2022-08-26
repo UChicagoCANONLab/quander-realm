@@ -1,21 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Labyrinth 
 { 
-        
-    public class Data {
+    [System.Serializable]
+    public class TTSaveData {
+
+        public Wrapper.Game gameID = Wrapper.Game.Labyrinth;
+        public string currentLevelID = string.Empty;
 
         public int[] MaxStarsPerLevel;
-        // public float[] TimePlayed;
         public int Level;
         public int NumStars;
         public float Time;
         public int HintsUsed;
-        // public object[] PreviousSave; // {level #, stars, time, hints used #}
+        public bool Winner;
         
-        public Data(SaveData save) {
+        public void updateTTSaveData(SaveData save) {
             MaxStarsPerLevel = save.starsPerLevel;
             // TimePlayed = save.timePerLevel;
             //PreviousSave = save.previousSave;
@@ -23,7 +27,12 @@ namespace Labyrinth
             NumStars = save.numStars;
             Time = save.time;
             HintsUsed = save.hintsUsed;
+            Winner = save.winner;
+        }
 
+        public string TTSDtoString() {
+            string jsonData = JsonUtility.ToJson(this);
+            return jsonData;
         }
     }
 }
