@@ -9,7 +9,7 @@ namespace QueueBits
     {
         public void loadlevel (string level)
         {
-            SceneManager.LoadScene(level);
+            SceneManager.LoadScene("QB_" + level);
         }
     }
 }

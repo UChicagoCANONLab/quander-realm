@@ -96,7 +96,7 @@ namespace QueueBits
                 icon.transform.SetParent(parentObject.transform);
                 icon.name = "Level" + i;
                 icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
-                string chosenLevel = "Level"+i;
+                string chosenLevel = "QB_Level"+i;
                 icon.GetComponent<Button>().onClick.AddListener(delegate { SceneManager.LoadScene(chosenLevel); });
             }
         }

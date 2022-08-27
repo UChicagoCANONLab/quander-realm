@@ -371,11 +371,11 @@ namespace QueueBits
 			}
 
 			//Data collection
-			redProbs.Add(75, 9);
-			redProbs.Add(100, 5);
+			redProbs.Add(75, 7);
+			redProbs.Add(100, 7);
 
-			blueProbs.Add(75, 9);
-			blueProbs.Add(100, 5);
+			blueProbs.Add(75, 7);
+			blueProbs.Add(100, 7);
 
 			int max = Mathf.Max(numRows, numColumns);
 

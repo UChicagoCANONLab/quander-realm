@@ -367,12 +367,12 @@ namespace QueueBits
 			//Data collection
 
 			redProbs.Add(50, 4);
-			redProbs.Add(75, 6);
-			redProbs.Add(100, 4);
+			redProbs.Add(75, 5);
+			redProbs.Add(100, 5);
 
 			blueProbs.Add(50, 4);
-			blueProbs.Add(75, 6);
-			blueProbs.Add(100, 4);
+			blueProbs.Add(75, 5);
+			blueProbs.Add(100, 5);
 
 			int max = Mathf.Max(numRows, numColumns);
 

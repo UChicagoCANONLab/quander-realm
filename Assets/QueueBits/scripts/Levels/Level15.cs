@@ -380,13 +380,13 @@ namespace QueueBits
 			}
 			//Data collection
 
-			redProbs.Add(50, 4);
+			redProbs.Add(50, 6);
 			redProbs.Add(75, 6);
-			redProbs.Add(100, 4);
+			redProbs.Add(100, 2);
 
-			blueProbs.Add(50, 4);
+			blueProbs.Add(50, 6);
 			blueProbs.Add(75, 6);
-			blueProbs.Add(100, 4);
+			blueProbs.Add(100, 2);
 
 			int max = Mathf.Max(numRows, numColumns);
 
@@ -1274,7 +1274,7 @@ namespace QueueBits
 				//	yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Yellow's Turn" : "Red's Turn";
+				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
 
 				DestroyImmediate(playerTurnObject);
 

@@ -1279,7 +1279,7 @@ namespace QueueBits
 				//	yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Yellow's Turn" : "Red's Turn";
+				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
 
 				DestroyImmediate(playerTurnObject);
 

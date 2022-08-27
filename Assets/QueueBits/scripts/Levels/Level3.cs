@@ -371,11 +371,11 @@ namespace QueueBits
 
 			//Shivani Puli Data collection
 
-			redProbs.Add(75, 8);
-			redProbs.Add(100, 6);
+			redProbs.Add(75, 7);
+			redProbs.Add(100, 7);
 
-			blueProbs.Add(75, 8);
-			blueProbs.Add(100, 6);
+			blueProbs.Add(75, 7);
+			blueProbs.Add(100, 7);
 
 			int max = Mathf.Max(numRows, numColumns);
 

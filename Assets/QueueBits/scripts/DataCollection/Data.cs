@@ -1,12 +1,11 @@
 
 using System;
 using System.Collections.Generic;
-
 public class Data
 {
 	public int level;
 	public int winner; //0 = tie 1 = player 2 = AI 
-					   //maps position index to value
+						//maps position index to value
 	public int prefilledBoard;
 	public int[] placement_order; //even turns = player, odd turns = AI
 	public int[] superposition;
