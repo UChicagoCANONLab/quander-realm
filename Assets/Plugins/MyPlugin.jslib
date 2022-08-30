@@ -1,19 +1,9 @@
-mergeInto(LibraryManager.library, {
-  TwinTanglementLoad: function (callback) {
+﻿mergeInto(LibraryManager.library, {
+  QueueBitsGameSaved: function (data) {
     window.dispatchReactUnityEvent(
-      "TwinTanglementLoad",
-      Pointer_stringify(callback),
+      "QueueBitsGameSaved",
+      Pointer_stringify(data)
     );
-    console.log("TwinTanglement load");
-  },
-});
-
-mergeInto(LibraryManager.library, {
-  TwinTanglementSave: function (data) {
-    window.dispatchReactUnityEvent(
-      "TwinTanglementSave",
-      Pointer_stringify(data),
-    );
-    console.log("TwinTanglement save")
+    console.log("123");
   },
 });
