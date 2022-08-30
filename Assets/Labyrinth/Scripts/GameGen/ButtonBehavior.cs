@@ -50,7 +50,7 @@ namespace Labyrinth
 
         public void LoadLevelSelectMenu() {
             Time.timeScale = 1f;
-            // Load.LoadGame();
+            Load.LoadGame();
 
             if (DialogueAndRewards.Instance.levelDialogue[0] == true) {
                 LevelSelect(0);
@@ -68,7 +68,8 @@ namespace Labyrinth
 
         public void LoadMainMenu() {
             Time.timeScale = 1f;
-            Load.LoadTTSaveData();
+            // Load.LoadTTSaveData();
+            Load.LoadGame();
             SceneManager.LoadScene("LA_MainMenu");
         }
 
@@ -82,6 +83,7 @@ namespace Labyrinth
             SaveData.Instance.winner = true;
             if (SaveData.Instance.CurrentLevel > 0) {
                 // Save.SaveTTSaveData();
+                Save.Instance.SaveGame();
             }
     
             winScreen.SetActive(true);
