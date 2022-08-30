@@ -208,6 +208,7 @@ namespace Labyrinth
             SaveData.Instance.updateSave(this);
             if (SaveData.Instance.CurrentLevel > 0) {
                 // Save.SaveTTSaveData();
+                Save.Instance.SaveGame();
             }
 
             // Resetting level

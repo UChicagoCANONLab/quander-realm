@@ -11,6 +11,33 @@ namespace Labyrinth
 { 
     public class Load : MonoBehaviour
     {
+        // public static TTSaveData saveData;
+
+        public static void LoadGame() {
+        // public static void LoadTTSaveData() {
+
+            try {
+                string saveString = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Labyrinth);
+                Data.Instance.ttSaveData = JsonUtility.FromJson<TTSaveData>(saveString);
+            }
+            catch (Exception e) {
+                Debug.LogError(e.Message);
+            }
+
+            if (Data.Instance.ttSaveData == null) {
+                Data.Instance.ttSaveData = new TTSaveData();
+            }
+            else {
+                for (int i=0; i<15; i++) {
+                    SaveData.Instance.starsPerLevel[i] = Data.Instance.ttSaveData.MaxStarsPerLevel[i];
+                }
+            }
+            Data.Instance.researchData = new ResearchData();
+            
+        }
+
+
+
         // [DllImport("__Internal")]
         // private static extern void TwinTanglementLoad(string callback);
 
@@ -39,25 +66,5 @@ namespace Labyrinth
                 }
             }
         } */
-
-        public static TTSaveData saveData;
-
-        public static void LoadTTSaveData() {
-            try {
-                string saveString = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Labyrinth);
-                saveData = JsonUtility.FromJson<TTSaveData>(saveString);
-            }
-            catch (Exception e) {
-                Debug.Log("ERROR");
-                Debug.LogError(e.Message);
-            }
-
-            if (saveData == null) {
-                saveData = new TTSaveData();
-            }
-
-            Debug.Log("Yeah "+saveData.TTSDtoString());
-        }
-
     }
 }
