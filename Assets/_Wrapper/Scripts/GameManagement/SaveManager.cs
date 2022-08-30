@@ -1,3 +1,9 @@
+/* Code by Srivathsan Prakash (Filament), Rob Frank (Filament), Tianle Liu (UChicago)
+ * 
+ * This class uploads/downloads players' save data by communicating with a firebase app
+ * It also sends analytics data to an AWS server hosted by UChicago (Implemented by Tianle)
+ *   All AWS related code is marked with a comments: "// AWS"
+ */
 using System.Collections;
 using UnityEngine;
 using BeauRoutine;
@@ -23,6 +29,8 @@ namespace Wrapper
 
         private float networkRequestTimeout = 5f;
         private bool isDatabaseReady = false;
+        private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"}; // AWS
+        public readonly string awsURL = "https://backend-quantime.link/"; // AWS
 
 #if !UNITY_WEBGL
         private FirebaseApp app;
@@ -56,8 +64,12 @@ namespace Wrapper
             Events.SubmitResearchCode += Login;
             Events.IsRewardUnlocked += IsRewardUnlocked;
             Events.UpdateRemoteSave += UpdateRemoteSave;
+            Events.GetPlayerResearchCode += GetResearchCode;
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
+#if !UNITY_WEBGL
+            Events.SaveMinigameResearchData += SaveMinigameResearchData; // AWS
+#endif
         }
 
         private void OnDisable()
@@ -67,8 +79,12 @@ namespace Wrapper
             Events.SubmitResearchCode -= Login;
             Events.IsRewardUnlocked -= IsRewardUnlocked;
             Events.UpdateRemoteSave -= UpdateRemoteSave;
+            Events.GetPlayerResearchCode -= GetResearchCode;
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
+#if !UNITY_WEBGL
+            Events.SaveMinigameResearchData -= SaveMinigameResearchData; // AWS
+#endif
         }
 
 #if !UNITY_WEBGL
@@ -329,6 +345,13 @@ namespace Wrapper
                 yield break;
             }
 
+            if (currentUserSave.id.Equals(string.Empty))
+            {
+                Debug.LogError("Aborting save attempt: Empty research code in current player's save file (UserSave.id). " +
+                    "Please make sure the player is logged in before saving.");
+                yield break;
+            }
+
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
@@ -376,6 +399,38 @@ namespace Wrapper
         }
 #endif
 
+#if !UNITY_WEBGL
+        // AWS
+        private void SaveMinigameResearchData(Game game, object minigameSave)
+        {
+            StartCoroutine(SendResearchDataToRemote(game, minigameSave));
+        }
+
+        // AWS
+        private IEnumerator SendResearchDataToRemote(Game game, object minigameSave)
+        {
+            string dataJson = JsonUtility.ToJson(minigameSave);
+            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(dataJson);
+
+            string url = awsURL + "/" + gameSaveURLs[(int)game] + "_save";
+
+            using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
+            {
+                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log("Sending research data to aws failed: " + www.error);
+                }
+            }
+        }
+#else
+        ///webGL version of SaveMinigameResearchData()...
+#endif
+
         private void ClearSave()
         {
             string id = currentUserSave.id;
@@ -395,9 +450,14 @@ namespace Wrapper
             UpdateRemoteSave();
         }
 
-        #endregion
+        private string GetResearchCode()
+        {
+            return currentUserSave.id;
+        }
 
-        #region WebGL dll imports
+#endregion
+
+#region WebGL dll imports
 
 #if UNITY_WEBGL
         [DllImport("__Internal")]
@@ -423,6 +483,6 @@ namespace Wrapper
         }
 #endif
 
-        #endregion
+#endregion
     }
 }
