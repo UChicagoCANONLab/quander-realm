@@ -394,6 +394,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: NavCell/Measurement
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: NodeCell/Lantern
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8364091492153193896}
   m_Solo: 0
@@ -758,7 +761,7 @@ AnimatorStateMachine:
     m_Position: {x: 20, y: 180, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5829764146086383094}
-    m_Position: {x: 20, y: 290, z: 0}
+    m_Position: {x: 20, y: 300, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -208147711529374274}
@@ -766,7 +769,7 @@ AnimatorStateMachine:
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 50, y: 240, z: 0}
+  m_AnyStatePosition: {x: 40, y: 240, z: 0}
   m_EntryPosition: {x: 40, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
@@ -931,6 +934,25 @@ AnimationClip:
     path: Container/HighlightEffect
     classID: 225
     script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_Alpha
+    path: Container/Shadow
+    classID: 225
+    script: {fileID: 0}
   m_PPtrCurves: []
   m_SampleRate: 60
   m_WrapMode: 0
@@ -941,6 +963,13 @@ AnimationClip:
     genericBindings:
     - serializedVersion: 2
       path: 3508751672
+      attribute: 1574349066
+      script: {fileID: 0}
+      typeID: 225
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 2510078538
       attribute: 1574349066
       script: {fileID: 0}
       typeID: 225
@@ -994,6 +1023,25 @@ AnimationClip:
       m_RotationOrder: 4
     attribute: m_Alpha
     path: Container/HighlightEffect
+    classID: 225
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_Alpha
+    path: Container/Shadow
     classID: 225
     script: {fileID: 0}
   m_EulerEditorCurves: []
@@ -1274,20 +1322,8 @@ AnimatorController:
     m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
-    m_Name: Base Layer
-    m_StateMachine: {fileID: 7161263041228268942}
-    m_Mask: {fileID: 0}
-    m_Motions: []
-    m_Behaviours: []
-    m_BlendingMode: 0
-    m_SyncedLayerIndex: -1
-    m_DefaultWeight: 0
-    m_IKPass: 0
-    m_SyncedLayerAffectsTiming: 0
-    m_Controller: {fileID: 9100000}
-  - serializedVersion: 5
-    m_Name: Color
-    m_StateMachine: {fileID: -3133806646006774881}
+    m_Name: Lantern
+    m_StateMachine: {fileID: 1509328666320477293}
     m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
@@ -1298,8 +1334,20 @@ AnimatorController:
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
-    m_Name: Lantern
-    m_StateMachine: {fileID: 1509328666320477293}
+    m_Name: Base Layer
+    m_StateMachine: {fileID: 7161263041228268942}
+    m_Mask: {fileID: 0}
+    m_Motions: []
+    m_Behaviours: []
+    m_BlendingMode: 0
+    m_SyncedLayerIndex: -1
+    m_DefaultWeight: 1
+    m_IKPass: 0
+    m_SyncedLayerAffectsTiming: 0
+    m_Controller: {fileID: 9100000}
+  - serializedVersion: 5
+    m_Name: Color
+    m_StateMachine: {fileID: -3133806646006774881}
     m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
@@ -1621,7 +1669,7 @@ AnimatorStateMachine:
     m_Position: {x: 30, y: 170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 334887742818127797}
-    m_Position: {x: 230, y: 230, z: 0}
+    m_Position: {x: 250, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1229397391996995972}
     m_Position: {x: 30, y: 300, z: 0}
@@ -1832,7 +1880,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: Container/Measurement/Shadow
+    path: Container/Shadow
     classID: 225
     script: {fileID: 0}
   m_PPtrCurves: []
@@ -1851,7 +1899,7 @@ AnimationClip:
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 167898857
+      path: 2510078538
       attribute: 1574349066
       script: {fileID: 0}
       typeID: 225
@@ -1923,7 +1971,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: Container/Measurement/Shadow
+    path: Container/Shadow
     classID: 225
     script: {fileID: 0}
   m_EulerEditorCurves: []
@@ -1993,6 +2041,9 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: NavCell/Measurement
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: NodeCell/Lantern
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6771538751527148812}
@@ -2274,13 +2325,13 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -4612991187238229917}
-    m_Position: {x: -240, y: -80, z: 0}
+    m_Position: {x: -240, y: -70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1018292034978550024}
     m_Position: {x: 130, y: -130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8364091492153193896}
-    m_Position: {x: 130, y: 30, z: 0}
+    m_Position: {x: 130, y: 160, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1917327692898949345}
     m_Position: {x: -380, y: 130, z: 0}
@@ -2292,7 +2343,7 @@ AnimatorStateMachine:
     m_Position: {x: 130, y: -80, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6771538751527148812}
-    m_Position: {x: 130, y: 80, z: 0}
+    m_Position: {x: 130, y: 210, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -6445315901491107205}
