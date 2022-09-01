@@ -83,7 +83,7 @@ namespace BlackBox
                 level = winState.level;
                 SetInfo(
                     winImage,
-                    headerText: "We did it!",
+                    headerText: "WE DID IT!",
                     subHeaderText: "We found all of the items!",
                     new GameObject[] { quitGO, nextLevelGO });
             }
@@ -96,7 +96,7 @@ namespace BlackBox
                 {
                     SetInfo(
                         notYetImage,
-                        headerText: "Not Quite…",
+                        headerText: "NOT QUITE…",
                         subHeaderText: "We found " + winState.numCorrect + " out of " + winState.numNodes + " items",
                         new GameObject[] { quitGO, keepPlayingGO });
                 }
@@ -104,8 +104,8 @@ namespace BlackBox
                 {
                     SetInfo(
                         loseImage, 
-                        headerText: "Game Over", 
-                        subHeaderText: "You ran out of lives",
+                        headerText: "GAME OVER", 
+                        subHeaderText: "You ran out of lives!",
                         new GameObject[] { quitGO, restartLevelGO }); 
                 }
             }
