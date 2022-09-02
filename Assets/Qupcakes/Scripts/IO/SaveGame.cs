@@ -20,36 +20,14 @@ namespace Qupcakery
         {
             // Save research data
             Data.researchData.UpdateResearchData(GameManagement.Instance.game.gameStat);
-            string dataJson = JsonUtility.ToJson(Data.researchData);
-            StartCoroutine(SaveResearchData(dataJson));
+            Wrapper.Events.SaveMinigameResearchData?.Invoke(Wrapper.Game.Qupcakes,
+                Data.researchData);
 
             // Save game data
             Data.gameData.UpdateGameData(GameManagement.Instance.game.gameStat);
             Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.Qupcakes,
                 Data.gameData);
             return 0;
-        }
-
-        IEnumerator SaveResearchData(string dataJson)
-        {
-            string username = Wrapper.Events.GetPlayerResearchCode?.Invoke();
-
-            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(dataJson);
-            string url = "http://127.0.0.1:5000/qupcakes_save";
-            //UnityWebRequest www = UnityWebRequest.Post(url, form);
-
-            using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
-            {
-                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
-                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                www.SetRequestHeader("Content-Type", "application/json");
-                yield return www.SendWebRequest();
-
-                if (www.result != UnityWebRequest.Result.Success)
-                {
-                    Debug.Log(www.error);
-                }
-            }
         }
     }
 }
