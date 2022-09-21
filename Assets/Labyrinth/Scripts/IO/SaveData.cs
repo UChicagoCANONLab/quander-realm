@@ -14,6 +14,7 @@ namespace Labyrinth
 
         // Non-research data
         public int[] starsPerLevel; //15 levels, all w 0-3 stars
+        public bool[] dialogueSeen;
 
         // Research data
         public int level; 
@@ -40,10 +41,17 @@ namespace Labyrinth
                 levelUnlocked = CurrentLevel + 1;
             } */
             if (CurrentLevel == 0) {
+                // DialogueAndRewards.Instance.updateDialogueDict();
                 return;
             }
             else if (gb.numStars > starsPerLevel[CurrentLevel - 1]) {
                 starsPerLevel[CurrentLevel - 1] = gb.numStars;
+            }
+
+            int i=0;
+            foreach(bool item in DialogueAndRewards.Instance.levelDialogue.Values) {
+                dialogueSeen[i] = item;
+                i++;
             }
 
             level = CurrentLevel;

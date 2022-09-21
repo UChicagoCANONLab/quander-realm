@@ -16,9 +16,9 @@ namespace Labyrinth
         public Button[] buttons;
 
         void Start() {
-            if (DialogueAndRewards.Instance.levelDialogue[-1] == true) {
+            if (DialogueAndRewards.Instance.levelDialogue[-1] == false) {
                 Wrapper.Events.StartDialogueSequence?.Invoke("LA_Intro");
-                DialogueAndRewards.Instance.levelDialogue[-1] = false;
+                DialogueAndRewards.Instance.levelDialogue[-1] = true;
             }
 
             if (buttons == null) {
@@ -51,8 +51,9 @@ namespace Labyrinth
         public void LoadLevelSelectMenu() {
             Time.timeScale = 1f;
             Load.LoadGame();
+            DialogueAndRewards.Instance.updateDialogueDict();
 
-            if (DialogueAndRewards.Instance.levelDialogue[0] == true) {
+            if (DialogueAndRewards.Instance.levelDialogue[0] == false) {
                 LevelSelect(0);
             }
             else {
@@ -97,6 +98,7 @@ namespace Labyrinth
                 DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
             }
             DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
+            // DialogueAndRewards.Instance.updateDialogueDict();
         }
 
         public void UndoWin(int goalsCollected) {
@@ -120,6 +122,7 @@ namespace Labyrinth
                     currScene = "LA_Tutorial";
                     break;
                 case < 3:
+                    DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 0;
                     currScene = "LA_4x4";
                     break;

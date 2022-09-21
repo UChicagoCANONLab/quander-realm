@@ -99,7 +99,7 @@ namespace Wrapper
             RewardAsset levelReward = Array.Find(rewardAssets, (reward) => reward.game == game && reward.level == level);
             if (levelReward == null)
             {
-                Debug.LogFormat("No Reward found for game {1} level {2}", game, level);
+                Debug.LogFormat("No Reward found for {0} level {1}", game.ToString(), level);
                 return;
             }
 
