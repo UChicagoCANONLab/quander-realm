@@ -15,6 +15,8 @@ namespace Qupcakery
         public GameObject thisCanvas;
         public int numberOfLevels;
 
+        public Sprite[] levelNumbers = new Sprite[27];
+
         Rect panelDimensions, iconDimensions;
         int amountPerPage;
         int currentLevelCount = 0;
@@ -94,6 +96,10 @@ namespace Qupcakery
                         m.SetAvailability(false);
                 }
                 icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
+
+                // comment this part out if you want the originial level select icon
+                Image levelNumberObj = icon.transform.Find("Number").GetComponent<Image>();
+                levelNumberObj.sprite = levelNumbers[currentLevelCount-1];
             }
 
         }

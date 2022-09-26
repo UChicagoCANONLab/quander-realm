@@ -50,6 +50,11 @@ namespace Qupcakery
                 TextMeshProUGUI text = gameObject.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
                 Color32 textColor = text.color;
                 text.color = new Color(textColor.r, textColor.g, textColor.b, 0.4f);
+
+                // comment this out if you want the original button prefab
+                Image iconNumber = gameObject.transform.Find("Number").gameObject.GetComponent<Image>();
+                Color imageColor2 = iconNumber.color;
+                iconNumber.color = new Color(imageColor2.r, imageColor2.g, imageColor2.b, 0.6f);
             }
         }
 
