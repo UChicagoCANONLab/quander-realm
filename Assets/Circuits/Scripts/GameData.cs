@@ -124,6 +124,8 @@ public static class GameData
         tutorialShown = true;
         switch (saveData.currLevel - offset)
         {
+            case 0:
+                return "Circuits_Dialogue";
             case 3:
                 return "Circuits_Dialogue";
             case 6:
