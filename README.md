@@ -11,6 +11,8 @@
 ### Overview <a name="overview"></a>
 The Quander Realm or **Wrapper** is a hub world that holds and manages the various minigames in this project along with all the shared functionality and assets.
 
+See [Wiki](../../wiki) for more detailed documentation. 
+
 ### Branching Strategy <a name="branching"></a>
 ## Overview <a name="boverview"></a>
 
