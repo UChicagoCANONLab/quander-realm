@@ -20,7 +20,6 @@ namespace Qupcakery
             switch (cakeState.stateSize)
             {
                 case 2:
-                    Debug.Log("distance is : " + Math.Abs(cakeState.probabilities[0] - 0.5f));
                     if (Math.Abs(cakeState.probabilities[0] - 0.5f) < Constants.FloatCmpMargin)
                         cake.UpdateCakeStateFlipPhase();
                     break;

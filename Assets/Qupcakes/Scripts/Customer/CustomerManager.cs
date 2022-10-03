@@ -150,7 +150,6 @@ namespace Qupcakery
             // Checks that there are at least 1 subscriber
             if (CakeReceived != null)
             {
-                Debug.Log("1st customer received cake!");
                 CakeReceived();
             }
         }

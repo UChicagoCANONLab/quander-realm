@@ -52,7 +52,6 @@ namespace Qupcakery
         public CakeState(float a, float b, float c, float d,
             Phase newPhase)
         {
-            Debug.Log("a: " + a + " b: " + b + " c: " + c + " d: " + d);
             Assert.AreApproximatelyEqual(1, a + b + c + d);
 
             stateSize = 4;
@@ -100,7 +99,6 @@ namespace Qupcakery
         public void UpdateCakeState(float a, float b, float c, float d,
             Phase newPhase)
         {
-            Debug.Log("a: " + a + " b: " + b + " c: " + c + " d: " + d);
             Assert.AreApproximatelyEqual(1, a + b + c + d);
 
             stateSize = 4;
@@ -113,7 +111,6 @@ namespace Qupcakery
 
         public void FlipPhase()
         {
-            Debug.Log("Flip phase");
             phase = phase == CakeState.Phase.Negative ?
                     CakeState.Phase.Positive : CakeState.Phase.Negative;
         }
