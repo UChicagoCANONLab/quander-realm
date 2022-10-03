@@ -42,6 +42,8 @@ namespace Wrapper
         private string researchCodeExists = "";
         private string loadDataJson = "";
         private bool webGLUploadSuccess = false;
+        [DllImport("__Internal")]
+        private static extern void SaveResearchData(int gameCode, string data);
 #endif
 
 #if PRODUCTION_FB
@@ -428,7 +430,13 @@ namespace Wrapper
             }
         }
 #else
-        ///webGL version of SaveMinigameResearchData()...
+#if UNITY_EDITOR == false
+        private void SaveMinigameResearchData(Game game, object minigameSave)
+        {
+            string dataJson = JsonUtility.ToJson(minigameSave);
+            SaveResearchData((int)game, dataJson);
+        }
+#endif
 #endif
 
         private void ClearSave()
