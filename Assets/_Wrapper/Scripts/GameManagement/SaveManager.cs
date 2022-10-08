@@ -399,9 +399,7 @@ namespace Wrapper
         // AWS
         private void SaveMinigameResearchData(Game game, object minigameSave)
         {
-#if UNITY_EDITOR == false
             StartCoroutine(SendResearchDataToRemote(game, minigameSave));
-#endif
         }
 
         // AWS
