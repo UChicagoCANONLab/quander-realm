@@ -69,9 +69,7 @@ namespace Wrapper
             Events.GetPlayerResearchCode += GetResearchCode;
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
-#if !UNITY_WEBGL
             Events.SaveMinigameResearchData += SaveMinigameResearchData; // AWS
-#endif
         }
 
         private void OnDisable()
@@ -84,9 +82,7 @@ namespace Wrapper
             Events.GetPlayerResearchCode -= GetResearchCode;
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
-#if !UNITY_WEBGL
             Events.SaveMinigameResearchData -= SaveMinigameResearchData; // AWS
-#endif
         }
 
 #if !UNITY_WEBGL
@@ -400,12 +396,12 @@ namespace Wrapper
                 Events.ToggleUploadFailurePopup?.Invoke(true);
         }
 #endif
-
-#if !UNITY_WEBGL
         // AWS
         private void SaveMinigameResearchData(Game game, object minigameSave)
         {
+#if UNITY_EDITOR == false
             StartCoroutine(SendResearchDataToRemote(game, minigameSave));
+#endif
         }
 
         // AWS
@@ -429,15 +425,6 @@ namespace Wrapper
                 }
             }
         }
-#else
-#if UNITY_EDITOR == false
-        private void SaveMinigameResearchData(Game game, object minigameSave)
-        {
-            string dataJson = JsonUtility.ToJson(minigameSave);
-            SaveResearchData((int)game, dataJson);
-        }
-#endif
-#endif
 
         private void ClearSave()
         {
