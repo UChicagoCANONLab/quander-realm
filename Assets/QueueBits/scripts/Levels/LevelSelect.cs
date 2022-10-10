@@ -69,7 +69,7 @@ namespace QueueBits
             GridLayoutGroup grid = panel.AddComponent<GridLayoutGroup>();
             // grid.cellSize = new Vector2(iconDimensions.width, iconDimensions.height);
             grid.cellSize = new Vector2(100,100);
-            grid.childAlignment = TextAnchor.MiddleCenter;
+            grid.childAlignment = TextAnchor.LowerCenter;
             // grid.spacing = iconSpacing;
             grid.spacing = new Vector2(50,20);
         }
@@ -99,9 +99,16 @@ namespace QueueBits
                 icon.transform.SetParent(thisCanvas.transform, false);
                 icon.transform.SetParent(parentObject.transform);
                 icon.name = "Level" + i;
+                
                 // new icon prefabs here
                 Image levelNumberObj = icon.transform.Find("LevelNum").GetComponent<Image>();
                 levelNumberObj.sprite = levelNumArray[i-1];
+                if (i%2 == 0) {
+                    GameObject.Find($"Canvas/Panel/Page-1/Level{i}/TokenRed").SetActive(true);
+                }
+                else {
+                    GameObject.Find($"Canvas/Panel/Page-1/Level{i}/TokenYellow").SetActive(true);
+                }
 
                 // icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
                 string chosenLevel = "QB_Level"+i;
