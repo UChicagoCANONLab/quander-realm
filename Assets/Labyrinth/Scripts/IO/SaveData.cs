@@ -40,11 +40,12 @@ namespace Labyrinth
             /* if (CurrentLevel == levelUnlocked) {
                 levelUnlocked = CurrentLevel + 1;
             } */
-            if (CurrentLevel == 0) {
+            /* if (CurrentLevel == 0) {
                 // DialogueAndRewards.Instance.updateDialogueDict();
                 return;
             }
-            else if (gb.numStars > starsPerLevel[CurrentLevel - 1]) {
+            else  */
+            if (gb.numStars > starsPerLevel[CurrentLevel - 1]) {
                 starsPerLevel[CurrentLevel - 1] = gb.numStars;
             }
 
