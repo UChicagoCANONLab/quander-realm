@@ -67,9 +67,7 @@ namespace Wrapper
             Events.GetPlayerResearchCode += GetResearchCode;
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
-#if !UNITY_WEBGL
             Events.SaveMinigameResearchData += SaveMinigameResearchData; // AWS
-#endif
         }
 
         private void OnDisable()
@@ -82,9 +80,7 @@ namespace Wrapper
             Events.GetPlayerResearchCode -= GetResearchCode;
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
-#if !UNITY_WEBGL
             Events.SaveMinigameResearchData -= SaveMinigameResearchData; // AWS
-#endif
         }
 
 #if !UNITY_WEBGL
@@ -399,7 +395,6 @@ namespace Wrapper
         }
 #endif
 
-#if !UNITY_WEBGL
         // AWS
         private void SaveMinigameResearchData(Game game, object minigameSave)
         {
@@ -427,9 +422,6 @@ namespace Wrapper
                 }
             }
         }
-#else
-        ///webGL version of SaveMinigameResearchData()...
-#endif
 
         private void ClearSave()
         {
