@@ -846,10 +846,10 @@ namespace QueueBits
 				// check if there are any empty cells left, if not set game over and update text to show a draw
 				if(!FieldContainsEmptyCell())
 				{
-					/*Shivani Puli Data Collection
+					//Shivani Puli Data Collection
 					mydata.winner = 0;
 					saveData.Save(mydata);
-					*/
+					
 
 					// star system
 					if (!starUpdated)
