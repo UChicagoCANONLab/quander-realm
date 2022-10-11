@@ -1598,7 +1598,7 @@ namespace QueueBits
 				if (!FieldContainsUnknownCell())
 				{
 					mydata.winner = 0;
-					//saveData.Save(mydata);
+					saveData.Save(mydata);
 
 					// star system
 					if (!starUpdated)

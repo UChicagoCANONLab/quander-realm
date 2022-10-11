@@ -597,7 +597,7 @@ namespace QueueBits
 						List<int> moves = GetPossibleMoves();
 						if (moves.Contains(column))
                         {
-							/*Shivani Puli Data Collection
+							//Shivani Puli Data Collection
 							int r = colPointers[column];
 							int index = r * numColumns + column;
 							turn++;
@@ -605,7 +605,7 @@ namespace QueueBits
 							mydata.superposition[index] = 100;
 							mydata.reveal_order[index] = turn;
 							mydata.outcome[index] = 1;
-							*/
+							
 							playMove(column, "1");
 							StartCoroutine(dropPiece(gameObjectTurn));
 						}
