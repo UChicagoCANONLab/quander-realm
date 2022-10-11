@@ -85,10 +85,10 @@ namespace QueueBits
 		// dialogue
 		bool dialoguePhase = false;
 
-		/* Shivani Puli Data Collection
+		// Shivani Puli Data Collection
 		int turn = 0;
 		Data mydata = new Data();
-		*/
+		
 
 
 		// Use this for initialization
