@@ -71,7 +71,7 @@ namespace QueueBits
             grid.cellSize = new Vector2(100,100);
             grid.childAlignment = TextAnchor.LowerCenter;
             // grid.spacing = iconSpacing;
-            grid.spacing = new Vector2(50,20);
+            grid.spacing = new Vector2(45,20);
         }
         void LoadIcons(int numberOfIcons, GameObject parentObject)
         {
