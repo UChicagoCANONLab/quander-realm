@@ -371,7 +371,7 @@ namespace QueueBits
             foreach (int column in moves)
             {
                 playMove(column, "2");
-				int value = minimax(0, 1, false);
+				int value = minimax(0, 4, false);
 				if (value > bestVal)
                 {
 					bestVal = value;
@@ -396,8 +396,6 @@ namespace QueueBits
                 {
 					playMove(column, "2");
 					int value = minimax(depth + 1, maxDepth, !isMaximizing);
-					//Testing minimax
-					Debug.Log("Column " + column + ": " + value);
 					bestVal = Mathf.Max(bestVal, value);
 					reverseMove(column);
 				}
