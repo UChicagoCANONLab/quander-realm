@@ -2,19 +2,27 @@
 
 # Table of contents
 1. [Overview](#overview)
-2. [Branching Strategy](#branching)
+2. [Merging Games into integration] (#merge)
+3. [Branching Strategy](#branching)
     1. [Overview](#boverview)
     2. [Summary](#bsummary)
     3. [Details](#bdetails)
-3. [Firebase Setup](#firebase)
+4. [Firebase Setup](#firebase)
 
-### Overview <a name="overview"></a>
+## Overview <a name="overview"></a>
 The Quander Realm or **Wrapper** is a hub world that holds and manages the various minigames in this project along with all the shared functionality and assets.
 
 See [Wiki](../../wiki) for more detailed documentation. 
 
-### Branching Strategy <a name="branching"></a>
-## Overview <a name="boverview"></a>
+## Merging Games into integration <a name="merge"></a>
+### !! Do not resolve conflicts through pull requests, otherwise the integration branch will be merged into the game branches !! 
+#### Do the following:
+- Create draft pull requests to merge
+- If there are conflicts, update the files locally to match on both branches
+- Once no conflicts remain, update the draft pull request to be ready for review and request a reviewer
+
+## Branching Strategy <a name="branching"></a>
+### Overview <a name="boverview"></a>
 
 This branching strategy is designed to keep each minigame and the wrapper in their own silos so they can be worked on \*mostly\* independently from each other. This page includes:
 
