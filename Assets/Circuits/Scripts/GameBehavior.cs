@@ -58,6 +58,8 @@ public class GameBehavior : MonoBehaviour
 
     bool simplified = false;
 
+    public Sprite[] numberSprites;
+
 
     private void renderCircuit(List<List<String>> newCircuit)
     {
@@ -134,6 +136,9 @@ public class GameBehavior : MonoBehaviour
         {
 
         }
+
+        Image numberObject = GameObject.Find("Canvas/LevelNumber/Number").GetComponent<Image>();
+        numberObject.sprite = numberSprites[GameData.getCurrLevel()];
 
         if (GameData.getCurrLevel() <= 9)
         {

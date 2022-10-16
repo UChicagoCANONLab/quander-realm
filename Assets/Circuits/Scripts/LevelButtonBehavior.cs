@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class LevelButtonBehavior : MonoBehaviour
 {
-    // Start is called before the first frame update
     public Text buttonText;
     //public Image star;
     public Sprite starSprite;
@@ -13,16 +12,9 @@ public class LevelButtonBehavior : MonoBehaviour
     //public Text scoreText;
     private LevelSelectorBehavior owner;
     private int level;
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public Sprite[] numberSprites;
+
 
     public void onClick()
     {
@@ -34,6 +26,10 @@ public class LevelButtonBehavior : MonoBehaviour
         owner = o;
         level = l;
         buttonText.text = $"{level}";
+
+        Image numberObject = panel.transform.Find("LevelNumber").GetComponent<Image>();
+        numberObject.sprite = numberSprites[level];
+
             GetComponent<Button>().interactable = true;
             //scoreText.text = "";
             if(completed)
