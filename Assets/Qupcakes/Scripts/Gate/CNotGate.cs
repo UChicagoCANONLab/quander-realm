@@ -17,8 +17,6 @@ namespace Qupcakery
 
             System.Diagnostics.Debug.Assert(ctrlCakeState.stateSize == 2);
 
-            Debug.Log("Control is " + ctrlCakeState);
-
             if (Mathf.Approximately(ctrlCakeState.probabilities[1], 1))
             {
                 Debug.Log("Control is chocolate");
@@ -43,9 +41,7 @@ namespace Qupcakery
                 {
                     /* Target is vanilla */
                     sharedCakeState = new CakeState(0.5f, 0, 0, 0.5f, ctrlCakeState.phase);
-                    Debug.Log("Updating control");
                     control.UpdateCakeState(ref sharedCakeState);
-                    Debug.Log("Updating target");
                     target.UpdateCakeState(ref sharedCakeState);
 
                     target.bitInd = 1;

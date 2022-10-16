@@ -43,10 +43,9 @@ namespace Qupcakery
 
         void LoadPanels(int numberOfPanels)
         {
-            // // Debug.LogFormat("Number of pages: {0}", numberOfPanels);
             GameObject panelClone = Instantiate(levelHolder) as GameObject;
-            //PageSwiper swiper = levelHolder.AddComponent<PageSwiper>();
-            //swiper.totalPages = numberOfPanels;
+            PageSwiper swiper = levelHolder.AddComponent<PageSwiper>();
+            swiper.totalPages = numberOfPanels;
 
             for (int i = 1; i <= numberOfPanels; i++)
             {

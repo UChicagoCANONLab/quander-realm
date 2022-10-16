@@ -167,15 +167,12 @@ namespace Qupcakery
             {
                 // Get y position of belt i
                 beltY = SetupUtilities.BeltPosition(beltCnt, i).y;
-                // // Debug.LogFormat("belt{0} Y: {1}", i, beltY);
-                // // Debug.LogFormat("Distance between belts: {0}", _distanceBetweenBelt);
-                // // Debug.LogFormat("Margin: {0}", margin);
+              
                 switch (GateSize)
                 {
                     case 1:
                         if (y > beltY - margin && y < beltY + margin)
                         {
-                            // Debug.LogFormat("The gate is on belt {0}", i);
                             ys.Add(i);
                         }
                         break;
