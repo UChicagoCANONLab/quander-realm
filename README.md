@@ -2,7 +2,7 @@
 
 # Table of contents
 1. [Overview](#overview)
-2. [Merging Games into integration] (#merge)
+2. [Merging Games into integration](#merge)
 3. [Branching Strategy](#branching)
     1. [Overview](#boverview)
     2. [Summary](#bsummary)
