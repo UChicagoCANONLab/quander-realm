@@ -10,8 +10,7 @@ namespace Labyrinth
         public static DialogueAndRewards Instance;
 
         public Dictionary<int, bool> levelDialogue = new Dictionary<int, bool>()
-            { {-1, false}, {0, false}, {5, true}, {6, true}, 
-            {10, true}, {11, true}, {15, true} };
+            { {-1, false}, {1, false}, {6, false}, {11, false}, {15, false} };
 
         public Dictionary<int, string> levelRewards = new Dictionary<int, string>()
             { {5, "LA_01"}, {15, "LA_02"}, {3, "LA_03"}, {4, "LA_04"}, 
@@ -27,10 +26,19 @@ namespace Labyrinth
             DontDestroyOnLoad(gameObject);
         }
 
+        public void updateDialogueDict() {
+            // Checking if dict different from array in SaveData
+            int i = 0;
+            foreach(int val in new List<int>(levelDialogue.Keys)) {
+                levelDialogue[val] = SaveData.Instance.dialogueSeen[i];
+                i++;
+            }
+        }
+
         public void doDialogue(int level) {
-            if (levelDialogue.ContainsKey(level) && levelDialogue[level] == true) {
+            if (levelDialogue.ContainsKey(level) && levelDialogue[level] == false) {
                 Wrapper.Events.StartDialogueSequence?.Invoke("LA_Level"+level);
-                levelDialogue[level] = false;
+                levelDialogue[level] = true;
             }
         }
 

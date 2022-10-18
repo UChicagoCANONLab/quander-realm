@@ -71,20 +71,6 @@ namespace Labyrinth
                 GameObject.Find(imagePath).SetActive(true);
                 pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
             }
-
-
-            /* if (size == 4) {
-                cam.orthographicSize = 4;    
-            }
-            else if (size == 5) {
-                cam.orthographicSize = 4.5f;
-            }
-            else if (size == 6) {
-                cam.orthographicSize = 5;
-            }
-            if (size%2 == 0) {
-                cam.transform.position += new Vector3(0.5f,0.5f,0);
-            } */
         }
 
         void Update() {
