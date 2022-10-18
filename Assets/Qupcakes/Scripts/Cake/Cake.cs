@@ -73,7 +73,6 @@ namespace Qupcakery
 
         public void UpdateCakeState(ref CakeState newCakeState)
         {
-            Debug.Log("Updating cake state to " + newCakeState);
             cakeState = newCakeState;
             OnCakeStateUpdated();
         }

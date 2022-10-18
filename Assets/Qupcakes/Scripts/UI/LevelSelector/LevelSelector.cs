@@ -15,6 +15,8 @@ namespace Qupcakery
         public GameObject thisCanvas;
         public int numberOfLevels;
 
+        public Sprite[] levelNumbers = new Sprite[27];
+
         Rect panelDimensions, iconDimensions;
         int amountPerPage;
         int currentLevelCount = 0;
@@ -41,10 +43,9 @@ namespace Qupcakery
 
         void LoadPanels(int numberOfPanels)
         {
-            // // Debug.LogFormat("Number of pages: {0}", numberOfPanels);
             GameObject panelClone = Instantiate(levelHolder) as GameObject;
-            //PageSwiper swiper = levelHolder.AddComponent<PageSwiper>();
-            //swiper.totalPages = numberOfPanels;
+            PageSwiper swiper = levelHolder.AddComponent<PageSwiper>();
+            swiper.totalPages = numberOfPanels;
 
             for (int i = 1; i <= numberOfPanels; i++)
             {
@@ -94,6 +95,10 @@ namespace Qupcakery
                         m.SetAvailability(false);
                 }
                 icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
+
+                // comment this part out if you want the originial level select icon
+                Image levelNumberObj = icon.transform.Find("Number").GetComponent<Image>();
+                levelNumberObj.sprite = levelNumbers[currentLevelCount-1];
             }
 
         }

@@ -14,7 +14,6 @@ namespace Qupcakery
 
         public void ShowNotRecipe()
         {
-            // Debug.Log("Showing not recipe");
             startPanel.SetActive(false);
             recipePanel.SetActive(true);
             recipePanel.GetComponentInChildren<Text>().text = "Flavor-inverter (NOT Gate)";

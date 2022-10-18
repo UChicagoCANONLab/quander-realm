@@ -14,7 +14,6 @@ namespace Qupcakery
 
         public void ShowZRecipe()
         {
-            // Debug.Log("Showing not recipe");
             startPanel.SetActive(false);
             recipePanel.SetActive(true);
             recipePanel.GetComponentInChildren<Text>().text = "Mystery-inverter (Z Gate)";
