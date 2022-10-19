@@ -4,14 +4,14 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-
 import { getDatabase, ref, child, get, set } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBRaUCnD9z-Ijg0YqjFqSBSeon7-I785qo",
-  authDomain: "quander-production.firebaseapp.com",
-  databaseURL: "https://quander-production-default-rtdb.firebaseio.com",
-  projectId: "quander-production",
-  storageBucket: "quander-production.appspot.com",
-  messagingSenderId: "297916384915",
-  appId: "1:297916384915:web:2264945c3f8573cae9af66",
-  measurementId: "G-XY8ZE0D331"
+    apiKey: "AIzaSyBRaUCnD9z-Ijg0YqjFqSBSeon7-I785qo",
+    authDomain: "quander-production.firebaseapp.com",
+    databaseURL: "https://quander-production-default-rtdb.firebaseio.com",
+    projectId: "quander-production",
+    storageBucket: "quander-production.appspot.com",
+    messagingSenderId: "297916384915",
+    appId: "1:297916384915:web:2264945c3f8573cae9af66",
+    measurementId: "G-XY8ZE0D331"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -54,4 +54,3 @@ JSLoadData = function(codeString) {
 	  GameInstance.SendMessage('SaveManager', 'LoadDataCallback', 'none');
 	});
 }
-

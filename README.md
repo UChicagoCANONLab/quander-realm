@@ -15,10 +15,8 @@ The Quander Realm or **Wrapper** is a hub world that holds and manages the vario
 See [Wiki](../../wiki) for more detailed documentation. 
 
 ## Merging Games into integration <a name="merge"></a>
-### !! Do not resolve conflicts through pull requests, otherwise the integration branch will be merged into the game branches !! 
-#### Do the following:
-- Create draft pull requests to merge
-- If there are conflicts, update the files locally to match on both branches
+- Create a draft pull request to merge a minigame branch into integration
+- If there are conflicts, checkout the minigame branch, merge integration into this branch, resolve the conflicts locally, and then push
 - Once no conflicts remain, update the draft pull request to be ready for review and request a reviewer
 
 ## Branching Strategy <a name="branching"></a>
