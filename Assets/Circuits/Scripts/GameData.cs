@@ -107,10 +107,12 @@ public static class GameData
 
         Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.Circuits, saveData);
 
+       
         researchData.completedLevels = saveData.completedLevels;
         researchData.currLevel = saveData.currLevel;
         researchData.log = String.Join("\n", log);
-        Wrapper.Events.SaveMinigameResearchData(Wrapper.Game.Circuits, saveData);
+        //Debug.Log(JsonUtility.ToJson(researchData));
+        Wrapper.Events.SaveMinigameResearchData?.Invoke(Wrapper.Game.Circuits, researchData);
         log.Clear();
 
     }
