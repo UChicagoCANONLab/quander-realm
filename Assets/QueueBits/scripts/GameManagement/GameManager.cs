@@ -12,6 +12,7 @@ namespace QueueBits
     public class GameManager : MonoBehaviour
     {
         public static QBSaveData saveData;
+        public static Data researchData;
         public static bool[] rewardSystem = { false, false, false, true, false, true, true, false, true, true, false, true, false, true, false, true };
 
         public static void Load()

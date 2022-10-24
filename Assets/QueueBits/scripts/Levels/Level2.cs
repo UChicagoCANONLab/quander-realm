@@ -108,6 +108,7 @@ namespace QueueBits
 
 			//Shivani Puli Data Collection
 			mydata.level = 2;
+			mydata.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
 			mydata.prefilledBoard = -1;
 			mydata.placement_order = new int[numColumns * numRows];
 			mydata.superposition = new int[numColumns * numRows];
@@ -371,7 +372,8 @@ namespace QueueBits
             foreach (int column in moves)
             {
                 playMove(column, "2");
-				int value = minimax(0, 4, false);
+				int value = minimax(0, 1, false); //changed to test
+				Debug.Log("Column " + column + ": " + value);
 				if (value > bestVal)
                 {
 					bestVal = value;
@@ -806,14 +808,6 @@ namespace QueueBits
 			// if Game Over update the winning text to show who has won
 			if(gameOver == true)
 			{
-				// Shivani Puli Data Collection -> store winner
-				if (isPlayersTurn)
-					mydata.winner = 1;
-				else
-					mydata.winner = 2;
-				saveData.Save(mydata);
-				
-
 				// star system
 				if (!starUpdated)
 				{
@@ -834,6 +828,14 @@ namespace QueueBits
 				GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
 				winningText.GetComponent<TextMesh>().text = isPlayersTurn ? playerWonText : playerLoseText;
 				GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
+
+				// Shivani Puli Data Collection -> store winner
+				if (isPlayersTurn)
+					mydata.winner = 1;
+				else
+					mydata.winner = 2;
+				saveData.Save(mydata);
+
 
 				// Reward System
 				if (GameManager.rewardSystem[2])
