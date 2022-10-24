@@ -241,7 +241,39 @@ namespace QueueBits
 				(Piece.Red, 2, 3),
 				(Piece.Blue, 2, 2)
 			}
-		}
+		},
+			{8, new List<(Piece piece, int col, int row)>
+            {
+				(Piece.Red, 3, 5),
+				(Piece.Blue, 3, 4),
+				(Piece.Red, 2, 5),
+				(Piece.Blue, 4, 5),
+				(Piece.Red, 0, 5),
+				(Piece.Blue, 1, 5),
+				(Piece.Red, 4, 4),
+				(Piece.Blue, 2, 4),
+				(Piece.Red, 1, 4),
+				(Piece.Blue, 3, 3),
+				(Piece.Red, 1, 3),
+				(Piece.Blue, 5, 5),
+				(Piece.Red, 5, 4),
+				(Piece.Blue, 0, 4),
+				(Piece.Red, 2, 3),
+				(Piece.Blue, 2, 2),
+				(Piece.Red, 2, 1),
+				(Piece.Blue, 1, 2),
+				(Piece.Red, 6, 5),
+				(Piece.Blue, 6, 4),
+				(Piece.Red, 1, 1),
+				(Piece.Blue, 3, 2),
+				(Piece.Red, 3, 1),
+				(Piece.Blue, 3, 0),
+				(Piece.Red, 5, 3),
+				(Piece.Blue, 5, 2),
+				(Piece.Red, 2, 0),
+				(Piece.Blue, 6, 3)
+			}
+				}
 	};
 
 		// Select Tokens
@@ -330,11 +362,12 @@ namespace QueueBits
 				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
 			}
 
-			int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
+			int board_num = 8;//Random.Range(0, prefilledBoardList.Keys.Count);
             prefilledBoard = prefilledBoardList[board_num];
 
 			//Shivani Puli Data Collection
 			mydata.level = 3;
+			mydata.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
 			mydata.prefilledBoard = board_num;
 			mydata.placement_order = new int[numColumns * numRows];
 			mydata.superposition = new int[numColumns * numRows];
@@ -827,6 +860,7 @@ namespace QueueBits
 			{
 				playMove(column, "2");
 				int value = minimax(0, 4, false);
+				print("Column " + column + ": " + value);
 				if (value > bestVal)
 				{
 					bestVal = value;
@@ -843,12 +877,18 @@ namespace QueueBits
 		int minimax(int depth, int maxDepth, bool isMaximizing)
 		{
 			List<int> moves = getMoves(colPointers);
+			int bestVal;
 
 			if (moves.Count == 0 || depth == maxDepth)
-				return evaluateState(state);
+			{
+				int temp = evaluateState(state);
+				//printState(state);
+				//Debug.Log("State val: " + temp);
+				return temp;
+			}
 			if (isMaximizing)
 			{
-				int bestVal = int.MinValue;
+				bestVal = int.MinValue;
 				foreach (int column in moves)
 				{
 					playMove(column, "2");
@@ -856,12 +896,11 @@ namespace QueueBits
 					bestVal = Mathf.Max(bestVal, value);
 					reverseMove(column);
 				}
-				return bestVal;
 			}
 
 			else
 			{
-				int bestVal = int.MaxValue;
+				bestVal = int.MaxValue;
 				foreach (int column in moves)
 				{
 					playMove(column, "1");
@@ -869,9 +908,8 @@ namespace QueueBits
 					bestVal = Mathf.Min(bestVal, value);
 					reverseMove(column);
 				}
-				return bestVal;
 			}
-
+			return bestVal;
 		}
 
 		/// <summary>
