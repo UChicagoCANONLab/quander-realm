@@ -207,7 +207,7 @@ namespace QueueBits
 			return (r, c);
         }
 
-		void printState(string state)
+		void printState()
         {
 			string p_state = "";
 			for (int r = 0; r < 6; r++)
@@ -218,7 +218,7 @@ namespace QueueBits
 			Debug.Log(p_state);
         }
 
-		int evaluateState(string state)
+		int evaluateState()
         {
 			int score = 0;
 			visited.Clear();
@@ -230,18 +230,18 @@ namespace QueueBits
 					int i = index(r, c);
 					if (state.Substring(i,1).Equals("2")) // && !visited.Contains((r,c)) -- adding this causes missed connections, but speed?
 					{
-						score += evaluatePosition(state, r, c, "2");
+						score += evaluatePosition(r, c, "2");
                     }
                     else if (state.Substring(i, 1).Equals("1"))
                     {
-                        score -= 2 * evaluatePosition(state, r, c, "1");
+                        score -= 2 * evaluatePosition(r, c, "1");
                     }
                 }
             }
 			return score;
         }
 
-		int evaluatePosition(string state, int r, int c, string color)
+		int evaluatePosition(int r, int c, string color)
         {
 			int i = index(r, c);
 			(int, int) pos;
@@ -364,7 +364,7 @@ namespace QueueBits
 
 		}
 
-		int findBestMove(string state, int[] cols)
+		int findBestMove(int[] cols)
         {
 			int bestVal = int.MinValue;
 			int bestMove = -1;
@@ -389,7 +389,7 @@ namespace QueueBits
 			List<int> moves = getMoves(colPointers);
 
 			if (moves.Count == 0 || depth == maxDepth)
-				return evaluateState(state);
+				return evaluateState();
 
 			if (isMaximizing)
             {
