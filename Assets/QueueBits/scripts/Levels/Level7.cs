@@ -713,6 +713,8 @@ namespace QueueBits
 				i++;
 				if ((i % 7) == 0)
 					i = state.Length;
+				if (color == "1" && i < state.Length && mydata.superposition[i] != 100)
+					i = state.Length;
 			}
 
 			i = index(r, c);
@@ -721,6 +723,8 @@ namespace QueueBits
 				r_counter++;
 				i--;
 				if ((i % 7) == 6)
+					i = -1;
+				if (color == "1" && i >= 0 && mydata.superposition[i] != 100)
 					i = -1;
 			}
 			r_counter--; // center val counted twice
@@ -734,14 +738,12 @@ namespace QueueBits
 			{
 				d_counter++;
 				i += 7;
+				if (color == "1" && i < state.Length && mydata.superposition[i] != 100)
+				{
+					i = state.Length;
+				}
 			}
-			i = index(r, c);
-			while (i >= 0 && state.Substring(i, 1).Equals(color))
-			{
-				d_counter++;
-				i -= 7;
-			}
-			d_counter--; //center val counted twice
+			//no need to look up for vertical case
 			if (d_counter >= 4)
 				return true;
 
@@ -754,6 +756,8 @@ namespace QueueBits
 				i += 8;
 				if ((i % 7) == 0)
 					i = state.Length;
+				if (color == "1" && i < state.Length && mydata.superposition[i] != 100)
+					i = state.Length;
 			}
 			i = index(r, c);
 			while (i >= 0 && state.Substring(i, 1).Equals(color))
@@ -761,6 +765,8 @@ namespace QueueBits
 				rd_counter++;
 				i -= 8;
 				if ((i % 7) == 6)
+					i = -1;
+				if (color == "1" && i >= 0 && mydata.superposition[i] != 100)
 					i = -1;
 			}
 			rd_counter--;
@@ -776,6 +782,8 @@ namespace QueueBits
 				i += 6;
 				if ((i % 7) == 6)
 					i = state.Length;
+				if (color == "1" && i < state.Length && mydata.superposition[i] != 100)
+					i = state.Length;
 			}
 			i = index(r, c);
 			while (i >= 0 && state.Substring(i, 1).Equals(color))
@@ -783,6 +791,8 @@ namespace QueueBits
 				ld_counter++;
 				i -= 6;
 				if ((i % 7) == 0)
+					i = -1;
+				if (color == "1" && i >= 0 && mydata.superposition[i] != 100)
 					i = -1;
 			}
 			ld_counter--;
@@ -838,6 +848,19 @@ namespace QueueBits
 			int bestMove = -1;
 
 			List<int> moves = getMoves(cols);
+
+			//check for all 100% yellow win
+			foreach (int column in moves)
+			{
+				playMove(column, "1");
+				if (isWin(colPointers[column] + 1, column, "1"))
+				{
+					reverseMove(column);
+					return column;
+				}
+				reverseMove(column);
+			}
+
 			foreach (int column in moves)
 			{
 				playMove(column, "2");
