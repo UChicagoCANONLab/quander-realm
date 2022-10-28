@@ -539,7 +539,7 @@ namespace QueueBits
 			return (r, c);
 		}
 
-		void printState(string state)
+		void printState()
 		{
 			string p_state = "";
 			for (int r = 0; r < 6; r++)
@@ -550,7 +550,7 @@ namespace QueueBits
 			Debug.Log(p_state);
 		}
 
-		int evaluateState(string state)
+		int evaluateState()
 		{
 			int score = 0;
 			visited.Clear();
@@ -562,18 +562,18 @@ namespace QueueBits
 					int i = index(r, c);
 					if (state.Substring(i, 1).Equals("2")) // && !visited.Contains((r,c)) -- adding this causes missed connections, but speed?
 					{
-						score += evaluatePosition(state, r, c, "2");
+						score += evaluatePosition(r, c, "2");
 					}
 					else if (state.Substring(i, 1).Equals("1"))
 					{
-						score -= 2 * evaluatePosition(state, r, c, "1");
+						score -= evaluatePosition(r, c, "1");
 					}
 				}
 			}
 			return score;
 		}
 
-		int evaluatePosition(string state, int r, int c, string color)
+		int evaluatePosition(int r, int c, string color)
 		{
 			int i = index(r, c);
 			(int, int) pos;
@@ -594,6 +594,8 @@ namespace QueueBits
 
 				r_counter++;
 				i++;
+				if ((i % 7) == 0)
+					i = state.Length;
 			}
 			r_counter = Mathf.Min(4, r_counter); // if 5 or more connected, goes to 4.
 			num_connected[r_counter - 1]++;
@@ -630,6 +632,8 @@ namespace QueueBits
 
 				rd_counter++;
 				i += 8;
+				if ((i % 7) == 0)
+					i = state.Length;
 			}
 			rd_counter = Mathf.Min(4, rd_counter);
 			num_connected[rd_counter - 1]++;
@@ -648,24 +652,104 @@ namespace QueueBits
 
 				ld_counter++;
 				i += 6;
+				if ((i % 7) == 6)
+					i = state.Length;
 			}
 			ld_counter = Mathf.Min(4, ld_counter);
 			num_connected[ld_counter - 1]++;
 
-			/*
-			//calculating depth
-			int depth = 0;
-			for(int ix=0;ix<numColumns*numRows;ix++)
-			{
-				if (state[ix] == '0')
-					depth++;
-				if (mydata.placement_order[ix] == 0)
-					depth--;
-            }
-			//lower depth = higher score for 4 in a row -> prioritizing faster win
-			*/
 			int score = 100 * num_connected[3] + 20 * num_connected[2] + 3 * num_connected[1] + 10 * hasCenter;
 			return score;
+		}
+
+		bool isWin(int r, int c, string color)
+		{
+			int i = index(r, c);
+			// look right
+			int r_counter = 0;
+			while (i < state.Length && state.Substring(i, 1).Equals(color))
+			{
+				r_counter++;
+				i++;
+				if ((i % 7) == 0)
+					i = state.Length;
+			}
+
+			i = index(r, c);
+			while (i >=0 && state.Substring(i, 1).Equals(color))
+			{
+				r_counter++;
+				i--;
+				if ((i % 7) == 6)
+					i = -1;
+			}
+			r_counter--; // center val counted twice
+			if (r_counter >= 4)
+				return true;
+
+			// look down
+			i = index(r, c);
+			int d_counter = 0;
+			while (i < state.Length && state.Substring(i, 1).Equals(color))
+			{
+				d_counter++;
+				i += 7;
+			}
+			i = index(r, c);
+			while (i >=0 && state.Substring(i, 1).Equals(color))
+			{
+				d_counter++;
+				i -= 7;
+			}
+			d_counter--; //center val counted twice
+			if (d_counter >= 4)
+				return true;
+
+			// look diagonal right-down
+			i = index(r, c);
+			int rd_counter = 0;
+			while (i < state.Length && state.Substring(i, 1).Equals(color))
+			{
+				rd_counter++;
+				i += 8;
+				if ((i % 7) == 0)
+					i = state.Length;
+			}
+			i = index(r, c);
+			while (i >=0 && state.Substring(i, 1).Equals(color))
+			{
+				rd_counter++;
+				i -= 8;
+				if ((i % 7) == 6)
+					i = -1;
+			}
+			rd_counter--;
+			if (rd_counter >= 4)
+				return true;
+
+			// look diagonal left-down
+			i = index(r, c);
+			int ld_counter = 0;
+			while (i < state.Length && state.Substring(i, 1).Equals(color))
+			{
+				ld_counter++;
+				i += 6;
+				if ((i % 7) == 6)
+					i = state.Length;
+			}
+			i = index(r, c);
+			while (i >= 0 && state.Substring(i, 1).Equals(color))
+			{
+				ld_counter++;
+				i -= 6;
+				if ((i % 7) == 0)
+					i = -1;
+			}
+			ld_counter--;
+			if (ld_counter >= 4)
+				return true;
+
+			return false;
 		}
 
 		List<int> getMoves(int[] cols)
@@ -708,7 +792,7 @@ namespace QueueBits
 
 		}
 
-		int findBestMove(string state, int[] cols)
+		int findBestMove(int[] cols)
 		{
 			int bestVal = int.MinValue;
 			int bestMove = -1;
@@ -717,7 +801,13 @@ namespace QueueBits
 			foreach (int column in moves)
 			{
 				playMove(column, "2");
-				int value = minimax(0, 4, false);
+				if(isWin(colPointers[column]+1,column,"2"))
+				{
+					reverseMove(column);
+					return column;
+				}
+				int value = minimax(0, 3, false);
+				Debug.Log("Column " + column + ": " + value);
 				if (value > bestVal)
 				{
 					bestVal = value;
@@ -733,7 +823,7 @@ namespace QueueBits
 			List<int> moves = getMoves(colPointers);
 
 			if (moves.Count == 0 || depth == maxDepth)
-				return evaluateState(state);
+				return evaluateState();
 
 			if (isMaximizing)
 			{
@@ -880,7 +970,7 @@ namespace QueueBits
 
 				if (moves.Count > 0)
 				{
-					int column = findBestMove(state, colPointers);
+					int column = findBestMove(colPointers);
 
 					spawnPos = new Vector3(column, 0, 0);
 				}
