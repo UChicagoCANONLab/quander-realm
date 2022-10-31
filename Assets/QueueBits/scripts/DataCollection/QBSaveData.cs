@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 // Firebase non-research load/save data
 
@@ -9,7 +9,7 @@ namespace QueueBits
     {
         public Wrapper.Game gameID = Wrapper.Game.QueueBits;
 
-        // star system
+        // star system testing
         public int[] starSystem = new int[]
         {
             0, // level select

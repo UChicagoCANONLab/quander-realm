@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace QueueBits
 {
-	public class Level2 : MonoBehaviour 
+	public class Level2 : MonoBehaviour
 	{
 		enum Piece
 		{
@@ -24,7 +24,7 @@ namespace QueueBits
 
 		[Tooltip("Allow diagonally connected Pieces?")]
 		public bool allowDiagonally = true;
-		
+
 		public float dropTime = 4f;
 
 		// star system
@@ -52,7 +52,7 @@ namespace QueueBits
 		public GameObject btnPlayAgain;
 		bool btnPlayAgainTouching = false;
 		Color btnPlayAgainOrigColor;
-		Color btnPlayAgainHoverColor = new Color(255, 143,4);
+		Color btnPlayAgainHoverColor = new Color(255, 143, 4);
 
 		public GameObject btnNextLevel;
 		bool btnNextLevelTouching = false;
@@ -72,27 +72,27 @@ namespace QueueBits
 
 		bool isPlayersTurn = true;
 		bool isLoading = true;
-		bool isDropping = false; 
+		bool isDropping = false;
 		bool mouseButtonPressed = false;
 
 		bool gameOver = false;
 		bool isCheckingForWinner = false;
 
 		string state = "000000000000000000000000000000000000000000";
-		int[] colPointers = {5, 5, 5, 5, 5, 5, 5};
+		int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
 		HashSet<(int, int)> visited = new HashSet<(int, int)>();
 
 		// dialogue
 		bool dialoguePhase = false;
 
-		/* Shivani Puli Data Collection
+		// Shivani Puli Data Collection
 		int turn = 0;
 		Data mydata = new Data();
-		*/
+
 
 
 		// Use this for initialization
-		void Start () 
+		void Start()
 		{
 			ShowStarSystem();
 
@@ -106,8 +106,9 @@ namespace QueueBits
 				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
 			}
 
-			/*Shivani Puli Data Collection
+			//Shivani Puli Data Collection
 			mydata.level = 2;
+			mydata.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
 			mydata.prefilledBoard = -1;
 			mydata.placement_order = new int[numColumns * numRows];
 			mydata.superposition = new int[numColumns * numRows];
@@ -121,14 +122,14 @@ namespace QueueBits
 				mydata.outcome[i] = 0;
 
 			}
-			*/
 
-			int max = Mathf.Max (numRows, numColumns);
 
-			if(numPiecesToWin > max)
+			int max = Mathf.Max(numRows, numColumns);
+
+			if (numPiecesToWin > max)
 				numPiecesToWin = max;
 
-			CreateField ();
+			CreateField();
 
 			GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
 			levelText.GetComponent<TextMesh>().text = "Level 2";
@@ -154,8 +155,8 @@ namespace QueueBits
 
 			isLoading = true;
 
-			gameObjectField = GameObject.Find ("Field");
-			if(gameObjectField != null)
+			gameObjectField = GameObject.Find("Field");
+			if (gameObjectField != null)
 			{
 				DestroyImmediate(gameObjectField);
 			}
@@ -169,7 +170,7 @@ namespace QueueBits
 
 			for (int x = 0; x < numColumns; x++)
 			{
-				for(int y = 0; y < numRows; y++)
+				for (int y = 0; y < numRows; y++)
 				{
 					field[x, y] = (int)Piece.Empty;
 				}
@@ -180,10 +181,10 @@ namespace QueueBits
 
 			// center camera
 			Camera.main.transform.position = new Vector3(
-				(numColumns-1) / 2.0f, -((numRows-1) / 2.0f), Camera.main.transform.position.z);
+				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f), Camera.main.transform.position.z);
 
 			winningText.transform.position = new Vector3(
-				(numColumns-1) / 2.0f, -((numRows-1) / 2.0f) + 0.2f, winningText.transform.position.z);
+				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
 
 			btnNextLevel.transform.position = new Vector3(
 	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnNextLevel.transform.position.z);
@@ -193,20 +194,20 @@ namespace QueueBits
 		}
 
 		int index(int r, int c)
-        {
+		{
 			int i = r * 7 + c;
 			return i;
-        }
+		}
 
 		(int, int) reverse_index(int i)
-        {
+		{
 			int r = i / 7;
 			int c = i % 7;
 			return (r, c);
-        }
+		}
 
-		void printState(string state)
-        {
+		void printState()
+		{
 			string p_state = "";
 			for (int r = 0; r < 6; r++)
 			{
@@ -214,33 +215,33 @@ namespace QueueBits
 				p_state += state.Substring(i, 7) + "\n";
 			}
 			Debug.Log(p_state);
-        }
+		}
 
-		int evaluateState(string state)
-        {
+		int evaluateState()
+		{
 			int score = 0;
 			visited.Clear();
 
 			for (int r = 0; r < 6; r++)
-            {
+			{
 				for (int c = 0; c < 7; c++)
-                {
+				{
 					int i = index(r, c);
-					if (state.Substring(i,1).Equals("2")) // && !visited.Contains((r,c)) -- adding this causes missed connections, but speed?
+					if (state.Substring(i, 1).Equals("2")) // && !visited.Contains((r,c)) -- adding this causes missed connections, but speed?
 					{
-						score += evaluatePosition(state, r, c, "2");
-                    }
-                    else if (state.Substring(i, 1).Equals("1"))
-                    {
-                        score -= 2 * evaluatePosition(state, r, c, "1");
-                    }
-                }
-            }
+						score += evaluatePosition(r, c, "2");
+					}
+					else if (state.Substring(i, 1).Equals("1"))
+					{
+						score -= evaluatePosition(r, c, "1");
+					}
+				}
+			}
 			return score;
-        }
+		}
 
-		int evaluatePosition(string state, int r, int c, string color)
-        {
+		int evaluatePosition(int r, int c, string color)
+		{
 			int i = index(r, c);
 			(int, int) pos;
 
@@ -250,7 +251,7 @@ namespace QueueBits
 			// look right
 			int r_counter = 0;
 			while(i < state.Length && state.Substring(i, 1).Equals(color))
-            {
+			{
 				pos = reverse_index(i);
 				visited.Add(pos);
 
@@ -260,9 +261,11 @@ namespace QueueBits
 
 				r_counter++;
 				i++;
-            }
+				if ((i % 7) == 0)
+					i = state.Length;
+			}
 			r_counter = Mathf.Min(4, r_counter); // if 5 or more connected, goes to 4.
-			num_connected[r_counter-1]++;
+			num_connected[r_counter - 1]++;
 
 			// look down
 			i = index(r, c);
@@ -280,7 +283,7 @@ namespace QueueBits
 				i += 7;
 			}
 			d_counter = Mathf.Min(4, d_counter);
-			num_connected[d_counter-1]++;
+			num_connected[d_counter - 1]++;
 
 			// look diagonal right-down
 			i = index(r, c);
@@ -296,9 +299,11 @@ namespace QueueBits
 
 				rd_counter++;
 				i += 8;
+				if ((i % 7) == 0)
+					i = state.Length;
 			}
 			rd_counter = Mathf.Min(4, rd_counter);
-			num_connected[rd_counter-1]++;
+			num_connected[rd_counter - 1]++;
 
 			// look diagonal left-down
 			i = index(r, c);
@@ -314,27 +319,29 @@ namespace QueueBits
 
 				ld_counter++;
 				i += 6;
+				if ((i % 7) == 6)
+					i = state.Length;
 			}
 			ld_counter = Mathf.Min(4, ld_counter);
-			num_connected[ld_counter-1]++;
+			num_connected[ld_counter - 1]++;
 
 			int score = 100 * num_connected[3] + 20 * num_connected[2] + 3 * num_connected[1] + 10 * hasCenter;
 			return score;
-        }
+		}
 
 		List<int> getMoves(int[] cols)
-        {
+		{
 			List<int> possCols = new List<int>();
-			for(int i = 0; i < cols.Length; i++)
-            {
+			for (int i = 0; i < cols.Length; i++)
+			{
 				if (cols[i] != -1)
 					possCols.Add(i);
-            }
+			}
 			return possCols;
-        }
+		}
 
 		void playMove(int column, string color)
-        {
+		{
 			int r = colPointers[column];
 			colPointers[column] -= 1;
 
@@ -356,51 +363,52 @@ namespace QueueBits
 			if (i == 0)
 				state = "0" + state.Substring(1); //prevents substring with length 0 error
 			else
-            {
+			{
 				state = state.Substring(0, i) + "0" + state.Substring(i + 1);
 			}
 
 		}
 
-		int findBestMove(string state, int[] cols)
-        {
+		int findBestMove(int[] cols)
+		{
 			int bestVal = int.MinValue;
 			int bestMove = -1;
 
 			List<int> moves = getMoves(cols);
-            foreach (int column in moves)
-            {
-                playMove(column, "2");
-				int value = minimax(0, 4, false);
+			foreach (int column in moves)
+			{
+				playMove(column, "2");
+				int value = minimax(0, 3, false); //changed to test
+				Debug.Log("Column " + column + ": " + value);
 				if (value > bestVal)
-                {
+				{
 					bestVal = value;
 					bestMove = column;
-                }
+				}
 				reverseMove(column);
-            }
-            return bestMove;
-        }
+			}
+			return bestMove;
+		}
 
 		int minimax(int depth, int maxDepth, bool isMaximizing)
-        {
+		{
 			List<int> moves = getMoves(colPointers);
 
 			if (moves.Count == 0 || depth == maxDepth)
-				return evaluateState(state);
+				return evaluateState();
 
 			if (isMaximizing)
-            {
+			{
 				int bestVal = int.MinValue;
 				foreach (int column in moves)
-                {
+				{
 					playMove(column, "2");
 					int value = minimax(depth + 1, maxDepth, !isMaximizing);
 					bestVal = Mathf.Max(bestVal, value);
 					reverseMove(column);
 				}
 				return bestVal;
-            }
+			}
 
 			else
 			{
@@ -415,7 +423,7 @@ namespace QueueBits
 				return bestVal;
 			}
 
-        }
+		}
 		/// <summary>
 		/// Spawns a piece at mouse position above the first row
 		/// </summary>
@@ -423,16 +431,16 @@ namespace QueueBits
 		GameObject SpawnPiece()
 		{
 			Vector3 spawnPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-					
-			if(!isPlayersTurn)
+
+			if (!isPlayersTurn)
 			{
 				List<int> moves = GetPossibleMoves();
 
-				if(moves.Count > 0)
+				if (moves.Count > 0)
 				{
-					int column = findBestMove(state, colPointers);
+					int column = findBestMove(colPointers);
 
-					/*Shivani Puli changed for data collection
+					//Shivani Puli changed for data collection
 					int r = colPointers[column];
 					int index = r * numColumns + column;
 					turn++;
@@ -440,7 +448,7 @@ namespace QueueBits
 					mydata.superposition[index] = 100;
 					mydata.reveal_order[index] = turn;
 					mydata.outcome[index] = 2;
-					*/
+
 					playMove(column, "2");
 
 					spawnPos = new Vector3(column, 0, 0);
@@ -451,7 +459,7 @@ namespace QueueBits
 			GameObject g = Instantiate(
 					isPlayersTurn ? pieceBlue : pieceRed, // is players turn = spawn blue, else spawn red
 					new Vector3(
-					Mathf.Clamp(spawnPos.x, 0, numColumns-1), 
+					Mathf.Clamp(spawnPos.x, 0, numColumns - 1),
 					gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
 					Quaternion.identity) as GameObject;
 
@@ -492,7 +500,7 @@ namespace QueueBits
 			RaycastHit hit;
 			//ray shooting out of the camera from where the mouse is
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			
+
 			if (Physics.Raycast(ray, out hit) && hit.collider.name == btnPlayAgain.name)
 			{
 				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainHoverColor;
@@ -500,7 +508,7 @@ namespace QueueBits
 				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnPlayAgainTouching == false)
 				{
 					btnPlayAgainTouching = true;
-					
+
 					//CreateField();
 					Application.LoadLevel(0);
 				}
@@ -509,8 +517,8 @@ namespace QueueBits
 			{
 				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainOrigColor;
 			}
-			
-			if(Input.touchCount == 0)
+
+			if (Input.touchCount == 0)
 			{
 				btnPlayAgainTouching = false;
 			}
@@ -541,9 +549,9 @@ namespace QueueBits
 		}
 
 		// Update is called once per frame
-		void Update () 
+		void Update()
 		{
-			if(isLoading)
+			if (isLoading)
 				return;
 
 			if (dialoguePhase)
@@ -552,7 +560,7 @@ namespace QueueBits
 			if (isCheckingForWinner)
 				return;
 
-			if(gameOver)
+			if (gameOver)
 			{
 				winningText.SetActive(true);
 				btnPlayAgain.SetActive(false);
@@ -571,9 +579,9 @@ namespace QueueBits
 				return;
 			}
 
-			if(isPlayersTurn)
+			if (isPlayersTurn)
 			{
-				if(gameObjectTurn == null)
+				if (gameObjectTurn == null)
 				{
 					gameObjectTurn = SpawnPiece();
 				}
@@ -582,21 +590,21 @@ namespace QueueBits
 					// update the objects position
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					gameObjectTurn.transform.position = new Vector3(
-						Mathf.Clamp(pos.x, 0, numColumns-1), 
+						Mathf.Clamp(pos.x, 0, numColumns - 1),
 						gameObjectField.transform.position.y + 1, 0);
 
 					// click the left mouse button to drop the piece into the selected column
-					if(Input.GetMouseButtonDown(0) && !mouseButtonPressed && !isDropping)
+					if (Input.GetMouseButtonDown(0) && !mouseButtonPressed && !isDropping)
 					{
-						mouseButtonPressed= true;
+						mouseButtonPressed = true;
 
 						Vector3 startPosition = gameObjectTurn.transform.position;
 						int column = Mathf.RoundToInt(startPosition.x);
 
 						List<int> moves = GetPossibleMoves();
 						if (moves.Contains(column))
-                        {
-							/*Shivani Puli Data Collection
+						{
+							//Shivani Puli Data Collection
 							int r = colPointers[column];
 							int index = r * numColumns + column;
 							turn++;
@@ -604,7 +612,7 @@ namespace QueueBits
 							mydata.superposition[index] = 100;
 							mydata.reveal_order[index] = turn;
 							mydata.outcome[index] = 1;
-							*/
+
 
 							playMove(column, "1");
 							StartCoroutine(dropPiece(gameObjectTurn));
@@ -618,13 +626,13 @@ namespace QueueBits
 			}
 			else
 			{
-				if(gameObjectTurn == null)
+				if (gameObjectTurn == null)
 				{
 					gameObjectTurn = SpawnPiece();
 				}
 				else
 				{
-					if(!isDropping)
+					if (!isDropping)
 						StartCoroutine(dropPiece(gameObjectTurn));
 				}
 			}
@@ -639,9 +647,9 @@ namespace QueueBits
 			List<int> possibleMoves = new List<int>();
 			for (int x = 0; x < numColumns; x++)
 			{
-				for(int y = numRows - 1; y >= 0; y--)
+				for (int y = numRows - 1; y >= 0; y--)
 				{
-					if(field[x, y] == (int)Piece.Empty)
+					if (field[x, y] == (int)Piece.Empty)
 					{
 						possibleMoves.Add(x);
 						break;
@@ -669,9 +677,9 @@ namespace QueueBits
 
 			// is there a free cell in the selected column?
 			bool foundFreeCell = false;
-			for(int i = numRows-1; i >= 0; i--)
+			for (int i = numRows - 1; i >= 0; i--)
 			{
-				if(field[x, i] == 0)
+				if (field[x, i] == 0)
 				{
 					foundFreeCell = true;
 					field[x, i] = isPlayersTurn ? (int)Piece.Blue : (int)Piece.Red;
@@ -681,20 +689,20 @@ namespace QueueBits
 				}
 			}
 
-			if(foundFreeCell)
+			if (foundFreeCell)
 			{
 				// Instantiate a new Piece, disable the temporary
-				GameObject g = Instantiate (gObject) as GameObject;
+				GameObject g = Instantiate(gObject) as GameObject;
 				gameObjectTurn.GetComponent<Renderer>().enabled = false;
 
 				float distance = Vector3.Distance(startPosition, endPosition);
 
 				float t = 0;
-				while(t < 1)
+				while (t < 1)
 				{
 					t += Time.deltaTime * dropTime * ((numRows - distance) + 1);
 
-					g.transform.position = Vector3.Lerp (startPosition, endPosition, t);
+					g.transform.position = Vector3.Lerp(startPosition, endPosition, t);
 					yield return null;
 				}
 
@@ -707,7 +715,7 @@ namespace QueueBits
 				StartCoroutine(Won());
 
 				// wait until winning check is done
-				while(isCheckingForWinner)
+				while (isCheckingForWinner)
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
@@ -725,29 +733,29 @@ namespace QueueBits
 		{
 			isCheckingForWinner = true;
 
-			for(int x = 0; x < numColumns; x++)
+			for (int x = 0; x < numColumns; x++)
 			{
-				for(int y = 0; y < numRows; y++)
+				for (int y = 0; y < numRows; y++)
 				{
 					// Get the Laymask to Raycast against, if its Players turn only include
 					// Layermask Blue otherwise Layermask Red
 					int layermask = isPlayersTurn ? (1 << 8) : (1 << 9);
 
 					// If its Players turn ignore red as Starting piece and wise versa
-					if(field[x, y] != (isPlayersTurn ? (int)Piece.Blue : (int)Piece.Red))
+					if (field[x, y] != (isPlayersTurn ? (int)Piece.Blue : (int)Piece.Red))
 					{
 						continue;
 					}
 
 					// shoot a ray of length 'numPiecesToWin - 1' to the right to test horizontally
 					RaycastHit[] hitsHorz = Physics.RaycastAll(
-						new Vector3(x, y * -1, 0), 
-						Vector3.right, 
-						numPiecesToWin - 1, 
+						new Vector3(x, y * -1, 0),
+						Vector3.right,
+						numPiecesToWin - 1,
 						layermask);
 
 					// return true (won) if enough hits
-					if(hitsHorz.Length == numPiecesToWin - 1)
+					if (hitsHorz.Length == numPiecesToWin - 1)
 					{
 						gameOver = true;
 						break;
@@ -755,42 +763,42 @@ namespace QueueBits
 
 					// shoot a ray up to test vertically
 					RaycastHit[] hitsVert = Physics.RaycastAll(
-						new Vector3(x, y * -1, 0), 
-						Vector3.up, 
-						numPiecesToWin - 1, 
+						new Vector3(x, y * -1, 0),
+						Vector3.up,
+						numPiecesToWin - 1,
 						layermask);
-					
-					if(hitsVert.Length == numPiecesToWin - 1)
+
+					if (hitsVert.Length == numPiecesToWin - 1)
 					{
 						gameOver = true;
 						break;
 					}
 
 					// test diagonally
-					if(allowDiagonally)
+					if (allowDiagonally)
 					{
 						// calculate the length of the ray to shoot diagonally
 						float length = Vector2.Distance(new Vector2(0, 0), new Vector2(numPiecesToWin - 1, numPiecesToWin - 1));
 
 						RaycastHit[] hitsDiaLeft = Physics.RaycastAll(
-							new Vector3(x, y * -1, 0), 
-							new Vector3(-1 , 1), 
-							length, 
+							new Vector3(x, y * -1, 0),
+							new Vector3(-1, 1),
+							length,
 							layermask);
-						
-						if(hitsDiaLeft.Length == numPiecesToWin - 1)
+
+						if (hitsDiaLeft.Length == numPiecesToWin - 1)
 						{
 							gameOver = true;
 							break;
 						}
 
 						RaycastHit[] hitsDiaRight = Physics.RaycastAll(
-							new Vector3(x, y * -1, 0), 
-							new Vector3(1 , 1), 
-							length, 
+							new Vector3(x, y * -1, 0),
+							new Vector3(1, 1),
+							length,
 							layermask);
-						
-						if(hitsDiaRight.Length == numPiecesToWin - 1)
+
+						if (hitsDiaRight.Length == numPiecesToWin - 1)
 						{
 							gameOver = true;
 							break;
@@ -804,16 +812,8 @@ namespace QueueBits
 			}
 
 			// if Game Over update the winning text to show who has won
-			if(gameOver == true)
+			if (gameOver == true)
 			{
-				/*Shivani Puli Data Collection -> store winner
-				if (isPlayersTurn)
-					mydata.winner = 1;
-				else
-					mydata.winner = 2;
-				saveData.Save(mydata);
-				*/
-
 				// star system
 				if (!starUpdated)
 				{
@@ -835,21 +835,29 @@ namespace QueueBits
 				winningText.GetComponent<TextMesh>().text = isPlayersTurn ? playerWonText : playerLoseText;
 				GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
 
+				// Shivani Puli Data Collection -> store winner
+				if (isPlayersTurn)
+					mydata.winner = 1;
+				else
+					mydata.winner = 2;
+				saveData.Save(mydata);
+
+
 				// Reward System
 				if (GameManager.rewardSystem[2])
 				{
 					Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 2);
 				}
 			}
-			else 
+			else
 			{
 				// check if there are any empty cells left, if not set game over and update text to show a draw
-				if(!FieldContainsEmptyCell())
+				if (!FieldContainsEmptyCell())
 				{
-					/*Shivani Puli Data Collection
+					//Shivani Puli Data Collection
 					mydata.winner = 0;
 					saveData.Save(mydata);
-					*/
+
 
 					// star system
 					if (!starUpdated)
@@ -891,11 +899,11 @@ namespace QueueBits
 		/// <returns><c>true</c>, if it contains empty cell, <c>false</c> otherwise.</returns>
 		bool FieldContainsEmptyCell()
 		{
-			for(int x = 0; x < numColumns; x++)
+			for (int x = 0; x < numColumns; x++)
 			{
-				for(int y = 0; y < numRows; y++)
+				for (int y = 0; y < numRows; y++)
 				{
-					if(field[x, y] == (int)Piece.Empty)
+					if (field[x, y] == (int)Piece.Empty)
 						return true;
 				}
 			}

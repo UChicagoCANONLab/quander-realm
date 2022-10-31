@@ -19,6 +19,7 @@ namespace QueueBits
         public GameObject iconStar3;
         public GameObject thisCanvas;
         public Vector2 iconSpacing;
+        public Sprite[] levelNumArray = new Sprite[15];
         private Rect panelDimensions;
         private Rect iconDimensions;
         private int amountPerPage;
@@ -41,7 +42,8 @@ namespace QueueBits
             int maxInARow = Mathf.FloorToInt((panelDimensions.width + iconSpacing.x) / (iconDimensions.width + iconSpacing.x));
             int maxInACol = Mathf.FloorToInt((panelDimensions.height + iconSpacing.y) / (iconDimensions.height + iconSpacing.y));
             amountPerPage = maxInARow * maxInACol;
-            int totalPages = Mathf.CeilToInt((float)(GameManager.saveData.starSystem.Length - 1)/ amountPerPage);
+            // int totalPages = Mathf.CeilToInt((float)(GameManager.saveData.starSystem.Length - 1)/ amountPerPage);
+            int totalPages = 1;
             LoadPanels(totalPages);
         }
 
@@ -65,9 +67,11 @@ namespace QueueBits
         void SetUpGrid(GameObject panel)
         {
             GridLayoutGroup grid = panel.AddComponent<GridLayoutGroup>();
-            grid.cellSize = new Vector2(iconDimensions.width, iconDimensions.height);
+            // grid.cellSize = new Vector2(iconDimensions.width, iconDimensions.height);
+            grid.cellSize = new Vector2(100,100);
             grid.childAlignment = TextAnchor.MiddleCenter;
-            grid.spacing = iconSpacing;
+            // grid.spacing = iconSpacing;
+            grid.spacing = new Vector2(50,20);
         }
         void LoadIcons(int numberOfIcons, GameObject parentObject)
         {
@@ -95,7 +99,11 @@ namespace QueueBits
                 icon.transform.SetParent(thisCanvas.transform, false);
                 icon.transform.SetParent(parentObject.transform);
                 icon.name = "Level" + i;
-                icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
+                // new icon prefabs here
+                Image levelNumberObj = icon.transform.Find("LevelNum").GetComponent<Image>();
+                levelNumberObj.sprite = levelNumArray[i-1];
+
+                // icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
                 string chosenLevel = "QB_Level"+i;
                 icon.GetComponent<Button>().onClick.AddListener(delegate { SceneManager.LoadScene(chosenLevel); });
             }
