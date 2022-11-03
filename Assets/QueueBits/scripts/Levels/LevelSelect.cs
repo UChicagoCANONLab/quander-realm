@@ -73,6 +73,16 @@ namespace QueueBits
             // grid.spacing = iconSpacing;
             grid.spacing = new Vector2(45,20);
         }
+
+
+        void loadLevel(int index)
+        {
+            //Debug.Log("Loading scene " + chosenLevel + "with index" + index);
+            GameManager.saveData.level = index;
+            string chosenLevel = "QB_Level" + index;
+            SceneManager.LoadScene(chosenLevel);
+        }
+
         void LoadIcons(int numberOfIcons, GameObject parentObject)
         {
             for (int i = 1; i <= numberOfIcons; i++)
@@ -111,8 +121,10 @@ namespace QueueBits
                 }
 
                 // icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
-                string chosenLevel = "QB_Level"+i;
-                icon.GetComponent<Button>().onClick.AddListener(delegate { SceneManager.LoadScene(chosenLevel); });
+                //string chosenLevel = "QB_Level"+i;
+                int index = i;
+                //Debug.Log(chosenLevel);
+                icon.GetComponent<Button>().onClick.AddListener(() => loadLevel(index));
             }
         }
 

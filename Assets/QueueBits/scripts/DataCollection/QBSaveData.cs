@@ -50,5 +50,7 @@ namespace QueueBits
             true, // level 14
             true, // level 15
         };
+
+        public int level = -1;
     }
 }
