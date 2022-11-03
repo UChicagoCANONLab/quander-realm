@@ -11,6 +11,7 @@ namespace Labyrinth
         public GameObject winScreen;
         public GameObject gameplayButtons;
         public GameObject gameplayObjects;
+        public GameObject progressBar;
         public GameObject[] starsWon;
 
         public Button[] buttons;
@@ -97,6 +98,8 @@ namespace Labyrinth
             winScreen.SetActive(true);
             gameplayButtons.SetActive(false);
             gameplayObjects.SetActive(false);
+            progressBar.SetActive(false);
+
             starsWon[goalsCollected].SetActive(true);
             // Time.timeScale = 0f;
 
@@ -114,6 +117,8 @@ namespace Labyrinth
             winScreen.SetActive(false);
             gameplayButtons.SetActive(true);
             gameplayObjects.SetActive(true);
+            progressBar.SetActive(true);
+
             starsWon[goalsCollected].SetActive(false);
             Time.timeScale = 1f;
         }
