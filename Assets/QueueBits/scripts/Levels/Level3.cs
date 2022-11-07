@@ -335,6 +335,7 @@ namespace QueueBits
 
 			//Shivani Puli Data Collection
 			mydata.level = 3;
+			mydata.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
 			mydata.prefilledBoard = board_num;
 			mydata.placement_order = new int[numColumns * numRows];
 			mydata.superposition = new int[numColumns * numRows];
@@ -359,13 +360,11 @@ namespace QueueBits
 				{
 					mydata.outcome[index] = 1;
 					playMove(c, "1");
-					//state = state.Substring(0, index) + "1" + state.Substring(index + 1);
 				}
 				else
 				{
 					mydata.outcome[index] = 2;
 					playMove(c, "2");
-					//state = state.Substring(0, index) + "2" + state.Substring(index + 1);
 				}
 			}
 
@@ -559,7 +558,7 @@ namespace QueueBits
 			return (r, c);
 		}
 
-		void printState(string state)
+		void printState()
 		{
 			string p_state = "";
 			for (int r = 0; r < 6; r++)
@@ -570,7 +569,7 @@ namespace QueueBits
 			Debug.Log(p_state);
 		}
 
-		int evaluateState(string state)
+		int evaluateState()
 		{
 			int score = 0;
 			visited.Clear();
@@ -582,11 +581,11 @@ namespace QueueBits
 					int i = index(r, c);
 					if (state.Substring(i, 1).Equals("2")) // && !visited.Contains((r,c)) -- adding this causes missed connections, but speed?
 					{
-						score += evaluatePosition(state, r, c, "2");
+						score += evaluatePosition(r, c, "2");
 					}
 					else if (state.Substring(i, 1).Equals("1"))
 					{
-						score -= 2 * evaluatePosition(state, r, c, "1");
+						score -= evaluatePosition(r, c, "1");
 					}
 				}
 			}
@@ -594,7 +593,7 @@ namespace QueueBits
 		}
 
 
-		int evaluatePosition(string state, int r, int c, string color)
+		int evaluatePosition(int r, int c, string color)
 		{
 			int i = index(r, c);
 			(int, int) pos;
@@ -615,6 +614,8 @@ namespace QueueBits
 
 				r_counter++;
 				i++;
+				if ((i % 7) == 0)
+					i = state.Length;
 			}
 			r_counter = Mathf.Min(4, r_counter); // if 5 or more connected, goes to 4.
 			num_connected[r_counter - 1]++;
@@ -651,6 +652,8 @@ namespace QueueBits
 
 				rd_counter++;
 				i += 8;
+				if((i%7)==0)
+					i = state.Length;
 			}
 			rd_counter = Mathf.Min(4, rd_counter);
 			num_connected[rd_counter - 1]++;
@@ -669,6 +672,8 @@ namespace QueueBits
 
 				ld_counter++;
 				i += 6;
+				if ((i % 7) == 6)
+					i = state.Length;
 			}
 			ld_counter = Mathf.Min(4, ld_counter);
 			num_connected[ld_counter - 1]++;
@@ -717,7 +722,7 @@ namespace QueueBits
 
 		}
 
-		int checkForWinner(string state, int r, int c)
+		int checkForWinner(int r, int c)
         {
 			int i = index(r, c);
 			char color = state[i];
@@ -817,7 +822,7 @@ namespace QueueBits
 			return 0;
 		}
 
-		int findBestMove(string state, int[] cols)
+		int findBestMove(int[] cols)
 		{
 			int bestVal = int.MinValue;
 			int bestMove = -1;
@@ -826,7 +831,8 @@ namespace QueueBits
 			foreach (int column in moves)
 			{
 				playMove(column, "2");
-				int value = minimax(0, 4, false);
+				int value = minimax(0, 3, false);
+				print("Column " + column + ": " + value);
 				if (value > bestVal)
 				{
 					bestVal = value;
@@ -843,12 +849,15 @@ namespace QueueBits
 		int minimax(int depth, int maxDepth, bool isMaximizing)
 		{
 			List<int> moves = getMoves(colPointers);
+			int bestVal;
 
 			if (moves.Count == 0 || depth == maxDepth)
-				return evaluateState(state);
+			{
+				return evaluateState();
+			}
 			if (isMaximizing)
 			{
-				int bestVal = int.MinValue;
+				bestVal = int.MinValue;
 				foreach (int column in moves)
 				{
 					playMove(column, "2");
@@ -856,12 +865,11 @@ namespace QueueBits
 					bestVal = Mathf.Max(bestVal, value);
 					reverseMove(column);
 				}
-				return bestVal;
 			}
 
 			else
 			{
-				int bestVal = int.MaxValue;
+				bestVal = int.MaxValue;
 				foreach (int column in moves)
 				{
 					playMove(column, "1");
@@ -869,9 +877,8 @@ namespace QueueBits
 					bestVal = Mathf.Min(bestVal, value);
 					reverseMove(column);
 				}
-				return bestVal;
 			}
-
+			return bestVal;
 		}
 
 		/// <summary>
@@ -991,7 +998,7 @@ namespace QueueBits
 
 				if (moves.Count > 0)
 				{
-					int column = findBestMove(state, colPointers);
+					int column = findBestMove(colPointers);
 					spawnPos = new Vector3(column, 0, 0);
 				}
 			}
@@ -1499,7 +1506,7 @@ namespace QueueBits
 					mydata.winner = 1;
 				else
 					mydata.winner = 2;
-				//saveData.Save(mydata);
+				saveData.Save(mydata);
 				//Data Collection
 
 				// star system

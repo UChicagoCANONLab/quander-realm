@@ -16,9 +16,14 @@ namespace Labyrinth
         public Button[] buttons;
 
         void Start() {
-            if (DialogueAndRewards.Instance.levelDialogue[-1] == true) {
+            if (SceneManager.GetActiveScene().name == "LA_MainMenu") {
+                Load.LoadGame();
+                DialogueAndRewards.Instance.updateDialogueDict();
+            }
+            if ((SceneManager.GetActiveScene().name == "LA_MainMenu") 
+            && (DialogueAndRewards.Instance.levelDialogue[-1] == false)) {
                 Wrapper.Events.StartDialogueSequence?.Invoke("LA_Intro");
-                DialogueAndRewards.Instance.levelDialogue[-1] = false;
+                DialogueAndRewards.Instance.levelDialogue[-1] = true;
             }
 
             if (buttons == null) {
@@ -50,14 +55,16 @@ namespace Labyrinth
 
         public void LoadLevelSelectMenu() {
             Time.timeScale = 1f;
-            Load.LoadGame();
+            // Load.LoadGame();
+            // DialogueAndRewards.Instance.updateDialogueDict();
 
-            if (DialogueAndRewards.Instance.levelDialogue[0] == true) {
+            /* if (DialogueAndRewards.Instance.levelDialogue[0] == false) {
                 LevelSelect(0);
             }
             else {
                 SceneManager.LoadScene("LA_LevelSelect");
-            }
+            } */
+            SceneManager.LoadScene("LA_LevelSelect");
         }
 
         /* public void InitialLoadLevelSelectMenu() {
@@ -81,10 +88,11 @@ namespace Labyrinth
 
         public void Win(int goalsCollected) {      
             SaveData.Instance.winner = true;
-            if (SaveData.Instance.CurrentLevel > 0) {
+            Save.Instance.SaveGame();
+            /* if (SaveData.Instance.CurrentLevel > 0) {
                 // Save.SaveTTSaveData();
                 Save.Instance.SaveGame();
-            }
+            } */
     
             winScreen.SetActive(true);
             gameplayButtons.SetActive(false);
@@ -97,6 +105,7 @@ namespace Labyrinth
                 DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
             }
             DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
+            // DialogueAndRewards.Instance.updateDialogueDict();
         }
 
         public void UndoWin(int goalsCollected) {
@@ -114,12 +123,13 @@ namespace Labyrinth
             SaveData.Instance.CurrentLevel = sel;
 
             switch(sel) {
-                case 0:
+                /* case 0:
                     DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 0;
                     currScene = "LA_Tutorial";
-                    break;
+                    break; */
                 case < 3:
+                    DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 0;
                     currScene = "LA_4x4";
                     break;

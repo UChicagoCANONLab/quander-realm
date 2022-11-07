@@ -31,6 +31,9 @@ namespace Labyrinth
                 for (int i=0; i<15; i++) {
                     SaveData.Instance.starsPerLevel[i] = Data.Instance.ttSaveData.MaxStarsPerLevel[i];
                 }
+                for (int i=0; i<5; i++) {
+                    SaveData.Instance.dialogueSeen[i] = Data.Instance.ttSaveData.DialogueSeen[i];
+                }
             }
             Data.Instance.researchData = new ResearchData();
             

@@ -1,27 +1,22 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using QueueBits;
 
 // for research data
 //		DO NOT push to firebase and mix with non-research data
 
 public class saveData : MonoBehaviour
 {
-#if UNITY_WEBGL == true && UNITY_EDITOR == false
-	[DllImport("__Internal")]
-	private static extern void QueueBitsGameSaved(string data);
-#endif
-
 	// Use this for initialization
 	public static int Save(Data mydata)
 	{
-		string dataJson = JsonUtility.ToJson(mydata);
-		// Debug.Log(dataJson);
+		ResearchData researchData = new ResearchData();
+		researchData.UpdateResearchData(mydata);
 
-#if UNITY_WEBGL == true && UNITY_EDITOR == false
-		QueueBitsGameSaved(dataJson);
-#endif
-
+		Wrapper.Events.SaveMinigameResearchData?.Invoke(Wrapper.Game.QueueBits, researchData);
+		Debug.Log("Research Data");
+		Debug.Log(researchData.SaveData);
 		return 0;
 	}
 

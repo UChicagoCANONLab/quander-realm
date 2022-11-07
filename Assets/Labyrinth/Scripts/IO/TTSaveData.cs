@@ -15,9 +15,11 @@ namespace Labyrinth
         // public string currentLevelID = string.Empty;
 
         public int[] MaxStarsPerLevel = new int[15];
+        public bool[] DialogueSeen = new bool[7];
 
         public void UpdateTTSaveData(SaveData save) {
             MaxStarsPerLevel = save.starsPerLevel;
+            DialogueSeen = save.dialogueSeen;
             Debug.Log("TTSD: " + TTSDtoString());
         }
 
