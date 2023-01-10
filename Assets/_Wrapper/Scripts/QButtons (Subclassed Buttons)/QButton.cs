@@ -16,6 +16,14 @@ namespace Wrapper
 
         public override void OnPointerClick(PointerEventData eventData)
         {
+            // if clicking reward card, then save card info
+            if (eventData.pointerCurrentRaycast.gameObject.name == "Hitbox") {
+                Debug.Log(eventData.pointerPress);
+                Reward currCard = eventData.pointerPress.GetComponent<Reward>();
+                
+                Debug.Log(currCard.titleFront.text); //name of card
+            }
+
             base.OnPointerClick(eventData);
         }
 
