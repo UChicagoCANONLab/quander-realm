@@ -25,7 +25,7 @@ namespace Wrapper
                 RewardResearchData.Instance.currentCard = currCard.titleFront.text; //name of card
                 RewardResearchData.Instance.timeClicked = DateTime.Now.ToString("HH:mm:ss tt"); //when they clicked it
                 RewardResearchData.Instance.displayType = currCard.displayType.ToString(); //InJournal=select new, Featured=flip
-                // RewardSave.Instance.SaveRewardResearchData();
+                RewardSave.Instance.SaveRewardResearchData();
             }
 
             base.OnPointerClick(eventData);

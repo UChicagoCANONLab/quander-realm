@@ -6,14 +6,11 @@ namespace Wrapper
 {
     public class RewardResearchData : MonoBehaviour
     {
-        public string Username = Wrapper.Events.GetPlayerResearchCode?.Invoke();
-
         public string currentCard;
         public string timeClicked;
         public string displayType;
 
         public static RewardResearchData Instance;
-        public string rewardResearchData = string.Empty;
         
         private void Awake()
         {
@@ -25,9 +22,21 @@ namespace Wrapper
             DontDestroyOnLoad(gameObject);
         }
 
-        public void RewardRDtoString() {
+        public string RewardRDtoString() {
             string jsonData = JsonUtility.ToJson(this);
-            rewardResearchData = jsonData;
+            return jsonData;
+        }
+
+        // DESTROYING INSTANCES WHEN NOT IN USE
+        private void OnEnable() {
+            Wrapper.Events.MinigameClosed += DestroyDataObject;
+        }
+        private void OnDisable(){
+            Wrapper.Events.MinigameClosed -= DestroyDataObject;
+        }
+        private void DestroyDataObject() {
+            Time.timeScale = 1f;
+            Destroy(GameObject.Find("RewardResearchData"));
         }
     }
 }

@@ -19,9 +19,8 @@ namespace Wrapper
 
         public int SaveRewardResearchData() {
             // Save research data
-            RewardResearchData.Instance.RewardRDtoString();
-            Debug.Log(RewardResearchData.Instance.rewardResearchData);
-            Wrapper.Events.SaveMinigameResearchData?.Invoke(Wrapper.Game.Rewards, RewardResearchData.Instance.rewardResearchData);
+            RewardData.Instance.RewardSaveObj.UpdateResearchData(RewardResearchData.Instance);
+            Wrapper.Events.SaveMinigameResearchData?.Invoke(Wrapper.Game.Rewards, RewardData.Instance.RewardSaveObj);
             return 0;
         }
         
