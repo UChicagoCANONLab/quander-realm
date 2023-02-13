@@ -59,8 +59,8 @@ namespace QueueBits
 		public GameObject playerTurnText;
 
 		//Piece Count Displays
-		public GameObject blueTitle;
-		public GameObject redTitle;
+		// public GameObject blueTitle;
+		// public GameObject redTitle;
 
 		//BLUE
 		public GameObject pieceBlue100;
@@ -503,13 +503,13 @@ namespace QueueBits
 			(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
 
 			//Piece Count Displays
-			blueTitle.transform.position = new Vector3(-4, 0, 0);
-			blueTitle.GetComponent<Renderer>().sortingOrder = 10;
-			blueTitle.SetActive(true);
+			// blueTitle.transform.position = new Vector3(-4, 0, 0);
+			// blueTitle.GetComponent<Renderer>().sortingOrder = 10;
+			// blueTitle.SetActive(true);
 
-			redTitle.transform.position = new Vector3(7.75f, 0, 0);
-			redTitle.GetComponent<Renderer>().sortingOrder = 10;
-			redTitle.SetActive(true);
+			// redTitle.transform.position = new Vector3(7.75f, 0, 0);
+			// redTitle.GetComponent<Renderer>().sortingOrder = 10;
+			// redTitle.SetActive(true);
 
 			pieceBlue100 = Instantiate(pieceBlue, new Vector3(-2, -1, -1), Quaternion.identity) as GameObject;
 			pieceBlue100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
@@ -1067,7 +1067,7 @@ namespace QueueBits
                     {
 						SelectTokenText = Instantiate(pieceCounterText, new Vector3(1.5f, 2, -1), Quaternion.identity) as GameObject;
 						SelectTokenText.GetComponent<TextMesh>().text = "SELECT TOKEN";
-						SelectTokenText.GetComponent<TextMesh>().color = Color.blue;
+						SelectTokenText.GetComponent<TextMesh>().color = Color.white;
 						SelectTokenText.SetActive(true);
 
 						if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
