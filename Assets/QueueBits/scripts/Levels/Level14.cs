@@ -1079,8 +1079,8 @@ namespace QueueBits
 			if (isLoading)
 				return;
 
-			if (dialoguePhase)
-				return;
+			// if (dialoguePhase)
+			// 	return;
 
 			if (revealingProbs)
 			{
@@ -1525,7 +1525,7 @@ namespace QueueBits
 					mydata.outcome[index] = 2;
 					field[coord_x, coord_y] = 2;
 				}
-				Debug.Log((coord_x, coord_y));
+				// Debug.Log((coord_x, coord_y));
 
 				isPlayersTurn = !isPlayersTurn;
 				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";

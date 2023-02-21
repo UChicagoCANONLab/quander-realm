@@ -1050,11 +1050,11 @@ namespace QueueBits
 		// Update is called once per frame
 		void Update()
 		{
-			if (isLoading)
+			if (isLoading) 
 				return;
 
-			if (dialoguePhase)
-				return;
+			// if (dialoguePhase)
+			// 	return;
 
 			if (revealingProbs)
 			{
@@ -1421,7 +1421,7 @@ namespace QueueBits
 					if (probDict.ContainsKey(clickedObjectID - 2))
 					{
 						(int probability, (int x, int y)) = probDict[clickedObjectID - 2];
-						Debug.Log(probability + " " + x + " " + y);
+						// Debug.Log(probability + " " + x + " " + y);
 						int p = Random.Range(1, 101);
 						if (p < probability)
 						{
