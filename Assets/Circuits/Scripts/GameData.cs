@@ -141,7 +141,7 @@ public static class GameData
                 return "Circuits_Dialogue";
             case 6:
                 return "Circuits_Dialogue";
-            case 9:
+            case 7: // case 9:
                 return "Circuits_Dialogue";
             case 14:
                 return "Circuits_Dialogue";

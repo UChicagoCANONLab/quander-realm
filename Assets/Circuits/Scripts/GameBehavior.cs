@@ -138,7 +138,9 @@ public class GameBehavior : MonoBehaviour
         }
 
         Image numberObject = GameObject.Find("Canvas/LevelNumber/Number").GetComponent<Image>();
-        numberObject.sprite = numberSprites[GameData.getCurrLevel()];
+        if (GameData.getCurrLevel() < 25) {
+            numberObject.sprite = numberSprites[GameData.getCurrLevel()];
+        }
 
         if (GameData.getCurrLevel() <= 9)
         {
@@ -314,6 +316,11 @@ public class GameBehavior : MonoBehaviour
             allowedSubstitutions = new string[] { "X", "Z", "CZ", "CX" };
             nExpansions = 5 + rng.Next(4);
             tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
+        }
+        else if (GameData.getCurrLevel() > 24)
+        {
+            SceneManager.LoadScene("Menu");
+            return; // sorry david :/
         }
         else
         {

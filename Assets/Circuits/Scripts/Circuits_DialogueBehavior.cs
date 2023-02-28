@@ -26,7 +26,8 @@ public class Circuits_DialogueBehavior : MonoBehaviour
                 Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level6");
                 break;
             //    return "DialogC-02";
-            case 9:
+            // case 9:
+            case 7:
                 Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level9");
                 break;
             case 14:
@@ -65,13 +66,8 @@ public class Circuits_DialogueBehavior : MonoBehaviour
     {
         // UnPause code
         //Debug.Log("Unpaused?");
+
         SceneManager.LoadScene("CircuitsLevelScene");
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
