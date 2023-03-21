@@ -198,14 +198,14 @@ public class LevelGenerator
 
                     reductions.Add(reduction);
                 }
-                if(prevGate == "CX-0" && nextGate == "CX-0") { 
-                    reduction = new Dictionary<Tuple<int, int>, string>();
-                    reduction.Add(prevGateCords, null);
-                    reduction.Add(currCords, "SWAP");
-                    reduction.Add(nextGateCords, null);
+          //      if(prevGate == "CX-0" && nextGate == "CX-0") { 
+          //          reduction = new Dictionary<Tuple<int, int>, string>();
+          //          reduction.Add(prevGateCords, null);
+          //          reduction.Add(currCords, "SWAP");
+          //          reduction.Add(nextGateCords, null);
 
-                    reductions.Add(reduction);
-		        }
+          //          reductions.Add(reduction);
+		        //}
                 break;
 
             default:
