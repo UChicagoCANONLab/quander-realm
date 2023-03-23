@@ -138,11 +138,16 @@ public class GameBehavior : MonoBehaviour
         }
 
         Image numberObject = GameObject.Find("Canvas/LevelNumber/Number").GetComponent<Image>();
-        if (GameData.getCurrLevel() < 25) {
+        if (GameData.getCurrLevel() < CTConstants.N_LEVELS) {
             numberObject.sprite = numberSprites[GameData.getCurrLevel()];
         }
 
-        if (GameData.getCurrLevel() <= 9)
+        if (GameData.getCurrLevel() > CTConstants.N_LEVELS)
+        {
+            SceneManager.LoadScene("Menu");
+            return; // sorry david :/
+        }
+        else if (GameData.getCurrLevel() <= 9)
         {
             String[] empty = new String[0];
             int startingSize = 9;
@@ -317,12 +322,7 @@ public class GameBehavior : MonoBehaviour
             nExpansions = 5 + rng.Next(4);
             tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
         }
-        else if (GameData.getCurrLevel() > 24)
-        {
-            SceneManager.LoadScene("Menu");
-            return; // sorry david :/
-        }
-        else
+	    else
         {
             System.Random rng = new System.Random();
             nLines = rng.Next(6, 7);

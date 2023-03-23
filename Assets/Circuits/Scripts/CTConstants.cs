@@ -7,7 +7,11 @@ public class CTConstants
     public const float camera_scale = 10.75f;
     public const float gridResolution_w = .45f * camera_scale;
     public const float gridResolution_h = .37f * camera_scale;
+#if LITE_VERSION
+    public const int N_LEVELS = 16;
+#else
     public const int N_LEVELS = 25;
+#endif
 }
 
 public struct Gates
