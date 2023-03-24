@@ -67,6 +67,8 @@ namespace Qupcakery
             GridLayoutGroup grid = panel.AddComponent<GridLayoutGroup>();
             grid.cellSize = new Vector2(iconDimensions.width, iconDimensions.height);
             grid.childAlignment = TextAnchor.UpperCenter;
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 9;
         }
 
         void LoadIcons(int numberOfIcons, GameObject parentObject)
