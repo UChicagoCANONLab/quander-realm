@@ -13,6 +13,7 @@ namespace Labyrinth
         public GameObject gameplayObjects;
         public GameObject progressBar;
         public GameObject[] starsWon;
+        public GameObject litePanel;
 
         public Button[] buttons;
 
@@ -45,6 +46,11 @@ namespace Labyrinth
                     GameObject.Find($"StarMessage{i}").GetComponent<StarMessage>().displayStars();
                 }
             }
+#if LITE_VERSION
+    if (litePanel != null) {
+        litePanel.SetActive(true);
+    }
+#endif
         }
 
         void Update() {
