@@ -13,6 +13,7 @@ namespace Qupcakery
         public GameObject levelHolder;
         public GameObject levelIcon;
         public GameObject thisCanvas;
+        public GameObject litePanel;
         public int numberOfLevels;
 
         public Sprite[] levelNumbers = new Sprite[27];
@@ -31,6 +32,10 @@ namespace Qupcakery
             }
 
             numberOfLevels = GameManagement.Instance.GetTotalLevelCnt();
+
+#if LITE_VERSION
+    litePanel.SetActive(true);
+#endif
 
             panelDimensions = levelHolder.GetComponent<RectTransform>().rect;
             iconDimensions = levelIcon.GetComponent<RectTransform>().rect;

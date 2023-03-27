@@ -31,10 +31,11 @@ namespace Qupcakery
                 if (GameManagement.Instance.game.gameStat.MaxLevelCompleted >= 1) {
                     IntroPlayed = true;
                 }
-                else if (GameManagement.Instance.game.gameStat.MaxLevelCompleted
-                == GameManagement.Instance.GetTotalLevelCnt()) {
+            }
+            else if (GameManagement.Instance.game.gameStat.MaxLevelCompleted
+            == GameManagement.Instance.GetTotalLevelCnt()) 
+            {
                     OutroPlayed = true;
-                }
             }
             else
             {             
