@@ -20,6 +20,8 @@ namespace QueueBits
         public GameObject thisCanvas;
         public Vector2 iconSpacing;
         public Sprite[] levelNumArray = new Sprite[15];
+        public GameObject litePanel;
+
         private Rect panelDimensions;
         private Rect iconDimensions;
         private int amountPerPage;
@@ -57,9 +59,16 @@ namespace QueueBits
                 panel.transform.SetParent(thisCanvas.transform, false);
                 panel.transform.SetParent(levelHolder.transform);
                 panel.name = "Page-" + i;
-                panel.GetComponent<RectTransform>().localPosition = new Vector2(panelDimensions.width * (i - 1), 0);
+                // panel.GetComponent<RectTransform>().localPosition = new Vector2(panelDimensions.width * (i - 1), 0);
+                panel.GetComponent<RectTransform>().offsetMax = new Vector2(0, 50);
                 SetUpGrid(panel);
-                int numberOfIcons = i == numberOfPanels ? (GameManager.saveData.starSystem.Length - 1) - currentLevelCount : amountPerPage;
+#if LITE_VERSION
+    int numberOfIcons = 8;
+    litePanel.SetActive(true);
+#else
+    int numberOfIcons = 15;
+#endif
+                // int numberOfIcons = i == numberOfPanels ? (GameManager.saveData.starSystem.Length - 1) - currentLevelCount : amountPerPage;
                 LoadIcons(numberOfIcons, panel);
             }
             Destroy(panelClone);
@@ -69,7 +78,7 @@ namespace QueueBits
             GridLayoutGroup grid = panel.AddComponent<GridLayoutGroup>();
             // grid.cellSize = new Vector2(iconDimensions.width, iconDimensions.height);
             grid.cellSize = new Vector2(100,100);
-            grid.childAlignment = TextAnchor.MiddleCenter;
+            grid.childAlignment = TextAnchor.UpperCenter;
             // grid.spacing = iconSpacing;
             grid.spacing = new Vector2(45,20);
         }
