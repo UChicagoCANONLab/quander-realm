@@ -8,8 +8,14 @@ namespace Qupcakery
     public static class TutorialManager
     {
         public static bool IntroPlayed = false; 
+        public static bool OutroPlayed = false;
         public static bool[] tutorialAvailable = new bool[Constants.MaxLevelCnt+1];
-        static int[] tutorialInd = new int[] { 1, 3, 8, 9, 13, 14, 16, 23, 24 };
+
+#if LITE_VERSION
+    static int[] tutorialInd = new int[] { 1, 3, 8, 9, 13, 14, 16 };
+#else
+    static int[] tutorialInd = new int[] { 1, 3, 8, 9, 13, 14, 16, 23, 24 };
+#endif
 
         public static void UpdateAvailability(int finishedLevel = -1)
         {
@@ -22,8 +28,14 @@ namespace Qupcakery
                     else
                         tutorialAvailable[ind] = false;
                 }
-                if (GameManagement.Instance.game.gameStat.MaxLevelCompleted >= 1)
+                if (GameManagement.Instance.game.gameStat.MaxLevelCompleted >= 1) {
                     IntroPlayed = true;
+                }
+            }
+            else if (GameManagement.Instance.game.gameStat.MaxLevelCompleted
+            == GameManagement.Instance.GetTotalLevelCnt()) 
+            {
+                    OutroPlayed = true;
             }
             else
             {             

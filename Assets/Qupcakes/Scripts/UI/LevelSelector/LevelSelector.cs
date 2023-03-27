@@ -13,6 +13,7 @@ namespace Qupcakery
         public GameObject levelHolder;
         public GameObject levelIcon;
         public GameObject thisCanvas;
+        public GameObject litePanel;
         public int numberOfLevels;
 
         public Sprite[] levelNumbers = new Sprite[27];
@@ -31,6 +32,10 @@ namespace Qupcakery
             }
 
             numberOfLevels = GameManagement.Instance.GetTotalLevelCnt();
+
+#if LITE_VERSION
+    litePanel.SetActive(true);
+#endif
 
             panelDimensions = levelHolder.GetComponent<RectTransform>().rect;
             iconDimensions = levelIcon.GetComponent<RectTransform>().rect;
@@ -67,6 +72,8 @@ namespace Qupcakery
             GridLayoutGroup grid = panel.AddComponent<GridLayoutGroup>();
             grid.cellSize = new Vector2(iconDimensions.width, iconDimensions.height);
             grid.childAlignment = TextAnchor.UpperCenter;
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 9;
         }
 
         void LoadIcons(int numberOfIcons, GameObject parentObject)
