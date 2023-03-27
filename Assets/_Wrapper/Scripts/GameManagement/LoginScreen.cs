@@ -46,7 +46,7 @@ namespace Wrapper
             gameObject.SetActive(false);
         }
 
-        private void SubmitCode()
+        virtual protected void SubmitCode()
         {
             Events.SubmitResearchCode?.Invoke(field.text);
             animator.SetBool("Loading", true);
