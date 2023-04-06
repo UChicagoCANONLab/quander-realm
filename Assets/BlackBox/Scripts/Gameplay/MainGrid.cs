@@ -15,11 +15,19 @@ namespace BlackBox
         private Ray ray = null;
         private NodeCell[,] cellArray = null;
 
+        [SerializeField]
+        float swapDelayTime = 0.8F;
+        [SerializeField]
+        float fogDelayTime = 2F;
+        BeauRoutine.Routine interactionDelayer;
+
         private void OnEnable()
         {
             BBEvents.FireRay += FireRay;
             BBEvents.ToggleFlag += ToggleFlag;
             BBEvents.ClearMarkers += ResetEnergy; // Debug
+            BBEvents.IsInteractionDelayed += IsDelayed;
+            BBEvents.DelayInteraction += DelayInteraction;
         }
 
         private void OnDisable()
@@ -27,6 +35,8 @@ namespace BlackBox
             BBEvents.FireRay -= FireRay;
             BBEvents.ToggleFlag -= ToggleFlag;            
             BBEvents.ClearMarkers -= ResetEnergy; // Debug
+            BBEvents.IsInteractionDelayed -= IsDelayed;
+            BBEvents.DelayInteraction -= DelayInteraction;
         }
 
         public void Create(int width, int height, int numEnergyUnits)
@@ -99,6 +109,7 @@ namespace BlackBox
                 UpdateRayPosition();
 
             BBEvents.SendMollyIn?.Invoke();
+            BBEvents.DelayInteraction?.Invoke(true);
             ray.AddMarkers();
         }
 
@@ -181,6 +192,22 @@ namespace BlackBox
         private void ResetEnergy()
         {
             energyUnits = (int)BBEvents.GetNumEnergyUnits?.Invoke();
+        }
+
+        void DelayInteraction(bool inFog)
+        {
+            interactionDelayer.Replace(Delay(inFog));
+        }
+
+        System.Collections.IEnumerator Delay(bool inFog)
+        {
+            if (inFog) yield return new WaitForSecondsRealtime(fogDelayTime);
+            else yield return new WaitForSecondsRealtime(swapDelayTime);
+        }
+
+        bool IsDelayed()
+        {
+            return interactionDelayer.Exists();
         }
     }
 }

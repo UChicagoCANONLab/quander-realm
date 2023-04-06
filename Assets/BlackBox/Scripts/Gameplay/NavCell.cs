@@ -16,6 +16,9 @@ namespace BlackBox
 
         public override void Interact()
         {
+            if (BBEvents.IsInteractionDelayed.Invoke()) return;
+            BBEvents.DelayInteraction?.Invoke(false);
+
             if (!isMollyAt)
             {
                 BBEvents.DisableMolly?.Invoke();

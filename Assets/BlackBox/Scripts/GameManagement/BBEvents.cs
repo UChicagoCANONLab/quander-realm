@@ -23,6 +23,10 @@ namespace BlackBox
         public static Action DisableMolly;
         public static Action SendMollyIn;
 
+        /// Interaction Delays
+        public static Func<bool> IsInteractionDelayed;
+        public static Action<bool> DelayInteraction;
+
         /// Flags/Lanterns
         public static Action<Vector3Int, bool> ToggleFlag;
         public static Action<GameObject> ReturnLanternHome;
