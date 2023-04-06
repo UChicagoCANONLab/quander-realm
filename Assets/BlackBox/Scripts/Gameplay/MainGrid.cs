@@ -98,6 +98,7 @@ namespace BlackBox
             while (RayInPlay())
                 UpdateRayPosition();
 
+            BBEvents.SendMollyIn?.Invoke();
             ray.AddMarkers();
         }
 
