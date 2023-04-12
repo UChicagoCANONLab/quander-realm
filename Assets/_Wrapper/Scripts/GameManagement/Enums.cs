@@ -25,12 +25,13 @@ namespace Wrapper
     };
 
     /// <summary>
-    /// Translates Step.Forward to +1 and Step.Backward to -1
+    /// Translates Step.Forward to +1 and Step.Backward to -1 | Added Skip for skipping all dialog
     /// </summary>
     public enum Step
     {
         Forward = 1,
-        Backward = -1
+        Backward = -1,
+        Skip = 0
     };
 
     public enum Side

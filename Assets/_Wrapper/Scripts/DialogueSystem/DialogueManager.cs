@@ -74,7 +74,8 @@ namespace Wrapper
 
         private void UpdateDialogueNumber(int step)
         {
-            Events.UpdateDialogueView?.Invoke(currentSequence.GetLine(step), step);
+            if (step == 0) Debug.Log("SKIP DIALOG");
+            else Events.UpdateDialogueView?.Invoke(currentSequence.GetLine(step), step);
         }
 
         private void PrintSequence(string sequenceID)

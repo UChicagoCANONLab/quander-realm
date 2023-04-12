@@ -35,6 +35,7 @@ namespace Wrapper
         public static Action<int> ChangeDialogue;
         public static Action<bool> SwitchNextButton;
         public static Action<bool> TogglePreviousButton;
+        public static Action EnableSkipButton;
 
         /// Reward System ///
         public static Func<string, bool> AddReward;
