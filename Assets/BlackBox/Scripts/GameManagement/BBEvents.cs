@@ -20,6 +20,12 @@ namespace BlackBox
         public static Action<Marker, Dir, Vector3Int> MarkUnits;
         public static Action<Dir, Vector3Int, Dir, Vector3Int, int> MarkDetourUnits;
         public static Action<string, Dir, Vector3Int> ToggleLinkedHighlight;
+        public static Action DisableMolly;
+        public static Action SendMollyIn;
+
+        /// Interaction Delays
+        public static Func<bool> IsInteractionDelayed;
+        public static Action<bool> DelayInteraction;
 
         /// Flags/Lanterns
         public static Action<Vector3Int, bool> ToggleFlag;

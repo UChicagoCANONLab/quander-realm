@@ -37,6 +37,9 @@ namespace BlackBox
                     cellArray[x, y] = navCell;
                 }
             }
+
+            // set Molly on first slot
+            if (direction == Dir.Top) cellArray[0, 0].EnableMolly();
         }
 
         private void MarkUnit(Marker marker, Dir gridDirection, Vector3Int destPosition)
@@ -51,11 +54,11 @@ namespace BlackBox
         {
             //Entry Cell
             if (entryDirection == direction)
-                cellArray[entryPosition.x, entryPosition.y].SetValue(Marker.Detour, detourPairNumber, exitDirection, exitPosition);
+                cellArray[entryPosition.x, entryPosition.y].SetValue(Marker.Detour, detourPairNumber, exitDirection, exitPosition, false);
 
             //Exit Cell
             if (exitDirection == direction)
-                cellArray[exitPosition.x, exitPosition.y].SetValue(Marker.Detour, detourPairNumber, entryDirection, entryPosition);
+                cellArray[exitPosition.x, exitPosition.y].SetValue(Marker.Detour, detourPairNumber, entryDirection, entryPosition, true);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace BlackBox
     {
         [SerializeField] private TextMeshProUGUI markerText = null;
 
+        bool isMollyAt = false;
         private bool isMarked = false;
         private bool isLinked = false;
         private Dir linkedCellDirection = Dir.None;
@@ -15,25 +16,38 @@ namespace BlackBox
 
         public override void Interact()
         {
-            if (isMarked)
-                return;
+            if (BBEvents.IsInteractionDelayed.Invoke()) return;
+            BBEvents.DelayInteraction?.Invoke(false);
 
-            BBEvents.FireRay?.Invoke(gridPosition, direction);
+            if (!isMollyAt)
+            {
+                BBEvents.DisableMolly?.Invoke();
+                EnableMolly();
+            }
+            else if (!isMarked)
+                BBEvents.FireRay?.Invoke(gridPosition, direction);
         }
 
         public void SetValue(Marker marker)
         {
             animator.SetBool("NavCell/Measurement", true);
             animator.SetInteger("PathType", (int)marker);
+            animator.SetTrigger("BatTravelIn");
             background.gameObject.SetActive(true);
             isMarked = true;
+            isMollyAt = true;
         }
 
-        public void SetValue(Marker marker, int pathNumber, Dir linkedCellDirection, Vector3Int linkedCellPosition)
+        public void SetValue(Marker marker, int pathNumber, Dir linkedCellDirection, Vector3Int linkedCellPosition, bool isExit)
         {
             animator.SetBool("NavCell/Measurement", true);
             animator.SetInteger("PathType", (int)marker);
             animator.SetInteger("PathNumber", pathNumber);
+            if (isExit)
+            {
+                animator.SetTrigger("BatTravelIn");
+                isMollyAt = true;
+            }
             background.gameObject.SetActive(true);
 
             isMarked = true;
@@ -63,6 +77,27 @@ namespace BlackBox
             return false;
         }
 
+        public void EnableMolly()
+        {
+            isMollyAt = true;
+            animator.SetTrigger("BatPoofIn");
+        }
+
+        void DisableMolly()
+        {
+            if (isMollyAt) animator.SetTrigger("BatPoofOut");
+            isMollyAt = false;
+        }
+
+        void SendMollyIn()
+        {
+            if (isMollyAt)
+            {
+                animator.SetTrigger("BatTravelOut");
+                isMollyAt = false;
+            }
+        }
+
         #region Linked Highlight
 
         protected override void OnEnable()
@@ -71,6 +106,8 @@ namespace BlackBox
 
             BBEvents.ClearMarkers += ResetValue; // Debug
             BBEvents.ToggleLinkedHighlight += ToggleLinkedHighlight;
+            BBEvents.DisableMolly += DisableMolly;
+            BBEvents.SendMollyIn += SendMollyIn;
         }
 
         protected override void OnDisable()
@@ -79,6 +116,8 @@ namespace BlackBox
             
             BBEvents.ClearMarkers -= ResetValue; // Debug
             BBEvents.ToggleLinkedHighlight -= ToggleLinkedHighlight;
+            BBEvents.DisableMolly -= DisableMolly;
+            BBEvents.SendMollyIn -= SendMollyIn;
         }
 
         private void ToggleLinkedHighlight(string triggerName, Dir linkedCellDirection, Vector3Int linkedCellPosition)
