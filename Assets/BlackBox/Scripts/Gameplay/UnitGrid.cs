@@ -39,7 +39,7 @@ namespace BlackBox
             }
 
             // set Molly on first slot
-            if (direction == Dir.Top) cellArray[0, 0].EnableMolly();
+            if (direction == Dir.Top) cellArray[0, 0].EnableMolly(false);
         }
 
         private void MarkUnit(Marker marker, Dir gridDirection, Vector3Int destPosition)

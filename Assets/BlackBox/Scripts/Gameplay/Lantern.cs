@@ -21,6 +21,8 @@ namespace BlackBox
             parentMount = GetParentMount();
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
+
+            Wrapper.Events.PlayMusic?.Invoke("BB_Music");
         }
 
         #region Interface Functions
@@ -28,6 +30,7 @@ namespace BlackBox
         public void OnPointerDown(PointerEventData eventData)
         {
             animator.SetBool("Hold", true);
+            Wrapper.Events.PlaySound?.Invoke("BB_PickUpLantern");
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -55,6 +58,7 @@ namespace BlackBox
             animator.SetInteger("DragDirection", 0);
 
             canvasGroup.blocksRaycasts = true;
+            Wrapper.Events.PlaySound?.Invoke("BB_PlaceLantern");
             BBEvents.ToggleLanternHeld?.Invoke(false);
             Routine.Start(ReturnHomeIfUnmounted());
         }
