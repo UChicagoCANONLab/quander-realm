@@ -77,10 +77,11 @@ namespace BlackBox
             return false;
         }
 
-        public void EnableMolly()
+        public void EnableMolly(bool playSound = true)
         {
             isMollyAt = true;
             animator.SetTrigger("BatPoofIn");
+            if (playSound) Wrapper.Events.PlaySound?.Invoke("BB_MollySonar");
         }
 
         void DisableMolly()
@@ -94,6 +95,7 @@ namespace BlackBox
             if (isMollyAt)
             {
                 animator.SetTrigger("BatTravelOut");
+                Wrapper.Events.PlaySound?.Invoke("BB_MollyEnter");
                 isMollyAt = false;
             }
         }

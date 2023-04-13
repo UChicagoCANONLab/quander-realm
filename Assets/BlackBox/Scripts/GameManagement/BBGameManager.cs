@@ -191,11 +191,13 @@ namespace BlackBox
 
             if (levelWon)
             {
+                Wrapper.Events.PlaySound?.Invoke("BB_WolfieSuccess");
                 saveData.currentLevelID = level.nextLevelID;
                 Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
             }
             else
             {
+                Wrapper.Events.PlaySound?.Invoke("BB_WolfieFail");
                 livesRemaining--;
                 BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
             }
