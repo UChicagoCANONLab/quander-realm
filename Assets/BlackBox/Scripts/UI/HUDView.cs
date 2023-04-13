@@ -70,6 +70,7 @@ namespace BlackBox
         private void IndicateEmpty()
         {
             HUDAnimator.SetTrigger("EmptyMeter");
+            Wrapper.Events.PlaySound?.Invoke("BB_NoBattery");
         }
 
         private void DecrementEnergy()
