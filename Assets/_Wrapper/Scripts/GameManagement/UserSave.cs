@@ -10,6 +10,7 @@ namespace Wrapper
         public string[] minigameSaves;
         public List<string> rewards;
         public bool introDialogueSeen = false;
+        public bool rewardDialogueSeen = false;
 
         public UserSave(string idString = "", string rewardID = "")
         {
@@ -31,6 +32,7 @@ namespace Wrapper
             if (rewards.Contains(formatted))
                 return false;
 
+            if (rewards.Count == 0) rewardDialogueSeen = false; // if we haven't seen the reward dialog while having a reward, reset this bool
             rewards.Add(formatted);
             return true;
         }
@@ -41,6 +43,12 @@ namespace Wrapper
                 return false;
 
             return rewards.Contains(FormatString(rewardID));
+        }
+
+        public bool HasAnyRewards()
+        {
+            if (rewards == null) return false;
+            else return rewards.Count > 0;
         }
 
         public void UpdateMinigameSave(Game game, object data)

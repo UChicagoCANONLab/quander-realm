@@ -11,7 +11,10 @@ namespace Wrapper
         public string displayType;
 
         public static RewardResearchData Instance;
-        
+
+        const string rewardIntroNew = "";
+        const string rewardIntroCards = "";
+
         private void Awake()
         {
             if (Instance != null) {
@@ -22,6 +25,15 @@ namespace Wrapper
             DontDestroyOnLoad(gameObject);
 
             Events.PlayMusic?.Invoke("W_RewardMusic");
+
+            // determine if we have been here before
+            var rewardStats = Events.GetRewardDialogStats.Invoke();
+            if (rewardStats.Item1) return;
+            else
+            {
+                if (rewardStats.Item2) Events.StartDialogueSequence?.Invoke(rewardIntroCards);
+                else Events.StartDialogueSequence?.Invoke(rewardIntroNew);
+            }
         }
 
         public string RewardRDtoString() {
@@ -32,13 +44,20 @@ namespace Wrapper
         // DESTROYING INSTANCES WHEN NOT IN USE
         private void OnEnable() {
             Wrapper.Events.MinigameClosed += DestroyDataObject;
+            Events.DialogueSequenceEnded += SetTextSeen;
         }
         private void OnDisable(){
             Wrapper.Events.MinigameClosed -= DestroyDataObject;
+            Events.DialogueSequenceEnded -= SetTextSeen;
         }
         private void DestroyDataObject() {
             Time.timeScale = 1f;
             Destroy(GameObject.Find("RewardResearchData"));
+        }
+
+        void SetTextSeen()
+        {
+            Events.SetRewardTextSeen?.Invoke(true);
         }
     }
 }
