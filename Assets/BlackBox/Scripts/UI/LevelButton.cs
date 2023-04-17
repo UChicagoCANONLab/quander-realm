@@ -28,6 +28,8 @@ namespace BlackBox
 
         public override void OnPointerClick(PointerEventData eventData)
         {
+            if (!interactable) return;
+
             base.OnPointerClick(eventData);
 
             if (levelID < 1 || levelID > 15)
