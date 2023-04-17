@@ -15,6 +15,9 @@ namespace BlackBox
         /// Tutorial
         public static Action<BBSaveData, Level> ShowTutorial;
 
+        /// Level Select
+        public static Action<string> PlayLevel;
+
         /// Ray and Markers
         public static Action<Vector3Int, Dir> FireRay;
         public static Action<Marker, Dir, Vector3Int> MarkUnits;
