@@ -21,8 +21,6 @@ namespace BlackBox
             parentMount = GetParentMount();
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
-
-            Wrapper.Events.PlayMusic?.Invoke("BB_Music");
         }
 
         #region Interface Functions

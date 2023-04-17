@@ -24,6 +24,7 @@ namespace Wrapper
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private CardPopup cardPopup;
         [SerializeField] private GameObject loadingScreenPrefab;
+        [SerializeField] Button universalBackButton;
 
         [Header("Reward Card Prefabs")]
         [SerializeField] private GameObject BBRewardPrefab;
@@ -69,6 +70,7 @@ namespace Wrapper
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
             Events.MinigameClosed += RestartMusic;
+            Events.ToggleBackButton += ToggleBackButton;
         }
 
         private void OnDisable()
@@ -79,6 +81,7 @@ namespace Wrapper
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
             Events.MinigameClosed -= RestartMusic;
+            Events.ToggleBackButton -= ToggleBackButton;
         }
 
         #endregion
@@ -142,6 +145,11 @@ namespace Wrapper
             rewardGO.GetComponent<Reward>().SetContent(rAsset, colorDict[rAsset.cardType], displayType);
 
             return rewardGO;
+        }
+
+        void ToggleBackButton(bool show)
+        {
+            universalBackButton.gameObject.SetActive(show);
         }
 
         #region Helpers
