@@ -58,7 +58,7 @@ namespace Wrapper
                 Events.OpenLoginScreen?.Invoke();
             }
 
-            Events.PlayMusic?.Invoke("WrapperTheme");
+            Events.PlayMusic?.Invoke("W_Music");
         }
 
         private void OnEnable()
@@ -68,6 +68,7 @@ namespace Wrapper
             Events.ShowCardPopup += ShowCardPopup; // Debug
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
+            Events.MinigameClosed += RestartMusic;
         }
 
         private void OnDisable()
@@ -77,6 +78,7 @@ namespace Wrapper
             Events.ShowCardPopup -= ShowCardPopup; // Debug
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
+            Events.MinigameClosed -= RestartMusic;
         }
 
         #endregion
@@ -84,6 +86,11 @@ namespace Wrapper
         private void OpenMinigame(Minigame minigame)
         {
             SceneManager.LoadScene(minigame.StartScene);
+        }
+
+        void RestartMusic()
+        {
+            Events.PlayMusic.Invoke("W_Music");
         }
 
         private void ToggleLoadingScreen()

@@ -86,6 +86,7 @@ namespace Wrapper
             }
 
             animator.SetBool(featuredCardParam, false);
+            Events.PlaySound?.Invoke("W_CardOut");
         }
 
         private IEnumerator DisplayFeaturedCard()
@@ -105,6 +106,7 @@ namespace Wrapper
             yield return Routine.WaitCondition(() => featuredCardGO != null);
 
             animator.SetBool(featuredCardParam, true);
+            Events.PlaySound?.Invoke("W_CardIn");
             Routine.Start(featuredCardGO.GetComponent<Reward>().UpdateAnimationState());
         }
 

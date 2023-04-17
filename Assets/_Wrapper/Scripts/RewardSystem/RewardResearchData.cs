@@ -20,6 +20,8 @@ namespace Wrapper
             }
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            Events.PlayMusic?.Invoke("W_RewardMusic");
         }
 
         public string RewardRDtoString() {
