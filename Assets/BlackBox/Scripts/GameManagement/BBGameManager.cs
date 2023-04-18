@@ -201,6 +201,7 @@ namespace BlackBox
         private void Quit()
         {
             SceneManager.LoadScene(0);
+            Events.ToggleBackButton?.Invoke(true);
             Events.MinigameClosed?.Invoke();
         }
 

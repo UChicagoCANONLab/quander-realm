@@ -12,8 +12,8 @@ namespace Wrapper
 
         public static RewardResearchData Instance;
 
-        const string rewardIntroNew = "";
-        const string rewardIntroCards = "";
+        const string rewardIntroNew = "RW_Intro_0";
+        const string rewardIntroCards = "RW_Intro_1";
 
         private void Awake()
         {
