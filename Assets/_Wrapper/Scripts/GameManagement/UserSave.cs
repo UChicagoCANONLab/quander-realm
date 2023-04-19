@@ -51,6 +51,16 @@ namespace Wrapper
             else return rewards.Count > 0;
         }
 
+        public bool FirstRewardFromGame(string gamePrefix)
+        {
+            // will already have one, check for exactly one
+            int counter = 0;
+            foreach (var reward in rewards)
+                if (reward.Contains(gamePrefix)) counter++;
+
+            return counter == 1;
+        }
+
         public void UpdateMinigameSave(Game game, object data)
         {
             //todo: error catching?

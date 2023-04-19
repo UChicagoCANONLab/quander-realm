@@ -228,7 +228,7 @@ namespace BlackBox
 
         void TrySetNewLevelSave()
         {
-            if (ParseLevelID(saveData.currentLevelID) < ParseLevelID(level.nextLevelID))
+            if (saveData.currentLevelID == string.Empty || ParseLevelID(saveData.currentLevelID) < ParseLevelID(level.nextLevelID))
             {
                 saveData.currentLevelID = level.nextLevelID;
                 Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);

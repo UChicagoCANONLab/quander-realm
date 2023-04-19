@@ -71,6 +71,7 @@ namespace Wrapper
             Events.SaveMinigameResearchData += SaveMinigameResearchData; // AWS
             Events.GetRewardDialogStats += GetRewardStatsForDialog;
             Events.SetRewardTextSeen += ToggleRewardDialogueSeen;
+            Events.GetFirstRewardBool += GetHasFirstReward;
         }
 
         private void OnDisable()
@@ -86,6 +87,7 @@ namespace Wrapper
             Events.SaveMinigameResearchData -= SaveMinigameResearchData; // AWS
             Events.GetRewardDialogStats -= GetRewardStatsForDialog;
             Events.SetRewardTextSeen -= ToggleRewardDialogueSeen;
+            Events.GetFirstRewardBool -= GetHasFirstReward;
         }
 
 #if !UNITY_WEBGL
@@ -461,6 +463,11 @@ namespace Wrapper
         (bool, bool) GetRewardStatsForDialog()
         {
             return (currentUserSave.rewardDialogueSeen, currentUserSave.HasAnyRewards());
+        }
+
+        bool GetHasFirstReward(string gamePrefix)
+        {
+            return currentUserSave.FirstRewardFromGame(gamePrefix);
         }
 
         #endregion
