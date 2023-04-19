@@ -19,6 +19,8 @@ namespace BlackBox
         float swapDelayTime = 0.8F;
         [SerializeField]
         float fogDelayTime = 2F;
+        [SerializeField]
+        float fogReactionDelayTime = 2F;
         BeauRoutine.Routine interactionDelayer;
 
         private void OnEnable()
@@ -28,6 +30,7 @@ namespace BlackBox
             BBEvents.ClearMarkers += ResetEnergy; // Debug
             BBEvents.IsInteractionDelayed += IsDelayed;
             BBEvents.DelayInteraction += DelayInteraction;
+            BBEvents.DelayReaction += DelayReaction;
         }
 
         private void OnDisable()
@@ -37,6 +40,7 @@ namespace BlackBox
             BBEvents.ClearMarkers -= ResetEnergy; // Debug
             BBEvents.IsInteractionDelayed -= IsDelayed;
             BBEvents.DelayInteraction -= DelayInteraction;
+            BBEvents.DelayReaction -= DelayReaction;
         }
 
         public void Create(int width, int height, int numEnergyUnits)
@@ -201,8 +205,20 @@ namespace BlackBox
 
         System.Collections.IEnumerator Delay(bool inFog)
         {
-            if (inFog) yield return new WaitForSecondsRealtime(fogDelayTime);
-            else yield return new WaitForSecondsRealtime(swapDelayTime);
+            if (inFog) yield return new WaitForSeconds(fogDelayTime);
+            else yield return new WaitForSeconds(swapDelayTime);
+        }
+
+        void DelayReaction(Action reaction)
+        {
+            interactionDelayer.Replace(ReactionDelay(reaction));
+        }
+
+        System.Collections.IEnumerator ReactionDelay(Action delayedReaction)
+        {
+            yield return new WaitForSeconds(fogReactionDelayTime);
+            if (delayedReaction != null) delayedReaction();
+            yield return new WaitForSeconds(fogReactionDelayTime);
         }
 
         bool IsDelayed()

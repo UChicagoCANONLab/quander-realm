@@ -20,7 +20,7 @@ namespace BlackBox
 
         /// Ray and Markers
         public static Action<Vector3Int, Dir> FireRay;
-        public static Action<Marker, Dir, Vector3Int> MarkUnits;
+        public static Action<Marker, Dir, Vector3Int, bool> MarkUnits;
         public static Action<Dir, Vector3Int, Dir, Vector3Int, int> MarkDetourUnits;
         public static Action<string, Dir, Vector3Int> ToggleLinkedHighlight;
         public static Action DisableMolly;
@@ -29,6 +29,7 @@ namespace BlackBox
         /// Interaction Delays
         public static Func<bool> IsInteractionDelayed;
         public static Action<bool> DelayInteraction;
+        public static Action<Action> DelayReaction;
 
         /// Flags/Lanterns
         public static Action<Vector3Int, bool> ToggleFlag;
