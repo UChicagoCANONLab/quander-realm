@@ -37,6 +37,15 @@ namespace Wrapper
         public Dictionary<CardType, Color> colorDict;
         public Dictionary<Game, GameObject> prefabDict;
 
+        [SerializeField, Tooltip("For the first card received in each minigame, if none keep blank")] GameCardDialogPair[] rewardDialogIDs;
+
+        [System.Serializable]
+        struct GameCardDialogPair
+        {
+            public Game game;
+            public string cardDialog;
+        }
+
         #region Unity Functions
 
         private void Awake()
@@ -114,8 +123,13 @@ namespace Wrapper
             bool rewardAdded = Events.AddReward?.Invoke(levelReward.rewardID) ?? false;
 
             if (rewardAdded)
+            {
                 Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
 
+                // if this is the first reward from this game, display the reward dialog 
+                if (Events.GetFirstRewardBool(levelReward.rewardID.Substring(0, 2).ToLower()))
+                    Events.StartDialogueSequence?.Invoke(rewardDialogIDs[(int)game].cardDialog);
+            }
             ////todo: call a function that creates the card and displays it in the reward card panel
             //Debug.LogFormat("Won Reward {0} in game {1} at level {2}", levelReward.rewardID, game, level);
             //    Routine.Start(DestroyLoadingScreen()); //todo: debug, delete later

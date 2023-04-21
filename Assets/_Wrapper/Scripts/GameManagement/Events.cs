@@ -54,6 +54,9 @@ namespace Wrapper
         public static Action<JournalPage> UpdateTab;
         public static Action<Game, int> CollectAndDisplayReward;
         public static Func<RewardAsset, GameObject, DisplayType, GameObject> CreatRewardCard;
+        public static Action<bool> SetRewardTextSeen;
+        public static Func<(bool, bool)> GetRewardDialogStats;
+        public static Func<string, bool> GetFirstRewardBool;
 
         /// Audio System ///
         public static Action<string> PlayMusic;

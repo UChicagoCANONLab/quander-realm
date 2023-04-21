@@ -28,26 +28,63 @@ namespace BlackBox
                 BBEvents.FireRay?.Invoke(gridPosition, direction);
         }
 
-        public void SetValue(Marker marker)
+        public void SetDelayedValue(Marker marker)
+        {
+            BBEvents.DelayReaction?.Invoke(() =>
+            {
+                animator.SetBool("NavCell/Measurement", true);
+                animator.SetInteger("PathType", (int)marker);
+
+                if (marker == Marker.Miss) SetFlyOppositeAnim(direction);
+                else SetFlyDirectionAnim(direction);
+
+                if (marker == Marker.Hit) animator.SetTrigger("BatDazed");
+                animator.SetTrigger("ChangeOrientation");
+                animator.SetTrigger("BatTravelIn");
+
+                background.gameObject.SetActive(true);
+                isMarked = true;
+                isMollyAt = true;
+            });
+        }
+
+        public void SetValue(Marker marker) // miss, hit, reflection
         {
             animator.SetBool("NavCell/Measurement", true);
             animator.SetInteger("PathType", (int)marker);
-            animator.SetTrigger("BatTravelIn");
+
             background.gameObject.SetActive(true);
             isMarked = true;
-            isMollyAt = true;
         }
 
-        public void SetValue(Marker marker, int pathNumber, Dir linkedCellDirection, Vector3Int linkedCellPosition, bool isExit)
+        public void SetDelayedValue(Marker marker, int pathNumber, Dir linkedCellDirection, Vector3Int linkedCellPosition)
+        {
+            BBEvents.DelayReaction?.Invoke(() =>
+            {
+                animator.SetBool("NavCell/Measurement", true);
+                animator.SetInteger("PathType", (int)marker);
+                animator.SetInteger("PathNumber", pathNumber);
+
+                SetFlyDirectionAnim(linkedCellDirection);
+                animator.SetTrigger("ChangeOrientation");
+                animator.SetTrigger("BatTravelIn");
+                isMollyAt = true;
+
+                background.gameObject.SetActive(true);
+
+                isMarked = true;
+                isLinked = true;
+
+                this.linkedCellDirection = linkedCellDirection;
+                this.linkedCellPosition = linkedCellPosition;
+            });
+        }
+
+        public void SetValue(Marker marker, int pathNumber, Dir linkedCellDirection, Vector3Int linkedCellPosition)    // detour only
         {
             animator.SetBool("NavCell/Measurement", true);
             animator.SetInteger("PathType", (int)marker);
             animator.SetInteger("PathNumber", pathNumber);
-            if (isExit)
-            {
-                animator.SetTrigger("BatTravelIn");
-                isMollyAt = true;
-            }
             background.gameObject.SetActive(true);
 
             isMarked = true;
@@ -94,9 +131,53 @@ namespace BlackBox
         {
             if (isMollyAt)
             {
+                SetFlyDirectionAnim(direction);
+                animator.SetTrigger("ChangeOrientation");
                 animator.SetTrigger("BatTravelOut");
                 Wrapper.Events.PlaySound?.Invoke("BB_MollyEnter");
                 isMollyAt = false;
+            }
+        }
+
+        void SetFlyDirectionAnim(Dir direction)
+        {
+            switch (direction)
+            {
+                case Dir.Top:
+                    animator.SetInteger("FlyOrientation", 1);
+                    break;
+                case Dir.Right:
+                    animator.SetInteger("FlyOrientation", 4);
+                    break;
+                case Dir.Bot:
+                    animator.SetInteger("FlyOrientation", 3);
+                    break;
+                case Dir.Left:
+                    animator.SetInteger("FlyOrientation", 2);
+                    break;
+
+                default: break;
+            }
+        }
+
+        void SetFlyOppositeAnim(Dir direction)
+        {
+            switch (direction)
+            {
+                case Dir.Top:
+                    animator.SetInteger("FlyOrientation", 3);
+                    break;
+                case Dir.Right:
+                    animator.SetInteger("FlyOrientation", 2);
+                    break;
+                case Dir.Bot:
+                    animator.SetInteger("FlyOrientation", 1);
+                    break;
+                case Dir.Left:
+                    animator.SetInteger("FlyOrientation", 4);
+                    break;
+
+                default: break;
             }
         }
 

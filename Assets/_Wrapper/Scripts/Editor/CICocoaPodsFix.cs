@@ -16,6 +16,7 @@ namespace Editor
             if (buildTarget == BuildTarget.iOS)
             {
                 ModifyFrameworks(path);
+                DisableBitcodeOnIos(buildTarget, path);
             }
         }
 
@@ -35,6 +36,29 @@ namespace Editor
 
             project.WriteToFile(projPath);
         }
+
+    /// <summary>
+    /// Disables bitcode compilation on iOS platform.
+    /// </summary>
+    // From https://support.unity3d.com/hc/en-us/articles/207942813-How-can-I-disable-Bitcode-support-
+    private static void DisableBitcodeOnIos(BuildTarget buildTarget, string path)
+    {
+        if (buildTarget != BuildTarget.iOS)
+        {
+            return;
+        }
+
+        string projectPath = path + "/Unity-iPhone.xcodeproj/project.pbxproj";
+
+        var pbxProject = new PBXProject();
+        pbxProject.ReadFromFile(projectPath);
+
+        string target = pbxProject.TargetGuidByName("Unity-iPhone");
+        pbxProject.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
+
+        pbxProject.WriteToFile(projectPath);
+    }
+
 #endif
     }
 }
