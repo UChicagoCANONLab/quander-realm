@@ -432,6 +432,7 @@ MonoBehaviour:
   newButton: {fileID: 2134610877397997764}
   logoutButton: {fileID: 2134610877794237037}
   newGameConfirm: {fileID: 4617001652507466131}
+  loadingPanel: {fileID: 451105058543138527}
   creditsButton: {fileID: 1972022903327077289}
   creditsPanel: {fileID: 0}
   learnMoreButton: {fileID: 7000534531260940386}
@@ -1374,6 +1375,32 @@ PrefabInstance:
 --- !u!224 &944582316 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2206426010392202313, guid: 587df8b90a5f3c5498ba626305bf95f3, type: 3}
+  m_PrefabInstance: {fileID: 2206426009993028325}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &944582319 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2206426010392202314, guid: 587df8b90a5f3c5498ba626305bf95f3, type: 3}
+  m_PrefabInstance: {fileID: 2206426009993028325}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &451105058543138527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944582319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47f47fbf3133d664b958b2dbf46d738a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  confirmation: {fileID: 944582319}
+  anim: {fileID: 2206426009990150606}
+  yesButton: {fileID: 0}
+  noButton: {fileID: 0}
+--- !u!95 &2206426009990150606 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7609131, guid: 587df8b90a5f3c5498ba626305bf95f3, type: 3}
   m_PrefabInstance: {fileID: 2206426009993028325}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2570399701279015677

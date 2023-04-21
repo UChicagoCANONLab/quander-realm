@@ -19,6 +19,8 @@ namespace Wrapper
         Button logoutButton;
         [SerializeField]
         ConfirmationPopup newGameConfirm;
+        [SerializeField]
+        ConfirmationPopup loadingPanel; // using code just for open/close consistency
 
         [Space, SerializeField]
         Button creditsButton;
@@ -70,6 +72,7 @@ namespace Wrapper
             //creditsPanel.SetActive(false);
             newGameConfirm.ForceCloseConfirmation();
             learnMoreConfirm.ForceCloseConfirmation();
+            loadingPanel.ForceCloseConfirmation();
 
         }
 
@@ -106,8 +109,10 @@ namespace Wrapper
         void NewGame()
         {
             // clear data and show loading screen for a bit, then refresh title screen
+            loadingPanel.OpenConfirmation();
+            Events.ClearSaveFile?.Invoke();
 
-            Events.ToggleTitleScreen?.Invoke(false);
+            //Events.ToggleTitleScreen?.Invoke(false);
         }
 
         void PlayGame()
@@ -123,7 +128,7 @@ namespace Wrapper
 
         void OpenCredits()
         {
-
+            // TODO: implement when ready
         }
 
         void OpenLearnConfirm()

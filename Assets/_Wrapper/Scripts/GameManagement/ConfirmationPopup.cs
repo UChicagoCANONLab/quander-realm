@@ -34,8 +34,8 @@ namespace Wrapper
             if (closing) return;
             confirmation.SetActive(true);
             anim.SetTrigger("AreYouSure_On");
-            yesButton.onClick.AddListener(CloseConfirmation);
-            noButton.onClick.AddListener(CloseConfirmation);
+            if (yesButton != null) yesButton.onClick.AddListener(CloseConfirmation);
+            if (noButton != null) noButton.onClick.AddListener(CloseConfirmation);
         }
 
         public void CloseConfirmation()

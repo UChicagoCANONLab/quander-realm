@@ -172,7 +172,7 @@ namespace Wrapper
 
             // Check if user's save data exists, create new save file if not
             bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);
-            Events.SetNewPlayerStatus?.Invoke(isUserDataPresent);
+            Events.SetNewPlayerStatus?.Invoke(isUserDataPresent);   
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;
@@ -337,6 +337,13 @@ namespace Wrapper
         {
             Routine.Start(UpdateRemoteSaveRoutine());
         }
+
+        //bool IsUserNew()
+        //{
+        //    if (currentUserSave == null) return true;
+        //    bool isNew = false;
+        //    
+        //}
 
 #if !UNITY_WEBGL
         private IEnumerator UpdateRemoteSaveRoutine()
