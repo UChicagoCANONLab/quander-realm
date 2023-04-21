@@ -20,7 +20,7 @@ namespace Wrapper
         [SerializeField]
         ConfirmationPopup newGameConfirm;
         [SerializeField]
-        ConfirmationPopup loadingPanel; // using code just for open/close consistency
+        LoadingPopup loadingPanel;
 
         [Space, SerializeField]
         Button creditsButton;
@@ -44,7 +44,7 @@ namespace Wrapper
 
             // buttons
             playButton.onClick.AddListener(PlayGame);
-            continueButton.onClick.AddListener(ContinueGame);
+            continueButton.onClick.AddListener(PlayGame);
             newButton.onClick.AddListener(OpenNewConfirm);
             logoutButton.onClick.AddListener(LogOut);
             creditsButton.onClick.AddListener(OpenCredits);
@@ -59,7 +59,7 @@ namespace Wrapper
 
             // buttons
             playButton.onClick.RemoveListener(PlayGame);
-            continueButton.onClick.RemoveListener(ContinueGame);
+            continueButton.onClick.RemoveListener(PlayGame);
             newButton.onClick.RemoveListener(OpenNewConfirm);
             logoutButton.onClick.RemoveListener(LogOut);
             creditsButton.onClick.RemoveListener(OpenCredits);
@@ -76,9 +76,9 @@ namespace Wrapper
 
         }
 
-        void SetNewPlayer(bool hasData)
+        void SetNewPlayer(bool isNew)
         {
-            newPlayer = !hasData;
+            newPlayer = isNew;
 
             if (newPlayer)
             {
@@ -95,11 +95,6 @@ namespace Wrapper
             // logout button is always active
         }
 
-        void ContinueGame()
-        {
-            Events.ToggleTitleScreen?.Invoke(false);
-        }
-
         void OpenNewConfirm()
         {
             newGameConfirm.SetConfirmationData(NewGame, null);
@@ -109,16 +104,18 @@ namespace Wrapper
         void NewGame()
         {
             // clear data and show loading screen for a bit, then refresh title screen
-            loadingPanel.OpenConfirmation();
+            loadingPanel.OpenPopup();
             Events.ClearSaveFile?.Invoke();
 
-            //Events.ToggleTitleScreen?.Invoke(false);
+            // loading screen will cover this when completed
+            //Events.SetNewPlayerStatus?.Invoke(true);
         }
 
         void PlayGame()
         {
             // same as continue with new save data
             Events.ToggleTitleScreen?.Invoke(false);
+            Events.PlayIntroDialog?.Invoke();
         }
 
         void LogOut()

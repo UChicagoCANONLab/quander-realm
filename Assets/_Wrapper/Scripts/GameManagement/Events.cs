@@ -15,6 +15,7 @@ namespace Wrapper
         public static Action CloseLoginScreen;
         public static Action<bool> ToggleBackButton;
         public static Action<bool> ToggleTitleScreen;
+        public static Action PlayIntroDialog;
 
         /// Save System ///
         public static Action<string> SubmitResearchCode;

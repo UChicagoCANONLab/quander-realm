@@ -37,6 +37,14 @@ namespace Wrapper
             return true;
         }
 
+        public bool IsNewSave()
+        {
+            if (HasAnyRewards()) return false;
+            if (introDialogueSeen || rewardDialogueSeen) return false;
+            foreach (var data in minigameSaves) if (!data.Equals(string.Empty)) return false;
+            return true;
+        }
+
         public bool HasReward(string rewardID)
         {
             if (rewards == null)

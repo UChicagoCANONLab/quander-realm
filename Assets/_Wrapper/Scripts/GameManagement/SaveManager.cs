@@ -69,9 +69,6 @@ namespace Wrapper
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
             Events.SaveMinigameResearchData += SaveMinigameResearchData; // AWS
-            Events.GetRewardDialogStats += GetRewardStatsForDialog;
-            Events.SetRewardTextSeen += ToggleRewardDialogueSeen;
-            Events.GetFirstRewardBool += GetHasFirstReward;
         }
 
         private void OnDisable()
@@ -85,9 +82,6 @@ namespace Wrapper
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
             Events.SaveMinigameResearchData -= SaveMinigameResearchData; // AWS
-            Events.GetRewardDialogStats -= GetRewardStatsForDialog;
-            Events.SetRewardTextSeen -= ToggleRewardDialogueSeen;
-            Events.GetFirstRewardBool -= GetHasFirstReward;
         }
 
 #if !UNITY_WEBGL
@@ -177,8 +171,7 @@ namespace Wrapper
             }
 
             // Check if user's save data exists, create new save file if not
-            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);
-            Events.SetNewPlayerStatus?.Invoke(isUserDataPresent);   
+            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);  
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;
@@ -201,6 +194,7 @@ namespace Wrapper
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
 
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
         }
 #else
@@ -263,6 +257,7 @@ namespace Wrapper
 
             currentUserSave = JsonUtility.FromJson<UserSave>(loadDataJson);
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
         }
 #endif
@@ -343,13 +338,6 @@ namespace Wrapper
         {
             Routine.Start(UpdateRemoteSaveRoutine());
         }
-
-        //bool IsUserNew()
-        //{
-        //    if (currentUserSave == null) return true;
-        //    bool isNew = false;
-        //    
-        //}
 
 #if !UNITY_WEBGL
         private IEnumerator UpdateRemoteSaveRoutine()
@@ -468,25 +456,9 @@ namespace Wrapper
             return currentUserSave.id;
         }
 
-        public void ToggleRewardDialogueSeen(bool hasSeen)
-        {
-            currentUserSave.rewardDialogueSeen = hasSeen;
-            UpdateRemoteSave();
-        }
+#endregion
 
-        (bool, bool) GetRewardStatsForDialog()
-        {
-            return (currentUserSave.rewardDialogueSeen, currentUserSave.HasAnyRewards());
-        }
-
-        bool GetHasFirstReward(string gamePrefix)
-        {
-            return currentUserSave.FirstRewardFromGame(gamePrefix);
-        }
-
-        #endregion
-
-        #region WebGL dll imports
+#region WebGL dll imports
 
 #if UNITY_WEBGL
         [DllImport("__Internal")]
@@ -512,6 +484,6 @@ namespace Wrapper
         }
 #endif
 
-        #endregion
+#endregion
     }
 }

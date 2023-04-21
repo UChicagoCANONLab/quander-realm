@@ -53,7 +53,7 @@ namespace Wrapper
 
         IEnumerator DelayClose()
         {
-            yield return 1F;
+            yield return 0.3F;
             confirmation.SetActive(false);
             closing = false;
         }

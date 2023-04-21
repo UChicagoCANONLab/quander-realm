@@ -54,7 +54,7 @@ namespace Wrapper
             InitColorDict();
             InitPrefabDict();
             InitRewardAssetArray();
-            Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?
+            //Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?      -> moved to its own method to call after title screen
             debugButton.onClick.AddListener(() => debugScreen.SetActive(!(debugScreen.activeInHierarchy))); //todo: debug, delete later
             Input.multiTouchEnabled = false;
         }
@@ -77,6 +77,7 @@ namespace Wrapper
             Events.MinigameClosed += RestartMusic;
             Events.ToggleBackButton += ToggleBackButton;
             Events.Logout += Logout;
+            Events.PlayIntroDialog += PlayIntroDialog;
         }
 
         private void OnDisable()
@@ -89,6 +90,7 @@ namespace Wrapper
             Events.MinigameClosed -= RestartMusic;
             Events.ToggleBackButton -= ToggleBackButton;
             Events.Logout -= Logout;
+            Events.PlayIntroDialog -= PlayIntroDialog;
         }
 
         #endregion
@@ -215,6 +217,11 @@ namespace Wrapper
             };
         }
 
+        void PlayIntroDialog()
+        {
+            Routine.Start(IntroDialogueRoutine());
+        }
+
         private IEnumerator IntroDialogueRoutine()
         {
             while (!(saveManager.isUserLoggedIn) || !(saveManager.currentUserSave != null))
@@ -225,6 +232,7 @@ namespace Wrapper
 
             Events.StartDialogueSequence?.Invoke(introSequenceID);
             saveManager.ToggleIntroDialogueSeen(true);
+            Events.SetNewPlayerStatus?.Invoke(false);
         }
 
         // todo: debug, delete later
