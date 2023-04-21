@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 5187384608791546270}
   - component: {fileID: 211064755}
   - component: {fileID: 211064754}
+  - component: {fileID: 7185781700110637934}
   m_Layer: 5
   m_Name: 'Are_you_Sure_PopUp '
   m_TagString: Untagged
@@ -249,6 +250,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7185781700110637934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5187384608791546268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47f47fbf3133d664b958b2dbf46d738a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  confirmation: {fileID: 5187384608791546268}
+  anim: {fileID: 211064754}
+  yesButton: {fileID: 3051052528420870296}
+  noButton: {fileID: 5595959521283544358}
 --- !u!1 &5187384608866177938
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,6 +554,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 336896218782348804, guid: 9189412d948f38847ac8bda11a1a359c, type: 3}
   m_PrefabInstance: {fileID: 2924508807673906751}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5595959521283544358 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7295029634334561049, guid: 9189412d948f38847ac8bda11a1a359c, type: 3}
+  m_PrefabInstance: {fileID: 2924508807673906751}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5199c6fd9a0c6a46a9216da59e1a6db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4019512510464472545
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -638,6 +666,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c26eb0c4a2ebbfc4389dac3c2ff482dd, type: 3}
+--- !u!114 &3051052528420870296 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2134610879393328505, guid: c26eb0c4a2ebbfc4389dac3c2ff482dd, type: 3}
+  m_PrefabInstance: {fileID: 4019512510464472545}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5199c6fd9a0c6a46a9216da59e1a6db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5460130223134702981 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8939199780771874916, guid: c26eb0c4a2ebbfc4389dac3c2ff482dd, type: 3}

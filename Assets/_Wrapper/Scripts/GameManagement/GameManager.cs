@@ -18,7 +18,6 @@ namespace Wrapper
         private const string introSequenceID = "W_Intro";
 
         [SerializeField] private float loadingToggleDelay = 0.5f;
-        [SerializeField] private GameObject loginScreen;
         [SerializeField] private GameObject debugScreen;
         [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
@@ -53,11 +52,8 @@ namespace Wrapper
 
         private void Start()
         {
-            if (!(saveManager.isUserLoggedIn))
-            {
-                loginScreen.SetActive(true);
-                Events.OpenLoginScreen?.Invoke();
-            }
+            if (!(saveManager.isUserLoggedIn)) Events.OpenLoginScreen?.Invoke();
+            else Events.CloseLoginScreen?.Invoke();
 
             Events.PlayMusic?.Invoke("W_Music");
         }
@@ -71,6 +67,7 @@ namespace Wrapper
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
             Events.MinigameClosed += RestartMusic;
             Events.ToggleBackButton += ToggleBackButton;
+            Events.Logout += Logout;
         }
 
         private void OnDisable()
@@ -82,6 +79,7 @@ namespace Wrapper
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
             Events.MinigameClosed -= RestartMusic;
             Events.ToggleBackButton -= ToggleBackButton;
+            Events.Logout -= Logout;
         }
 
         #endregion
@@ -150,6 +148,12 @@ namespace Wrapper
         void ToggleBackButton(bool show)
         {
             universalBackButton.gameObject.SetActive(show);
+        }
+
+        void Logout()
+        {
+            saveManager.Logout();
+            SceneManager.LoadScene(0);
         }
 
         #region Helpers

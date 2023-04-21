@@ -12,7 +12,9 @@ namespace Wrapper
         public static Action MinigameClosed;
         public static Action ToggleLoadingScreen;
         public static Action OpenLoginScreen;
+        public static Action CloseLoginScreen;
         public static Action<bool> ToggleBackButton;
+        public static Action<bool> ToggleTitleScreen;
 
         /// Save System ///
         public static Action<string> SubmitResearchCode;
@@ -24,6 +26,8 @@ namespace Wrapper
         public static Action<bool> ToggleUploadFailurePopup;
         public static Func<string> GetPlayerResearchCode;
         public static Action<Game, object> SaveMinigameResearchData;
+        public static Action<bool> SetNewPlayerStatus;
+        public static Action Logout;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;

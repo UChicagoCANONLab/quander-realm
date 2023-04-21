@@ -118,6 +118,12 @@ namespace Wrapper
 
         #region Login
 
+        public void Logout()
+        {
+            currentUserSave = null;
+            isUserLoggedIn = false;
+        }
+
         private void Login(string researchCode)
         {
             isUserLoggedIn = false;
@@ -166,6 +172,7 @@ namespace Wrapper
 
             // Check if user's save data exists, create new save file if not
             bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);
+            Events.SetNewPlayerStatus?.Invoke(isUserDataPresent);
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;

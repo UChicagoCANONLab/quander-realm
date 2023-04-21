@@ -27,12 +27,14 @@ namespace Wrapper
         {
             Events.OpenLoginScreen += Open;
             Events.UpdateLoginStatus += UpdateLoginScreen;
+            Events.CloseLoginScreen += Close;
         }
 
         private void OnDisable()
         {
             Events.OpenLoginScreen -= Open;
             Events.UpdateLoginStatus -= UpdateLoginScreen;
+            Events.CloseLoginScreen -= Close;
         }
 
         private void Open()
@@ -58,7 +60,10 @@ namespace Wrapper
 
             switch (status)
             {
-                case LoginStatus.Success: animator.SetBool("On", false); break;
+                case LoginStatus.Success: 
+                    animator.SetBool("On", false);
+                    Events.ToggleTitleScreen?.Invoke(true);
+                    break;
                 case LoginStatus.FormatError: DisplayError(formatErrorText); break;
                 case LoginStatus.DatabaseError: DisplayError(databaseErrorText); break;
                 case LoginStatus.ConnectionError: DisplayError(connectionErrorText); break;

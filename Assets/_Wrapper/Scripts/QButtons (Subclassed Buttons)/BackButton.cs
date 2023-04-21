@@ -10,10 +10,14 @@ namespace Wrapper
             base.OnPointerClick(eventData);
 
             if (SceneManager.GetActiveScene().buildIndex == 0)
-                return;
-
-            SceneManager.LoadScene(0);
-            Events.MinigameClosed?.Invoke();
+            {
+                Events.ToggleTitleScreen?.Invoke(true);
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+                Events.MinigameClosed?.Invoke();
+            }
         }
     }
 }
