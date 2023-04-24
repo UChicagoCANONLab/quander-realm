@@ -10,14 +10,15 @@ namespace Wrapper
         bool loaded = false;
 
         [SerializeField]
-        TextMeshProUGUI orgContainer;
+        TextMeshProUGUI filaContainer;
+        [SerializeField]
+        CreditsLineItem filaLine;
+        [SerializeField]
+        TextMeshProUGUI clientContainer;
+        [SerializeField]
+        CreditsLineItem clientLine;
         [SerializeField]
         UnityEngine.UI.Button backButton;
-
-        private void Awake()
-        {
-            orgContainer.gameObject.SetActive(false);
-        }
 
         private void OnEnable()
         {
@@ -48,10 +49,18 @@ namespace Wrapper
 
                     // organization entry
 
-                    currentOrg = Instantiate(orgContainer, orgContainer.transform.parent, false);
-                    nameTitlePair = currentOrg.gameObject.GetComponentInChildren<CreditsLineItem>(true);
-                    currentOrg.gameObject.SetActive(true);
-                    
+                    if (currentOrg == null)
+                    {
+                        currentOrg = filaContainer;
+                        nameTitlePair = filaLine;
+                    }
+                    else
+                    {
+                        currentOrg = clientContainer;
+                        nameTitlePair = clientLine;
+                    }
+
+                    nameTitlePair.gameObject.SetActive(false);
                     currentOrg.text = entry.Name;
                 }
                 else
