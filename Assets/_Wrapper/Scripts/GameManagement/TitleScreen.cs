@@ -25,7 +25,9 @@ namespace Wrapper
         [Space, SerializeField]
         Button creditsButton;
         [SerializeField]
-        GameObject creditsPanel;
+        CreditsFiller creditsPanel;
+        [SerializeField]
+        Credits creditsData;
 
         [Space, SerializeField]
         Button learnMoreButton;
@@ -69,7 +71,7 @@ namespace Wrapper
         void ToggleTitleScreen(bool enable)
         {
             mainContainer.SetActive(enable);
-            //creditsPanel.SetActive(false);
+            creditsPanel.gameObject.SetActive(false);
             newGameConfirm.ForceCloseConfirmation();
             learnMoreConfirm.ForceCloseConfirmation();
             loadingPanel.ForceCloseConfirmation();
@@ -126,6 +128,8 @@ namespace Wrapper
         void OpenCredits()
         {
             // TODO: implement when ready
+            creditsPanel.LoadCredits(creditsData);
+            creditsPanel.gameObject.SetActive(true);
         }
 
         void OpenLearnConfirm()
