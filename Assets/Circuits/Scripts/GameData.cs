@@ -16,6 +16,7 @@ public static class GameData
     private static List<string> log = new List<string>();
     private static bool dataLoaded = false;
     private static Circuits_SaveData saveData;
+    private static Circuits_ResearchData researchData;
 
 
     //[DllImport("__Internal")]
@@ -44,6 +45,9 @@ public static class GameData
             }
             dataLoaded = true;
         }
+
+        researchData = new Circuits_ResearchData();
+        researchData.Username = Wrapper.Events.GetPlayerResearchCode?.Invoke();
     }
 
     public static void hintRequested()
@@ -102,6 +106,12 @@ public static class GameData
         log.Add(string.Format("{0}-passed-{1}", saveData.currLevel, DateTime.UtcNow.ToString(datePatt)));
 
         Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.Circuits, saveData);
+
+       
+        researchData.SaveData = String.Join("\n", log);
+        Wrapper.Events.SaveMinigameResearchData?.Invoke(Wrapper.Game.Circuits, researchData);
+        log.Clear();
+
     }
 
 
@@ -114,6 +124,7 @@ public static class GameData
         Debug.Log("LOG");
         Debug.Log(String.Join("\n", log));
         Debug.Log(outString);
+
 
         if (!tutorialShown)
         {
@@ -130,7 +141,7 @@ public static class GameData
                 return "Circuits_Dialogue";
             case 6:
                 return "Circuits_Dialogue";
-            case 9:
+            case 7: // case 9:
                 return "Circuits_Dialogue";
             case 14:
                 return "Circuits_Dialogue";

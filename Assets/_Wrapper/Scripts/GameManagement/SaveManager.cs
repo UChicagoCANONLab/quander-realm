@@ -29,7 +29,8 @@ namespace Wrapper
 
         private float networkRequestTimeout = 5f;
         private bool isDatabaseReady = false;
-        private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"}; // AWS
+        // private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"}; // AWS
+        private string[] gameSaveURLs = new string[6] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery", "rewards"}; // AWS
         public readonly string awsURL = "https://backend-quantime.link/"; // AWS
 
 #if !UNITY_WEBGL
