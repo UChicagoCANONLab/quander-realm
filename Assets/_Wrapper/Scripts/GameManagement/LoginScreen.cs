@@ -17,28 +17,28 @@ namespace Wrapper
         [SerializeField] private string databaseErrorText = "Login failed: Could not connect to the user database. Please check your internet connection and try again.";
         [SerializeField] private string nonexistentUserErrorText = "Login failed: There is no user associated with this research code. Please verify your code and try again. (Codes are case-sensitive)";
 
-
         private void Awake()
-        {
-            loginButton.onClick.AddListener(SubmitCode);    
-        }
-
-        private void OnEnable()
         {
             Events.OpenLoginScreen += Open;
             Events.UpdateLoginStatus += UpdateLoginScreen;
             Events.CloseLoginScreen += Close;
+
+            loginButton.onClick.AddListener(SubmitCode);
+            Close();
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             Events.OpenLoginScreen -= Open;
             Events.UpdateLoginStatus -= UpdateLoginScreen;
             Events.CloseLoginScreen -= Close;
+            loginButton.onClick.RemoveListener(SubmitCode);
         }
 
         private void Open()
         {
+            gameObject.SetActive(true);
+            field.text = "";
             animator.SetBool("On", true);
         }
 

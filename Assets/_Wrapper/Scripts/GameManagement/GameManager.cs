@@ -61,10 +61,7 @@ namespace Wrapper
 
         private void Start()
         {
-            if (!(saveManager.isUserLoggedIn)) Events.OpenLoginScreen?.Invoke();
-            else Events.CloseLoginScreen?.Invoke();
-
-            Events.PlayMusic?.Invoke("W_Music");
+            BackToMain();
         }
 
         private void OnEnable()
@@ -74,10 +71,10 @@ namespace Wrapper
             Events.ShowCardPopup += ShowCardPopup; // Debug
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
-            Events.MinigameClosed += RestartMusic;
             Events.ToggleBackButton += ToggleBackButton;
             Events.Logout += Logout;
             Events.PlayIntroDialog += PlayIntroDialog;
+            Events.MinigameClosed += BackToMain;
         }
 
         private void OnDisable()
@@ -87,10 +84,10 @@ namespace Wrapper
             Events.ShowCardPopup -= ShowCardPopup; // Debug
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
-            Events.MinigameClosed -= RestartMusic;
             Events.ToggleBackButton -= ToggleBackButton;
             Events.Logout -= Logout;
             Events.PlayIntroDialog -= PlayIntroDialog;
+            Events.MinigameClosed -= BackToMain;
         }
 
         #endregion
@@ -100,9 +97,15 @@ namespace Wrapper
             SceneManager.LoadScene(minigame.StartScene);
         }
 
-        void RestartMusic()
+        void BackToMain()
         {
-            Events.PlayMusic.Invoke("W_Music");
+            if (!saveManager.isUserLoggedIn) Events.OpenLoginScreen?.Invoke();
+            else
+            {
+                Events.CloseLoginScreen?.Invoke();
+                Events.ToggleTitleScreen?.Invoke(false);
+            }
+            Events.PlayMusic?.Invoke("W_Music");
         }
 
         private void ToggleLoadingScreen()
@@ -169,7 +172,7 @@ namespace Wrapper
         void Logout()
         {
             saveManager.Logout();
-            SceneManager.LoadScene(0);
+            BackToMain();
         }
 
         #region Helpers

@@ -38,7 +38,7 @@ namespace Wrapper
 
         bool newPlayer = true;
 
-        private void OnEnable()
+        private void Awake()
         {
             // events
             Events.SetNewPlayerStatus += SetNewPlayer;
@@ -51,9 +51,11 @@ namespace Wrapper
             logoutButton.onClick.AddListener(LogOut);
             creditsButton.onClick.AddListener(OpenCredits);
             learnMoreButton.onClick.AddListener(OpenLearnConfirm);
+
+            ToggleTitleScreen(false);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             // events
             Events.SetNewPlayerStatus -= SetNewPlayer;
@@ -127,7 +129,6 @@ namespace Wrapper
 
         void OpenCredits()
         {
-            // TODO: implement when ready
             creditsPanel.LoadCredits(creditsData);
             creditsPanel.gameObject.SetActive(true);
         }
