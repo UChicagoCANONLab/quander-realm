@@ -10,13 +10,18 @@ namespace Wrapper
         bool loaded = false;
 
         [SerializeField]
-        TextMeshProUGUI filaContainer;
+        TextMeshProUGUI[] creditsContainers; // container itself is the tmp object, it contains the line credits
         [SerializeField]
-        CreditsLineItem filaLine;
-        [SerializeField]
-        TextMeshProUGUI clientContainer;
-        [SerializeField]
-        CreditsLineItem clientLine;
+        CreditsLineItem[] creditsLineItems;
+
+        //[SerializeField]
+        //TextMeshProUGUI filaContainer;
+        //[SerializeField]
+        //CreditsLineItem filaLine;
+        //[SerializeField]
+        //TextMeshProUGUI clientContainer;
+        //[SerializeField]
+        //CreditsLineItem clientLine;
         [SerializeField]
         UnityEngine.UI.Button backButton;
 
@@ -34,8 +39,9 @@ namespace Wrapper
         {
             if (loaded) return;
 
-            TextMeshProUGUI currentOrg = null;
-            CreditsLineItem nameTitlePair = null;
+            int current = -1;
+            //TextMeshProUGUI currentOrg = null;
+            //CreditsLineItem nameTitlePair = null;
 
             foreach (var entry in credits.Entries)
             {
@@ -48,34 +54,42 @@ namespace Wrapper
                     }
 
                     // organization entry
+                    current++;
 
-                    if (currentOrg == null)
+                    if (current >= creditsContainers.Length || creditsContainers[current] == null)
                     {
-                        currentOrg = filaContainer;
-                        nameTitlePair = filaLine;
-                    }
-                    else
-                    {
-                        currentOrg = clientContainer;
-                        nameTitlePair = clientLine;
+                        Debug.LogError("Error filling credits, not enough organization categories");
+                        return;
                     }
 
-                    nameTitlePair.gameObject.SetActive(false);
-                    currentOrg.text = entry.Name;
+                    creditsContainers[current].text = entry.Name;
+                    creditsLineItems[current].gameObject.SetActive(false);
                 }
                 else
                 {
                     // person entry
 
-                    if (currentOrg == null || nameTitlePair == null)
+                    if (current < 0)
                     {
                         Debug.LogError("Cannot load names, need to provide organization first");
                         return;
                     }
+                    else if (current >= creditsContainers.Length)
+                    {
+                        Debug.LogError("Error setting names, invalid setup of creditsLineItems");
+                        return;
+                    }
 
-                    var newLine = Instantiate(nameTitlePair, nameTitlePair.transform.parent, false);
+                    var newLine = Instantiate(creditsLineItems[current], creditsLineItems[current].transform.parent, false);
                     newLine.gameObject.SetActive(true);
                     newLine.LoadText(entry.Name, entry.Title);
+                }
+            }
+            if (current < creditsContainers.Length - 1)
+            {
+                for (int i = creditsContainers[current].transform.GetSiblingIndex(); i < creditsContainers[current].transform.parent.childCount; i++)
+                {
+                    creditsContainers[current].transform.parent.GetChild(i).gameObject.SetActive(false);
                 }
             }
 
