@@ -48,6 +48,7 @@ public class Circuits_DialogueBehavior : MonoBehaviour
             //    return "DialogC-04";
             default:
                 SceneManager.LoadScene("CircuitsLevelScene");
+                // SceneManager.LoadScene("Circuits_Title");
                 break;
 	    }
     }
@@ -68,6 +69,7 @@ public class Circuits_DialogueBehavior : MonoBehaviour
         //Debug.Log("Unpaused?");
 
         SceneManager.LoadScene("CircuitsLevelScene");
+        // SceneManager.LoadScene("Circuits_Title");
     }
 
 }

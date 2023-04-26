@@ -58,6 +58,7 @@ public class GameBehavior : MonoBehaviour
 
     bool simplified = false;
 
+    // public bool titleScene = false;
     public Sprite[] numberSprites;
 
 
@@ -120,6 +121,10 @@ public class GameBehavior : MonoBehaviour
     }
     private void Start()
     {
+        // if (titleScene=true) {
+        //     titleScene=false;
+        //     return;
+        // }
         GameData.levelStart();
         selection = new HashSet<BaseGateBehavior>();
         String[] gatesToSample;
@@ -144,7 +149,7 @@ public class GameBehavior : MonoBehaviour
 
         if (GameData.getCurrLevel() > CTConstants.N_LEVELS)
         {
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("Circuits_Menu");
             return; // sorry david :/
         }
         else if (GameData.getCurrLevel() <= 9)
@@ -541,7 +546,12 @@ public class GameBehavior : MonoBehaviour
 
     public void toMenu()
     {
-        SceneManager.LoadScene("Menu");
+        SceneManager.LoadScene("Circuits_Menu");
+    }
+
+    public void toTitle()
+    {
+        SceneManager.LoadScene("Circuits_Title");
     }
 
     public void loadNextLevel()

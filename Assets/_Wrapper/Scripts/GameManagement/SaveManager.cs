@@ -69,6 +69,9 @@ namespace Wrapper
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
             Events.SaveMinigameResearchData += SaveMinigameResearchData; // AWS
+            Events.GetRewardDialogStats += GetRewardStatsForDialog;
+            Events.SetRewardTextSeen += ToggleRewardDialogueSeen;
+            Events.GetFirstRewardBool += GetHasFirstReward;
         }
 
         private void OnDisable()
@@ -82,6 +85,9 @@ namespace Wrapper
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
             Events.SaveMinigameResearchData -= SaveMinigameResearchData; // AWS
+            Events.GetRewardDialogStats -= GetRewardStatsForDialog;
+            Events.SetRewardTextSeen -= ToggleRewardDialogueSeen;
+            Events.GetFirstRewardBool -= GetHasFirstReward;
         }
 
 #if !UNITY_WEBGL
@@ -456,9 +462,25 @@ namespace Wrapper
             return currentUserSave.id;
         }
 
-#endregion
+        public void ToggleRewardDialogueSeen(bool hasSeen)
+        {
+            currentUserSave.rewardDialogueSeen = hasSeen;
+            UpdateRemoteSave();
+        }
 
-#region WebGL dll imports
+        (bool, bool) GetRewardStatsForDialog()
+        {
+            return (currentUserSave.rewardDialogueSeen, currentUserSave.HasAnyRewards());
+        }
+
+        bool GetHasFirstReward(string gamePrefix)
+        {
+            return currentUserSave.FirstRewardFromGame(gamePrefix);
+        }
+
+        #endregion
+
+        #region WebGL dll imports
 
 #if UNITY_WEBGL
         [DllImport("__Internal")]
@@ -484,6 +506,6 @@ namespace Wrapper
         }
 #endif
 
-#endregion
+        #endregion
     }
 }
