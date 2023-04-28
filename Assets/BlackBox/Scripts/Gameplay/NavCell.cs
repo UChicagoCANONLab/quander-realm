@@ -14,7 +14,7 @@ namespace BlackBox
         private Dir linkedCellDirection = Dir.None;
         private Vector3Int linkedCellPosition = Vector3Int.back;
 
-        const float highlightDelayTime = 0.4F;
+        const float highlightDelayTime = 0.2F;
         BeauRoutine.Routine highlightDelay;
 
         public override void Interact()
