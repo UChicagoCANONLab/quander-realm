@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace BlackBox
 {
-    public class NavCell : Cell, IPointerEnterHandler, IPointerExitHandler
+    public class NavCell : Cell, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField] private TextMeshProUGUI markerText = null;
 
@@ -13,6 +13,9 @@ namespace BlackBox
         private bool isLinked = false;
         private Dir linkedCellDirection = Dir.None;
         private Vector3Int linkedCellPosition = Vector3Int.back;
+
+        const float highlightDelayTime = 0.4F;
+        BeauRoutine.Routine highlightDelay;
 
         public override void Interact()
         {
@@ -206,21 +209,56 @@ namespace BlackBox
         private void ToggleLinkedHighlight(string triggerName, Dir linkedCellDirection, Vector3Int linkedCellPosition)
         {
             if (linkedCellDirection == direction && linkedCellPosition == gridPosition)
+            {
+                Debug.Log($"Setting {triggerName} state to: {linkedCellDirection} - {linkedCellPosition}");
                 animator.SetTrigger(triggerName);
+            }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+#if UNITY_EDITOR || UNITY_WEBGL
             if (isLinked)
                 BBEvents.ToggleLinkedHighlight?.Invoke("Highlighted", linkedCellDirection, linkedCellPosition);
+#endif
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+#if UNITY_EDITOR || UNITY_WEBGL
+            if (isLinked)
+                BBEvents.ToggleLinkedHighlight?.Invoke("Normal", linkedCellDirection, linkedCellPosition);
+#endif
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+#if UNITY_IOS || UNITY_ANDROID
+            if (isLinked)
+            {
+                BBEvents.ToggleLinkedHighlight?.Invoke("Highlighted", linkedCellDirection, linkedCellPosition);
+                if (highlightDelay.Exists()) highlightDelay.Stop();
+            }
+#endif
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+#if UNITY_IOS || UNITY_ANDROID
+            if (isLinked)
+            {
+                highlightDelay.Replace(DelayHighlight());
+            }
+#endif
+        }
+
+        System.Collections.IEnumerator DelayHighlight()
+        {
+            yield return highlightDelayTime;
             if (isLinked)
                 BBEvents.ToggleLinkedHighlight?.Invoke("Normal", linkedCellDirection, linkedCellPosition);
         }
 
-        #endregion
+#endregion
     }
 }
