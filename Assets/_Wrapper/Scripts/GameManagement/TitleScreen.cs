@@ -43,6 +43,7 @@ namespace Wrapper
             // events
             Events.SetNewPlayerStatus += SetNewPlayer;
             Events.ToggleTitleScreen += ToggleTitleScreen;
+            SetNewPlayer(false);
 
             // buttons
             playButton.onClick.AddListener(PlayGame);
