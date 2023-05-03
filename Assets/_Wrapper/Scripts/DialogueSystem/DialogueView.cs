@@ -108,6 +108,7 @@ namespace Wrapper
 
         private IEnumerator CloseRoutine()
         {
+            yield return ClearNoneCharacters(null);
             Events.TogglePreviousButton?.Invoke(false);
             animator.SetBool("View/On", false);
             yield return animator.WaitToCompleteAnimation();
@@ -154,7 +155,6 @@ namespace Wrapper
             //todo: rethink closing here
             if (dialogue == null)
             {
-                yield return ClearNoneCharacters(null);
                 Close();
                 yield break;
             }
