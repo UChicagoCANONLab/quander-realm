@@ -154,6 +154,7 @@ namespace Wrapper
             //todo: rethink closing here
             if (dialogue == null)
             {
+                yield return ClearNoneCharacters(null);
                 Close();
                 yield break;
             }
@@ -416,6 +417,21 @@ namespace Wrapper
 
         private IEnumerator ClearNoneCharacters(Dialogue dialogue)
         {
+            if (dialogue == null)
+            {
+                animator.SetBool("CharacterLeft/On", false);
+                charLeft = Character.None;
+                charNameTextLeft.text = "";
+                animatorCharLeft = null;
+
+                animator.SetBool("CharacterRight/On", false);
+                charRight = Character.None;
+                charNameTextRight.text = "";
+                animatorCharRight = null;
+
+                yield break;
+            }
+
             if (charLeft != dialogue.speaker && charLeft != dialogue.listener && animator.GetBool("CharacterLeft/On"))
             {
                 animator.SetBool("CharacterLeft/On", false);

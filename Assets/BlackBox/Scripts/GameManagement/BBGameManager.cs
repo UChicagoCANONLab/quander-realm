@@ -96,6 +96,7 @@ namespace BlackBox
             BBEvents.GetFrontMount += GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits += GetNumEnergyUnits;
             BBEvents.ReturnLanternHome += ReturnLanternHome;
+            BBEvents.CompleteBlackBox += PlayEndDialog;
             BBEvents.PlayLevel += SetAndPlayLevel;
             gameBackButton.onClick.AddListener(() => ShowLevelSelect(true));
         }
@@ -113,6 +114,7 @@ namespace BlackBox
             BBEvents.GetFrontMount -= GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits -= GetNumEnergyUnits;
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
+            BBEvents.CompleteBlackBox -= PlayEndDialog;
             BBEvents.PlayLevel -= SetAndPlayLevel;
             gameBackButton.onClick.RemoveListener(() => ShowLevelSelect(true));
         }
@@ -222,7 +224,7 @@ namespace BlackBox
                 BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
             }
 
-            WinState winState = new(totalNodes, numCorrect, levelWon, level.number, livesRemaining);
+            WinState winState = new(totalNodes, numCorrect, levelWon, level.number, livesRemaining, ParseLevelID(level.nextLevelID) == -1);
             Routine.Start(DisplayPlayerFeedBack(winState));
         }
 
@@ -244,6 +246,37 @@ namespace BlackBox
             { 
                 yield return rewardPopupDelay;
                 Events.CollectAndDisplayReward?.Invoke(Game.BlackBox, level.number);
+            }
+        }
+
+        void PlayEndDialog()
+        {
+            try
+            {
+                bool complete = saveData.completed;
+            }
+            catch (Exception)
+            {
+                BBSaveData data = new BBSaveData
+                {
+                    gameID = saveData.gameID,
+                    currentLevelID = saveData.currentLevelID,
+                    tutorialsSeen = saveData.tutorialsSeen,
+                    completed = false
+                };
+
+                saveData = data;
+                Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+            }
+            finally
+            {
+                bool complete = saveData.completed;
+                if (!complete)
+                {
+                    Events.StartDialogueSequence?.Invoke("BB_End");
+                    saveData.completed = true;
+                    Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+                }
             }
         }
 
@@ -270,10 +303,30 @@ namespace BlackBox
                 level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
             }
 
-            int levelNum = ParseLevelID(level.levelID);
-            if (levelNum > 0)
+            try
             {
-                for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum);
+                bool complete = saveData.completed;
+            }
+            catch (Exception)
+            {
+                BBSaveData data = new BBSaveData
+                {
+                    gameID = saveData.gameID,
+                    currentLevelID = saveData.currentLevelID,
+                    tutorialsSeen = saveData.tutorialsSeen,
+                    completed = false
+                };
+
+                saveData = data;
+                Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+            }
+            finally
+            {
+                int levelNum = ParseLevelID(level.levelID) + (saveData.completed ? 1 : 0);
+                if (levelNum > 0)
+                {
+                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum);
+                }
             }
         }
 
@@ -427,7 +480,7 @@ namespace BlackBox
             if (int.TryParse(levelID.Trim('L'), out levelNum)) return levelNum;
             else
             {
-                Debug.LogError("Unable to parse current level ID: " + levelID);
+                Debug.LogWarning("Unable to parse current level ID: " + levelID);
                 return -1;
             }
         }

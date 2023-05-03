@@ -85,7 +85,9 @@ namespace BlackBox
                     winImage,
                     headerText: "WE DID IT!",
                     subHeaderText: "We found all of the items!",
+                    winState.end ? new GameObject[] {quitGO} :
                     new GameObject[] { quitGO, nextLevelGO });
+                if (winState.end) BBEvents.CompleteBlackBox?.Invoke();
             }
 
             else

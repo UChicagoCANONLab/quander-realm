@@ -52,5 +52,6 @@ namespace BlackBox
         public static Action StartNextLevel;
         public static Action RestartLevel;
         public static Action QuitBlackBox;
+        public static Action CompleteBlackBox;
     }
 }
