@@ -437,19 +437,7 @@ namespace BlackBox
 
         private void CheckWolfieReady()
         {
-            bool isWolfieReady = true;
-
-            foreach (GameObject mountGO in lanternMounts)
-            {
-                LanternMount mount = mountGO.GetComponent<LanternMount>();
-                if (mountGO.activeInHierarchy && !(mount.isEmpty))
-                {
-                    isWolfieReady = false;
-                    break;
-                }
-            }
-
-            BBEvents.ToggleWolfieButton?.Invoke(isWolfieReady);
+            BBEvents.ToggleWolfieButton?.Invoke(level.nodePositions.Length == BBEvents.LanternPlacedCount.Invoke());
         }
 
         private Transform GetLanternFrontMount()

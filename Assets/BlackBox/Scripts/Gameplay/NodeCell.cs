@@ -65,6 +65,11 @@ namespace BlackBox
             hasFlag = isOn;
         }
 
+        public bool HasLantern()
+        {
+            return !lanternMount.isEmpty;
+        }
+
         #region Debug
 
         private void SetupDebug()

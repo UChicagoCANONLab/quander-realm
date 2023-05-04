@@ -53,5 +53,6 @@ namespace BlackBox
         public static Action RestartLevel;
         public static Action QuitBlackBox;
         public static Action CompleteBlackBox;
+        public static Func<int> LanternPlacedCount;
     }
 }
