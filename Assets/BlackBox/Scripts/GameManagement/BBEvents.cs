@@ -23,6 +23,7 @@ namespace BlackBox
         public static Action<Marker, Dir, Vector3Int, bool> MarkUnits;
         public static Action<Dir, Vector3Int, Dir, Vector3Int, int> MarkDetourUnits;
         public static Action<string, Dir, Vector3Int> ToggleLinkedHighlight;
+        public static Action<Dir, Vector3Int> TestLinkHovered;
         public static Action DisableMolly;
         public static Action SendMollyIn;
 
