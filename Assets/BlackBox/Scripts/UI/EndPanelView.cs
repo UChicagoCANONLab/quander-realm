@@ -78,6 +78,8 @@ namespace BlackBox
             DisableAllElements();
             TogglePanel(true);
 
+            animator.SetInteger("Lives", winState.livesRemaining);
+
             if (winState.levelWon)
             {
                 level = winState.level;
@@ -92,8 +94,6 @@ namespace BlackBox
 
             else
             {
-                animator.SetInteger("Lives", winState.livesRemaining);
-
                 if (winState.livesRemaining > 0)
                 {
                     SetInfo(

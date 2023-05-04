@@ -8,14 +8,14 @@ namespace Wrapper
     {
         [SerializeField] public Step step = Step.Forward;
 
-        protected override void OnEnable()
+        protected override void Awake()
         {
             if (this.step == Step.Backward)
                 Events.TogglePreviousButton += ToggleInteractable;
             else if (step == Step.Skip) Events.EnableSkipButton += () => ToggleInteractable(true);
         }
 
-        protected override void OnDisable()
+        protected override void OnDestroy()
         {
             if (this.step == Step.Backward)
                 Events.TogglePreviousButton -= ToggleInteractable;

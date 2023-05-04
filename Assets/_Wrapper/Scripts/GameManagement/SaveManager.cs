@@ -32,12 +32,12 @@ namespace Wrapper
         // private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"}; // AWS
         private string[] gameSaveURLs = new string[6] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery", "rewards"}; // AWS
         public readonly string awsURL = "https://backend-quantime.link/"; // AWS
+        private bool isConnectedToInternet = false;
 
 #if !UNITY_WEBGL
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
-        private bool isConnectedToInternet = false;
         private bool uploadSuccess = false;
 #else
         private string researchCodeExists = "";
@@ -206,6 +206,14 @@ namespace Wrapper
 #else
         private IEnumerator LoginRoutine(string researchCode)
         {
+            yield return TestInternetConnection();
+            if (!(isConnectedToInternet))
+            {
+                Debug.LogError("Error: Internet connection issue");
+                Events.UpdateLoginStatus?.Invoke(LoginStatus.ConnectionError);
+                yield break;
+            }
+
             // Get Database Snapshot
             yield return GetDatabaseSnapshot();
             if (!(isDatabaseReady))
@@ -298,7 +306,6 @@ namespace Wrapper
         }
 #endif
 
-#if !UNITY_WEBGL
         private IEnumerator TestInternetConnection()
         {
             isConnectedToInternet = false;
@@ -310,7 +317,6 @@ namespace Wrapper
             if (request.error == null && request.result != UnityWebRequest.Result.ConnectionError)
                 isConnectedToInternet = true;
         }
-#endif
 
         #endregion
 

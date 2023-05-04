@@ -97,7 +97,7 @@ namespace Wrapper
             dialogueBody.text = "";
             animator.SetBool("View/On", true);
             SwitchNextButton(false);
-            UpdateView(dialogue);
+            Routine.Start(UpdateViewRoutine(dialogue, default, true));
         }
 
         private void Close()
@@ -108,6 +108,7 @@ namespace Wrapper
 
         private IEnumerator CloseRoutine()
         {
+            yield return ClearNoneCharacters(null, false);
             Events.TogglePreviousButton?.Invoke(false);
             animator.SetBool("View/On", false);
             yield return animator.WaitToCompleteAnimation();
@@ -149,17 +150,16 @@ namespace Wrapper
             Routine.Start(UpdateViewRoutine(dialogue, step));
         }
 
-        private IEnumerator UpdateViewRoutine(Dialogue dialogue, int step = 1)
+        private IEnumerator UpdateViewRoutine(Dialogue dialogue, int step = 1, bool initial = false)
         {
             //todo: rethink closing here
             if (dialogue == null)
             {
-                yield return ClearNoneCharacters(null);
                 Close();
                 yield break;
             }
 
-            yield return ClearNoneCharacters(dialogue);
+            yield return ClearNoneCharacters(dialogue, initial);
             yield return UpdateCharacters(dialogue);
             InitiateDialogueAnimation(dialogue, step);
 
@@ -415,7 +415,7 @@ namespace Wrapper
             return side;
         }
 
-        private IEnumerator ClearNoneCharacters(Dialogue dialogue)
+        private IEnumerator ClearNoneCharacters(Dialogue dialogue, bool initial)
         {
             if (dialogue == null)
             {
@@ -448,9 +448,11 @@ namespace Wrapper
                 animatorCharRight = null;
             }
 
-            yield return Routine.Combine(
-                animator.WaitToCompleteAnimation(leftCharAnimLayerIndex),
-                animator.WaitToCompleteAnimation(rightCharAnimLayerIndex));
+            if (initial) yield return null;
+            else 
+                yield return Routine.Combine(
+                    animator.WaitToCompleteAnimation(leftCharAnimLayerIndex),
+                    animator.WaitToCompleteAnimation(rightCharAnimLayerIndex));
         }
     }
 }

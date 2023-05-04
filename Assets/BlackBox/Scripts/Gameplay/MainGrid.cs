@@ -31,6 +31,7 @@ namespace BlackBox
             BBEvents.IsInteractionDelayed += IsDelayed;
             BBEvents.DelayInteraction += DelayInteraction;
             BBEvents.DelayReaction += DelayReaction;
+            BBEvents.LanternPlacedCount += GetLanternsOnGridCount;
         }
 
         private void OnDisable()
@@ -41,6 +42,7 @@ namespace BlackBox
             BBEvents.IsInteractionDelayed -= IsDelayed;
             BBEvents.DelayInteraction -= DelayInteraction;
             BBEvents.DelayReaction -= DelayReaction;
+            BBEvents.LanternPlacedCount -= GetLanternsOnGridCount;
         }
 
         public void Create(int width, int height, int numEnergyUnits)
@@ -224,6 +226,20 @@ namespace BlackBox
         bool IsDelayed()
         {
             return interactionDelayer.Exists();
+        }
+
+        int GetLanternsOnGridCount()
+        {
+            int count = 0;
+            for (int y = 0; y < cellArray.GetLength(1); y++)
+            {
+                for (int x = 0; x < cellArray.GetLength(0); x++)
+                {
+                    if (cellArray[x, y].HasLantern()) count++;
+                }
+            }
+
+            return count;
         }
     }
 }
