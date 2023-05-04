@@ -37,6 +37,7 @@ namespace Wrapper
         private GameObject featuredCardGO;
         private string featuredCardID;
         private JournalPage currentPage;
+        Routine pageFlip;
 
         #endregion
 
@@ -129,7 +130,7 @@ namespace Wrapper
 
         private void SwitchCardsOnPage(JournalPage newPage)
         {
-            Routine.Start(SwitchCardsRoutine(newPage));
+            pageFlip.Replace(SwitchCardsRoutine(newPage));
         }
 
         /// <summary>
@@ -139,7 +140,7 @@ namespace Wrapper
         {
             Events.PlaySound?.Invoke("PageFlip");
             animator.SetTrigger(GetPageFlipTrigger(newPage));
-            yield return animator.WaitToCompleteAnimation(3);
+            yield return 0.1F;
 
             foreach (Transform rewardTransform in GetVisibleCards())
                 rewardTransform.SetParent(hiddenRewardsMount.transform);
@@ -149,9 +150,10 @@ namespace Wrapper
                 rewardGO.transform.SetParent(visibleRewardsMount.transform);
                 Routine.Start(rewardGO.GetComponent<Reward>().UpdateAnimationState());
             }
+            yield return animator.WaitToCompleteAnimation(3);
 
             Events.UpdateTab?.Invoke(newPage);
-            animator.SetTrigger(GetPageFlipTrigger(newPage));
+            //animator.SetTrigger(GetPageFlipTrigger(newPage));
             currentPage = newPage;
             UpdateNavButtons();
         }
