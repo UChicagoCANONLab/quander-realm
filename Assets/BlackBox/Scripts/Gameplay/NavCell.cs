@@ -214,18 +214,23 @@ namespace BlackBox
 
         private void ToggleLinkedHighlight(string triggerName, Dir linkedCellDirection, Vector3Int linkedCellPosition)
         {
-            if (linkedCellDirection == direction && linkedCellPosition == gridPosition)
+            if (this.linkedCellDirection == Dir.None || this.linkedCellPosition == null)
+            {
+                if (triggerName == "Highlighted") animator.SetTrigger("Normal");
+            }
+            else if (linkedCellDirection == direction && linkedCellPosition == gridPosition)
             {
                 animator.SetTrigger(triggerName);
             }
+            else if (triggerName == "Highlighted" && linkedCellDirection != this.linkedCellDirection && linkedCellPosition != this.linkedCellPosition) 
+                animator.SetTrigger("Normal");
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
 #if UNITY_EDITOR || UNITY_WEBGL
             hovered = true;
-            if (isLinked)
-                BBEvents.ToggleLinkedHighlight?.Invoke("Highlighted", linkedCellDirection, linkedCellPosition);
+            BBEvents.ToggleLinkedHighlight?.Invoke("Highlighted", linkedCellDirection, linkedCellPosition);
 #endif
         }
 
@@ -233,8 +238,7 @@ namespace BlackBox
         {
 #if UNITY_EDITOR || UNITY_WEBGL
             hovered = false;
-            if (isLinked)
-                BBEvents.ToggleLinkedHighlight?.Invoke("Normal", linkedCellDirection, linkedCellPosition);
+            BBEvents.ToggleLinkedHighlight?.Invoke("Normal", linkedCellDirection, linkedCellPosition);
 #endif
         }
 
@@ -242,11 +246,8 @@ namespace BlackBox
         {
 #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
             hovered = true;
-            if (isLinked)
-            {
-                BBEvents.ToggleLinkedHighlight?.Invoke("Highlighted", linkedCellDirection, linkedCellPosition);
-                if (highlightDelay.Exists()) highlightDelay.Stop();
-            }
+            BBEvents.ToggleLinkedHighlight?.Invoke("Highlighted", linkedCellDirection, linkedCellPosition);
+            if (highlightDelay.Exists()) highlightDelay.Stop();
 #endif
         }
 
@@ -254,10 +255,8 @@ namespace BlackBox
         {
 #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
             hovered = false;
-            if (isLinked)
-            {
-                highlightDelay.Replace(DelayHighlight());
-            }
+            if (isLinked) highlightDelay.Replace(DelayHighlight());
+            else BBEvents.ToggleLinkedHighlight?.Invoke("Normal", linkedCellDirection, linkedCellPosition);
 #endif
         }
 
