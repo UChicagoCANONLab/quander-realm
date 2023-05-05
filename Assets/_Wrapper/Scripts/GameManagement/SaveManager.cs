@@ -206,13 +206,13 @@ namespace Wrapper
 #else
         private IEnumerator LoginRoutine(string researchCode)
         {
-            yield return TestInternetConnection();
-            if (!(isConnectedToInternet))
-            {
-                Debug.LogError("Error: Internet connection issue");
-                Events.UpdateLoginStatus?.Invoke(LoginStatus.ConnectionError);
-                yield break;
-            }
+            //yield return TestInternetConnection();
+            //if (!(isConnectedToInternet))
+            //{
+            //    Debug.LogError("Error: Internet connection issue");
+            //    Events.UpdateLoginStatus?.Invoke(LoginStatus.ConnectionError);
+            //    yield break;
+            //}
 
             // Get Database Snapshot
             yield return GetDatabaseSnapshot();
