@@ -206,13 +206,13 @@ namespace Wrapper
 #else
         private IEnumerator LoginRoutine(string researchCode)
         {
-            //yield return TestInternetConnection();
-            //if (!(isConnectedToInternet))
-            //{
-            //    Debug.LogError("Error: Internet connection issue");
-            //    Events.UpdateLoginStatus?.Invoke(LoginStatus.ConnectionError);
-            //    yield break;
-            //}
+            yield return TestInternetConnection();
+            if (!(isConnectedToInternet))
+            {
+                Debug.LogError("Error: Internet connection issue");
+                Events.UpdateLoginStatus?.Invoke(LoginStatus.ConnectionError);
+                yield break;
+            }
 
             // Get Database Snapshot
             yield return GetDatabaseSnapshot();
@@ -306,6 +306,7 @@ namespace Wrapper
         }
 #endif
 
+#if !UNITY_WEBGL
         private IEnumerator TestInternetConnection()
         {
             isConnectedToInternet = false;
@@ -318,9 +319,23 @@ namespace Wrapper
                 isConnectedToInternet = true;
         }
 
-        #endregion
+#else
+        private IEnumerator TestInternetConnection()
+        {
+            isConnectedToInternet = false;
 
-        #region UserSave
+            UnityWebRequest request = new UnityWebRequest(Application.absoluteURL);
+            request.timeout = (int)networkRequestTimeout;
+            yield return request.SendWebRequest();
+
+            if (request.error == null && request.result != UnityWebRequest.Result.ConnectionError)
+                isConnectedToInternet = true;
+        }
+#endif
+
+#endregion
+
+#region UserSave
 
         private bool AddReward(string rewardID)
         {
@@ -484,9 +499,9 @@ namespace Wrapper
             return currentUserSave.FirstRewardFromGame(gamePrefix);
         }
 
-        #endregion
+#endregion
 
-        #region WebGL dll imports
+#region WebGL dll imports
 
 #if UNITY_WEBGL
         [DllImport("__Internal")]
@@ -512,6 +527,6 @@ namespace Wrapper
         }
 #endif
 
-        #endregion
+#endregion
     }
 }
