@@ -98,7 +98,7 @@ namespace BlackBox
                 {
                     SetInfo(
                         notYetImage,
-                        headerText: "NOT QUITE…",
+                        headerText: "NOT QUITE...",
                         subHeaderText: "We found " + winState.numCorrect + " out of " + winState.numNodes + " items",
                         new GameObject[] { quitGO, keepPlayingGO });
                 }
