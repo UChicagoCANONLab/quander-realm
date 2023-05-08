@@ -356,7 +356,8 @@ namespace Qupcakery
         // Use H to unwrap
         private void SetLevel14()
         {
-            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 60, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 60, levelTotalBeltCnt: 1);
+            // UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 60, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
 
