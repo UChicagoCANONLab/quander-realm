@@ -99,7 +99,7 @@ namespace Wrapper
             RewardAsset rAsset = Resources.Load<RewardAsset>(Path.Combine(GameManager.Instance.rewardsPath, featuredCardID));
             if (rAsset == null)
             {
-                Debug.LogErrorFormat("Could not find card {0} to feature", featuredCardID);
+                Debug.LogWarningFormat("Could not find card {0} to feature", featuredCardID);
                 yield break;
             }
 
