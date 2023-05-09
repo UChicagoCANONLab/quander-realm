@@ -42,11 +42,17 @@ namespace BlackBox
             if (cellType == CellType.EdgeNode)
                 return;
 
-            hasNode = !hasNode;
-
             // Debug
             if (debug)
+            {
+                hasNode = !hasNode;
                 nodeObj.SetActive(hasNode);
+            }
+        }
+
+        public void SetNode()
+        {
+            hasNode = !hasNode;
         }
 
         //todo: make these properties?
@@ -77,9 +83,6 @@ namespace BlackBox
             debug = (bool)BBEvents.IsDebug?.Invoke();
 
             text.text = gridPosition.x.ToString() + ", " + gridPosition.y.ToString();
-            buttons = new List<Button>();
-            foreach (Button button in buttons)
-                button.onClick.AddListener(() => { if (debug) Interact(); });
 
             if (debug)
                 ToggleDebug();
