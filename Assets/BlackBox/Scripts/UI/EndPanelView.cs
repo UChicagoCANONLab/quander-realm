@@ -46,7 +46,7 @@ namespace BlackBox
         private void SetupButtonFunctionality()
         {
             restartLevelGO.GetComponent<Button>().onClick.AddListener(RestartLevel);
-            quitGO.GetComponent<Button>().onClick.AddListener(QuitBlackBox);
+            quitGO.GetComponent<Button>().onClick.AddListener(ToLevelSelect);
             keepPlayingGO.GetComponent<Button>().onClick.AddListener(() => TogglePanel(false));
             nextLevelGO.GetComponent<Button>().onClick.AddListener(StartNextLevel);
         }
@@ -55,6 +55,12 @@ namespace BlackBox
         {
             TogglePanel(false);
             BBEvents.RestartLevel?.Invoke();
+        }
+
+        void ToLevelSelect()
+        {
+            TogglePanel(false);
+            BBEvents.OpenLevelSelect?.Invoke(true);
         }
 
         private void QuitBlackBox()

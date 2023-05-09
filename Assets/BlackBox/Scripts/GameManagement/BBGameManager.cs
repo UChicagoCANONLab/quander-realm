@@ -99,6 +99,7 @@ namespace BlackBox
             BBEvents.CompleteBlackBox += PlayEndDialog;
             BBEvents.PlayLevel += SetAndPlayLevel;
             gameBackButton.onClick.AddListener(() => ShowLevelSelect(true));
+            BBEvents.OpenLevelSelect += ShowLevelSelect;
         }
 
         private void OnDisable()
@@ -117,6 +118,7 @@ namespace BlackBox
             BBEvents.CompleteBlackBox -= PlayEndDialog;
             BBEvents.PlayLevel -= SetAndPlayLevel;
             gameBackButton.onClick.RemoveListener(() => ShowLevelSelect(true));
+            BBEvents.OpenLevelSelect -= ShowLevelSelect;
         }
 
         #endregion
