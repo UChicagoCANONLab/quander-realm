@@ -71,5 +71,6 @@ namespace Wrapper
         public static Action BBToggleDebug;
         public static Action BBClearMarkers;
         public static Action<string> ShowCardPopup;
+        public static Func<bool> IsDebugEnabled;
     }
 }

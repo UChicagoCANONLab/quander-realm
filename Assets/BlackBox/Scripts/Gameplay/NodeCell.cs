@@ -22,20 +22,20 @@ namespace BlackBox
             lanternMount.SetGridPosition(gridPosition);
             lanternMount.EvaluateEmpty();
 
-            SetupDebug();
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) SetupDebug();
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
-            BBEvents.ToggleDebug += ToggleDebug;
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ToggleDebug += ToggleDebug;
         }
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            BBEvents.ToggleDebug -= ToggleDebug;
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ToggleDebug -= ToggleDebug;
         }
         public override void Interact()
         {
