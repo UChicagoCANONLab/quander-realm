@@ -39,7 +39,7 @@ namespace BlackBox
             BBEvents.DecrementEnergy -= DecrementEnergy;
             BBEvents.ToggleWolfieButton -= ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives -= UpdateWolfieLives;
-            BBEvents.CloseLevel += CloseLevel;
+            BBEvents.CloseLevel -= CloseLevel;
         }
 
         private void UpdateWolfieLives(int livesRemaining)
@@ -89,7 +89,6 @@ namespace BlackBox
 
         void CloseLevel()
         {
-            if (!HUDAnimator) HUDAnimator = GetComponent<Animator>();
             HUDAnimator.SetBool("On", false);
             BeauRoutine.Routine.Start(DelayClose());
         }
