@@ -38,6 +38,8 @@ namespace Wrapper
         public Dictionary<Game, GameObject> prefabDict;
 
         [SerializeField, Tooltip("For the first card received in each minigame, if none keep blank")] GameCardDialogPair[] rewardDialogIDs;
+        [SerializeField] MinigameTitles minigameTitles;
+        Game currentGame = Game.None;
 
         [System.Serializable]
         struct GameCardDialogPair
@@ -75,6 +77,8 @@ namespace Wrapper
             Events.Logout += Logout;
             Events.PlayIntroDialog += PlayIntroDialog;
             Events.MinigameClosed += BackToMain;
+            Events.GetMinigameTitle += GetGameTitle;
+            Events.GetCurrentGame += GetCurrentGame;
         }
 
         private void OnDisable()
@@ -88,6 +92,8 @@ namespace Wrapper
             Events.Logout -= Logout;
             Events.PlayIntroDialog -= PlayIntroDialog;
             Events.MinigameClosed -= BackToMain;
+            Events.GetMinigameTitle -= GetGameTitle;
+            Events.GetCurrentGame -= GetCurrentGame;
         }
 
         #endregion
@@ -95,6 +101,7 @@ namespace Wrapper
         private void OpenMinigame(Minigame minigame)
         {
             SceneManager.LoadScene(minigame.StartScene);
+            currentGame = minigame.gameValue;
         }
 
         void BackToMain()
@@ -106,6 +113,7 @@ namespace Wrapper
                 Events.ToggleTitleScreen?.Invoke(false);
             }
             Events.PlayMusic?.Invoke("W_Music");
+            currentGame = Game.None;
         }
 
         private void ToggleLoadingScreen()
@@ -263,6 +271,16 @@ namespace Wrapper
         {
             foreach (Transform child in mount.transform)
                 Destroy(child.gameObject);
+        }
+
+        string GetGameTitle(Game game)
+        {
+            return minigameTitles.Entries[(int)game];
+        }
+
+        Game GetCurrentGame()
+        {
+            return currentGame;
         }
 
         #endregion
