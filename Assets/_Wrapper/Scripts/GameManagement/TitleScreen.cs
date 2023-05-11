@@ -23,6 +23,11 @@ namespace Wrapper
         LoadingPopup loadingPanel;
 
         [Space, SerializeField]
+        Animator titleAnim;
+        [SerializeField]
+        Animator mapAnim;
+
+        [Space, SerializeField]
         Button creditsButton;
         [SerializeField]
         CreditsFiller creditsPanel;
@@ -73,12 +78,20 @@ namespace Wrapper
 
         void ToggleTitleScreen(bool enable)
         {
-            mainContainer.SetActive(enable);
+            mainContainer.SetActive(true);
             creditsPanel.gameObject.SetActive(false);
             newGameConfirm.ForceCloseConfirmation();
             learnMoreConfirm.ForceCloseConfirmation();
             loadingPanel.ForceCloseConfirmation();
+            mapAnim.SetTrigger(enable ? "Map_Fly_Out" : "MapFly_In");
+            titleAnim.SetTrigger(enable ? "MainMenu_Fade_In" : "MainMenu_Fade_Out");
+            if (!enable) BeauRoutine.Routine.Start(DelayTitleClose());
+        }
 
+        IEnumerator DelayTitleClose()
+        {
+            yield return 0.5F;
+            mainContainer.SetActive(false);
         }
 
         void SetNewPlayer(bool isNew)
