@@ -19,6 +19,10 @@ namespace Wrapper
         public static Func<Game> GetCurrentGame;
         public static Func<Game, string> GetMinigameTitle;
 
+        /// Screen Fading ///
+        public static Action<Action, float> ScreenFadeMidAction;
+        public static Action StopScreenFade;
+
         /// Save System ///
         public static Action<string> SubmitResearchCode;
         public static Action<LoginStatus> UpdateLoginStatus;

@@ -143,8 +143,11 @@ namespace Wrapper
 
         void OpenCredits()
         {
-            creditsPanel.LoadCredits(creditsData);
-            creditsPanel.gameObject.SetActive(true);
+            Events.ScreenFadeMidAction?.Invoke(() =>
+            {
+                creditsPanel.LoadCredits(creditsData);
+                creditsPanel.gameObject.SetActive(true);
+            }, 0.1F);
         }
 
         void OpenLearnConfirm()

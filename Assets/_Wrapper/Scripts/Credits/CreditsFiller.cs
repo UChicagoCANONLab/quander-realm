@@ -98,7 +98,7 @@ namespace Wrapper
 
         void CloseCredits()
         {
-            gameObject.SetActive(false);
+            Events.ScreenFadeMidAction?.Invoke(() => gameObject.SetActive(false), 0F);
         }
     }
 }

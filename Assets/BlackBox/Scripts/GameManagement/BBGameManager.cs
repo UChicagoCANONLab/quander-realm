@@ -101,7 +101,7 @@ namespace BlackBox
             BBEvents.ReturnLanternHome += ReturnLanternHome;
             BBEvents.CompleteBlackBox += PlayEndDialog;
             BBEvents.PlayLevel += SetAndPlayLevel;
-            gameBackButton.onClick.AddListener(() => ShowLevelSelect(true));
+            gameBackButton.onClick.AddListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect += ShowLevelSelect;
         }
 
@@ -123,7 +123,7 @@ namespace BlackBox
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
             BBEvents.CompleteBlackBox -= PlayEndDialog;
             BBEvents.PlayLevel -= SetAndPlayLevel;
-            gameBackButton.onClick.RemoveListener(() => ShowLevelSelect(true));
+            gameBackButton.onClick.RemoveListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect -= ShowLevelSelect;
         }
 

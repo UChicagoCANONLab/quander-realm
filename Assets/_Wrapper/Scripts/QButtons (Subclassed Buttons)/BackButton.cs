@@ -15,8 +15,11 @@ namespace Wrapper
             }
             else
             {
-                SceneManager.LoadScene(0);
-                Events.MinigameClosed?.Invoke();
+                Events.ScreenFadeMidAction?.Invoke(() =>
+                {
+                    SceneManager.LoadScene(0);
+                    Events.MinigameClosed?.Invoke();
+                }, 0.1F);
             }
         }
     }

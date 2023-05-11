@@ -18,6 +18,7 @@ namespace BlackBox
         /// Level Select
         public static Action<string> PlayLevel;
         public static Action<bool> OpenLevelSelect;
+        public static Action CloseLevel;
 
         /// Ray and Markers
         public static Action<Vector3Int, Dir> FireRay;

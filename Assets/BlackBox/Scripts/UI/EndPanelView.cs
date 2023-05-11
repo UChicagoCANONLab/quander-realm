@@ -60,7 +60,7 @@ namespace BlackBox
         void ToLevelSelect()
         {
             TogglePanel(false);
-            BBEvents.OpenLevelSelect?.Invoke(true);
+            BBEvents.CloseLevel?.Invoke();
         }
 
         private void QuitBlackBox()

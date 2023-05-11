@@ -28,6 +28,7 @@ namespace BlackBox
             BBEvents.IndicateEmptyMeter += IndicateEmpty;
             BBEvents.ToggleWolfieButton += ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives += UpdateWolfieLives;
+            BBEvents.CloseLevel += CloseLevel;
         }
 
         private void OnDisable()
@@ -38,6 +39,7 @@ namespace BlackBox
             BBEvents.DecrementEnergy -= DecrementEnergy;
             BBEvents.ToggleWolfieButton -= ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives -= UpdateWolfieLives;
+            BBEvents.CloseLevel += CloseLevel;
         }
 
         private void UpdateWolfieLives(int livesRemaining)
@@ -83,6 +85,19 @@ namespace BlackBox
                     break;
                 }
             }
+        }
+
+        void CloseLevel()
+        {
+            if (!HUDAnimator) HUDAnimator = GetComponent<Animator>();
+            HUDAnimator.SetBool("On", false);
+            BeauRoutine.Routine.Start(DelayClose());
+        }
+
+        System.Collections.IEnumerator DelayClose()
+        {
+            yield return 0.6F;
+            BBEvents.OpenLevelSelect?.Invoke(true);
         }
 
         #endregion
