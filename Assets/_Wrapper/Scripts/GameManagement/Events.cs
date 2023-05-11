@@ -16,6 +16,8 @@ namespace Wrapper
         public static Action<bool> ToggleBackButton;
         public static Action<bool> ToggleTitleScreen;
         public static Action PlayIntroDialog;
+        public static Func<Game> GetCurrentGame;
+        public static Func<Game, string> GetMinigameTitle;
 
         /// Save System ///
         public static Action<string> SubmitResearchCode;
@@ -69,5 +71,6 @@ namespace Wrapper
         public static Action BBToggleDebug;
         public static Action BBClearMarkers;
         public static Action<string> ShowCardPopup;
+        public static Func<bool> IsDebugEnabled;
     }
 }

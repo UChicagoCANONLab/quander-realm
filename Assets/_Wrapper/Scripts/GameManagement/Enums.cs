@@ -50,7 +50,8 @@ namespace Wrapper
         Labyrinth = 2,
         QueueBits = 3,
         Qupcakes = 4,
-        Rewards = 5
+        Rewards = 5,
+        None = 6
     };
 
     public enum LoginStatus

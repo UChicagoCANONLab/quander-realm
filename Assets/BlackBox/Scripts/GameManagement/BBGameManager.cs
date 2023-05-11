@@ -78,7 +78,7 @@ namespace BlackBox
 #if UNITY_EDITOR || UNITY_WEBGL
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Events.IsDebugEnabled.Invoke() && Input.GetKeyDown(KeyCode.D))
                 BBEvents.ToggleDebug?.Invoke();
         }
 #endif
@@ -86,9 +86,12 @@ namespace BlackBox
         private void OnEnable()
         {
             BBEvents.QuitBlackBox += Quit;
-            BBEvents.GotoLevel += NextLevel; // Debug
-            BBEvents.IsDebug += GetDebugBool; // Debug
-            BBEvents.ToggleDebug += ToggleDebug; // Debug
+            if (Events.IsDebugEnabled.Invoke())
+            {
+                BBEvents.GotoLevel += NextLevel; // Debug
+                BBEvents.IsDebug += GetDebugBool; // Debug
+                BBEvents.ToggleDebug += ToggleDebug; // Debug
+            }
             BBEvents.RestartLevel += StartLevel;
             BBEvents.StartNextLevel += NextLevel;
             BBEvents.CheckWinState += CheckWinState;
@@ -99,14 +102,18 @@ namespace BlackBox
             BBEvents.CompleteBlackBox += PlayEndDialog;
             BBEvents.PlayLevel += SetAndPlayLevel;
             gameBackButton.onClick.AddListener(() => ShowLevelSelect(true));
+            BBEvents.OpenLevelSelect += ShowLevelSelect;
         }
 
         private void OnDisable()
         {
             BBEvents.QuitBlackBox -= Quit;
-            BBEvents.GotoLevel -= NextLevel; // Debug
-            BBEvents.IsDebug -= GetDebugBool; // Debug
-            BBEvents.ToggleDebug -= ToggleDebug; // Debug
+            if (Wrapper.Events.IsDebugEnabled.Invoke())
+            {
+                BBEvents.GotoLevel -= NextLevel; // Debug
+                BBEvents.IsDebug -= GetDebugBool; // Debug
+                BBEvents.ToggleDebug -= ToggleDebug; // Debug
+            }
             BBEvents.RestartLevel -= StartLevel;
             BBEvents.StartNextLevel -= NextLevel;
             BBEvents.CheckWinState -= CheckWinState;
@@ -117,6 +124,7 @@ namespace BlackBox
             BBEvents.CompleteBlackBox -= PlayEndDialog;
             BBEvents.PlayLevel -= SetAndPlayLevel;
             gameBackButton.onClick.RemoveListener(() => ShowLevelSelect(true));
+            BBEvents.OpenLevelSelect -= ShowLevelSelect;
         }
 
         #endregion

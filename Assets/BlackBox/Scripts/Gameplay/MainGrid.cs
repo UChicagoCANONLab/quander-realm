@@ -27,7 +27,7 @@ namespace BlackBox
         {
             BBEvents.FireRay += FireRay;
             BBEvents.ToggleFlag += ToggleFlag;
-            BBEvents.ClearMarkers += ResetEnergy; // Debug
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers += ResetEnergy; // Debug
             BBEvents.IsInteractionDelayed += IsDelayed;
             BBEvents.DelayInteraction += DelayInteraction;
             BBEvents.DelayReaction += DelayReaction;
@@ -37,8 +37,8 @@ namespace BlackBox
         private void OnDisable()
         {
             BBEvents.FireRay -= FireRay;
-            BBEvents.ToggleFlag -= ToggleFlag;            
-            BBEvents.ClearMarkers -= ResetEnergy; // Debug
+            BBEvents.ToggleFlag -= ToggleFlag;
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers -= ResetEnergy; // Debug
             BBEvents.IsInteractionDelayed -= IsDelayed;
             BBEvents.DelayInteraction -= DelayInteraction;
             BBEvents.DelayReaction -= DelayReaction;
@@ -83,7 +83,7 @@ namespace BlackBox
         public void SetNodes(Vector2Int[] nodePositions)
         {
             foreach (Vector2Int position in nodePositions)
-                cellArray[position.x, position.y].Interact(); // todo: rename/use a dedicated function for toggling here?
+                cellArray[position.x, position.y].SetNode();
         }
 
         public int GetNumCorrect(Vector2Int[] nodePositions)

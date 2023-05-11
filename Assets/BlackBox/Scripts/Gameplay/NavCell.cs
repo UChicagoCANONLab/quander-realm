@@ -194,7 +194,7 @@ namespace BlackBox
         {
             base.OnEnable();
 
-            BBEvents.ClearMarkers += ResetValue; // Debug
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers += ResetValue; // Debug
             BBEvents.ToggleLinkedHighlight += ToggleLinkedHighlight;
             BBEvents.TestLinkHovered += TestLinkHovered;
             BBEvents.DisableMolly += DisableMolly;
@@ -204,8 +204,8 @@ namespace BlackBox
         protected override void OnDisable()
         {
             base.OnDisable();
-            
-            BBEvents.ClearMarkers -= ResetValue; // Debug
+
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers -= ResetValue; // Debug
             BBEvents.ToggleLinkedHighlight -= ToggleLinkedHighlight;
             BBEvents.TestLinkHovered -= TestLinkHovered;
             BBEvents.DisableMolly -= DisableMolly;

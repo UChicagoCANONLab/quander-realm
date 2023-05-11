@@ -18,7 +18,7 @@ namespace Wrapper
         private const string introSequenceID = "W_Intro";
 
         [SerializeField] private float loadingToggleDelay = 0.5f;
-        [SerializeField] private GameObject debugScreen;
+        [SerializeField] private DebugScreen debugScreen;
         [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private CardPopup cardPopup;
@@ -38,6 +38,8 @@ namespace Wrapper
         public Dictionary<Game, GameObject> prefabDict;
 
         [SerializeField, Tooltip("For the first card received in each minigame, if none keep blank")] GameCardDialogPair[] rewardDialogIDs;
+        [SerializeField] MinigameTitles minigameTitles;
+        Game currentGame = Game.None;
 
         [System.Serializable]
         struct GameCardDialogPair
@@ -55,7 +57,12 @@ namespace Wrapper
             InitPrefabDict();
             InitRewardAssetArray();
             //Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?      -> moved to its own method to call after title screen
-            debugButton.onClick.AddListener(() => debugScreen.SetActive(!(debugScreen.activeInHierarchy))); //todo: debug, delete later
+            if (debugScreen.DebugEnabled)
+            {
+                debugButton.gameObject.SetActive(true);
+                debugButton.onClick.AddListener(() => debugScreen.gameObject.SetActive(!(debugScreen.gameObject.activeInHierarchy)));
+            }
+            else debugButton.gameObject.SetActive(false);
             Input.multiTouchEnabled = false;
         }
 
@@ -68,26 +75,32 @@ namespace Wrapper
         {
             Events.OpenMinigame += OpenMinigame;
             Events.CreatRewardCard += CreateCard;
-            Events.ShowCardPopup += ShowCardPopup; // Debug
+            if (debugScreen.DebugEnabled) Events.ShowCardPopup += ShowCardPopup; // Debug
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
             Events.ToggleBackButton += ToggleBackButton;
             Events.Logout += Logout;
             Events.PlayIntroDialog += PlayIntroDialog;
             Events.MinigameClosed += BackToMain;
+            Events.GetMinigameTitle += GetGameTitle;
+            Events.GetCurrentGame += GetCurrentGame;
+            Events.IsDebugEnabled += () => debugScreen.DebugEnabled;
         }
 
         private void OnDisable()
         {
             Events.OpenMinigame -= OpenMinigame;
             Events.CreatRewardCard -= CreateCard;
-            Events.ShowCardPopup -= ShowCardPopup; // Debug
+            if (debugScreen.DebugEnabled) Events.ShowCardPopup -= ShowCardPopup; // Debug
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
             Events.ToggleBackButton -= ToggleBackButton;
             Events.Logout -= Logout;
             Events.PlayIntroDialog -= PlayIntroDialog;
             Events.MinigameClosed -= BackToMain;
+            Events.GetMinigameTitle -= GetGameTitle;
+            Events.GetCurrentGame -= GetCurrentGame;
+            Events.IsDebugEnabled -= () => debugScreen.DebugEnabled;
         }
 
         #endregion
@@ -95,6 +108,7 @@ namespace Wrapper
         private void OpenMinigame(Minigame minigame)
         {
             SceneManager.LoadScene(minigame.StartScene);
+            currentGame = minigame.gameValue;
         }
 
         void BackToMain()
@@ -106,6 +120,7 @@ namespace Wrapper
                 Events.ToggleTitleScreen?.Invoke(false);
             }
             Events.PlayMusic?.Invoke("W_Music");
+            currentGame = Game.None;
         }
 
         private void ToggleLoadingScreen()
@@ -263,6 +278,16 @@ namespace Wrapper
         {
             foreach (Transform child in mount.transform)
                 Destroy(child.gameObject);
+        }
+
+        string GetGameTitle(Game game)
+        {
+            return minigameTitles.Entries[(int)game];
+        }
+
+        Game GetCurrentGame()
+        {
+            return currentGame;
         }
 
         #endregion

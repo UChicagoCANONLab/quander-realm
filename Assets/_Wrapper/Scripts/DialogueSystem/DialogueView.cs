@@ -357,12 +357,12 @@ namespace Wrapper
         {
             if (step > 0)
             {
-                dupePage.text = dialogue.text;
+                SetDupeText(dialogue.text);
                 animator.SetTrigger("DialogueNext");
             }
             else
             {
-                dupePage.text = dialogueBody.text;
+                SetDupeText(dialogueBody.text);
                 tempDialogueText = dialogue.text;
                 animator.SetTrigger("DialoguePrevious");
             }
@@ -376,12 +376,12 @@ namespace Wrapper
         {
             if (step > 0) //Next
             {
-                dialogueBody.text = dupePage.text;
+                SetDialogText(dupePage.text);
                 animator.SetTrigger("DialogueNext");
             }
             else
             {
-                dialogueBody.text = tempDialogueText;
+                SetDialogText(tempDialogueText);
                 animator.SetTrigger("DialoguePrevious");
             }
         }
@@ -453,6 +453,28 @@ namespace Wrapper
                 yield return Routine.Combine(
                     animator.WaitToCompleteAnimation(leftCharAnimLayerIndex),
                     animator.WaitToCompleteAnimation(rightCharAnimLayerIndex));
+        }
+
+        void SetDupeText(string text)
+        {
+            if (text.Contains("*this part of town*"))
+            {
+                // replace with minigame name
+                var game = Events.GetMinigameTitle.Invoke(Events.GetCurrentGame.Invoke());
+                text = text.Replace("*this part of town*", game);
+            }
+            dupePage.text = text;
+        }
+
+        void SetDialogText(string text)
+        {
+            if (text.Contains("*this part of town*"))
+            {
+                // replace with minigame name
+                var game = Events.GetMinigameTitle.Invoke(Events.GetCurrentGame.Invoke());
+                text = text.Replace("*this part of town*", game);
+            }
+            dialogueBody.text = text;
         }
     }
 }

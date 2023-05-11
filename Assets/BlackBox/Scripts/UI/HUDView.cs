@@ -22,7 +22,7 @@ namespace BlackBox
 
         private void OnEnable()
         {
-            BBEvents.ClearMarkers += InitEnergyBar; // Debug
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers += InitEnergyBar; // Debug
             BBEvents.InitEnergyBar += InitEnergyBar;
             BBEvents.DecrementEnergy += DecrementEnergy;
             BBEvents.IndicateEmptyMeter += IndicateEmpty;
@@ -32,7 +32,7 @@ namespace BlackBox
 
         private void OnDisable()
         {
-            BBEvents.ClearMarkers -= InitEnergyBar; // Debug
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers -= InitEnergyBar; // Debug
             BBEvents.InitEnergyBar -= InitEnergyBar;
             BBEvents.IndicateEmptyMeter -= IndicateEmpty;
             BBEvents.DecrementEnergy -= DecrementEnergy;

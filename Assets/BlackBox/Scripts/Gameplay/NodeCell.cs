@@ -22,31 +22,37 @@ namespace BlackBox
             lanternMount.SetGridPosition(gridPosition);
             lanternMount.EvaluateEmpty();
 
-            SetupDebug();
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) SetupDebug();
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
-            BBEvents.ToggleDebug += ToggleDebug;
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ToggleDebug += ToggleDebug;
         }
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            BBEvents.ToggleDebug -= ToggleDebug;
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ToggleDebug -= ToggleDebug;
         }
         public override void Interact()
         {
             if (cellType == CellType.EdgeNode)
                 return;
 
-            hasNode = !hasNode;
-
             // Debug
             if (debug)
+            {
+                hasNode = !hasNode;
                 nodeObj.SetActive(hasNode);
+            }
+        }
+
+        public void SetNode()
+        {
+            hasNode = !hasNode;
         }
 
         //todo: make these properties?
@@ -77,9 +83,6 @@ namespace BlackBox
             debug = (bool)BBEvents.IsDebug?.Invoke();
 
             text.text = gridPosition.x.ToString() + ", " + gridPosition.y.ToString();
-            buttons = new List<Button>();
-            foreach (Button button in buttons)
-                button.onClick.AddListener(() => { if (debug) Interact(); });
 
             if (debug)
                 ToggleDebug();
