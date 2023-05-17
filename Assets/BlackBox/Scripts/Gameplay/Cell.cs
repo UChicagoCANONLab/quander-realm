@@ -42,8 +42,30 @@ namespace BlackBox
             gridPosition = new Vector3Int(xPos, yPos, 0);
             this.cellType = cellType;
             this.direction = direction;
+            SetDirectionAnim(direction);
 
             return this;
+        }
+
+        void SetDirectionAnim(Dir direction)
+        {
+            switch (direction)
+            {
+                case Dir.Top:
+                    animator.SetInteger("BatGridLocation", 1);
+                    break;
+                case Dir.Right:
+                    animator.SetInteger("BatGridLocation", 2);
+                    break;
+                case Dir.Bot:
+                    animator.SetInteger("BatGridLocation", 3);
+                    break;
+                case Dir.Left:
+                    animator.SetInteger("BatGridLocation", 4);
+                    break;
+
+                default: break;
+            }
         }
     }
 }

@@ -37,25 +37,32 @@ namespace BlackBox
                     cellArray[x, y] = navCell;
                 }
             }
+
+            // set Molly on first slot
+            if (direction == Dir.Top) cellArray[0, 0].EnableMolly(false);
         }
 
-        private void MarkUnit(Marker marker, Dir gridDirection, Vector3Int destPosition)
+        private void MarkUnit(Marker marker, Dir gridDirection, Vector3Int destPosition, bool destination)
         {
             if (direction != gridDirection)
                 return;
 
-            cellArray[destPosition.x, destPosition.y].SetValue(marker);
+            if (destination) cellArray[destPosition.x, destPosition.y].SetDelayedValue(marker);
+            else cellArray[destPosition.x, destPosition.y].SetValue(marker);
         }
 
         private void MarkLinkedUnits(Dir entryDirection, Vector3Int entryPosition, Dir exitDirection, Vector3Int exitPosition, int detourPairNumber)
         {
-            //Entry Cell
-            if (entryDirection == direction)
-                cellArray[entryPosition.x, entryPosition.y].SetValue(Marker.Detour, detourPairNumber, exitDirection, exitPosition);
+            //BBEvents.DelayReaction?.Invoke(() =>
+            //{
+                //Entry Cell
+                if (entryDirection == direction)
+                    cellArray[entryPosition.x, entryPosition.y].SetValue(Marker.Detour, detourPairNumber, exitDirection, exitPosition);
 
-            //Exit Cell
-            if (exitDirection == direction)
-                cellArray[exitPosition.x, exitPosition.y].SetValue(Marker.Detour, detourPairNumber, entryDirection, entryPosition);
+                //Exit Cell
+                if (exitDirection == direction)
+                    cellArray[exitPosition.x, exitPosition.y].SetDelayedValue(Marker.Detour, detourPairNumber, entryDirection, entryPosition);
+            //});
         }
     }
 }
