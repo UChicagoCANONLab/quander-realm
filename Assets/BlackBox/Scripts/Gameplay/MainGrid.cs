@@ -15,18 +15,34 @@ namespace BlackBox
         private Ray ray = null;
         private NodeCell[,] cellArray = null;
 
+        [SerializeField]
+        float swapDelayTime = 0.8F;
+        [SerializeField]
+        float fogDelayTime = 2F;
+        [SerializeField]
+        float fogReactionDelayTime = 2F;
+        BeauRoutine.Routine interactionDelayer;
+
         private void OnEnable()
         {
             BBEvents.FireRay += FireRay;
             BBEvents.ToggleFlag += ToggleFlag;
-            BBEvents.ClearMarkers += ResetEnergy; // Debug
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers += ResetEnergy; // Debug
+            BBEvents.IsInteractionDelayed += IsDelayed;
+            BBEvents.DelayInteraction += DelayInteraction;
+            BBEvents.DelayReaction += DelayReaction;
+            BBEvents.LanternPlacedCount += GetLanternsOnGridCount;
         }
 
         private void OnDisable()
         {
             BBEvents.FireRay -= FireRay;
-            BBEvents.ToggleFlag -= ToggleFlag;            
-            BBEvents.ClearMarkers -= ResetEnergy; // Debug
+            BBEvents.ToggleFlag -= ToggleFlag;
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers -= ResetEnergy; // Debug
+            BBEvents.IsInteractionDelayed -= IsDelayed;
+            BBEvents.DelayInteraction -= DelayInteraction;
+            BBEvents.DelayReaction -= DelayReaction;
+            BBEvents.LanternPlacedCount -= GetLanternsOnGridCount;
         }
 
         public void Create(int width, int height, int numEnergyUnits)
@@ -67,7 +83,7 @@ namespace BlackBox
         public void SetNodes(Vector2Int[] nodePositions)
         {
             foreach (Vector2Int position in nodePositions)
-                cellArray[position.x, position.y].Interact(); // todo: rename/use a dedicated function for toggling here?
+                cellArray[position.x, position.y].SetNode();
         }
 
         public int GetNumCorrect(Vector2Int[] nodePositions)
@@ -98,6 +114,8 @@ namespace BlackBox
             while (RayInPlay())
                 UpdateRayPosition();
 
+            BBEvents.SendMollyIn?.Invoke();
+            BBEvents.DelayInteraction?.Invoke(true);
             ray.AddMarkers();
         }
 
@@ -180,6 +198,48 @@ namespace BlackBox
         private void ResetEnergy()
         {
             energyUnits = (int)BBEvents.GetNumEnergyUnits?.Invoke();
+        }
+
+        void DelayInteraction(bool inFog)
+        {
+            interactionDelayer.Replace(Delay(inFog));
+        }
+
+        System.Collections.IEnumerator Delay(bool inFog)
+        {
+            if (inFog) yield return new WaitForSeconds(fogDelayTime);
+            else yield return new WaitForSeconds(swapDelayTime);
+        }
+
+        void DelayReaction(Action reaction)
+        {
+            interactionDelayer.Replace(ReactionDelay(reaction));
+        }
+
+        System.Collections.IEnumerator ReactionDelay(Action delayedReaction)
+        {
+            yield return new WaitForSeconds(fogReactionDelayTime);
+            if (delayedReaction != null) delayedReaction();
+            yield return new WaitForSeconds(fogReactionDelayTime);
+        }
+
+        bool IsDelayed()
+        {
+            return interactionDelayer.Exists();
+        }
+
+        int GetLanternsOnGridCount()
+        {
+            int count = 0;
+            for (int y = 0; y < cellArray.GetLength(1); y++)
+            {
+                for (int x = 0; x < cellArray.GetLength(0); x++)
+                {
+                    if (cellArray[x, y].HasLantern()) count++;
+                }
+            }
+
+            return count;
         }
     }
 }

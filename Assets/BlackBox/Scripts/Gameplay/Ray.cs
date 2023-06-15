@@ -54,9 +54,9 @@ namespace BlackBox
                 if (origin == destination)
                 {
                     if (directHit)
-                        BBEvents.MarkUnits?.Invoke(Marker.Hit, originDirection, origin);
+                        BBEvents.MarkUnits?.Invoke(Marker.Hit, originDirection, origin, true);
                     else // only other case for returning to the same cell is a reflection
-                        BBEvents.MarkUnits?.Invoke(Marker.Reflect, originDirection, origin);
+                        BBEvents.MarkUnits?.Invoke(Marker.Reflect, originDirection, origin, true);
                 }
                 else // different cell
                     BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination, GetDetourPairNumber());
@@ -67,8 +67,8 @@ namespace BlackBox
                     BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination, GetDetourPairNumber());
                 else // straight through
                 {
-                    BBEvents.MarkUnits?.Invoke(Marker.Miss, originDirection, origin);
-                    BBEvents.MarkUnits?.Invoke(Marker.Miss, destDirection, destination);
+                    BBEvents.MarkUnits?.Invoke(Marker.Miss, originDirection, origin, false);
+                    BBEvents.MarkUnits?.Invoke(Marker.Miss, destDirection, destination, true);
                 }
             }
         }
