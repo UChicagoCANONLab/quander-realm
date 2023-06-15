@@ -137,7 +137,16 @@ namespace Wrapper
             Routine.Start(LoginRoutine(researchCode));
         }
 
-#if !UNITY_WEBGL
+#if LITE_VERSION
+        private IEnumerator LoginRoutine(string researchCode)
+        {
+            currentUserSave.id = "GUEST"; 
+	        Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            isUserLoggedIn = true;
+            return null;
+	    }
+
+#elif !UNITY_WEBGL
         private IEnumerator LoginRoutine(string researchCode)
         {
             // Test internet connection
@@ -277,7 +286,7 @@ namespace Wrapper
 #endif
 
 #if !UNITY_WEBGL
-        private IEnumerator GetDatabaseSnapshot()
+            private IEnumerator GetDatabaseSnapshot()
         {
             if (dbReference == null)
                 yield break;
@@ -366,7 +375,12 @@ namespace Wrapper
             Routine.Start(UpdateRemoteSaveRoutine());
         }
 
-#if !UNITY_WEBGL
+#if LITE_VERSION
+        private IEnumerator UpdateRemoteSaveRoutine()
+        {
+            return null;
+        }
+#elif !UNITY_WEBGL
         private IEnumerator UpdateRemoteSaveRoutine()
         {
             uploadSuccess = false;
@@ -431,10 +445,12 @@ namespace Wrapper
         }
 #endif
 
-        // AWS
-        private void SaveMinigameResearchData(Game game, object minigameSave)
+            // AWS
+            private void SaveMinigameResearchData(Game game, object minigameSave)
         {
+#if !LITE_VERSION
             StartCoroutine(SendResearchDataToRemote(game, minigameSave));
+#endif
         }
 
         // AWS
