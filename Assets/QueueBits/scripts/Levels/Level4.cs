@@ -262,7 +262,7 @@ namespace QueueBits
 
 		public GameObject resultBG;
 		public string playerWonText = "You Won!";
-		public string playerLoseText = "Red Won!";
+		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
 		public GameObject probText;
@@ -379,7 +379,7 @@ namespace QueueBits
 			levelText.SetActive(true);
 
 			isPlayersTurn = false;
-			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 			if (isPlayersTurn)
 			{
@@ -1336,7 +1336,7 @@ namespace QueueBits
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 				DestroyImmediate(playerTurnObject);
 

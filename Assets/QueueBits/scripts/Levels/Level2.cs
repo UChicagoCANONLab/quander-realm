@@ -43,7 +43,7 @@ namespace QueueBits
 		public GameObject winningText;
 		public GameObject resultBG;
 		public string playerWonText = "You Won!";
-		public string playerLoseText = "Red Won!";
+		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
 		// public GameObject probText;

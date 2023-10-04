@@ -263,7 +263,7 @@ namespace QueueBits
 
 		public GameObject resultBG;
 		public string playerWonText = "You Won!";
-		public string playerLoseText = "Red Won!";
+		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
 		public GameObject probText;
@@ -384,7 +384,7 @@ namespace QueueBits
 			CreateField();
 
 			isPlayersTurn = false;
-			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 			GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
 			levelText.GetComponent<TextMesh>().text = "Level 3";
 
@@ -1385,7 +1385,7 @@ namespace QueueBits
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 				DestroyImmediate(playerTurnObject);
 
