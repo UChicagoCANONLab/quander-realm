@@ -268,7 +268,7 @@ namespace QueueBits
 		public GameObject resultBG;
 		public bool resultBGshown = false;
 		public string playerWonText = "You Won!";
-		public string playerLoseText = "Red Won!";
+		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
 		public GameObject probText;
@@ -402,7 +402,7 @@ namespace QueueBits
 
 			isPlayersTurn = false;
 			//isPlayersTurn = System.Convert.ToBoolean(Random.Range(0, 2));
-			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 
 			if (isPlayersTurn)
@@ -1399,7 +1399,7 @@ namespace QueueBits
 				//	yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 				DestroyImmediate(playerTurnObject);
 
@@ -1475,7 +1475,7 @@ namespace QueueBits
 								field[coord_x, coord_y] = 2;
 							}
 							isPlayersTurn = !isPlayersTurn;
-							playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+							playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 							DestroyImmediate(playerTurnObject);
 
@@ -1527,7 +1527,7 @@ namespace QueueBits
 				Debug.Log((coord_x, coord_y));
 
 				isPlayersTurn = !isPlayersTurn;
-				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 				DestroyImmediate(playerTurnObject);
 
