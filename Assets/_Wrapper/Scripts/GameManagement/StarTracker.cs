@@ -8,6 +8,15 @@ namespace Wrapper
     public class StarTracker : MonoBehaviour {
 
         public static StarTracker ST;
+        private void Awake()
+        {
+            if (ST != null) {
+                Destroy(gameObject);
+                return;
+            }
+            ST = this;
+            DontDestroyOnLoad(gameObject);
+        }
 
         public Dictionary<Game, int> starsPerGame = new Dictionary<Game, int>() {
             {Game.BlackBox, 0},     // max 0? maybe make 15 or 45
@@ -16,10 +25,6 @@ namespace Wrapper
             {Game.QueueBits, 0},    // max 45
             {Game.Qupcakes, 0}      // max 81
         };
-
-        void Awake() {
-            ResetStarCounter();
-        }
 
         public TMP_Text scoreNumber; 
 

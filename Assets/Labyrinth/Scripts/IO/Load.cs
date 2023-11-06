@@ -38,7 +38,7 @@ namespace Labyrinth
                 }
             }
             Data.Instance.researchData = new ResearchData();
-            
+            Wrapper.StarTracker.ST.starsPerGame[Wrapper.Game.Labyrinth] = SaveData.Instance.totalStars;
         }
 
 
