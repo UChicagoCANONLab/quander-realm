@@ -11,6 +11,7 @@ namespace Wrapper
         public List<string> rewards;
         public bool introDialogueSeen = false;
         public bool rewardDialogueSeen = false;
+        public int totalStars = 0;
 
         public UserSave(string idString = "", string rewardID = "")
         {
@@ -89,5 +90,14 @@ namespace Wrapper
         {
             return rawString.Trim().ToLower();
         }
+
+        public void UpdateTotalStars(Game game, int i) {
+            totalStars += i;
+        }
+
+        public int GetTotalStars() {
+            return totalStars;
+        }
+
     }
 }
