@@ -30,8 +30,8 @@ namespace QueueBits
             if (saveData == null)
             {
                 saveData = new QBSaveData();
-                Save();
             }
+            Save();
         }
 
         public static void Save()

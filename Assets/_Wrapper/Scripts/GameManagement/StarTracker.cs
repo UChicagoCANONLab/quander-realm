@@ -20,8 +20,8 @@ namespace Wrapper
 
         // Total stars per each game
         private Dictionary<Game, int> starsPerGame = new Dictionary<Game, int>() {
-            {Game.BlackBox, 0},     // max 0? maybe make 15 or 45
-            {Game.Circuits, 0},     // max 25 now, soon 75
+            {Game.BlackBox, 0},     // max 0? maybe make 45
+            {Game.Circuits, 0},     // max 75
             {Game.Labyrinth, 0},    // max 45
             {Game.QueueBits, 0},    // max 45
             {Game.Qupcakes, 0}      // max 81
@@ -29,9 +29,8 @@ namespace Wrapper
         private Game[] games = new Game[] {
             Game.BlackBox, Game.Circuits, Game.Labyrinth, Game.QueueBits, Game.Qupcakes
         };
-
         public void PrintDict() {
-            foreach (Game game in starsPerGame.Keys) {
+            foreach (Game game in games) {
                 Debug.Log($"{game}: {starsPerGame[game]}");
             }
         }
@@ -74,7 +73,7 @@ namespace Wrapper
         }
 
 
-        /* Getting TotalStars from each game */
+        /* Loading TotalStars from each game */
 
         // TwinTanglement
         private void InitTTStars() {
