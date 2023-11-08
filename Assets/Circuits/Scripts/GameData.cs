@@ -32,7 +32,7 @@ namespace Circuits
                 try
                 {
                     string saveString = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Circuits);
-                    Debug.Log(saveString);
+                    // Debug.Log(saveString);
                     saveData = JsonUtility.FromJson<Circuits_SaveData>(saveString);
                 }
                 catch (Exception e)
@@ -97,6 +97,14 @@ namespace Circuits
             return saveData.starsPerLevel;
         }
 
+        public static void resetTotalStars() {
+            int temp = 0;
+            for (int i=0; i<CTConstants.N_LEVELS; i++) {
+                temp += saveData.starsPerLevel[i];
+            }
+            saveData.totalStars = temp;
+        }
+
         public static void levelPassed()
         {
             try
@@ -110,6 +118,7 @@ namespace Circuits
             {
 
             }
+            resetTotalStars();
             saveData.currLevel += 1;
             log.Add(string.Format("{0}-passed-{1}", saveData.currLevel, DateTime.UtcNow.ToString(datePatt)));
 

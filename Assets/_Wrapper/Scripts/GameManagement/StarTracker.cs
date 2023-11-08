@@ -43,6 +43,7 @@ namespace Wrapper
         public void InitStarTracker() {
             InitTTStars();
             InitQCStars();
+            InitTLStars();
 
             ResetStarDisplay();
             // PrintDict();
@@ -92,6 +93,15 @@ namespace Wrapper
             }
             // Debug.Log($"QC: {string.Join(",", data2.levelPerformance)}");
             // Debug.Log($"QC: {data2.TotalStars}");
+        }
+
+        // Tangle's Lair
+        private void InitTLStars() {
+            string data = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Circuits);
+            Circuits.Circuits_SaveData data2 = JsonUtility.FromJson<Circuits.Circuits_SaveData>(data);
+            if (data2 != null) {
+                UpdateStarTracker(Game.Circuits, data2.totalStars);
+            }
         }
         
     }

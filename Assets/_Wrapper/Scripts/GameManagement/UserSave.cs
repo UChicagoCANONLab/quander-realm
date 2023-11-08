@@ -99,5 +99,11 @@ namespace Wrapper
             return totalStars;
         }
 
+        public void printSaveStrings() {
+            foreach (string s in minigameSaves) {
+                Debug.Log(s);
+            }
+        }
+
     }
 }
