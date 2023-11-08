@@ -22,7 +22,7 @@ namespace Circuits
                 newButton.transform.SetParent(content.transform);
                 newButton.transform.localScale = Vector3.one;
                 LevelButtonBehavior lb = newButton.GetComponent<LevelButtonBehavior>();
-                lb.init(i, GameData.getCompletedLevels()[i], this);
+                lb.init(i, GameData.getCompletedLevels()[i], GameData.getStarsPerLevel()[i], this);
                 buttons[i] = lb;
             }
 
@@ -32,7 +32,7 @@ namespace Circuits
         {
             for (int i = 0; i < CTConstants.N_LEVELS; i++)
             {
-                buttons[i].init(i, GameData.getCompletedLevels()[i], this);
+                buttons[i].init(i, GameData.getCompletedLevels()[i], GameData.getStarsPerLevel()[i], this);
             }
         }
 

@@ -9,7 +9,10 @@ namespace Circuits
     {
         public Text buttonText;
         //public Image star;
-        public Sprite starSprite;
+
+        // public Sprite starSprite;
+        public GameObject[] starSprites;
+        
         public GameObject panel;
         //public Text scoreText;
         private LevelSelectorBehavior owner;
@@ -23,7 +26,7 @@ namespace Circuits
             owner.onLevelSelection(level);
         }
 
-        public void init(int l, bool completed, LevelSelectorBehavior o)
+        public void init(int l, bool completed, int stars, LevelSelectorBehavior o)
         {
             owner = o;
             level = l;
@@ -32,14 +35,17 @@ namespace Circuits
             Image numberObject = panel.transform.Find("LevelNumber").GetComponent<Image>();
             numberObject.sprite = numberSprites[level];
 
-                GetComponent<Button>().interactable = true;
-                //scoreText.text = "";
-                if(completed)
-                {
-                    Image starObject = panel.transform.Find($"Star").GetComponent<Image>();
-                    starObject.sprite = starSprite;
-                    //scoreText.text += "*";
-                }
+            GetComponent<Button>().interactable = true;
+            //scoreText.text = "";
+            /* if(completed)
+            {
+                Image starObject = panel.transform.Find($"Star").GetComponent<Image>();
+                // starObject.sprite = starSprite;
+                //scoreText.text += "*";
+            } */
+            for (int i=0; i< stars; i++) {
+                starSprites[i].SetActive(true);
+            }
         }
     }
 }

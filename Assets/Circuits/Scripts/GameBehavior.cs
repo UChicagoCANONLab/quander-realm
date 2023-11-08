@@ -78,8 +78,8 @@ namespace Circuits
             //camera.orthographicSize = Math.Max(circuitSize * 2.5f, 25);
 
 
-
-            var loadedGate = Resources.Load("Circuits/Prefabs/H_Gate");
+            string prefix = "Circuits/Prefabs/";
+            var loadedGate = Resources.Load($"{prefix}H_Gate");
             gateObjects = new BaseGateBehavior[circuit.Count, circuit[0].Count];
             Vector3 offset = new Vector3((-nCols / 2) * CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h);
             for (int i = 0; i < circuit.Count; i++)
@@ -94,22 +94,22 @@ namespace Circuits
                     switch (gateSelected)
                     {
                         case "H-0":
-                            instantiateGate("Circuits/Prefabs/H_Gate", j, i, nLines, circuit[i].Count);
+                            instantiateGate($"{prefix}H_Gate", j, i, nLines, circuit[i].Count);
                             break;
                         case "Z-0":
-                            instantiateGate("Circuits/Prefabs/Z_Gate", j, i, nLines, circuit[i].Count);
+                            instantiateGate($"{prefix}Z_Gate", j, i, nLines, circuit[i].Count);
                             break;
                         case "X-0":
-                            instantiateGate("Circuits/Prefabs/NOT_Gate", j, i, nLines, circuit[i].Count);
+                            instantiateGate($"{prefix}NOT_Gate", j, i, nLines, circuit[i].Count);
                             break;
                         case "CX-0":
-                            instantiateGate("Circuits/Prefabs/CNOT_Gate", j, i, nLines, circuit[i].Count);
+                            instantiateGate($"{prefix}CNOT_Gate", j, i, nLines, circuit[i].Count);
                             break;
                         case "CZ-0":
-                            instantiateGate("Circuits/Prefabs/CZ_Gate", j, i, nLines, circuit[i].Count);
+                            instantiateGate($"{prefix}CZ_Gate", j, i, nLines, circuit[i].Count);
                             break;
                         case "SWAP-0":
-                            instantiateGate("Circuits/Prefabs/SWAP_Gate", j, i, nLines, circuit[i].Count);
+                            instantiateGate($"{prefix}SWAP_Gate", j, i, nLines, circuit[i].Count);
                             break;
                         default:
                             //Debug.Log("No Match for: " + gateSelected);
@@ -510,6 +510,8 @@ namespace Circuits
 
         public void flashHint()
         {
+            StarDisplay.SD.LoseStar();
+
             for (int y = 0; y < circuit.Count; y++)
             {
                 for (int x = 0; x < circuit[y].Count; x++)
@@ -558,8 +560,9 @@ namespace Circuits
         public void loadNextLevel()
         {
             GameData.levelPassed();
-
             SceneManager.LoadScene(GameData.getNextScene());
+
+            StarDisplay.SD.ResetStars();
         }
         private void Update()
         {

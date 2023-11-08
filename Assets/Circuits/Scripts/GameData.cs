@@ -93,11 +93,18 @@ namespace Circuits
             return saveData.completedLevels;
         }
 
+        public static int[] getStarsPerLevel() {
+            return saveData.starsPerLevel;
+        }
+
         public static void levelPassed()
         {
             try
             {
                 saveData.completedLevels[saveData.currLevel] = true;
+                if (saveData.starsPerLevel[saveData.currLevel] < StarDisplay.SD.numStars) {
+                    saveData.starsPerLevel[saveData.currLevel] = StarDisplay.SD.numStars;
+                }
             }
             catch (Exception ex)
             {
