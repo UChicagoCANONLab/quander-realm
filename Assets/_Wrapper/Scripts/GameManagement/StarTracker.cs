@@ -44,6 +44,7 @@ namespace Wrapper
             InitTTStars();
             InitQCStars();
             InitTLStars();
+            InitQBStars();
 
             ResetStarDisplay();
             // PrintDict();
@@ -101,6 +102,15 @@ namespace Wrapper
             Circuits.Circuits_SaveData data2 = JsonUtility.FromJson<Circuits.Circuits_SaveData>(data);
             if (data2 != null) {
                 UpdateStarTracker(Game.Circuits, data2.totalStars);
+            }
+        }
+
+        // QueueBits
+        private void InitQBStars() {
+            string data = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.QueueBits);
+            QueueBits.QBSaveData data2 = JsonUtility.FromJson<QueueBits.QBSaveData>(data);
+            if (data2 != null) {
+                UpdateStarTracker(Game.QueueBits, data2.totalStars);
             }
         }
         
