@@ -53,12 +53,13 @@ namespace Qupcakery
                 {
                     GameManagement.Instance.game.gameStat.
                         SetLevelPerformance((int)levelInd, starCnt);
+                    // GameManagement.Instance.game.gameStat.totalStars += (starCnt - prevCnt);
                 }
             }
             else
             {
-                GameManagement.Instance.game.gameStat.
-                        SetLevelPerformance((int)levelInd, starCnt);
+                GameManagement.Instance.game.gameStat.SetLevelPerformance((int)levelInd, starCnt);
+                // GameManagement.Instance.game.gameStat.totalStars += starCnt;
             }
             //string dataJson = JsonUtility.ToJson(GameManagement.Instance.game.gameStat);
             //Debug.Log(dataJson);

@@ -27,14 +27,22 @@ namespace Wrapper
             {Game.Qupcakes, 0}      // max 81
         };
 
+        public void PrintDict() {
+            foreach (Game game in starsPerGame.Keys) {
+                Debug.Log($"{game}: {starsPerGame[game]}");
+            }
+        }
+
         // GameObject that displays the star count
         public TMP_Text scoreNumber; 
 
         // Function to Initialize the StarTracker, called during LoginRoutine in SaveManager
         public void InitStarTracker() {
             InitTTStars();
+            InitQCStars();
 
             ResetStarCounter();
+            // PrintDict();
         }
 
         // Reset the TMPro Asset that displays the count
@@ -46,21 +54,34 @@ namespace Wrapper
             scoreNumber.text = $"{i}";
         }
 
-        // Sets private Dictionary values
+        // Sets private Dictionary values and updates display
         public void SetStarTracker(Game game, int i) {
             starsPerGame[game] = i;
             ResetStarCounter();
         }
 
 
-        // Getting TotalStars from each game
+        /* Getting TotalStars from each game */
+
+        // TwinTanglement
         private void InitTTStars() {
             string data = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Labyrinth);
             Labyrinth.TTSaveData data2 = JsonUtility.FromJson<Labyrinth.TTSaveData>(data);
-            SetStarTracker(Game.Labyrinth, data2.TotalStars);
+            if (data2 != null) {
+                SetStarTracker(Game.Labyrinth, data2.TotalStars);
+            }
         }
-
-
+        
+        // QupCakery
+        private void InitQCStars() {
+            string data = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Qupcakes);
+            Qupcakery.GameData data2 = JsonUtility.FromJson<Qupcakery.GameData>(data);
+            Debug.Log($"QC: {string.Join(",", data2.levelPerformance)}");
+            Debug.Log($"QC: {data2.TotalStars}");
+            if (data2 != null) {
+                SetStarTracker(Game.Qupcakes, data2.TotalStars);   
+            }
+        }
         
     }
 }

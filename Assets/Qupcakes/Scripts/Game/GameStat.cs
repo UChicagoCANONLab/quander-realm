@@ -21,6 +21,7 @@ namespace Qupcakery
         public int MaxLevelCompleted; // largest level index of completed levels
         public int LevelJustAttempted;
         public int Result; // loss: 0, win: 1, quit: -1
+        public int totalStars;
 
         // Stores player performance for completed levels
         [SerializeField]
@@ -38,6 +39,7 @@ namespace Qupcakery
             TotalEarning = 0;
             MaxLevelCompleted = 0;
             LevelJustAttempted = 0;
+            totalStars = 0;
             levelPerformance = new int[totalLevelCnt];
             PuzzleResults = new bool[Constants.MaxNumberOfPuzzlePerLevel];
             CompressedPuzzleSolutions = new long[Constants.MaxNumberOfPuzzlePerLevel];
