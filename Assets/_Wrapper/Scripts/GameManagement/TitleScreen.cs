@@ -103,6 +103,8 @@ namespace Wrapper
                 playButton.gameObject.SetActive(true);
                 continueButton.gameObject.SetActive(false);
                 newButton.gameObject.SetActive(false);
+
+                StarTracker.ST.ResetStarCounts();
             }
             else
             {

@@ -26,6 +26,9 @@ namespace Wrapper
             {Game.QueueBits, 0},    // max 45
             {Game.Qupcakes, 0}      // max 81
         };
+        private Game[] games = new Game[] {
+            Game.BlackBox, Game.Circuits, Game.Labyrinth, Game.QueueBits, Game.Qupcakes
+        };
 
         public void PrintDict() {
             foreach (Game game in starsPerGame.Keys) {
@@ -41,12 +44,12 @@ namespace Wrapper
             InitTTStars();
             InitQCStars();
 
-            ResetStarCounter();
+            ResetStarDisplay();
             // PrintDict();
         }
 
         // Reset the TMPro Asset that displays the count
-        public void ResetStarCounter() {
+        public void ResetStarDisplay() {
             int i = 0;
             foreach (Game g in starsPerGame.Keys) {
                 i += starsPerGame[g];
@@ -54,10 +57,18 @@ namespace Wrapper
             scoreNumber.text = $"{i}";
         }
 
+        // Resets all the counts to be zero for when NewGame button pressed
+        public void ResetStarCounts() {
+            foreach (Game g in games) {
+                starsPerGame[g] = 0;
+            }
+            scoreNumber.text = "0";
+        }
+
         // Sets private Dictionary values and updates display
-        public void SetStarTracker(Game game, int i) {
+        public void UpdateStarTracker(Game game, int i) {
             starsPerGame[game] = i;
-            ResetStarCounter();
+            ResetStarDisplay();
         }
 
 
@@ -68,7 +79,7 @@ namespace Wrapper
             string data = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Labyrinth);
             Labyrinth.TTSaveData data2 = JsonUtility.FromJson<Labyrinth.TTSaveData>(data);
             if (data2 != null) {
-                SetStarTracker(Game.Labyrinth, data2.TotalStars);
+                UpdateStarTracker(Game.Labyrinth, data2.TotalStars);
             }
         }
         
@@ -76,11 +87,11 @@ namespace Wrapper
         private void InitQCStars() {
             string data = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Qupcakes);
             Qupcakery.GameData data2 = JsonUtility.FromJson<Qupcakery.GameData>(data);
-            Debug.Log($"QC: {string.Join(",", data2.levelPerformance)}");
-            Debug.Log($"QC: {data2.TotalStars}");
             if (data2 != null) {
-                SetStarTracker(Game.Qupcakes, data2.TotalStars);   
+                UpdateStarTracker(Game.Qupcakes, data2.TotalStars);   
             }
+            // Debug.Log($"QC: {string.Join(",", data2.levelPerformance)}");
+            // Debug.Log($"QC: {data2.TotalStars}");
         }
         
     }
