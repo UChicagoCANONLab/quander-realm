@@ -4,15 +4,18 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class Circuits_ButtonBehavior : MonoBehaviour
+namespace Circuits 
 {
-    public void toMenu()
+    public class Circuits_ButtonBehavior : MonoBehaviour
     {
-        SceneManager.LoadScene("Circuits_Menu");
-    }
+        public void toMenu()
+        {
+            SceneManager.LoadScene("Circuits_Menu");
+        }
 
-    public void toTitle()
-    {
-        SceneManager.LoadScene("Circuits_Title");
+        public void toTitle()
+        {
+            SceneManager.LoadScene("Circuits_Title");
+        }
     }
 }

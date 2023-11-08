@@ -2,33 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseGateOffsetBehavior : MonoBehaviour
+namespace Circuits 
 {
-    private bool isHint = false;
-    public void mistakeAnimationFinished()
+    public class BaseGateOffsetBehavior : MonoBehaviour
     {
-        Debug.Log("TEST");
-        if (isHint) 
-	    {
-            GetComponent<Animation>().Play("GateMotion");
-	    }
-    }
-
-    public void setHint(bool status)
-    {
-        isHint = status;
-        if(isHint)
+        private bool isHint = false;
+        public void mistakeAnimationFinished()
         {
-            GetComponent<Animation>().Play("GateMotion");
-	    }
-        else
-	    {
-            GetComponent<Animation>().Stop();
-	    }
-    }
+            Debug.Log("TEST");
+            if (isHint) 
+            {
+                GetComponent<Animation>().Play("GateMotion");
+            }
+        }
 
-    public void mistakeShake() 
-    {
-        GetComponent<Animation>().Play("Mistake");
+        public void setHint(bool status)
+        {
+            isHint = status;
+            if(isHint)
+            {
+                GetComponent<Animation>().Play("GateMotion");
+            }
+            else
+            {
+                GetComponent<Animation>().Stop();
+            }
+        }
+
+        public void mistakeShake() 
+        {
+            GetComponent<Animation>().Play("Mistake");
+        }
     }
 }
