@@ -223,6 +223,9 @@ namespace BlackBox
             if (levelWon)
             {
                 Wrapper.Events.PlaySound?.Invoke("BB_WolfieSuccess");
+                if (saveData.livesPerLevel[level.number-1] < livesRemaining) {
+                    saveData.livesPerLevel[level.number-1] = livesRemaining;
+                }
                 TrySetNewLevelSave();
             }
             else
@@ -241,9 +244,12 @@ namespace BlackBox
             if (saveData.currentLevelID == string.Empty || ParseLevelID(saveData.currentLevelID) < ParseLevelID(level.nextLevelID))
             {
                 saveData.currentLevelID = level.nextLevelID;
-                Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
+                // Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
             }
-            else Debug.Log("Player has completed a higher level; save data not updated.");
+            // else Debug.Log("Player has completed a higher level; save data not updated.");
+            
+            Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
+            // Debug.Log(string.Join(",", saveData.livesPerLevel));
         }
 
         private IEnumerator DisplayPlayerFeedBack(WinState winState)
@@ -458,6 +464,11 @@ namespace BlackBox
         private int GetNumEnergyUnits()
         {
             return level.numEnergyUnits;
+        }
+
+        private int GetLivesRemaining() 
+        {
+            return livesRemaining;
         }
 
         private bool GetDebugBool()

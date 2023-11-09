@@ -8,5 +8,6 @@ namespace BlackBox
         public string currentLevelID = string.Empty;
         public bool[] tutorialsSeen = new bool[] { false, false, false, false, false };
         public bool completed = false;
+        public int[] livesPerLevel = new int[15];
     }
 }
