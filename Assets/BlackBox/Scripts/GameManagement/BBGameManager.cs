@@ -143,8 +143,12 @@ namespace BlackBox
                 Debug.LogError(e.Message);
             }
 
-            if (saveData == null)
+            if (saveData == null) {
                 saveData = new BBSaveData();
+            }
+            int temp = 0;
+            foreach (int i in saveData.livesPerLevel) { temp += i; }
+            saveData.totalStars = temp;
         }
 
         private void InitLevel()
@@ -224,6 +228,7 @@ namespace BlackBox
             {
                 Wrapper.Events.PlaySound?.Invoke("BB_WolfieSuccess");
                 if (saveData.livesPerLevel[level.number-1] < livesRemaining) {
+                    saveData.totalStars += (livesRemaining - saveData.livesPerLevel[level.number-1]);
                     saveData.livesPerLevel[level.number-1] = livesRemaining;
                 }
                 TrySetNewLevelSave();
@@ -339,7 +344,7 @@ namespace BlackBox
                 int levelNum = ParseLevelID(level.levelID) + (saveData.completed ? 1 : 0);
                 if (levelNum > 0)
                 {
-                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum, GetLevelStars(levelNum));
+                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
                 }
             }
         }
@@ -501,7 +506,7 @@ namespace BlackBox
         }
 
         public int GetLevelStars(int level) {
-            return saveData.livesPerLevel[level -1];
+            return saveData.livesPerLevel[level];
         }
     }
 }

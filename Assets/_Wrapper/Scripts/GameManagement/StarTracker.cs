@@ -44,6 +44,7 @@ namespace Wrapper
             InitQCStars();
             InitTLStars();
             InitQBStars();
+            InitBTStars();
 
             ResetStarDisplay();
             // PrintDict();
@@ -110,6 +111,14 @@ namespace Wrapper
             QueueBits.QBSaveData data2 = JsonUtility.FromJson<QueueBits.QBSaveData>(data);
             if (data2 != null) {
                 UpdateStarTracker(Game.QueueBits, data2.totalStars);
+            }
+        }
+
+        private void InitBTStars() {
+            string data = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.BlackBox);
+            BlackBox.BBSaveData data2 = JsonUtility.FromJson<BlackBox.BBSaveData>(data);
+            if (data2 != null) {
+                UpdateStarTracker(Game.BlackBox, data2.totalStars);
             }
         }
         
