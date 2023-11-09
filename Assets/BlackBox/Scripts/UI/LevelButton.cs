@@ -12,7 +12,9 @@ namespace BlackBox
         [SerializeField]
         Animator buttonAnim;
 
-        public void SetButtonState(int currentLevel)
+        public GameObject[] stars = new GameObject[3];
+
+        public void SetButtonState(int currentLevel, int numStars)
         {
             if (currentLevel >= levelID)
             {
@@ -23,6 +25,9 @@ namespace BlackBox
             {
                 interactable = false;
                 buttonAnim.SetBool("LevelLocked", true);
+            }
+            for (int i=0; i<numStars; i++) {
+                stars[i].SetActive(true);
             }
         }
 

@@ -339,7 +339,7 @@ namespace BlackBox
                 int levelNum = ParseLevelID(level.levelID) + (saveData.completed ? 1 : 0);
                 if (levelNum > 0)
                 {
-                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum);
+                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum, GetLevelStars(levelNum));
                 }
             }
         }
@@ -498,6 +498,10 @@ namespace BlackBox
             if (level < 10) levelText += ("0" + level.ToString());
             else levelText += level.ToString();
             return levelText;
+        }
+
+        public int GetLevelStars(int level) {
+            return saveData.livesPerLevel[level -1];
         }
     }
 }
