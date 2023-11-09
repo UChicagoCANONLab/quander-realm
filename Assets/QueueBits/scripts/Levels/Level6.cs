@@ -1700,6 +1700,7 @@ namespace QueueBits
 					if (GameManager.saveData.starSystem[6] + 1 <= 3)
 					{
 						GameManager.saveData.starSystem[6] = GameManager.saveData.starSystem[6] + 1;
+						GameManager.Save();
 					}
 				}
 				// StarSystem
