@@ -11,6 +11,7 @@ namespace Labyrinth
         // Helps the game run
         public int Degree;
         public int CurrentLevel; //current level the user is playing
+        public int MaxLevelUnlocked;
 
         // Non-research data
         public int[] starsPerLevel; //15 levels, all w 0-3 stars
