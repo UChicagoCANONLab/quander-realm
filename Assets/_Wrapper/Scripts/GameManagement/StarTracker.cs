@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Wrapper;
 
 namespace Wrapper 
 {
     public class StarTracker : MonoBehaviour 
     {
-        private int TotalStars;
+        private int TotalStars; // total possible is 291
 
         // Set up Singleton for StarTracker
         public static StarTracker ST;
@@ -26,7 +27,7 @@ namespace Wrapper
 
         // Total stars per each game
         private Dictionary<Game, int> starsPerGame = new Dictionary<Game, int>() {
-            {Game.BlackBox, 0},     // max 0? maybe make 45
+            {Game.BlackBox, 0},     // max 45
             {Game.Circuits, 0},     // max 75
             {Game.Labyrinth, 0},    // max 45
             {Game.QueueBits, 0},    // max 45
@@ -53,6 +54,7 @@ namespace Wrapper
             InitBTStars();
 
             ResetStarDisplay();
+            GameObject.Find("MapCanvas 1/MapPanel").GetComponent<MapManager>().InitMap();
             // PrintDict();
         }
 
@@ -84,6 +86,23 @@ namespace Wrapper
             starsPerGame[game] = i;
             ResetStarDisplay();
         }
+
+        /* 
+        Check unlock conditions 
+        */
+
+        public void CheckUnlockGames() {
+            if (starsPerGame[Game.Qupcakes] >= 27) {
+                // Unlock Tangle's Lair (Circuits)
+            }
+            if (starsPerGame[Game.Qupcakes] >= 10 && starsPerGame[Game.Labyrinth] >= 10) {
+                // Unlock Queuebits
+            }
+            if (TotalStars >= 120) {
+                // Unlock Buried Treasure (BlackBox)
+            }
+        }
+
 
         /* 
         Loading TotalStars from each game 

@@ -20,7 +20,7 @@ namespace Wrapper
             
             // In order: {BT, TL, TT, QB, QC}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-            minigameUnlocked = new bool[] {false, false, false, false, true};
+            minigameUnlocked = new bool[] {false, false, true, false, true};
 
             if (!(idString.Equals(string.Empty)))
                 id = idString.Trim();
