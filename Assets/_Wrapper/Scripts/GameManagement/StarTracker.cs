@@ -5,7 +5,9 @@ using TMPro;
 
 namespace Wrapper 
 {
-    public class StarTracker : MonoBehaviour {
+    public class StarTracker : MonoBehaviour 
+    {
+        private int TotalStars;
 
         // Set up Singleton for StarTracker
         public static StarTracker ST;
@@ -64,6 +66,7 @@ namespace Wrapper
             foreach (Game g in starsPerGame.Keys) {
                 i += starsPerGame[g];
             }
+            TotalStars = i;
             scoreNumber.text = $"{i}";
         }
 
@@ -72,6 +75,7 @@ namespace Wrapper
             foreach (Game g in games) {
                 starsPerGame[g] = 0;
             }
+            TotalStars = 0;
             scoreNumber.text = "0";
         }
 
