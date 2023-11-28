@@ -18,7 +18,8 @@ namespace Wrapper
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            // if clicking reward card, then save card info
+            // If clicking reward card, then save card info
+            // Doing this here even though it would be better in Reward.cs becauses idk how to do it there
             if (eventData.pointerCurrentRaycast.gameObject.name == "Hitbox" && SceneManager.GetActiveScene().name == "RewardCollection") {
                 // Debug.Log(eventData.pointerPress);
                 Reward currCard = eventData.pointerPress.GetComponent<Reward>();
