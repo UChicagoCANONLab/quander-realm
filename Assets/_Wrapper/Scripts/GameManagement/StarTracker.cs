@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using Wrapper;
+using UnityEngine.SceneManagement;
 
 namespace Wrapper 
 {
     public class StarTracker : MonoBehaviour 
     {
-        private int TotalStars; // total possible is 291
+        public int TotalStars; // total possible is 291
 
         // Set up Singleton for StarTracker
         public static StarTracker ST;
@@ -26,7 +26,7 @@ namespace Wrapper
         */
 
         // Total stars per each game
-        private Dictionary<Game, int> starsPerGame = new Dictionary<Game, int>() {
+        public Dictionary<Game, int> starsPerGame = new Dictionary<Game, int>() {
             {Game.BlackBox, 0},     // max 45
             {Game.Circuits, 0},     // max 75
             {Game.Labyrinth, 0},    // max 45

@@ -119,7 +119,7 @@ namespace Wrapper
             {
                 Events.CloseLoginScreen?.Invoke();
                 Events.ToggleTitleScreen?.Invoke(false);
-                StarTracker.ST.InitStarTracker();
+                StarTracker.ST.Invoke("InitStarTracker", 0.2f);
             }
             Events.PlayMusic?.Invoke("W_Music");
             currentGame = Game.None;

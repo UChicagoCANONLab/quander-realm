@@ -212,7 +212,7 @@ namespace Wrapper
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
 
-            StarTracker.ST.InitStarTracker();
+            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
 #else
         private IEnumerator LoginRoutine(string researchCode)
@@ -285,7 +285,7 @@ namespace Wrapper
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
 
-            StarTracker.ST.InitStarTracker();
+            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
 #endif
 

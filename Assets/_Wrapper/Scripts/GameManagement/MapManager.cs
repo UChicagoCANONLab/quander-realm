@@ -22,9 +22,20 @@ namespace Wrapper
             Lock(Game.BlackBox);
             Lock(Game.QueueBits);
             Lock(Game.Circuits);
-            Lock(Game.Qupcakes);
-            Lock(Game.Labyrinth);
 
+            TryUnlockGames();
+        }
+
+        public void TryUnlockGames() {
+            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 27) {
+                Unlock(Game.Circuits);
+            }
+            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 10 && StarTracker.ST.starsPerGame[Game.Labyrinth] >= 10) {
+                Unlock(Game.QueueBits);
+            }
+            if (StarTracker.ST.TotalStars >= 120) {
+                Unlock(Game.BlackBox);
+            }
         }
 
         public void Unlock(Game game) {
