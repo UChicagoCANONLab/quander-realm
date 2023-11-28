@@ -18,6 +18,10 @@ namespace Wrapper
             DontDestroyOnLoad(gameObject);
         }
 
+        /* 
+        Dictionary and helper methods 
+        */
+
         // Total stars per each game
         private Dictionary<Game, int> starsPerGame = new Dictionary<Game, int>() {
             {Game.BlackBox, 0},     // max 0? maybe make 45
@@ -50,6 +54,10 @@ namespace Wrapper
             // PrintDict();
         }
 
+        /* 
+        Updating star display and dictionary 
+        */
+
         // Reset the TMPro Asset that displays the count
         public void ResetStarDisplay() {
             int i = 0;
@@ -73,8 +81,9 @@ namespace Wrapper
             ResetStarDisplay();
         }
 
-
-        /* Loading TotalStars from each game */
+        /* 
+        Loading TotalStars from each game 
+        */
 
         // TwinTanglement
         private void InitTTStars() {
@@ -114,6 +123,7 @@ namespace Wrapper
             }
         }
 
+        // Buried Treasure
         private void InitBTStars() {
             string data = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.BlackBox);
             BlackBox.BBSaveData data2 = JsonUtility.FromJson<BlackBox.BBSaveData>(data);
