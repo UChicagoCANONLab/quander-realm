@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GateData
+namespace Circuits 
 {
-    public string type;
-    public GateData owner;
-    public GateData(string t, GateData o)
+    public class GateData
     {
-        type = t;
-        owner = o;
-    }
+        public string type;
+        public GateData owner;
+        public GateData(string t, GateData o)
+        {
+            type = t;
+            owner = o;
+        }
 
-    public GateData(string t) : this(t,null) { }
+        public GateData(string t) : this(t,null) { }
 
 
-    public override string ToString()
-    {
-        return type != null ? $"[{type}]" : "-";
+        public override string ToString()
+        {
+            return type != null ? $"[{type}]" : "-";
+        }
     }
 }

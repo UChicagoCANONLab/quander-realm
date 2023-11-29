@@ -8,14 +8,19 @@ namespace Wrapper
     {
         public string id = string.Empty;
         public string[] minigameSaves;
+        public bool[] minigameUnlocked;
         public List<string> rewards;
         public bool introDialogueSeen = false;
         public bool rewardDialogueSeen = false;
+        public int totalStars = 0;
 
         public UserSave(string idString = "", string rewardID = "")
         {
             rewards = new List<string>();
+            
+            // In order: {BT, TL, TT, QB, QC}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+            minigameUnlocked = new bool[] {false, false, true, false, true};
 
             if (!(idString.Equals(string.Empty)))
                 id = idString.Trim();
@@ -89,5 +94,26 @@ namespace Wrapper
         {
             return rawString.Trim().ToLower();
         }
+
+        public void UnlockGame(Game game) {
+            if (minigameUnlocked[(int)game] == false) {
+                minigameUnlocked[(int)game] = true;
+            }
+        }
+
+        public void UpdateTotalStars(Game game, int i) {
+            totalStars += i;
+        }
+
+        public int GetTotalStars() {
+            return totalStars;
+        }
+
+        public void printSaveStrings() {
+            foreach (string s in minigameSaves) {
+                Debug.Log(s);
+            }
+        }
+
     }
 }

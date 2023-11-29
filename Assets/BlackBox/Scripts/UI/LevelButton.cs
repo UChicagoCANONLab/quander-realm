@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using Wrapper;
@@ -12,7 +13,7 @@ namespace BlackBox
         [SerializeField]
         Animator buttonAnim;
 
-        public void SetButtonState(int currentLevel)
+        public void SetButtonState(int currentLevel, int numStars)
         {
             if (currentLevel >= levelID)
             {
@@ -23,6 +24,11 @@ namespace BlackBox
             {
                 interactable = false;
                 buttonAnim.SetBool("LevelLocked", true);
+            }
+            
+            string prefix = "TrashPile/StarSystem/Star_";
+            for (int i=0; i<numStars; i++) {
+                gameObject.transform.Find($"{prefix}{i}/Star{i}").gameObject.SetActive(true);
             }
         }
 

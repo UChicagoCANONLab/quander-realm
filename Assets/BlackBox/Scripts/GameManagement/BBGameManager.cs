@@ -143,8 +143,12 @@ namespace BlackBox
                 Debug.LogError(e.Message);
             }
 
-            if (saveData == null)
+            if (saveData == null) {
                 saveData = new BBSaveData();
+            }
+            int temp = 0;
+            foreach (int i in saveData.livesPerLevel) { temp += i; }
+            saveData.totalStars = temp;
         }
 
         private void InitLevel()
@@ -223,6 +227,10 @@ namespace BlackBox
             if (levelWon)
             {
                 Wrapper.Events.PlaySound?.Invoke("BB_WolfieSuccess");
+                if (saveData.livesPerLevel[level.number-1] < livesRemaining) {
+                    saveData.totalStars += (livesRemaining - saveData.livesPerLevel[level.number-1]);
+                    saveData.livesPerLevel[level.number-1] = livesRemaining;
+                }
                 TrySetNewLevelSave();
             }
             else
@@ -241,9 +249,12 @@ namespace BlackBox
             if (saveData.currentLevelID == string.Empty || ParseLevelID(saveData.currentLevelID) < ParseLevelID(level.nextLevelID))
             {
                 saveData.currentLevelID = level.nextLevelID;
-                Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
+                // Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
             }
-            else Debug.Log("Player has completed a higher level; save data not updated.");
+            // else Debug.Log("Player has completed a higher level; save data not updated.");
+            
+            Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
+            // Debug.Log(string.Join(",", saveData.livesPerLevel));
         }
 
         private IEnumerator DisplayPlayerFeedBack(WinState winState)
@@ -333,7 +344,7 @@ namespace BlackBox
                 int levelNum = ParseLevelID(level.levelID) + (saveData.completed ? 1 : 0);
                 if (levelNum > 0)
                 {
-                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum);
+                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
                 }
             }
         }
@@ -460,6 +471,11 @@ namespace BlackBox
             return level.numEnergyUnits;
         }
 
+        private int GetLivesRemaining() 
+        {
+            return livesRemaining;
+        }
+
         private bool GetDebugBool()
         {
             return debug;
@@ -487,6 +503,10 @@ namespace BlackBox
             if (level < 10) levelText += ("0" + level.ToString());
             else levelText += level.ToString();
             return levelText;
+        }
+
+        public int GetLevelStars(int level) {
+            return saveData.livesPerLevel[level];
         }
     }
 }
