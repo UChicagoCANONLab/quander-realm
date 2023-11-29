@@ -25,7 +25,19 @@ namespace Wrapper
 
             TryUnlockGames();
         }
-
+#if LITE_VERSION
+        public void TryUnlockGames() {
+            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 18) {
+                Unlock(Game.Circuits);
+            }
+            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 7 && StarTracker.ST.starsPerGame[Game.Labyrinth] >= 7) {
+                Unlock(Game.QueueBits);
+            }
+            if (StarTracker.ST.TotalStars >= 60) {
+                Unlock(Game.BlackBox);
+            }
+        }
+#else
         public void TryUnlockGames() {
             if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 27) {
                 Unlock(Game.Circuits);
@@ -37,6 +49,7 @@ namespace Wrapper
                 Unlock(Game.BlackBox);
             }
         }
+#endif
 
         public void Unlock(Game game) {
             switch (game) {

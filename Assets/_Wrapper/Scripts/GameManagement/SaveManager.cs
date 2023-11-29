@@ -143,6 +143,7 @@ namespace Wrapper
             currentUserSave.id = "GUEST"; 
 	        Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             isUserLoggedIn = true;
+            StarTracker.ST.Invoke("InitStarTracker_Lite", 0.2f);
             return null;
 	    }
 
