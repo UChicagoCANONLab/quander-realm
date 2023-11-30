@@ -13,10 +13,12 @@ namespace Labyrinth
         public int CurrentLevel; //current level the user is playing
         public int MaxLevelUnlocked;
 
+        [Header("Non-Research Data")]
         // Non-research data
         public int[] starsPerLevel; //15 levels, all w 0-3 stars
         public bool[] dialogueSeen;
 
+        [Header("Research Data")]
         // Research data
         public int level; 
         public int numStars;
