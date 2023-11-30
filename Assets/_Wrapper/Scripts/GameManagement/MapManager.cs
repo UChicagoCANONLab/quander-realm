@@ -17,7 +17,7 @@ namespace Wrapper
         private string prefix = "MapCanvas 1/MapPanel";
 
         public void InitMap() {
-            StarTracker.ST.PrintDict();
+            // StarTracker.ST.PrintDict();
 
             Lock(Game.BlackBox);
             Lock(Game.QueueBits);

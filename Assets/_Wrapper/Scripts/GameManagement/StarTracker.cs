@@ -88,23 +88,6 @@ namespace Wrapper
         }
 
         /* 
-        Check unlock conditions 
-        */
-
-        public void CheckUnlockGames() {
-            if (starsPerGame[Game.Qupcakes] >= 27) {
-                // Unlock Tangle's Lair (Circuits)
-            }
-            if (starsPerGame[Game.Qupcakes] >= 10 && starsPerGame[Game.Labyrinth] >= 10) {
-                // Unlock Queuebits
-            }
-            if (TotalStars >= 120) {
-                // Unlock Buried Treasure (BlackBox)
-            }
-        }
-
-
-        /* 
         Loading TotalStars from each game 
         */
 
