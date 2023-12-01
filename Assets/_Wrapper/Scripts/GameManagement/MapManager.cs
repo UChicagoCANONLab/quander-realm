@@ -16,88 +16,59 @@ namespace Wrapper
 
         private string prefix = "MapCanvas 1/MapPanel";
 
+        /* 
+        Functions to initialize map and unlock games
+        Different for LITE_VERSION and full version
+        */
+       
+#if LITE_VERSION
         public void InitMap() {
-            StarTracker.ST.PrintDict();
-
-            Lock(Game.BlackBox);
-            Lock(Game.QueueBits);
-            Lock(Game.Circuits);
-
+            // StarTracker.ST.PrintDict();
+            Lock(BT);
+            Lock(TL);
             TryUnlockGames();
         }
-#if LITE_VERSION
         public void TryUnlockGames() {
-            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 18) {
-                Unlock(Game.Circuits);
+            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 12) { 
+                Unlock(TL); // Unlock Tangle's Lair (Circuits)
             }
-            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 7 && StarTracker.ST.starsPerGame[Game.Labyrinth] >= 7) {
-                Unlock(Game.QueueBits);
-            }
-            if (StarTracker.ST.TotalStars >= 60) {
-                Unlock(Game.BlackBox);
+            if (StarTracker.ST.TotalStars >= 50) {
+                Unlock(BT); // Unlock Buried Treasure
             }
         }
 #else
+         public void InitMap() {
+            // StarTracker.ST.PrintDict();
+            Lock(BT);
+            Lock(QB);
+            Lock(TL);
+            TryUnlockGames();
+        }
         public void TryUnlockGames() {
-            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 27) {
-                Unlock(Game.Circuits);
+            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 27) { 
+                Unlock(TL); // Unlock Tangle's Lair (Circuits)
             }
             if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 10 && StarTracker.ST.starsPerGame[Game.Labyrinth] >= 10) {
-                Unlock(Game.QueueBits);
+                Unlock(QB); // Unlock QueueBits
             }
             if (StarTracker.ST.TotalStars >= 120) {
-                Unlock(Game.BlackBox);
+                Unlock(BT); // Unlock Buried Treasure
             }
         }
 #endif
 
-        public void Unlock(Game game) {
-            switch (game) {
-                case Game.BlackBox:
-                    BT.GetComponent<MinigameButton>().enabled = true;
-                    GameObject.Find($"{prefix}/{BT.name}/Locked").SetActive(false);
-                    break;
+        /* 
+        Functions to lock and unlock games 
+        */
 
-                case Game.Circuits:
-                    TL.GetComponent<MinigameButton>().enabled = true;
-                    GameObject.Find($"{prefix}/{TL.name}/Locked").SetActive(false);
-                    break;
-
-                case Game.QueueBits:
-                    QB.GetComponent<MinigameButton>().enabled = true;
-                    GameObject.Find($"{prefix}/{QB.name}/Locked").SetActive(false);
-                    break;
-
-                default: // For TT and QB
-                    break;
-            }
+        public void Unlock(GameObject game) {
+            game.GetComponent<MinigameButton>().enabled = true;
+            GameObject.Find($"{prefix}/{game.name}/Locked").SetActive(false);
         }
 
-        public void Lock(Game game) {
-            switch (game) {
-                case Game.BlackBox:
-                    BT.GetComponent<MinigameButton>().enabled = false;
-                    GameObject.Find($"{prefix}/{BT.name}/Locked").SetActive(true);
-                    break;
-
-                case Game.Circuits:
-                    TL.GetComponent<MinigameButton>().enabled = false;
-                    GameObject.Find($"{prefix}/{TL.name}/Locked").SetActive(true);
-                    break;
-
-                case Game.QueueBits:
-                    QB.GetComponent<MinigameButton>().enabled = false;
-                    GameObject.Find($"{prefix}/{QB.name}/Locked").SetActive(true);
-                    break;
-
-                default: // For TT and QB
-                    break;
-            }
+        public void Lock(GameObject game) {
+            game.GetComponent<MinigameButton>().enabled = false;
+            GameObject.Find($"{prefix}/{game.name}/Locked").SetActive(true);
         }
-
-
-
-
-
     }
 }
