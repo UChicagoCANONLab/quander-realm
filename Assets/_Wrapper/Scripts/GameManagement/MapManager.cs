@@ -37,7 +37,6 @@ namespace Wrapper
             }
             // StarTracker.ST.PrintDict();
         }
-#endif
 
         /* 
         Functions to lock and unlock games 
