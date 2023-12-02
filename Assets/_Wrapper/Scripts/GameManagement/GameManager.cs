@@ -22,6 +22,7 @@ namespace Wrapper
         [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private CardPopup cardPopup;
+        [SerializeField] private GamePopup gamePopup;
         [SerializeField] private GameObject loadingScreenPrefab;
         [SerializeField] Button universalBackButton;
 
@@ -78,6 +79,7 @@ namespace Wrapper
             if (debugScreen.DebugEnabled) Events.ShowCardPopup += ShowCardPopup; // Debug
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
+            Events.UnlockAndDisplayGame += UnlockAndDisplayGame;
             Events.ToggleBackButton += ToggleBackButton;
             Events.Logout += Logout;
             Events.PlayIntroDialog += PlayIntroDialog;
@@ -94,6 +96,7 @@ namespace Wrapper
             if (debugScreen.DebugEnabled) Events.ShowCardPopup -= ShowCardPopup; // Debug
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
+            Events.UnlockAndDisplayGame -= UnlockAndDisplayGame;
             Events.ToggleBackButton -= ToggleBackButton;
             Events.Logout -= Logout;
             Events.PlayIntroDialog -= PlayIntroDialog;
@@ -156,6 +159,10 @@ namespace Wrapper
             ////todo: call a function that creates the card and displays it in the reward card panel
             //Debug.LogFormat("Won Reward {0} in game {1} at level {2}", levelReward.rewardID, game, level);
             //    Routine.Start(DestroyLoadingScreen()); //todo: debug, delete later
+        }
+
+        private void UnlockAndDisplayGame(Game game) {
+            Routine.Start(gamePopup.DisplayGame(game));
         }
 
         private GameObject CreateCard(string rewardID, GameObject mount, DisplayType displayType)

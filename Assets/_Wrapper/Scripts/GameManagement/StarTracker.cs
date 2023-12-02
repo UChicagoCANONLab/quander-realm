@@ -38,9 +38,70 @@ namespace Wrapper
         };
         public void PrintDict() {
             foreach (Game game in games) {
-                Debug.Log($"{game}: {starsPerGame[game]}");
+                Debug.Log($"{game}: {starsPerGame[game]}; Unlocked: {gameUnlocked[game]}");
             }
+            Debug.Log("-----");
         }
+
+        /* 
+        Game unlock status 
+        */
+        public Dictionary<Game, bool> gameUnlocked = new Dictionary<Game, bool>() {
+            {Game.BlackBox, false},     // max 45
+            {Game.Circuits, false},     // max 75
+            {Game.Labyrinth, true},    // max 45
+            {Game.QueueBits, false},    // max 45
+            {Game.Qupcakes, true}      // max 81
+        };
+#if LITE_VERSION
+        public bool CheckUnlocked(Game game) {
+            if (gameUnlocked[game] == true) {
+                return true;
+            }
+            else if (game == Game.Circuits 
+            && starsPerGame[Game.Qupcakes] >= 12) { 
+                return true;
+            }
+            else if (game == Game.QueueBits) { // No criteria for this one
+                return true;
+            }
+            else if (game == Game.BlackBox
+            && TotalStars >= 50) {
+                return true;
+            }
+            else { 
+                return false; }
+        }
+#else
+        public bool CheckUnlocked(Game game) {
+            if (gameUnlocked[game] == true) {
+                return true;
+            }
+            else if (game == Game.Circuits 
+            && starsPerGame[Game.Qupcakes] >= 3) { // for testing
+            // && StarTracker.ST.starsPerGame[Game.Qupcakes] >= 27) {
+                Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
+                return true;
+            }
+            else if (game == Game.QueueBits
+            && starsPerGame[Game.Qupcakes] >= 2 // 10 
+            && starsPerGame[Game.Labyrinth] >= 2) {
+                Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.QueueBits);
+                return true;
+            }
+            else if (game == Game.BlackBox
+            && TotalStars >= 10) {
+            // &&TotalStars >= 120) {
+                Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
+                return true;
+            }
+            else { 
+                return false; }
+        }
+#endif
+
+
+
 
         // GameObject that displays the star count
         public TMP_Text scoreNumber; 
@@ -79,6 +140,10 @@ namespace Wrapper
             }
             TotalStars = 0;
             scoreNumber.text = "0";
+
+            gameUnlocked[Game.BlackBox] = false;
+            gameUnlocked[Game.Circuits] = false;
+            gameUnlocked[Game.QueueBits] = false;
         }
 
         // Sets private Dictionary values and updates display
@@ -117,6 +182,7 @@ namespace Wrapper
             Circuits.Circuits_SaveData data2 = JsonUtility.FromJson<Circuits.Circuits_SaveData>(data);
             if (data2 != null) {
                 UpdateStarTracker(Game.Circuits, data2.totalStars);
+                gameUnlocked[Game.Circuits] = CheckUnlocked(Game.Circuits);
             }
         }
 
@@ -126,6 +192,7 @@ namespace Wrapper
             QueueBits.QBSaveData data2 = JsonUtility.FromJson<QueueBits.QBSaveData>(data);
             if (data2 != null) {
                 UpdateStarTracker(Game.QueueBits, data2.totalStars);
+                gameUnlocked[Game.QueueBits] = CheckUnlocked(Game.QueueBits);
             }
         }
 
@@ -135,6 +202,7 @@ namespace Wrapper
             BlackBox.BBSaveData data2 = JsonUtility.FromJson<BlackBox.BBSaveData>(data);
             if (data2 != null) {
                 UpdateStarTracker(Game.BlackBox, data2.totalStars);
+                gameUnlocked[Game.BlackBox] = CheckUnlocked(Game.BlackBox);
             }
         }
         

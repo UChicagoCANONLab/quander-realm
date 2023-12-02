@@ -24,16 +24,24 @@ namespace Wrapper
 #if LITE_VERSION
         public void InitMap() {
             // StarTracker.ST.PrintDict();
+            StarTracker.ST.gameUnlocked[Game.QueueBits] = true;
+
             Lock(BT);
             Lock(TL);
             TryUnlockGames();
         }
         public void TryUnlockGames() {
-            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 12) { 
+            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 12 
+            && StarTracker.ST.gameUnlocked[Game.Circuits] == false) { 
                 Unlock(TL); // Unlock Tangle's Lair (Circuits)
+                Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
+                StarTracker.ST.gameUnlocked[Game.Circuits] = true;
             }
-            if (StarTracker.ST.TotalStars >= 50) {
+            if (StarTracker.ST.TotalStars >= 50
+            && StarTracker.ST.gameUnlocked[Game.QueueBits] == false) {
                 Unlock(BT); // Unlock Buried Treasure
+                Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
+                StarTracker.ST.gameUnlocked[Game.BlackBox] = true;
             }
         }
 #else
@@ -44,16 +52,21 @@ namespace Wrapper
             Lock(TL);
             TryUnlockGames();
         }
+
         public void TryUnlockGames() {
-            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 27) { 
+            if (StarTracker.ST.CheckUnlocked(Game.Circuits)) {
                 Unlock(TL); // Unlock Tangle's Lair (Circuits)
+                StarTracker.ST.gameUnlocked[Game.Circuits] = true;
             }
-            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 10 && StarTracker.ST.starsPerGame[Game.Labyrinth] >= 10) {
+            if (StarTracker.ST.CheckUnlocked(Game.QueueBits)) {
                 Unlock(QB); // Unlock QueueBits
+                StarTracker.ST.gameUnlocked[Game.QueueBits] = true;
             }
-            if (StarTracker.ST.TotalStars >= 120) {
+            if (StarTracker.ST.CheckUnlocked(Game.BlackBox)) {
                 Unlock(BT); // Unlock Buried Treasure
+                StarTracker.ST.gameUnlocked[Game.BlackBox] = true;
             }
+            StarTracker.ST.PrintDict();
         }
 #endif
 
