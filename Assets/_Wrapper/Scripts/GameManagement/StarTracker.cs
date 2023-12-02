@@ -115,6 +115,12 @@ namespace Wrapper
         public TMP_Text scoreNumber; 
 
         // Function to Initialize the StarTracker, called during LoginRoutine in SaveManager
+
+        public void InitStarTracker_Lite() {
+            ResetStarCounts();
+            GameObject.Find("MapCanvas 1/MapPanel").GetComponent<MapManager>().InitMap();
+        }
+
         public void InitStarTracker() {
             InitTTStars();
             InitQCStars();
@@ -126,6 +132,7 @@ namespace Wrapper
             GameObject.Find("MapCanvas 1/MapPanel").GetComponent<MapManager>().InitMap();
             // PrintDict();
         }
+
 
         /* 
         Updating star display and dictionary 

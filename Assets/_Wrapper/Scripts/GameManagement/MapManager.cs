@@ -16,6 +16,7 @@ namespace Wrapper
 
         /* 
         Functions to initialize map and unlock games
+
         */
         public void InitMap() {
             // StarTracker.ST.PrintDict();
@@ -24,7 +25,6 @@ namespace Wrapper
             Lock(TL);
             TryUnlockGames();
         }
-
         public void TryUnlockGames() {
             if (StarTracker.ST.CheckUnlocked(Game.Circuits)) {
                 Unlock(TL); // Unlock Tangle's Lair (Circuits)
@@ -37,6 +37,7 @@ namespace Wrapper
             }
             // StarTracker.ST.PrintDict();
         }
+#endif
 
         /* 
         Functions to lock and unlock games 
