@@ -53,6 +53,12 @@ namespace Wrapper
             {Game.QueueBits, false},    // max 45
             {Game.Qupcakes, true}      // max 81
         };
+
+        /* 
+        Function to check if game meets unlocked status
+        Different for LITE_VERSION and full version
+        */
+
 #if LITE_VERSION
         public bool CheckUnlocked(Game game) {
             if (gameUnlocked[game] == true) {
@@ -60,17 +66,22 @@ namespace Wrapper
             }
             else if (game == Game.Circuits 
             && starsPerGame[Game.Qupcakes] >= 12) { 
+                Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
+                gameUnlocked[Game.Circuits] = true;
                 return true;
             }
             else if (game == Game.QueueBits) { // No criteria for this one
+                // No pop-up
+                gameUnlocked[Game.QueueBits] = true;
                 return true;
             }
             else if (game == Game.BlackBox
             && TotalStars >= 50) {
+                Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
+                gameUnlocked[Game.BlackBox] = true;
                 return true;
             }
-            else { 
-                return false; }
+            else { return false; }
         }
 #else
         public bool CheckUnlocked(Game game) {
@@ -78,30 +89,27 @@ namespace Wrapper
                 return true;
             }
             else if (game == Game.Circuits 
-            && starsPerGame[Game.Qupcakes] >= 3) { // for testing
-            // && StarTracker.ST.starsPerGame[Game.Qupcakes] >= 27) {
+            && starsPerGame[Game.Qupcakes] >= 27) {
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
+                gameUnlocked[Game.Circuits] = true;
                 return true;
             }
             else if (game == Game.QueueBits
-            && starsPerGame[Game.Qupcakes] >= 2 // 10 
-            && starsPerGame[Game.Labyrinth] >= 2) {
+            && starsPerGame[Game.Qupcakes] >= 10
+            && starsPerGame[Game.Labyrinth] >= 10) {
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.QueueBits);
+                gameUnlocked[Game.QueueBits] = true;
                 return true;
             }
             else if (game == Game.BlackBox
-            && TotalStars >= 10) {
-            // &&TotalStars >= 120) {
+            && TotalStars >= 120) {
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
+                gameUnlocked[Game.BlackBox] = true;
                 return true;
             }
-            else { 
-                return false; }
+            else { return false; }
         }
 #endif
-
-
-
 
         // GameObject that displays the star count
         public TMP_Text scoreNumber; 
@@ -172,8 +180,6 @@ namespace Wrapper
             if (data2 != null) {
                 UpdateStarTracker(Game.Qupcakes, data2.TotalStars);   
             }
-            // Debug.Log($"QC: {string.Join(",", data2.levelPerformance)}");
-            // Debug.Log($"QC: {data2.TotalStars}");
         }
 
         // Tangle's Lair
