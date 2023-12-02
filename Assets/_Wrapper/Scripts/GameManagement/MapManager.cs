@@ -6,8 +6,6 @@ namespace Wrapper
 {
     public class MapManager : MonoBehaviour 
     {
-        public static MapManager MM;
-
         public GameObject QC;
         public GameObject TT;
         public GameObject TL;
@@ -18,26 +16,9 @@ namespace Wrapper
 
         /* 
         Functions to initialize map and unlock games
-        Different for LITE_VERSION and full version
+
         */
-       
-#if LITE_VERSION
         public void InitMap() {
-            // StarTracker.ST.PrintDict();
-            Lock(BT);
-            Lock(TL);
-            TryUnlockGames();
-        }
-        public void TryUnlockGames() {
-            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 12) { 
-                Unlock(TL); // Unlock Tangle's Lair (Circuits)
-            }
-            if (StarTracker.ST.TotalStars >= 50) {
-                Unlock(BT); // Unlock Buried Treasure
-            }
-        }
-#else
-         public void InitMap() {
             // StarTracker.ST.PrintDict();
             Lock(BT);
             Lock(QB);
@@ -45,15 +26,16 @@ namespace Wrapper
             TryUnlockGames();
         }
         public void TryUnlockGames() {
-            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 27) { 
+            if (StarTracker.ST.CheckUnlocked(Game.Circuits)) {
                 Unlock(TL); // Unlock Tangle's Lair (Circuits)
             }
-            if (StarTracker.ST.starsPerGame[Game.Qupcakes] >= 10 && StarTracker.ST.starsPerGame[Game.Labyrinth] >= 10) {
+            if (StarTracker.ST.CheckUnlocked(Game.QueueBits)) {
                 Unlock(QB); // Unlock QueueBits
             }
-            if (StarTracker.ST.TotalStars >= 120) {
+            if (StarTracker.ST.CheckUnlocked(Game.BlackBox)) {
                 Unlock(BT); // Unlock Buried Treasure
             }
+            // StarTracker.ST.PrintDict();
         }
 #endif
 
