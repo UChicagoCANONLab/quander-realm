@@ -46,7 +46,7 @@ namespace BlackBox
         private void SetupButtonFunctionality()
         {
             restartLevelGO.GetComponent<Button>().onClick.AddListener(RestartLevel);
-            quitGO.GetComponent<Button>().onClick.AddListener(QuitBlackBox);
+            quitGO.GetComponent<Button>().onClick.AddListener(ToLevelSelect);
             keepPlayingGO.GetComponent<Button>().onClick.AddListener(() => TogglePanel(false));
             nextLevelGO.GetComponent<Button>().onClick.AddListener(StartNextLevel);
         }
@@ -55,6 +55,12 @@ namespace BlackBox
         {
             TogglePanel(false);
             BBEvents.RestartLevel?.Invoke();
+        }
+
+        void ToLevelSelect()
+        {
+            TogglePanel(false);
+            BBEvents.CloseLevel?.Invoke();
         }
 
         private void QuitBlackBox()
@@ -78,6 +84,8 @@ namespace BlackBox
             DisableAllElements();
             TogglePanel(true);
 
+            animator.SetInteger("Lives", winState.livesRemaining);
+
             if (winState.levelWon)
             {
                 level = winState.level;
@@ -85,18 +93,18 @@ namespace BlackBox
                     winImage,
                     headerText: "WE DID IT!",
                     subHeaderText: "We found all of the items!",
+                    winState.end ? new GameObject[] {quitGO} :
                     new GameObject[] { quitGO, nextLevelGO });
+                if (winState.end) BBEvents.CompleteBlackBox?.Invoke();
             }
 
             else
             {
-                animator.SetInteger("Lives", winState.livesRemaining);
-
                 if (winState.livesRemaining > 0)
                 {
                     SetInfo(
                         notYetImage,
-                        headerText: "NOT QUITE…",
+                        headerText: "NOT QUITE...",
                         subHeaderText: "We found " + winState.numCorrect + " out of " + winState.numNodes + " items",
                         new GameObject[] { quitGO, keepPlayingGO });
                 }

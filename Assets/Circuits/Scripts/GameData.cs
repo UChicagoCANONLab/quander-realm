@@ -86,6 +86,14 @@ namespace Circuits
             return saveData.starsPerLevel;
         }
 
+        public static void resetTotalStars() {
+            int temp = 0;
+            for (int i=0; i<CTConstants.N_LEVELS; i++) {
+                temp += saveData.starsPerLevel[i];
+            }
+            saveData.totalStars = temp;
+        }
+
         public static void levelPassed()
         {
             try
@@ -99,7 +107,7 @@ namespace Circuits
             { 
                 Debug.LogError(e.Message);
             }
-
+            resetTotalStars();
             saveData.currLevel += 1;
             LogAtTime("passed");
 

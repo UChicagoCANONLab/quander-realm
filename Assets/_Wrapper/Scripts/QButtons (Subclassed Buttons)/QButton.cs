@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace Wrapper
 {
@@ -17,8 +18,9 @@ namespace Wrapper
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            // if clicking reward card, then save card info
-            if (eventData.pointerCurrentRaycast.gameObject.name == "Hitbox") {
+            // If clicking reward card, then save card info
+            // Doing this here even though it would be better in Reward.cs becauses idk how to do it there
+            if (eventData.pointerCurrentRaycast.gameObject.name == "Hitbox" && SceneManager.GetActiveScene().name == "RewardCollection") {
                 // Debug.Log(eventData.pointerPress);
                 Reward currCard = eventData.pointerPress.GetComponent<Reward>();
 

@@ -13,6 +13,7 @@ namespace Qupcakery
         [SerializeField]
         private Sprite[] stars = new Sprite[4];
         private bool levelAvailable = true; 
+        public GameObject lockIcon;
 
         // On-click load target level
         public void LoadLevel()
@@ -55,6 +56,8 @@ namespace Qupcakery
                 Image iconNumber = gameObject.transform.Find("Number").gameObject.GetComponent<Image>();
                 Color imageColor2 = iconNumber.color;
                 iconNumber.color = new Color(imageColor2.r, imageColor2.g, imageColor2.b, 0.6f);
+
+                lockIcon.SetActive(true);
             }
         }
 

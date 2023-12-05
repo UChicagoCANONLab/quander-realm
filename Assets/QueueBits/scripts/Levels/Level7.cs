@@ -254,7 +254,7 @@ namespace QueueBits
 
 		public GameObject resultBG;
 		public string playerWonText = "You Won!";
-		public string playerLoseText = "Red Won!";
+		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
 		public GameObject probText;
@@ -388,7 +388,7 @@ namespace QueueBits
 
 			isPlayersTurn = false;
 			// isPlayersTurn = System.Convert.ToBoolean(Random.Range(0, 2));
-			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 			if (isPlayersTurn)
 			{
@@ -1390,7 +1390,7 @@ namespace QueueBits
 				if (probCounter < 42)
 				{
 					isPlayersTurn = !isPlayersTurn;
-					playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+					playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 					DestroyImmediate(playerTurnObject);
 
@@ -1456,7 +1456,7 @@ namespace QueueBits
 							field[x, y] = 2;
 						}
 						isPlayersTurn = !isPlayersTurn;
-						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 					}
 					StartCoroutine(Won());
 				}
@@ -1497,7 +1497,7 @@ namespace QueueBits
 						mydata.outcome[index] = 1;
 						field[x, y] = 1;
 						isPlayersTurn = !isPlayersTurn;
-						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 						DestroyImmediate(playerTurnObject);
 
 						if (isPlayersTurn)
@@ -1527,7 +1527,7 @@ namespace QueueBits
 						mydata.outcome[index] = 2;
 						field[x, y] = 2;
 						isPlayersTurn = !isPlayersTurn;
-						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 						DestroyImmediate(playerTurnObject);
 
 						if (isPlayersTurn)

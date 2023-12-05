@@ -15,11 +15,24 @@ namespace BlackBox
         /// Tutorial
         public static Action<BBSaveData, Level> ShowTutorial;
 
+        /// Level Select
+        public static Action<string> PlayLevel;
+        public static Action<bool> OpenLevelSelect;
+        public static Action CloseLevel;
+
         /// Ray and Markers
         public static Action<Vector3Int, Dir> FireRay;
-        public static Action<Marker, Dir, Vector3Int> MarkUnits;
+        public static Action<Marker, Dir, Vector3Int, bool> MarkUnits;
         public static Action<Dir, Vector3Int, Dir, Vector3Int, int> MarkDetourUnits;
         public static Action<string, Dir, Vector3Int> ToggleLinkedHighlight;
+        public static Action<Dir, Vector3Int> TestLinkHovered;
+        public static Action DisableMolly;
+        public static Action SendMollyIn;
+
+        /// Interaction Delays
+        public static Func<bool> IsInteractionDelayed;
+        public static Action<bool> DelayInteraction;
+        public static Action<Action> DelayReaction;
 
         /// Flags/Lanterns
         public static Action<Vector3Int, bool> ToggleFlag;
@@ -42,5 +55,7 @@ namespace BlackBox
         public static Action StartNextLevel;
         public static Action RestartLevel;
         public static Action QuitBlackBox;
+        public static Action CompleteBlackBox;
+        public static Func<int> LanternPlacedCount;
     }
 }

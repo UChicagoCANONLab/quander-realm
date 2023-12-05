@@ -16,6 +16,11 @@ namespace BlackBox
 
         private float directionVelocityThreshold = 0.23f;
 
+        [SerializeField]
+        float waitTime = 0.2F;
+        Routine resetAnim;
+        bool isHeld = false;
+
         private void Awake()
         {
             parentMount = GetParentMount();
@@ -27,7 +32,9 @@ namespace BlackBox
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            isHeld = true;
             animator.SetBool("Hold", true);
+            Wrapper.Events.PlaySound?.Invoke("BB_PickUpLantern");
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -46,15 +53,18 @@ namespace BlackBox
         public void OnDrag(PointerEventData eventData)
         {
             UpdateAnimator(eventData);
+            resetAnim.Replace(DelayedAnimReset());
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            isHeld = false;
             animator.SetBool("Hold", false);
             animator.SetFloat("Velocity", 0f);
             animator.SetInteger("DragDirection", 0);
 
             canvasGroup.blocksRaycasts = true;
+            Wrapper.Events.PlaySound?.Invoke("BB_PlaceLantern");
             BBEvents.ToggleLanternHeld?.Invoke(false);
             Routine.Start(ReturnHomeIfUnmounted());
         }
@@ -115,6 +125,24 @@ namespace BlackBox
         private LanternMount GetParentMount()
         {
             return transform.parent.GetComponent<LanternMount>();
+        }
+
+        IEnumerator DelayedAnimReset()
+        {
+            yield return waitTime;
+            // reset
+            if (isHeld)
+            {
+                float current = animator.GetFloat("Velocity");
+                float time = 0F;
+                while (time < waitTime)
+                {
+                    animator.SetFloat("Velocity", Mathf.Lerp(current, 0F, time / waitTime));
+                    time += Time.deltaTime;
+                    yield return null;
+                }
+                animator.SetInteger("DragDirection", 0);
+            }
         }
 
 
