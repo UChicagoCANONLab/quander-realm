@@ -28,11 +28,11 @@ namespace Circuits
             
             if (!dataLoaded)
             {
-                Debug.Log("Loading Data!");
+                // Debug.Log("Loading Data!");
                 try
                 {
                     string saveString = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Circuits);
-                    Debug.Log(saveString);
+                    // Debug.Log(saveString);
                     saveData = JsonUtility.FromJson<Circuits_SaveData>(saveString);
                 }
                 catch (Exception e)
@@ -129,9 +129,9 @@ namespace Circuits
             string outString = String.Join(",", saveData.completedLevels.Select(passed => passed ? "1" : "0"));
             outString += "\n";
             outString += String.Join("\n", log);
-            Debug.Log("LOG");
-            Debug.Log(String.Join("\n", log));
-            Debug.Log(outString);
+            // Debug.Log("LOG");
+            // Debug.Log(String.Join("\n", log));
+            // Debug.Log(outString);
 
 
             if (!tutorialShown)

@@ -26,8 +26,8 @@ namespace Circuits
 
         public void loadData(string data)
         {
-            Debug.Log("I just got this data:");
-            Debug.Log(data);
+            // Debug.Log("I just got this data:");
+            // Debug.Log(data);
             //TODO Load Data into memory
             SceneManager.LoadScene(nextScene);
         }

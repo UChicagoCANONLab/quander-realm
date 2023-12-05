@@ -430,7 +430,7 @@ namespace Circuits
 
                 GameData.correctSub();
                 renderCircuit(simplifiedCircuit);
-                Debug.Log("!Valid Substiution!");
+                // Debug.Log("!Valid Substiution!");
             }
             else
             {

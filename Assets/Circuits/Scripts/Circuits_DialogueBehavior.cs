@@ -14,12 +14,13 @@ namespace Circuits
             int offset = 0;
 
             GameData.InitCircuitsSaveData();
-            Debug.Log(GameData.getCurrLevel());
+            // Debug.Log(GameData.getCurrLevel());
 
             switch (GameData.getCurrLevel() - offset)
             {
                 case 0:
                     Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
+                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level1");
                     break;
                 case 3:
                     Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level3");
