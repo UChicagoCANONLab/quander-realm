@@ -23,6 +23,7 @@ namespace Labyrinth
 
         public Star[] stars; 
 
+        // Time in seconds for research data
         private float initTime;
         private float endTime;
         public float timePlayed;
@@ -40,9 +41,6 @@ namespace Labyrinth
 
         private Dictionary<string, string> rot90 = new Dictionary<string, string>() 
         { {"N", "W"}, {"W", "S"}, {"E", "N"}, {"S", "E"} };
-
-        private Dictionary<string, string> rotNEG90 = new Dictionary<string, string>() 
-        { {"N", "E"}, {"W", "N"}, {"E", "S"}, {"S", "W"} };
 
         private Dictionary<string, string> goalTextNormal = new Dictionary<string, string>() 
         { {"N", "Up"}, {"W", "Left"}, {"E", "Right"}, {"S", "Down"} };

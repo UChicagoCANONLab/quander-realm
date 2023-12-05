@@ -4,7 +4,11 @@ namespace Qupcakery
 {
     public static class Constants
     {
-        public const int MaxLevelCnt = 27;
+#if LITE_VERSION
+    public const int MaxLevelCnt = 16;
+#else
+    public const int MaxLevelCnt = 27;
+#endif
         public const int MaxPuzzleCnt = 10;
         public const int MaxGateTypeCnt = 5;
         public const int MaxCustomerPerBatch = 3;

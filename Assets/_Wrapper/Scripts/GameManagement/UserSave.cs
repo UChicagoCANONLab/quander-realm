@@ -8,13 +8,19 @@ namespace Wrapper
     {
         public string id = string.Empty;
         public string[] minigameSaves;
+        public bool[] minigameUnlocked;
         public List<string> rewards;
         public bool introDialogueSeen = false;
+        public bool rewardDialogueSeen = false;
+        public int totalStars = 0;
 
         public UserSave(string idString = "", string rewardID = "")
         {
             rewards = new List<string>();
+            
+            // In order: {BT, TL, TT, QB, QC}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+            minigameUnlocked = new bool[] {false, false, true, false, true};
 
             if (!(idString.Equals(string.Empty)))
                 id = idString.Trim();
@@ -31,7 +37,16 @@ namespace Wrapper
             if (rewards.Contains(formatted))
                 return false;
 
+            if (rewards.Count == 0) rewardDialogueSeen = false; // if we haven't seen the reward dialog while having a reward, reset this bool
             rewards.Add(formatted);
+            return true;
+        }
+
+        public bool IsNewSave()
+        {
+            if (HasAnyRewards()) return false;
+            if (introDialogueSeen || rewardDialogueSeen) return false;
+            foreach (var data in minigameSaves) if (!data.Equals(string.Empty)) return false;
             return true;
         }
 
@@ -41,6 +56,22 @@ namespace Wrapper
                 return false;
 
             return rewards.Contains(FormatString(rewardID));
+        }
+
+        public bool HasAnyRewards()
+        {
+            if (rewards == null) return false;
+            else return rewards.Count > 0;
+        }
+
+        public bool FirstRewardFromGame(string gamePrefix)
+        {
+            // will already have one, check for exactly one
+            int counter = 0;
+            foreach (var reward in rewards)
+                if (reward.Contains(gamePrefix)) counter++;
+
+            return counter == 1;
         }
 
         public void UpdateMinigameSave(Game game, object data)
@@ -63,5 +94,26 @@ namespace Wrapper
         {
             return rawString.Trim().ToLower();
         }
+
+        public void UnlockGame(Game game) {
+            if (minigameUnlocked[(int)game] == false) {
+                minigameUnlocked[(int)game] = true;
+            }
+        }
+
+        public void UpdateTotalStars(Game game, int i) {
+            totalStars += i;
+        }
+
+        public int GetTotalStars() {
+            return totalStars;
+        }
+
+        public void printSaveStrings() {
+            foreach (string s in minigameSaves) {
+                Debug.Log(s);
+            }
+        }
+
     }
 }

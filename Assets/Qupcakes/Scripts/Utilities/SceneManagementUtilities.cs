@@ -35,8 +35,11 @@ namespace Qupcakery
         public static void LoadLevelSelectionMenu()
         {
             if (GameManagement.Instance.game.gameStat.MaxLevelCompleted
-                == GameManagement.Instance.GetTotalLevelCnt())
+            == GameManagement.Instance.GetTotalLevelCnt() 
+            & TutorialManager.OutroPlayed == false) {
                 Wrapper.Events.StartDialogueSequence?.Invoke("QU_End");
+                TutorialManager.UpdateAvailability(0);
+            }
 
             SceneManager.LoadScene("QU_LevelSelection");
         }

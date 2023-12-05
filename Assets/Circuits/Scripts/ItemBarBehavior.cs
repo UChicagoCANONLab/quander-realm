@@ -5,51 +5,52 @@ using UnityEngine.UI;
 
 
 
-
-public class ItemBarBehavior : MonoBehaviour
+namespace Circuits 
 {
-
-    public Transform content;
-
-    public ColorBlock selected;
-    public ColorBlock unselected;
-
-    public GameObject eventSystem;
-
-    public Transform gameManager;
-
-
-    private string selection;
-
-    private void Start()
+    public class ItemBarBehavior : MonoBehaviour
     {
-        foreach (Transform child in content)
-        {
-            Button currButton = child.gameObject.GetComponent<Button>();
-            currButton.colors = unselected;
-        }
-    }
+        public Transform content;
 
-    public void buttonClick(string name)
-    {
-        if (name == selection)
-            selection = "";
-        else
-            selection = name;
-        foreach (Transform child in content)
+        public ColorBlock selected;
+        public ColorBlock unselected;
+
+        public GameObject eventSystem;
+
+        public Transform gameManager;
+
+
+        private string selection;
+
+        private void Start()
         {
-            Button currButton = child.gameObject.GetComponent<Button>();
-            if (child.name == selection)
+            foreach (Transform child in content)
             {
-                currButton.colors = selected;
-            }
-            else
-            {
+                Button currButton = child.gameObject.GetComponent<Button>();
                 currButton.colors = unselected;
             }
         }
 
-	//gameManager.GetComponent<GameBehavior>().setSelected(selection);
-    }
+        public void buttonClick(string name)
+        {
+            if (name == selection)
+                selection = "";
+            else
+                selection = name;
+            foreach (Transform child in content)
+            {
+                Button currButton = child.gameObject.GetComponent<Button>();
+                if (child.name == selection)
+                {
+                    currButton.colors = selected;
+                }
+                else
+                {
+                    currButton.colors = unselected;
+                }
+            }
 
+        //gameManager.GetComponent<GameBehavior>().setSelected(selection);
+        }
+
+    }
 }

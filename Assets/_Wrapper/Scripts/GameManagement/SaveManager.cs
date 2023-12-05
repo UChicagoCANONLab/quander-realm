@@ -32,12 +32,12 @@ namespace Wrapper
         // private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"}; // AWS
         private string[] gameSaveURLs = new string[6] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery", "rewards"}; // AWS
         public readonly string awsURL = "https://backend-quantime.link/"; // AWS
+        private bool isConnectedToInternet = false;
 
 #if !UNITY_WEBGL
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
-        private bool isConnectedToInternet = false;
         private bool uploadSuccess = false;
 #else
         private string researchCodeExists = "";
@@ -69,6 +69,9 @@ namespace Wrapper
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
             Events.SaveMinigameResearchData += SaveMinigameResearchData; // AWS
+            Events.GetRewardDialogStats += GetRewardStatsForDialog;
+            Events.SetRewardTextSeen += ToggleRewardDialogueSeen;
+            Events.GetFirstRewardBool += GetHasFirstReward;
         }
 
         private void OnDisable()
@@ -82,6 +85,9 @@ namespace Wrapper
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
             Events.SaveMinigameResearchData -= SaveMinigameResearchData; // AWS
+            Events.GetRewardDialogStats -= GetRewardStatsForDialog;
+            Events.SetRewardTextSeen -= ToggleRewardDialogueSeen;
+            Events.GetFirstRewardBool -= GetHasFirstReward;
         }
 
 #if !UNITY_WEBGL
@@ -118,6 +124,12 @@ namespace Wrapper
 
         #region Login
 
+        public void Logout()
+        {
+            currentUserSave = null;
+            isUserLoggedIn = false;
+        }
+
         private void Login(string researchCode)
         {
             isUserLoggedIn = false;
@@ -125,7 +137,17 @@ namespace Wrapper
             Routine.Start(LoginRoutine(researchCode));
         }
 
-#if !UNITY_WEBGL
+#if LITE_VERSION
+        private IEnumerator LoginRoutine(string researchCode)
+        {
+            currentUserSave.id = "GUEST"; 
+	        Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            isUserLoggedIn = true;
+            StarTracker.ST.Invoke("InitStarTracker_Lite", 0.2f);
+            return null;
+	    }
+
+#elif !UNITY_WEBGL
         private IEnumerator LoginRoutine(string researchCode)
         {
             // Test internet connection
@@ -165,7 +187,7 @@ namespace Wrapper
             }
 
             // Check if user's save data exists, create new save file if not
-            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);
+            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);  
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;
@@ -188,11 +210,22 @@ namespace Wrapper
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
 
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
+
+            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
 #else
         private IEnumerator LoginRoutine(string researchCode)
         {
+            yield return TestInternetConnection();
+            if (!(isConnectedToInternet))
+            {
+                Debug.LogError("Error: Internet connection issue");
+                Events.UpdateLoginStatus?.Invoke(LoginStatus.ConnectionError);
+                yield break;
+            }
+
             // Get Database Snapshot
             yield return GetDatabaseSnapshot();
             if (!(isDatabaseReady))
@@ -250,12 +283,15 @@ namespace Wrapper
 
             currentUserSave = JsonUtility.FromJson<UserSave>(loadDataJson);
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
+
+            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
 #endif
 
 #if !UNITY_WEBGL
-        private IEnumerator GetDatabaseSnapshot()
+            private IEnumerator GetDatabaseSnapshot()
         {
             if (dbReference == null)
                 yield break;
@@ -296,11 +332,24 @@ namespace Wrapper
             if (request.error == null && request.result != UnityWebRequest.Result.ConnectionError)
                 isConnectedToInternet = true;
         }
+
+#else
+        private IEnumerator TestInternetConnection()
+        {
+            isConnectedToInternet = false;
+
+            UnityWebRequest request = new UnityWebRequest(Application.absoluteURL);
+            request.timeout = (int)networkRequestTimeout;
+            yield return request.SendWebRequest();
+
+            if (request.error == null && request.result != UnityWebRequest.Result.ConnectionError)
+                isConnectedToInternet = true;
+        }
 #endif
 
-        #endregion
+#endregion
 
-        #region UserSave
+#region UserSave
 
         private bool AddReward(string rewardID)
         {
@@ -331,7 +380,12 @@ namespace Wrapper
             Routine.Start(UpdateRemoteSaveRoutine());
         }
 
-#if !UNITY_WEBGL
+#if LITE_VERSION
+        private IEnumerator UpdateRemoteSaveRoutine()
+        {
+            return null;
+        }
+#elif !UNITY_WEBGL
         private IEnumerator UpdateRemoteSaveRoutine()
         {
             uploadSuccess = false;
@@ -396,10 +450,12 @@ namespace Wrapper
         }
 #endif
 
-        // AWS
-        private void SaveMinigameResearchData(Game game, object minigameSave)
+            // AWS
+            private void SaveMinigameResearchData(Game game, object minigameSave)
         {
+#if !LITE_VERSION
             StartCoroutine(SendResearchDataToRemote(game, minigameSave));
+#endif
         }
 
         // AWS
@@ -446,6 +502,22 @@ namespace Wrapper
         private string GetResearchCode()
         {
             return currentUserSave.id;
+        }
+
+        public void ToggleRewardDialogueSeen(bool hasSeen)
+        {
+            currentUserSave.rewardDialogueSeen = hasSeen;
+            UpdateRemoteSave();
+        }
+
+        (bool, bool) GetRewardStatsForDialog()
+        {
+            return (currentUserSave.rewardDialogueSeen, currentUserSave.HasAnyRewards());
+        }
+
+        bool GetHasFirstReward(string gamePrefix)
+        {
+            return currentUserSave.FirstRewardFromGame(gamePrefix);
         }
 
 #endregion

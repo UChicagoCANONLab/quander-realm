@@ -30,14 +30,23 @@ namespace QueueBits
             if (saveData == null)
             {
                 saveData = new QBSaveData();
-                Save();
             }
+            Save();
         }
 
         public static void Save()
         {
+            UpdateTotalStars();
             Wrapper.Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.QueueBits, saveData);
             Debug.Log("DataSaved!");
+        }
+
+        public static void UpdateTotalStars() {
+            int temp = 0;
+            foreach (int i in saveData.starSystem){
+                temp += i;
+            }
+            saveData.totalStars = temp;
         }
     }
 }
