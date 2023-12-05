@@ -9,6 +9,9 @@ namespace QueueBits
     {
         public Wrapper.Game gameID = Wrapper.Game.QueueBits;
 
+        // total stars
+        public int totalStars = 0;
+
         // star system testing
         public int[] starSystem = new int[]
         {

@@ -52,8 +52,8 @@ namespace QueueBits
 		public GameObject pieceSuperposition;
 
 		//Piece Count Displays
-		public GameObject blueTitle;
-		public GameObject redTitle;
+		// public GameObject blueTitle;
+		// public GameObject redTitle;
 
 		//BLUE
 		public GameObject pieceBlue100;
@@ -254,16 +254,16 @@ namespace QueueBits
 
 		public GameObject resultBG;
 		public string playerWonText = "You Won!";
-		public string playerLoseText = "Red Won!";
+		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
 		public GameObject probText;
 		public GameObject starText;
 
-		public GameObject btnPlayAgain;
-		bool btnPlayAgainTouching = false;
-		Color btnPlayAgainOrigColor;
-		Color btnPlayAgainHoverColor = new Color(255, 143, 4);
+		// public GameObject btnPlayAgain;
+		// bool btnPlayAgainTouching = false;
+		// Color btnPlayAgainOrigColor;
+		// Color btnPlayAgainHoverColor = new Color(255, 143, 4);
 
 		GameObject gameObjectField;
 
@@ -388,7 +388,7 @@ namespace QueueBits
 
 			isPlayersTurn = false;
 			// isPlayersTurn = System.Convert.ToBoolean(Random.Range(0, 2));
-			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 			if (isPlayersTurn)
 			{
@@ -401,7 +401,7 @@ namespace QueueBits
 				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 			}
 
-			btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
+			// btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
 		}
 
 		// dialogue
@@ -417,7 +417,7 @@ namespace QueueBits
 		void CreateField()
 		{
 			winningText.SetActive(false);
-			btnPlayAgain.SetActive(false);
+			// btnPlayAgain.SetActive(false);
 
 			playerTurnText.SetActive(true);
 			playerTurnText.GetComponent<Renderer>().sortingOrder = 4;
@@ -520,13 +520,13 @@ namespace QueueBits
 				(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
 
 			//Piece Count Displays
-			blueTitle.transform.position = new Vector3(-4, 0, 0);
-			blueTitle.GetComponent<Renderer>().sortingOrder = 10;
-			blueTitle.SetActive(true);
+			// blueTitle.transform.position = new Vector3(-4, 0, 0);
+			// blueTitle.GetComponent<Renderer>().sortingOrder = 10;
+			// blueTitle.SetActive(true);
 
-			redTitle.transform.position = new Vector3(7.75f, 0, 0);
-			redTitle.GetComponent<Renderer>().sortingOrder = 10;
-			redTitle.SetActive(true);
+			// redTitle.transform.position = new Vector3(7.75f, 0, 0);
+			// redTitle.GetComponent<Renderer>().sortingOrder = 10;
+			// redTitle.SetActive(true);
 
 			pieceBlue100 = Instantiate(pieceBlue, new Vector3(-2, -1, -1), Quaternion.identity) as GameObject;
 			pieceBlue100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
@@ -1073,16 +1073,16 @@ namespace QueueBits
 			if (gameOver)
 			{
 				winningText.SetActive(true);
-				btnPlayAgain.SetActive(false);
+	// 			btnPlayAgain.SetActive(false);
 
-				// fix play again button
-				btnPlayAgain.transform.position = new Vector3(
-	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
-				btnPlayAgain.GetComponent<TextMesh>().color = Color.white;
-				btnPlayAgain.GetComponent<TextMesh>().text = "EXIT TO MENU";
-				btnPlayAgain.GetComponent<TextMesh>().fontSize = 70;
+	// 			// fix play again button
+	// 			btnPlayAgain.transform.position = new Vector3(
+	// (numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
+	// 			btnPlayAgain.GetComponent<TextMesh>().color = Color.white;
+	// 			btnPlayAgain.GetComponent<TextMesh>().text = "EXIT TO MENU";
+	// 			btnPlayAgain.GetComponent<TextMesh>().fontSize = 70;
 
-				UpdatePlayAgainButton();
+				// UpdatePlayAgainButton();
 
 				playerTurnText.SetActive(false);
 				playerTurnObject.SetActive(false);
@@ -1090,7 +1090,7 @@ namespace QueueBits
 				return;
 			}
 
-			UpdatePlayAgainButton();
+			// UpdatePlayAgainButton();
 
 			if (isPlayersTurn)
 			{
@@ -1100,7 +1100,7 @@ namespace QueueBits
 					{
 						SelectTokenText = Instantiate(pieceCounterText, new Vector3(1.5f, 2, -1), Quaternion.identity) as GameObject;
 						SelectTokenText.GetComponent<TextMesh>().text = "SELECT TOKEN";
-						SelectTokenText.GetComponent<TextMesh>().color = Color.blue;
+						SelectTokenText.GetComponent<TextMesh>().color = Color.white;
 						SelectTokenText.SetActive(true);
 
 						if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
@@ -1390,7 +1390,7 @@ namespace QueueBits
 				if (probCounter < 42)
 				{
 					isPlayersTurn = !isPlayersTurn;
-					playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+					playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 					DestroyImmediate(playerTurnObject);
 
@@ -1456,7 +1456,7 @@ namespace QueueBits
 							field[x, y] = 2;
 						}
 						isPlayersTurn = !isPlayersTurn;
-						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 					}
 					StartCoroutine(Won());
 				}
@@ -1497,7 +1497,7 @@ namespace QueueBits
 						mydata.outcome[index] = 1;
 						field[x, y] = 1;
 						isPlayersTurn = !isPlayersTurn;
-						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 						DestroyImmediate(playerTurnObject);
 
 						if (isPlayersTurn)
@@ -1527,7 +1527,7 @@ namespace QueueBits
 						mydata.outcome[index] = 2;
 						field[x, y] = 2;
 						isPlayersTurn = !isPlayersTurn;
-						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Red's Turn";
+						playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 						DestroyImmediate(playerTurnObject);
 
 						if (isPlayersTurn)
@@ -1772,7 +1772,7 @@ namespace QueueBits
 			}
 		}
 
-		void UpdatePlayAgainButton()
+		/* void UpdatePlayAgainButton()
 		{
 			RaycastHit hit;
 			//ray shooting out of the camera from where the mouse is
@@ -1799,7 +1799,7 @@ namespace QueueBits
 			{
 				btnPlayAgainTouching = false;
 			}
-		}
+		} */
 
 		/// <summary>
 		/// check if the field contains an empty cell

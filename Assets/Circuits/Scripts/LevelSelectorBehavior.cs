@@ -4,49 +4,46 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
-public class LevelSelectorBehavior : MonoBehaviour
+namespace Circuits 
 {
-    public GameObject buttonPrefab;
-    public GameObject content;
-    public GameBehavior gameBehavior;
-    private LevelButtonBehavior[] buttons;
-    // Start is called before the first frame update
-    void Start()
+    public class LevelSelectorBehavior : MonoBehaviour
     {
-        buttons = new LevelButtonBehavior[CTConstants.N_LEVELS];
-        for (int i = 0; i < CTConstants.N_LEVELS; i++)
+        public GameObject buttonPrefab;
+        public GameObject content;
+        public GameBehavior gameBehavior;
+        private LevelButtonBehavior[] buttons;
+        // Start is called before the first frame update
+        void Start()
         {
-            GameObject newButton = Instantiate(buttonPrefab);
-            newButton.transform.SetParent(content.transform);
-            newButton.transform.localScale = Vector3.one;
-            LevelButtonBehavior lb = newButton.GetComponent<LevelButtonBehavior>();
-            lb.init(i, GameData.getCompletedLevels()[i], this);
-            buttons[i] = lb;
+            buttons = new LevelButtonBehavior[CTConstants.N_LEVELS];
+            for (int i = 0; i < CTConstants.N_LEVELS; i++)
+            {
+                GameObject newButton = Instantiate(buttonPrefab);
+                newButton.transform.SetParent(content.transform);
+                newButton.transform.localScale = Vector3.one;
+                LevelButtonBehavior lb = newButton.GetComponent<LevelButtonBehavior>();
+                lb.init(i, GameData.getCompletedLevels()[i], GameData.getStarsPerLevel()[i], this);
+                buttons[i] = lb;
+            }
+
         }
 
-    }
-
-    public void updateLevels()
-    {
-        for (int i = 0; i < CTConstants.N_LEVELS; i++)
+        public void updateLevels()
         {
-            buttons[i].init(i, GameData.getCompletedLevels()[i], this);
+            for (int i = 0; i < CTConstants.N_LEVELS; i++)
+            {
+                buttons[i].init(i, GameData.getCompletedLevels()[i], GameData.getStarsPerLevel()[i], this);
+            }
         }
-    }
 
-    public void onLevelSelection(int l)
-    {
-        GameData.setCurrLevel(l);
-        string nextScene = GameData.getNextScene();
-        SceneManager.LoadScene(nextScene);
+        public void onLevelSelection(int l)
+        {
+            GameData.setCurrLevel(l);
+            string nextScene = GameData.getNextScene();
+            SceneManager.LoadScene(nextScene);
 
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        }
 
     }
 }

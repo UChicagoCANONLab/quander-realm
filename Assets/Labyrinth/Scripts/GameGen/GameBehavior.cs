@@ -23,6 +23,7 @@ namespace Labyrinth
 
         public Star[] stars; 
 
+        // Time in seconds for research data
         private float initTime;
         private float endTime;
         public float timePlayed;
@@ -31,6 +32,7 @@ namespace Labyrinth
         public PlayerMovement pm;
         // public Camera cam;
         public ButtonBehavior btn;
+        public ProgressBar pb;
 
         public static GameBehavior Instance;
 
@@ -39,9 +41,6 @@ namespace Labyrinth
 
         private Dictionary<string, string> rot90 = new Dictionary<string, string>() 
         { {"N", "W"}, {"W", "S"}, {"E", "N"}, {"S", "E"} };
-
-        private Dictionary<string, string> rotNEG90 = new Dictionary<string, string>() 
-        { {"N", "E"}, {"W", "N"}, {"E", "S"}, {"S", "W"} };
 
         private Dictionary<string, string> goalTextNormal = new Dictionary<string, string>() 
         { {"N", "Up"}, {"W", "Left"}, {"E", "Right"}, {"S", "Down"} };
@@ -59,6 +58,7 @@ namespace Labyrinth
             pm = GameObject.Find("Players").GetComponent<PlayerMovement>();
             btn = GameObject.Find("GameManagerLocal").GetComponent<ButtonBehavior>();
             maze = GameObject.Find("MazeGen").GetComponent<Maze>();
+            pb = GameObject.Find("StarCountdown").GetComponent<ProgressBar>();
             
             pm.StartPM();
             maze.StartMaze();
@@ -71,6 +71,8 @@ namespace Labyrinth
                 GameObject.Find(imagePath).SetActive(true);
                 pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
             }
+            pb.resestBar();
+            pb.initializeBar(pathLength);
         }
 
         void Update() {
@@ -110,18 +112,7 @@ namespace Labyrinth
         }
 
         public void checkNumStars() {
-            /* if (steps > (int)(1.25 * pathLength)) {
-                stars[2].visibilityOff();
-                numStars = 2;
-            }
-            if (steps > (int)(1.75 * pathLength)) {
-                stars[1].visibilityOff();
-                numStars = 1;
-            }
-            if (steps > (int)(2.25 * pathLength)) {
-                stars[0].visibilityOff();
-                numStars = 0;
-            } */
+            pb.detractBar(steps);
             if (steps > (int)(pathLength + 2)) { // 1 mistake
                 stars[2].visibilityOff();
                 numStars = 2;
@@ -136,13 +127,6 @@ namespace Labyrinth
             }
             return;
         }
-
-    /*  void OnGUI() {
-            if (winner != true) {
-                GUI.Box(new Rect(10, 10, 150, 25), "Goals Collected: " + goalsCollected);
-                GUI.Box(new Rect(10, 350, 200, 25), hintText);
-            }
-        } */
 
         
 
@@ -225,6 +209,10 @@ namespace Labyrinth
             if (pm.player1.current == false) {
                 pm.SwitchPlayer();
             }
+
+            pb.resestBar();
+            Debug.Log(pathLength);
+            pb.initializeBar(pathLength);
         }
 
         public void MoveButton(string mov) {
