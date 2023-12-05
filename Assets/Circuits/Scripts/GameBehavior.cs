@@ -117,15 +117,11 @@ namespace Circuits
                     }
                 }
             }
-
             gatesObject.transform.localScale = Vector3.one * sceneScale;
         }
+
         private void Start()
         {
-            // if (titleScene=true) {
-            //     titleScene=false;
-            //     return;
-            // }
             GameData.levelStart();
             selection = new HashSet<BaseGateBehavior>();
             String[] gatesToSample;
@@ -140,7 +136,7 @@ namespace Circuits
             }
             catch (Exception ex)
             {
-
+                Debug.LogError(ex.Message);
             }
 
             Image numberObject = GameObject.Find("Canvas/LevelNumber/Number").GetComponent<Image>();
@@ -166,7 +162,6 @@ namespace Circuits
                 switch (GameData.getCurrLevel())
                 {
                     case 0:
-                        Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
                         row.Add(H);
                         row.Add(H);
                         break;
@@ -430,7 +425,7 @@ namespace Circuits
 
                 GameData.correctSub();
                 renderCircuit(simplifiedCircuit);
-                Debug.Log("!Valid Substiution!");
+                // Debug.Log("!Valid Substiution!");
             }
             else
             {

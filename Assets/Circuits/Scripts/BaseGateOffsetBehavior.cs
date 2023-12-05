@@ -9,7 +9,7 @@ namespace Circuits
         private bool isHint = false;
         public void mistakeAnimationFinished()
         {
-            Debug.Log("TEST");
+            // Debug.Log("TEST");
             if (isHint) 
             {
                 GetComponent<Animation>().Play("GateMotion");
