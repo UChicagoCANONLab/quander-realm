@@ -12,6 +12,7 @@ namespace Circuits
         public GameObject content;
         public GameBehavior gameBehavior;
         private LevelButtonBehavior[] buttons;
+        
         // Start is called before the first frame update
         void Start()
         {
