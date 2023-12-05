@@ -17,6 +17,7 @@ namespace Labyrinth
         // Non-research data
         public int[] starsPerLevel; //15 levels, all w 0-3 stars
         public bool[] dialogueSeen;
+        public int totalStars;
 
         [Header("Research Data")]
         // Research data
@@ -49,6 +50,7 @@ namespace Labyrinth
             }
             else  */
             if (gb.numStars > starsPerLevel[CurrentLevel - 1]) {
+                totalStars += (gb.numStars - starsPerLevel[CurrentLevel-1]);
                 starsPerLevel[CurrentLevel - 1] = gb.numStars;
             }
 

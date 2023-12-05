@@ -43,19 +43,19 @@ namespace QueueBits
 		public GameObject winningText;
 		public GameObject resultBG;
 		public string playerWonText = "You Won!";
-		public string playerLoseText = "Red Won!";
+		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
-		public GameObject probText;
-		public GameObject starText;
+		// public GameObject probText;
+		// public GameObject starText;
 
-		public GameObject btnPlayAgain;
+		/* public GameObject btnPlayAgain;
 		bool btnPlayAgainTouching = false;
 		Color btnPlayAgainOrigColor;
 		Color btnPlayAgainHoverColor = new Color(255, 143, 4);
 
 		public GameObject btnNextLevel;
-		bool btnNextLevelTouching = false;
+		bool btnNextLevelTouching = false; */
 
 		GameObject gameObjectField;
 
@@ -131,10 +131,10 @@ namespace QueueBits
 
 			CreateField();
 
-			GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
-			levelText.GetComponent<TextMesh>().text = "Level 2";
+			// GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
+			// levelText.GetComponent<TextMesh>().text = "Level 2";
 
-			btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
+			// btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
 		}
 
 		// dialogue
@@ -150,8 +150,8 @@ namespace QueueBits
 		void CreateField()
 		{
 			winningText.SetActive(false);
-			btnPlayAgain.SetActive(false);
-			btnNextLevel.SetActive(false);
+			// btnPlayAgain.SetActive(false);
+			// btnNextLevel.SetActive(false);
 
 			isLoading = true;
 
@@ -186,8 +186,8 @@ namespace QueueBits
 			winningText.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
 
-			btnNextLevel.transform.position = new Vector3(
-	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnNextLevel.transform.position.z);
+	// 		btnNextLevel.transform.position = new Vector3(
+	// (numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnNextLevel.transform.position.z);
 
 			//btnPlayAgain.transform.position = new Vector3(
 			//	(numColumns-1) / 2.0f, -((numRows-1) / 2.0f) - 2, btnPlayAgain.transform.position.z);
@@ -501,7 +501,7 @@ namespace QueueBits
 			//ray shooting out of the camera from where the mouse is
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-			if (Physics.Raycast(ray, out hit) && hit.collider.name == btnPlayAgain.name)
+			/* if (Physics.Raycast(ray, out hit) && hit.collider.name == btnPlayAgain.name)
 			{
 				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainHoverColor;
 				//check if the left mouse has been pressed down this frame
@@ -521,7 +521,7 @@ namespace QueueBits
 			if (Input.touchCount == 0)
 			{
 				btnPlayAgainTouching = false;
-			}
+			} */
 		}
 
 		void UpdateNextLevelButton()
@@ -530,7 +530,7 @@ namespace QueueBits
 			//ray shooting out of the camera from where the mouse is
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-			if (Physics.Raycast(ray, out hit) && hit.collider.name == btnNextLevel.name)
+			/* if (Physics.Raycast(ray, out hit) && hit.collider.name == btnNextLevel.name)
 			{
 				//check if the left mouse has been pressed down this frame
 				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnNextLevelTouching == false)
@@ -545,7 +545,7 @@ namespace QueueBits
 			if (Input.touchCount == 0)
 			{
 				btnNextLevelTouching = false;
-			}
+			} */
 		}
 
 		// Update is called once per frame
@@ -563,7 +563,7 @@ namespace QueueBits
 			if (gameOver)
 			{
 				winningText.SetActive(true);
-				btnPlayAgain.SetActive(false);
+				/* btnPlayAgain.SetActive(false);
 				btnNextLevel.SetActive(false);
 
 				// fix play again button
@@ -571,7 +571,7 @@ namespace QueueBits
 	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
 				btnPlayAgain.GetComponent<TextMesh>().color = Color.white;
 				btnPlayAgain.GetComponent<TextMesh>().text = "EXIT TO MENU";
-				btnPlayAgain.GetComponent<TextMesh>().fontSize = 70;
+				btnPlayAgain.GetComponent<TextMesh>().fontSize = 70; */
 
 				UpdatePlayAgainButton();
 				UpdateNextLevelButton();
@@ -833,7 +833,7 @@ namespace QueueBits
 
 				GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
 				winningText.GetComponent<TextMesh>().text = isPlayersTurn ? playerWonText : playerLoseText;
-				GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
+				// GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
 
 				// Shivani Puli Data Collection -> store winner
 				if (isPlayersTurn)
@@ -878,7 +878,7 @@ namespace QueueBits
 					GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
 					gameOver = true;
 					winningText.GetComponent<TextMesh>().text = drawText;
-					GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
+					// GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
 
 					// Reward System
 					if (GameManager.rewardSystem[2])

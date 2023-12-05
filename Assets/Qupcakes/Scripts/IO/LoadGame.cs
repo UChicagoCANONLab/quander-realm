@@ -33,10 +33,12 @@ namespace Qupcakery
                 GameManagement.Instance.game.gameStat.MaxLevelCompleted = Data.gameData.MaxLevelCompleted;
                 // Debug.Log("(data received) Max level completed is : " + saveData.MaxLevelCompleted);
 
+                GameManagement.Instance.game.gameStat.totalStars = 0;
                 for (int i = 0; i < Data.gameData.MaxLevelCompleted; i++)
                 {
                     int starCnt = (int)Data.gameData.levelPerformance[i];
                     GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i+1, (int)starCnt);
+                    GameManagement.Instance.game.gameStat.totalStars += (int)starCnt;
                 }
             }
 
