@@ -10,7 +10,7 @@ namespace Labyrinth
         public static DialogueAndRewards Instance;
 
         public Dictionary<int, bool> levelDialogue = new Dictionary<int, bool>()
-            { {-1, false}, {1, false}, {6, false}, {11, false}, {15, false} };
+            { {-1, false}, {1, false}, {5, false}, {6, false}, {10, false}, {11, false}, {15, false} };
 
         public Dictionary<int, string> levelRewards = new Dictionary<int, string>()
             { {5, "LA_01"}, {15, "LA_02"}, {3, "LA_03"}, {4, "LA_04"}, 
