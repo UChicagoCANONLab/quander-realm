@@ -16,10 +16,15 @@ namespace Circuits
             GameData.InitCircuitsSaveData();
             // Debug.Log(GameData.getCurrLevel());
 
+            if (SceneManager.GetActiveScene().name == "Circuits_Title") {
+                Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
+                return;
+            }
+
             switch (GameData.getCurrLevel() - offset)
             {
                 case 0:
-                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
+                    // Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
                     Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level1");
                     break;
                 case 3:
@@ -50,7 +55,7 @@ namespace Circuits
                     break;
                 //    return "DialogC-04";
                 default:
-                    SceneManager.LoadScene("CircuitsLevelScene");
+                    // SceneManager.LoadScene("CircuitsLevelScene");
                     // SceneManager.LoadScene("Circuits_Title");
                     break;
             }
@@ -68,11 +73,12 @@ namespace Circuits
 
         private void UnPauseGame()
         {
-            // UnPause code
-            //Debug.Log("Unpaused?");
-
-            SceneManager.LoadScene("CircuitsLevelScene");
-            // SceneManager.LoadScene("Circuits_Title");
+            if (SceneManager.GetActiveScene().name == "Circuits_Title") {
+                return;
+            }
+            else {
+                SceneManager.LoadScene("CircuitsLevelScene");
+            }
         }
 
     }

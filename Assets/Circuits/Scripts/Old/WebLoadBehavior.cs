@@ -10,7 +10,6 @@ namespace Circuits
 {
     public class WebLoadBehavior : MonoBehaviour
     {
-        
         public string nextScene;
         private int timeout = 100;
 
