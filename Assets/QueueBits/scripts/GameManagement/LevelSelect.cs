@@ -63,16 +63,17 @@ namespace QueueBits
                 panel.GetComponent<RectTransform>().offsetMax = new Vector2(0, 50);
                 SetUpGrid(panel);
 #if LITE_VERSION
-    int numberOfIcons = 8;
-    litePanel.SetActive(true);
+                int numberOfIcons = 8;
+                litePanel.SetActive(true);
 #else
-    int numberOfIcons = 15;
+                int numberOfIcons = 15;
 #endif
                 // int numberOfIcons = i == numberOfPanels ? (GameManager.saveData.starSystem.Length - 1) - currentLevelCount : amountPerPage;
                 LoadIcons(numberOfIcons, panel);
             }
             Destroy(panelClone);
         }
+
         void SetUpGrid(GameObject panel)
         {
             GridLayoutGroup grid = panel.AddComponent<GridLayoutGroup>();
@@ -82,6 +83,7 @@ namespace QueueBits
             // grid.spacing = iconSpacing;
             grid.spacing = new Vector2(45,20);
         }
+
         void LoadIcons(int numberOfIcons, GameObject parentObject)
         {
             for (int i = 1; i <= numberOfIcons; i++)
@@ -110,8 +112,12 @@ namespace QueueBits
                 icon.name = "Level" + i;
                 
                 // new icon prefabs here
-                Image levelNumberObj = icon.transform.Find("LevelNum").GetComponent<Image>();
-                levelNumberObj.sprite = levelNumArray[i-1];
+                // Image levelNumberObj = icon.transform.Find("LevelNum").GetComponent<Image>();
+                // levelNumberObj.sprite = levelNumArray[i-1];
+                
+                TMP_Text levelNumberObj = icon.transform.Find("LevelNumText").GetComponent<TextMeshProUGUI>();
+                levelNumberObj.text = $"{i}";
+
                 if (i%2 == 0) {
                     GameObject.Find($"Canvas/Panel/Page-1/Level{i}/TokenRed").SetActive(true);
                 }
@@ -125,10 +131,5 @@ namespace QueueBits
             }
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            
-        }
     }
 }
