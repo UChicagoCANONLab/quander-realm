@@ -20,6 +20,7 @@ namespace Circuits
             for (int i = 0; i < CTConstants.N_LEVELS; i++)
             {
                 GameObject newButton = Instantiate(buttonPrefab);
+                newButton.name = $"Level{i}";
                 newButton.transform.SetParent(content.transform);
                 newButton.transform.localScale = Vector3.one;
                 LevelButtonBehavior lb = newButton.GetComponent<LevelButtonBehavior>();
