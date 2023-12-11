@@ -9,10 +9,11 @@ namespace Labyrinth
     public class ButtonBehavior : MonoBehaviour
     {
         public GameObject winScreen;
+        public GameObject loseScreen;
         public GameObject gameplayButtons;
         public GameObject gameplayObjects;
         public GameObject progressBar;
-        public GameObject[] starsWon;
+        public GameObject[] starsWonArr;
         public GameObject litePanel;
 
         public Button[] buttons;
@@ -42,23 +43,27 @@ namespace Labyrinth
                 }
             } */
             else if (buttons.Length > 0) {
+                string prefix = "Canvas/LevelButtons-New/Container";
                 for (int i=1; i<=15; i++) {
                     GameObject.Find($"StarMessage{i}").GetComponent<StarMessage>().displayStars();
+                    if (i > SaveData.Instance.MaxLevelUnlocked) {
+                        buttons[i-1].enabled = false;
+                        GameObject.Find($"{prefix}/{i}/Locked{i}").SetActive(true);
+                    }
                 }
             }
 #if LITE_VERSION
-    if (litePanel != null) {
-        litePanel.SetActive(true);
-    }
+            if (litePanel != null) {
+                litePanel.SetActive(true);
+            }
 #endif
         }
 
-        void Update() {
+        /* void Update() {
             if (Input.GetKeyDown(KeyCode.Escape)) {
                 LoadMainMenu();
-                // LoadLevelSelectMenu();
             }
-        }
+        } */
 
         public void LoadLevelSelectMenu() {
             Time.timeScale = 1f;
@@ -74,12 +79,6 @@ namespace Labyrinth
             SceneManager.LoadScene("LA_LevelSelect");
         }
 
-        /* public void InitialLoadLevelSelectMenu() {
-            Time.timeScale = 1f;
-            Load.LoadGame();
-            SceneManager.LoadScene("LevelSelect");
-        } */
-
         public void LoadMainMenu() {
             Time.timeScale = 1f;
             // Load.LoadTTSaveData();
@@ -89,24 +88,33 @@ namespace Labyrinth
 
         public void Exit() {
             // Save.SaveGame();
-            
             Application.Quit();
         }
 
-        public void Win(int goalsCollected) {      
-            SaveData.Instance.winner = true;
+        public void Win(int starsWon) {      
+            if (starsWon == 0) {
+                SaveData.Instance.winner = false;
+                loseScreen.SetActive(true);
+            }
+            else {
+                SaveData.Instance.winner = true;
+                winScreen.SetActive(true);
+                
+                for (int i=0; i<starsWon; i++) { 
+                    starsWonArr[i].SetActive(true); 
+                }
+
+                if (SaveData.Instance.CurrentLevel == SaveData.Instance.MaxLevelUnlocked) {
+                    SaveData.Instance.MaxLevelUnlocked += 1;
+                }
+            }
+            
             Save.Instance.SaveGame();
-            /* if (SaveData.Instance.CurrentLevel > 0) {
-                // Save.SaveTTSaveData();
-                Save.Instance.SaveGame();
-            } */
-    
-            winScreen.SetActive(true);
+            
             gameplayButtons.SetActive(false);
             gameplayObjects.SetActive(false);
             progressBar.SetActive(false);
 
-            starsWon[goalsCollected].SetActive(true);
             // Time.timeScale = 0f;
 
             if ((SaveData.Instance.CurrentLevel % 5 == 0) 
@@ -117,16 +125,19 @@ namespace Labyrinth
             // DialogueAndRewards.Instance.updateDialogueDict();
         }
 
-        public void UndoWin(int goalsCollected) {
+        public void UndoWin(int starsWon) {
             SaveData.Instance.winner = false;
 
             winScreen.SetActive(false);
+            loseScreen.SetActive(false);
             gameplayButtons.SetActive(true);
             gameplayObjects.SetActive(true);
             progressBar.SetActive(true);
 
-            starsWon[goalsCollected].SetActive(false);
-            Time.timeScale = 1f;
+            for (int i=0; i<starsWon; i++) {
+                starsWonArr[i].SetActive(false);
+            }
+            // Time.timeScale = 1f;
         }
 
         public void LevelSelect(int sel) {

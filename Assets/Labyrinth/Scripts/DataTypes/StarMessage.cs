@@ -15,8 +15,8 @@ namespace Labyrinth
             /* for (int i=0; i < stars.Length; i++) {
                 stars[i].SetActive(false);
             }
-            
             stars[numStars].SetActive(true); */
+            
             for (int i=0; i < numStars; i++) {
                 stars[i].SetActive(true);
             }

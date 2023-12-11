@@ -11,16 +11,14 @@ namespace Labyrinth
         // Helps the game run
         public int Degree;
         public int CurrentLevel; //current level the user is playing
-        public int MaxLevelUnlocked;
 
         [Header("Non-Research Data")]
-        // Non-research data
         public int[] starsPerLevel; //15 levels, all w 0-3 stars
         public bool[] dialogueSeen;
         public int totalStars;
+        public int MaxLevelUnlocked = 1;
 
         [Header("Research Data")]
-        // Research data
         public int level; 
         public int numStars;
         public float time;
@@ -59,6 +57,7 @@ namespace Labyrinth
                 dialogueSeen[i] = item;
                 i++;
             }
+            // MaxLevelUnlocked incremented at ButtonBehavior line 107
 
             level = CurrentLevel;
             numStars = gb.numStars;
