@@ -14,6 +14,7 @@ namespace Circuits
         public GameObject[] starSprites;
         
         public GameObject panel;
+        public GameObject locked;
         //public Text scoreText;
         private LevelSelectorBehavior owner;
         private int level;
@@ -34,8 +35,9 @@ namespace Circuits
 
             Image numberObject = panel.transform.Find("LevelNumber").GetComponent<Image>();
             numberObject.sprite = numberSprites[level];
-
+            
             GetComponent<Button>().interactable = true;
+
             //scoreText.text = "";
             /* if(completed)
             {
@@ -43,6 +45,12 @@ namespace Circuits
                 // starObject.sprite = starSprite;
                 //scoreText.text += "*";
             } */
+
+            if (level >= GameData.getMaxLevelUnlocked()) {
+                locked.SetActive(true);
+                GetComponent<Button>().enabled = false;
+            }
+
             for (int i=0; i< stars; i++) {
                 starSprites[i].SetActive(true);
             }

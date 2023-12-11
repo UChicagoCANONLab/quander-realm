@@ -68,6 +68,11 @@ namespace Circuits
             log.Add(string.Format("{0}-checkSub-{1}", saveData.currLevel, sub));
         }
 
+        public static int getMaxLevelUnlocked() 
+        {
+            return saveData.maxLevel;
+        }
+
         public static int getCurrLevel() 
         {
             return saveData.currLevel;
@@ -99,6 +104,11 @@ namespace Circuits
             try
             {
                 saveData.completedLevels[saveData.currLevel] = true;
+
+                if (saveData.currLevel > saveData.maxLevel) {
+                    saveData.maxLevel = saveData.currLevel + 1;
+                }
+
                 if (saveData.starsPerLevel[saveData.currLevel] < StarDisplay.SD.numStars) {
                     saveData.starsPerLevel[saveData.currLevel] = StarDisplay.SD.numStars;
                 }
