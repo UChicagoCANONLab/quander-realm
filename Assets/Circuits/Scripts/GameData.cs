@@ -105,7 +105,7 @@ namespace Circuits
             {
                 saveData.completedLevels[saveData.currLevel] = true;
 
-                if (saveData.currLevel > saveData.maxLevel) {
+                if (saveData.currLevel >= saveData.maxLevel) {
                     saveData.maxLevel = saveData.currLevel + 1;
                 }
 
