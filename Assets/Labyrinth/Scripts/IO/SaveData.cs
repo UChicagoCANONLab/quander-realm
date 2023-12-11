@@ -11,7 +11,7 @@ namespace Labyrinth
         // Helps the game run
         public int Degree;
         public int CurrentLevel; //current level the user is playing
-        public int MaxLevelUnlocked;
+        public int MaxLevelUnlocked = 1;
 
         [Header("Non-Research Data")]
         // Non-research data
@@ -59,6 +59,10 @@ namespace Labyrinth
                 dialogueSeen[i] = item;
                 i++;
             }
+
+            // if (winner == true && CurrentLevel == MaxLevelUnlocked) {
+            //     MaxLevelUnlocked = CurrentLevel + 1;
+            // }
 
             level = CurrentLevel;
             numStars = gb.numStars;

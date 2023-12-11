@@ -43,8 +43,13 @@ namespace Labyrinth
                 }
             } */
             else if (buttons.Length > 0) {
+                string prefix = "Canvas/LevelButtons-New/Container";
                 for (int i=1; i<=15; i++) {
                     GameObject.Find($"StarMessage{i}").GetComponent<StarMessage>().displayStars();
+                    if (i > SaveData.Instance.MaxLevelUnlocked) {
+                        buttons[i-1].enabled = false;
+                        GameObject.Find($"{prefix}/{i}/Locked{i}").SetActive(true);
+                    }
                 }
             }
 #if LITE_VERSION
@@ -97,6 +102,10 @@ namespace Labyrinth
                 
                 for (int i=0; i<starsWon; i++) { 
                     starsWonArr[i].SetActive(true); 
+                }
+
+                if (SaveData.Instance.CurrentLevel == SaveData.Instance.MaxLevelUnlocked) {
+                    SaveData.Instance.MaxLevelUnlocked += 1;
                 }
             }
             
