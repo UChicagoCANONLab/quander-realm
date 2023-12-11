@@ -17,18 +17,15 @@ namespace QueueBits
 
         public static void Load()
         {
-            try
-            {
+            try {
                 string saveString = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.QueueBits);
                 saveData = JsonUtility.FromJson<QBSaveData>(saveString);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 Debug.LogError(e.Message);
             }
 
-            if (saveData == null)
-            {
+            if (saveData == null) {
                 saveData = new QBSaveData();
             }
             Save();
