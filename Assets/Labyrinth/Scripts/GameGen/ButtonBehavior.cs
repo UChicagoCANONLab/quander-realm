@@ -53,17 +53,17 @@ namespace Labyrinth
                 }
             }
 #if LITE_VERSION
-    if (litePanel != null) {
-        litePanel.SetActive(true);
-    }
+            if (litePanel != null) {
+                litePanel.SetActive(true);
+            }
 #endif
         }
 
-        void Update() {
+        /* void Update() {
             if (Input.GetKeyDown(KeyCode.Escape)) {
                 LoadMainMenu();
             }
-        }
+        } */
 
         public void LoadLevelSelectMenu() {
             Time.timeScale = 1f;

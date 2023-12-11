@@ -15,21 +15,26 @@ namespace Labyrinth
         public int hintsUsed = 0;
         public int numStars = 3;
 
+        [Header("Maze Info")]
         public int degree;
         public int size;
         public double wallProb = 0.5;
         
+        [Header("Path Info")]
         public int steps = 0;
         public int pathLength;
 
+        [Header("Feedback Objects")]
         public Star[] stars;
         public GameObject levelNumber;
 
+        [Header("Time Info (for research)")]
         // Time in seconds for research data
         private float initTime;
         private float endTime;
         public float timePlayed;
 
+        [Header("GameObjects")]
         public Maze maze;
         public PlayerMovement pm;
         // public Camera cam;
@@ -106,7 +111,6 @@ namespace Labyrinth
 
                 endTime = Time.time;
                 timePlayed = endTime - initTime;
-                //SaveSystem.SaveGame(this);
                 SaveData.Instance.updateSave(this);
 
                 btn.Win(numStars);
