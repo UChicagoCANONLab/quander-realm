@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 namespace Labyrinth 
 { 
@@ -21,7 +22,8 @@ namespace Labyrinth
         public int steps = 0;
         public int pathLength;
 
-        public Star[] stars; 
+        public Star[] stars;
+        public GameObject levelNumber;
 
         // Time in seconds for research data
         private float initTime;
@@ -67,8 +69,9 @@ namespace Labyrinth
                 pathLength = 8;
             }
             else {
-                string imagePath = $"Canvases/CanvasUnder/LevelNumbers/Level{SaveData.Instance.CurrentLevel}";
-                GameObject.Find(imagePath).SetActive(true);
+                // string imagePath = $"Canvases/CanvasUnder/LevelNumbers/Level{SaveData.Instance.CurrentLevel}";
+                // GameObject.Find(imagePath).SetActive(true);
+                levelNumber.GetComponent<TextMeshProUGUI>().text = $"{SaveData.Instance.CurrentLevel}";
                 pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
             }
             pb.resestBar();
