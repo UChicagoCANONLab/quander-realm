@@ -29,6 +29,7 @@ namespace Labyrinth
             }
             else {
                 SaveData.Instance.totalStars = 0;
+                SaveData.Instance.MaxLevelUnlocked = Data.Instance.ttSaveData.MaxLevelUnlocked;
                 for (int i=0; i<15; i++) {
                     SaveData.Instance.starsPerLevel[i] = Data.Instance.ttSaveData.MaxStarsPerLevel[i];
                     SaveData.Instance.totalStars += Data.Instance.ttSaveData.MaxStarsPerLevel[i];
