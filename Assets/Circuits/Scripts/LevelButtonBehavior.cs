@@ -46,7 +46,7 @@ namespace Circuits
                 //scoreText.text += "*";
             } */
 
-            if (level > GameData.getMaxLevelUnlocked()) {
+            if (level >= GameData.getMaxLevelUnlocked()) {
                 locked.SetActive(true);
                 GetComponent<Button>().enabled = false;
             }
