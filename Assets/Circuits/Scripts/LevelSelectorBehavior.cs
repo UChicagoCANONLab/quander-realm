@@ -12,6 +12,7 @@ namespace Circuits
         public GameObject content;
         public GameBehavior gameBehavior;
         private LevelButtonBehavior[] buttons;
+        
         // Start is called before the first frame update
         void Start()
         {
@@ -19,6 +20,7 @@ namespace Circuits
             for (int i = 0; i < CTConstants.N_LEVELS; i++)
             {
                 GameObject newButton = Instantiate(buttonPrefab);
+                newButton.name = $"Level{i}";
                 newButton.transform.SetParent(content.transform);
                 newButton.transform.localScale = Vector3.one;
                 LevelButtonBehavior lb = newButton.GetComponent<LevelButtonBehavior>();
@@ -45,10 +47,5 @@ namespace Circuits
 
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 }

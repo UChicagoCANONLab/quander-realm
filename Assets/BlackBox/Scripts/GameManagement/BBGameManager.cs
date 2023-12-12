@@ -231,6 +231,7 @@ namespace BlackBox
                     saveData.totalStars += (livesRemaining - saveData.livesPerLevel[level.number-1]);
                     saveData.livesPerLevel[level.number-1] = livesRemaining;
                 }
+                // PLAY END OF LEVEL DIALOGUE IF APPLICABLE
                 TrySetNewLevelSave();
             }
             else

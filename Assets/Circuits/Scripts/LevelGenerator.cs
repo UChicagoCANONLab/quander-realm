@@ -505,7 +505,7 @@ namespace Circuits
                 }
                 if (!success)
                 {
-                    Debug.Log("No substitutions possible");
+                    Debug.LogError("No substitutions possible");
                     break;
                 }
             }

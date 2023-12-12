@@ -10,9 +10,9 @@ namespace QueueBits
         public void loadlevel (string level)
         {
 #if LITE_VERSION
-    if (level=="Level9") {
-        level = "LevelSelect";
-    }
+            if (level=="Level9") {
+                level = "LevelSelect";
+            }
 #endif
             SceneManager.LoadScene("QB_" + level);
         }

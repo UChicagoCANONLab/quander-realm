@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 namespace Labyrinth 
 { 
@@ -14,20 +15,26 @@ namespace Labyrinth
         public int hintsUsed = 0;
         public int numStars = 3;
 
+        [Header("Maze Info")]
         public int degree;
         public int size;
         public double wallProb = 0.5;
         
+        [Header("Path Info")]
         public int steps = 0;
         public int pathLength;
 
-        public Star[] stars; 
+        [Header("Feedback Objects")]
+        public Star[] stars;
+        public GameObject levelNumber;
 
+        [Header("Time Info (for research)")]
         // Time in seconds for research data
         private float initTime;
         private float endTime;
         public float timePlayed;
 
+        [Header("GameObjects")]
         public Maze maze;
         public PlayerMovement pm;
         // public Camera cam;
@@ -67,8 +74,9 @@ namespace Labyrinth
                 pathLength = 8;
             }
             else {
-                string imagePath = $"Canvases/CanvasUnder/LevelNumbers/Level{SaveData.Instance.CurrentLevel}";
-                GameObject.Find(imagePath).SetActive(true);
+                // string imagePath = $"Canvases/CanvasUnder/LevelNumbers/Level{SaveData.Instance.CurrentLevel}";
+                // GameObject.Find(imagePath).SetActive(true);
+                levelNumber.GetComponent<TextMeshProUGUI>().text = $"{SaveData.Instance.CurrentLevel}";
                 pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
             }
             pb.resestBar();
@@ -103,7 +111,6 @@ namespace Labyrinth
 
                 endTime = Time.time;
                 timePlayed = endTime - initTime;
-                //SaveSystem.SaveGame(this);
                 SaveData.Instance.updateSave(this);
 
                 btn.Win(numStars);
