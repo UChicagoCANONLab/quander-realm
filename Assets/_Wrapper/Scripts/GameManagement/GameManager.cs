@@ -150,7 +150,8 @@ namespace Wrapper
 
             if (rewardAdded)
             {
-                Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+                // Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+                Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
 
                 // if this is the first reward from this game, display the reward dialog 
                 if (Events.GetFirstRewardBool(levelReward.rewardID.Substring(0, 2).ToLower()))
@@ -280,7 +281,8 @@ namespace Wrapper
                 return;
             }
 
-            Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+            // Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+            Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
         }
 
         //todo: Utils class?
