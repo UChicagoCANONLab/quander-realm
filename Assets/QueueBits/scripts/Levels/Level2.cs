@@ -28,6 +28,7 @@ namespace QueueBits
 		public float dropTime = 4f;
 
 		// star system
+		[Header("Star System")]
 		public bool starUpdated = false;
 		public GameObject starFilled;
 		public GameObject starEmpty;
@@ -36,12 +37,15 @@ namespace QueueBits
 		public GameObject Star3;
 
 		// Gameobjects 
+		[Header("GameObjects")]
 		public GameObject pieceRed;
 		public GameObject pieceBlue;
 		public GameObject pieceField;
 
 		public GameObject winningText;
 		public GameObject resultBG;
+
+		[Header("Texts")]
 		public string playerWonText = "You Won!";
 		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
