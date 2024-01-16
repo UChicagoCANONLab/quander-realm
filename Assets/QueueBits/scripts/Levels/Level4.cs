@@ -44,13 +44,13 @@ namespace QueueBits
 		public GameObject Star3;
 
 		// Gameobjects 
-		[Header("GameObects")]
+		[Header("GameObjects")]
 		public GameObject pieceRed;
 		public GameObject pieceBlue;
 		public GameObject pieceField;
 		public GameObject finalColor;
 
-		[Header("GameObects - Superposition")]
+		[Header("GameObjects - Superposition")]
 		public GameObject pieceSuperposition;
 		// public GameObject piece25;
 		public GameObject piece50;
@@ -65,7 +65,7 @@ namespace QueueBits
 		// public GameObject redTitle;
 
 		//BLUE
-		[Header("GameObects - BLUE Display")]
+		[Header("GameObjects - BLUE Display")]
 		public GameObject pieceBlue100;
 		public GameObject pieceBlue75;
 		public GameObject pieceBlue50;
@@ -79,7 +79,7 @@ namespace QueueBits
 		public GameObject pieceCounterText;
 
 		//RED
-		[Header("GameObects - RED Display")]
+		[Header("GameObjects - RED Display")]
 		public GameObject pieceRed100;
 		public GameObject pieceRed75;
 		public GameObject pieceRed50;

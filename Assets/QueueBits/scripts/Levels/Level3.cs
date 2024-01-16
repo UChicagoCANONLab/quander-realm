@@ -45,7 +45,7 @@ namespace QueueBits
 		public GameObject Star3;
 
 		// Gameobjects 
-		[Header("GameObects")]
+		[Header("GameObjects")]
 		public GameObject pieceRed;
 		public GameObject pieceBlue;
 		public GameObject pieceField;

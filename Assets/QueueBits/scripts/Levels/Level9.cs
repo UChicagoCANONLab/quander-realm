@@ -29,6 +29,7 @@ namespace QueueBits
 		public float dropTime = 4f;
 
 		// star system
+		[Header("Star System")]
 		public bool starUpdated = false;
 		public GameObject starFilled;
 		public GameObject starEmpty;
@@ -37,47 +38,51 @@ namespace QueueBits
 		public GameObject Star3;
 
 		// Gameobjects 
+		[Header("GameObjects")]
 		public GameObject pieceRed;
 		public GameObject pieceBlue;
 		public GameObject pieceField;
 		public GameObject finalColor;
 
 		// Superposition Pieces
-		public GameObject piece25;
+		[Header("GameObjects - Superposition")]
+		public GameObject pieceSuperposition;
+		// public GameObject piece25;
 		public GameObject piece50;
 		public GameObject piece75;
 		public GameObject piece25red_turn;
 		public GameObject piece50red_turn;
-		public GameObject piece75red_turn;
-		public GameObject pieceSuperposition;
+		// public GameObject piece75red_turn;
 
 		//Piece Count Displays
 		// public GameObject blueTitle;
 		// public GameObject redTitle;
 
 		//BLUE
+		[Header("GameObjects - BLUE Display")]
 		public GameObject pieceBlue100;
 		public GameObject pieceBlue75;
 		public GameObject pieceBlue50;
-		public GameObject pieceBlue25;
+		// public GameObject pieceBlue25;
 
 		public GameObject pieceBlue100Text;
 		public GameObject pieceBlue75Text;
 		public GameObject pieceBlue50Text;
-		public GameObject pieceBlue25Text;
+		// public GameObject pieceBlue25Text;
 
 		public GameObject pieceCounterText;
 
 		//RED
+		[Header("GameObjects - RED Display")]
 		public GameObject pieceRed100;
 		public GameObject pieceRed75;
 		public GameObject pieceRed50;
-		public GameObject pieceRed25;
+		// public GameObject pieceRed25;
 
 		public GameObject pieceRed100Text;
 		public GameObject pieceRed75Text;
 		public GameObject pieceRed50Text;
-		public GameObject pieceRed25Text;
+		// public GameObject pieceRed25Text;
 
 		public int probability;
 
@@ -248,6 +253,7 @@ namespace QueueBits
 		bool SelectMenuGenerated = false;
 		int choice;
 
+		[Header("Texts")]
 		public GameObject winningText;
 
 		public GameObject playerTurnObject;
@@ -965,8 +971,8 @@ namespace QueueBits
 				}
 				else
 				{
-					pieceSuperposition = piece25;
-					pieceBlue25Text.GetComponent<TextMesh>().text = blueProbs[25].ToString();
+					// pieceSuperposition = piece25;
+					// pieceBlue25Text.GetComponent<TextMesh>().text = blueProbs[25].ToString();
 				}
 
 				if (blueProbs[prob] == 0)
@@ -1003,8 +1009,8 @@ namespace QueueBits
 				}
 				else
 				{
-					pieceSuperposition = piece75red_turn;
-					pieceRed25Text.GetComponent<TextMesh>().text = redProbs[25].ToString();
+					// pieceSuperposition = piece75red_turn;
+					// pieceRed25Text.GetComponent<TextMesh>().text = redProbs[25].ToString();
 				}
 
 				if (redProbs[prob] == 0)
