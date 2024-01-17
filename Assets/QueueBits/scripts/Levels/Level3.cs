@@ -340,11 +340,13 @@ namespace QueueBits
 				mydata.reveal_order[i] = 0;
 				mydata.outcome[i] = 0;
 			}
+
 			foreach ((Piece pi, int c, int r) in prefilledBoard)
 			{
 				turn++;
 				int index = r * numColumns + c;
 				mydata.placement_order[index] = turn;
+				
 				mydata.reveal_order[index] = turn;
 				mydata.superposition[index] = 100;
 				if (pi == Piece.Blue)//if Yellow

@@ -295,7 +295,8 @@ namespace QueueBits
 		bool gameOver = false;
 		bool isCheckingForWinner = false;
 
-		string state = "000000000000000000000000000000000000000000";//"000000000000000020020002201010110122021012";
+		string state = "000000000000000000000000000000000000000000";
+		// string state = "000000000000000020020002201010110122021012";
 		int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
 		HashSet<(int, int)> visited = new HashSet<(int, int)>();
 
@@ -305,7 +306,6 @@ namespace QueueBits
 		// Shivani Puli Data Collection
 		int turn = 0;
 		Data mydata = new Data();
-		//Shivani Puli Data Collection
 
 		// Use this for initialization
 		void Start()
@@ -346,8 +346,9 @@ namespace QueueBits
 				turn++;
 				int index = r * numColumns + c;
 				mydata.placement_order[index] = turn;
-				mydata.superposition[index] = 100;
+				
 				mydata.reveal_order[index] = turn;
+				mydata.superposition[index] = 100;
 				if (pi == Piece.Blue)//if Yellow
 				{
 					mydata.outcome[index] = 1;
