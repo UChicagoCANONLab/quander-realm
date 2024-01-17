@@ -280,11 +280,6 @@ namespace QueueBits
 		public GameObject probText;
 		public GameObject starText;
 
-		// public GameObject btnPlayAgain;
-		// bool btnPlayAgainTouching = false;
-		// Color btnPlayAgainOrigColor;
-		// Color btnPlayAgainHoverColor = new Color(255, 143, 4);
-
 		GameObject gameObjectField;
 
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
@@ -422,8 +417,6 @@ namespace QueueBits
 				playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity) as GameObject;
 				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 			}
-
-			// btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
 		}
 
 		// dialogue
@@ -440,8 +433,6 @@ namespace QueueBits
 		{
 
 			winningText.SetActive(false);
-			// btnPlayAgain.SetActive(false);
-
 			playerTurnText.SetActive(true);
 			playerTurnText.GetComponent<Renderer>().sortingOrder = 4;
 
@@ -539,9 +530,6 @@ namespace QueueBits
 
 			winningText.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
-
-			//btnPlayAgain.transform.position = new Vector3(
-			//	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
 
 			playerTurnText.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
@@ -1101,23 +1089,11 @@ namespace QueueBits
 			if (gameOver)
 			{
 				winningText.SetActive(true);
-	// 			btnPlayAgain.SetActive(false);
-
-	// 			// fix play again button
-	// 			btnPlayAgain.transform.position = new Vector3(
-	// (numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
-	// 			btnPlayAgain.GetComponent<TextMesh>().color = Color.white;
-	// 			btnPlayAgain.GetComponent<TextMesh>().text = "EXIT TO MENU";
-	// 			btnPlayAgain.GetComponent<TextMesh>().fontSize = 70;
-				// UpdatePlayAgainButton();
-
 				playerTurnText.SetActive(false);
 				playerTurnObject.SetActive(false);
 
 				return;
 			}
-
-			// UpdatePlayAgainButton();
 
 			if (isPlayersTurn)
 			{
@@ -1829,35 +1805,6 @@ namespace QueueBits
 				Star3 = Instantiate(starFilled, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
 			}
 		}
-
-		/* void UpdatePlayAgainButton()
-		{
-			RaycastHit hit;
-			//ray shooting out of the camera from where the mouse is
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-			if (Physics.Raycast(ray, out hit) && hit.collider.name == btnPlayAgain.name)
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainHoverColor;
-				//check if the left mouse has been pressed down this frame
-				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnPlayAgainTouching == false)
-				{
-					btnPlayAgainTouching = true;
-
-					//CreateField();
-					Application.LoadLevel(0);
-				}
-			}
-			else
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainOrigColor;
-			}
-
-			if (Input.touchCount == 0)
-			{
-				btnPlayAgainTouching = false;
-			}
-		} */
 
 		/// <summary>
 		/// check if the field contains an empty cell
