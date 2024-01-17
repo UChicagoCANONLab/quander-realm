@@ -42,24 +42,16 @@ namespace QueueBits
 		public GameObject pieceBlue;
 		public GameObject pieceField;
 
+		[Header("Texts")]
 		public GameObject winningText;
 		public GameObject resultBG;
 
-		[Header("Texts")]
 		public string playerWonText = "You Won!";
 		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
 		// public GameObject probText;
 		// public GameObject starText;
-
-		/* public GameObject btnPlayAgain;
-		bool btnPlayAgainTouching = false;
-		Color btnPlayAgainOrigColor;
-		Color btnPlayAgainHoverColor = new Color(255, 143,4);
-
-		public GameObject btnNextLevel;
-		bool btnNextLevelTouching = false; */
 
 		GameObject gameObjectField;
 
@@ -83,21 +75,18 @@ namespace QueueBits
 		bool isCheckingForWinner = false;
 
 		string state = "000000000000000000000000000000000000000000";
-		int[] colPointers = {5, 5, 5, 5, 5, 5, 5};
+		int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
 		HashSet<(int, int)> visited = new HashSet<(int, int)>();
 
 		// dialogue
 		bool dialoguePhase = false;
-
-		
+	
 		// Shivani Puli Data Collection
 		int turn = 0;
 		Data mydata = new Data();
-		//Shivani Puli Data Collection
 		
-
 		// Use this for initialization
-		void Start () 
+		void Start() 
 		{
 			ShowStarSystem();
 
@@ -134,12 +123,10 @@ namespace QueueBits
 			if(numPiecesToWin > max)
 				numPiecesToWin = max;
 
-			CreateField ();
+			CreateField();
 
 			// GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
 			// levelText.GetComponent<TextMesh>().text = "Level 1";
-
-			// btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
 		}
 
 		// dialogue
@@ -155,13 +142,11 @@ namespace QueueBits
 		void CreateField()
 		{
 			winningText.SetActive(false);
-			/* btnPlayAgain.SetActive(false);
-			btnNextLevel.SetActive(false); */
 
 			isLoading = true;
 
-			gameObjectField = GameObject.Find ("Field");
-			if(gameObjectField != null)
+			gameObjectField = GameObject.Find("Field");
+			if (gameObjectField != null)
 			{
 				DestroyImmediate(gameObjectField);
 			}
@@ -175,7 +160,7 @@ namespace QueueBits
 
 			for (int x = 0; x < numColumns; x++)
 			{
-				for(int y = 0; y < numRows; y++)
+				for (int y = 0; y < numRows; y++)
 				{
 					field[x, y] = (int)Piece.Empty;
 				}
@@ -186,16 +171,10 @@ namespace QueueBits
 
 			// center camera
 			Camera.main.transform.position = new Vector3(
-				(numColumns-1) / 2.0f, -((numRows-1) / 2.0f), Camera.main.transform.position.z);
+				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f), Camera.main.transform.position.z);
 
 			winningText.transform.position = new Vector3(
-				(numColumns-1) / 2.0f, -((numRows-1) / 2.0f) + 0.2f, winningText.transform.position.z);
-
-	// 		btnNextLevel.transform.position = new Vector3(
-	// (numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnNextLevel.transform.position.z);
-
-			//btnPlayAgain.transform.position = new Vector3(
-			//	(numColumns-1) / 2.0f, -((numRows-1) / 2.0f) - 2, btnPlayAgain.transform.position.z);
+				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
 		}
 
 		int index(int r, int c)
@@ -232,7 +211,7 @@ namespace QueueBits
 				for (int c = 0; c < 7; c++)
                 {
 					int i = index(r, c);
-					if (state.Substring(i,1).Equals("2")) // && !visited.Contains((r,c)) -- adding this causes missed connections, but speed?
+					if (state.Substring(i, 1).Equals("2")) // && !visited.Contains((r,c)) -- adding this causes missed connections, but speed?
 					{
 						score += evaluatePosition(r, c, "2");
                     }
@@ -268,7 +247,7 @@ namespace QueueBits
 				i++;
             }
 			r_counter = Mathf.Min(4, r_counter); // if 5 or more connected, goes to 4.
-			num_connected[r_counter-1]++;
+			num_connected[r_counter - 1]++;
 
 			// look down
 			i = index(r, c);
@@ -286,7 +265,7 @@ namespace QueueBits
 				i += 7;
 			}
 			d_counter = Mathf.Min(4, d_counter);
-			num_connected[d_counter-1]++;
+			num_connected[d_counter - 1]++;
 
 			// look diagonal right-down
 			i = index(r, c);
@@ -304,7 +283,7 @@ namespace QueueBits
 				i += 8;
 			}
 			rd_counter = Mathf.Min(4, rd_counter);
-			num_connected[rd_counter-1]++;
+			num_connected[rd_counter - 1]++;
 
 			// look diagonal left-down
 			i = index(r, c);
@@ -322,7 +301,7 @@ namespace QueueBits
 				i += 6;
 			}
 			ld_counter = Mathf.Min(4, ld_counter);
-			num_connected[ld_counter-1]++;
+			num_connected[ld_counter - 1]++;
 
 			int score = 100 * num_connected[3] + 20 * num_connected[2] + 3 * num_connected[1] + 10 * hasCenter;
 			return score;
@@ -331,7 +310,7 @@ namespace QueueBits
 		List<int> getMoves(int[] cols)
         {
 			List<int> possCols = new List<int>();
-			for(int i = 0; i < cols.Length; i++)
+			for (int i = 0; i < cols.Length; i++)
             {
 				if (cols[i] != -1)
 					possCols.Add(i);
@@ -430,7 +409,7 @@ namespace QueueBits
 		{
 			Vector3 spawnPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					
-			if(!isPlayersTurn)
+			if (!isPlayersTurn)
 			{
 				List<int> moves = GetPossibleMoves();
 
@@ -457,7 +436,7 @@ namespace QueueBits
 			GameObject g = Instantiate(
 					isPlayersTurn ? pieceBlue : pieceRed, // is players turn = spawn blue, else spawn red
 					new Vector3(
-					Mathf.Clamp(spawnPos.x, 0, numColumns-1), 
+					Mathf.Clamp(spawnPos.x, 0, numColumns - 1), 
 					gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
 					Quaternion.identity) as GameObject;
 
@@ -493,93 +472,28 @@ namespace QueueBits
 			}
 		}
 
-		void UpdatePlayAgainButton()
-		{
-			RaycastHit hit;
-			//ray shooting out of the camera from where the mouse is
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			
-			/* if (Physics.Raycast(ray, out hit) && hit.collider.name == btnPlayAgain.name)
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainHoverColor;
-				//check if the left mouse has been pressed down this frame
-				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnPlayAgainTouching == false)
-				{
-					btnPlayAgainTouching = true;
-					
-					//CreateField();
-					Application.LoadLevel(0);
-				}
-			}
-			else
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainOrigColor;
-			} */
-			
-			/* if(Input.touchCount == 0)
-			{
-				btnPlayAgainTouching = false;
-			} */
-		}
-
-		void UpdateNextLevelButton()
-		{
-			RaycastHit hit;
-			//ray shooting out of the camera from where the mouse is
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-			/* if (Physics.Raycast(ray, out hit) && hit.collider.name == btnNextLevel.name)
-			{
-				//check if the left mouse has been pressed down this frame
-				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnNextLevelTouching == false)
-				{
-					btnNextLevelTouching = true;
-
-					//CreateField();
-					SceneManager.LoadScene("level2");
-				}
-			}
-
-			if (Input.touchCount == 0)
-			{
-				btnNextLevelTouching = false;
-			} */
-		}
-
 		// Update is called once per frame
-		void Update () 
+		void Update() 
 		{
-			if(isLoading)
+			if (isLoading)
 				return;
 
-			if(dialoguePhase)
+			if (dialoguePhase)
 				return;
 
-			if(isCheckingForWinner)
+			if (isCheckingForWinner)
 				return;
 
-			if(gameOver)
+			if (gameOver)
 			{
 				winningText.SetActive(true);
-				/* btnPlayAgain.SetActive(false);
-				btnNextLevel.SetActive(false);
-
-				// fix play again button
-				btnPlayAgain.transform.position = new Vector3(
-	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
-				btnPlayAgain.GetComponent<TextMesh>().color = Color.white;
-				btnPlayAgain.GetComponent<TextMesh>().text = "EXIT TO MENU";
-				btnPlayAgain.GetComponent<TextMesh>().fontSize = 70; */
-
-				UpdatePlayAgainButton();
-				UpdateNextLevelButton();
 
 				return;
 			}
 
-			if(isPlayersTurn)
+			if (isPlayersTurn)
 			{
-				if(gameObjectTurn == null)
+				if (gameObjectTurn == null)
 				{
 					gameObjectTurn = SpawnPiece();
 				}
@@ -588,13 +502,13 @@ namespace QueueBits
 					// update the objects position
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					gameObjectTurn.transform.position = new Vector3(
-						Mathf.Clamp(pos.x, 0, numColumns-1), 
+						Mathf.Clamp(pos.x, 0, numColumns - 1), 
 						gameObjectField.transform.position.y + 1, 0);
 
 					// click the left mouse button to drop the piece into the selected column
-					if(Input.GetMouseButtonDown(0) && !mouseButtonPressed && !isDropping)
+					if (Input.GetMouseButtonDown(0) && !mouseButtonPressed && !isDropping)
 					{
-						mouseButtonPressed= true;
+						mouseButtonPressed = true;
 
 						Vector3 startPosition = gameObjectTurn.transform.position;
 						int column = Mathf.RoundToInt(startPosition.x);
@@ -623,13 +537,13 @@ namespace QueueBits
 			}
 			else
 			{
-				if(gameObjectTurn == null)
+				if (gameObjectTurn == null)
 				{
 					gameObjectTurn = SpawnPiece();
 				}
 				else
 				{
-					if(!isDropping)
+					if (!isDropping)
 						StartCoroutine(dropPiece(gameObjectTurn));
 				}
 			}
@@ -644,9 +558,9 @@ namespace QueueBits
 			List<int> possibleMoves = new List<int>();
 			for (int x = 0; x < numColumns; x++)
 			{
-				for(int y = numRows - 1; y >= 0; y--)
+				for (int y = numRows - 1; y >= 0; y--)
 				{
-					if(field[x, y] == (int)Piece.Empty)
+					if (field[x, y] == (int)Piece.Empty)
 					{
 						possibleMoves.Add(x);
 						break;
@@ -674,9 +588,9 @@ namespace QueueBits
 
 			// is there a free cell in the selected column?
 			bool foundFreeCell = false;
-			for(int i = numRows-1; i >= 0; i--)
+			for (int i = numRows - 1; i >= 0; i--)
 			{
-				if(field[x, i] == 0)
+				if (field[x, i] == 0)
 				{
 					foundFreeCell = true;
 					field[x, i] = isPlayersTurn ? (int)Piece.Blue : (int)Piece.Red;
@@ -686,20 +600,20 @@ namespace QueueBits
 				}
 			}
 
-			if(foundFreeCell)
+			if (foundFreeCell)
 			{
 				// Instantiate a new Piece, disable the temporary
-				GameObject g = Instantiate (gObject) as GameObject;
+				GameObject g = Instantiate(gObject) as GameObject;
 				gameObjectTurn.GetComponent<Renderer>().enabled = false;
 
 				float distance = Vector3.Distance(startPosition, endPosition);
 
 				float t = 0;
-				while(t < 1)
+				while (t < 1)
 				{
 					t += Time.deltaTime * dropTime * ((numRows - distance) + 1);
 
-					g.transform.position = Vector3.Lerp (startPosition, endPosition, t);
+					g.transform.position = Vector3.Lerp(startPosition, endPosition, t);
 					yield return null;
 				}
 
@@ -712,7 +626,7 @@ namespace QueueBits
 				StartCoroutine(Won());
 
 				// wait until winning check is done
-				while(isCheckingForWinner)
+				while (isCheckingForWinner)
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
@@ -730,16 +644,16 @@ namespace QueueBits
 		{
 			isCheckingForWinner = true;
 
-			for(int x = 0; x < numColumns; x++)
+			for (int x = 0; x < numColumns; x++)
 			{
-				for(int y = 0; y < numRows; y++)
+				for (int y = 0; y < numRows; y++)
 				{
 					// Get the Laymask to Raycast against, if its Players turn only include
 					// Layermask Blue otherwise Layermask Red
 					int layermask = isPlayersTurn ? (1 << 8) : (1 << 9);
 
 					// If its Players turn ignore red as Starting piece and wise versa
-					if(field[x, y] != (isPlayersTurn ? (int)Piece.Blue : (int)Piece.Red))
+					if (field[x, y] != (isPlayersTurn ? (int)Piece.Blue : (int)Piece.Red))
 					{
 						continue;
 					}
@@ -752,7 +666,7 @@ namespace QueueBits
 						layermask);
 
 					// return true (won) if enough hits
-					if(hitsHorz.Length == numPiecesToWin - 1)
+					if (hitsHorz.Length == numPiecesToWin - 1)
 					{
 						gameOver = true;
 						break;
@@ -765,25 +679,25 @@ namespace QueueBits
 						numPiecesToWin - 1, 
 						layermask);
 					
-					if(hitsVert.Length == numPiecesToWin - 1)
+					if (hitsVert.Length == numPiecesToWin - 1)
 					{
 						gameOver = true;
 						break;
 					}
 
 					// test diagonally
-					if(allowDiagonally)
+					if (allowDiagonally)
 					{
 						// calculate the length of the ray to shoot diagonally
 						float length = Vector2.Distance(new Vector2(0, 0), new Vector2(numPiecesToWin - 1, numPiecesToWin - 1));
 
 						RaycastHit[] hitsDiaLeft = Physics.RaycastAll(
 							new Vector3(x, y * -1, 0), 
-							new Vector3(-1 , 1), 
+							new Vector3(-1, 1), 
 							length, 
 							layermask);
 						
-						if(hitsDiaLeft.Length == numPiecesToWin - 1)
+						if (hitsDiaLeft.Length == numPiecesToWin - 1)
 						{
 							gameOver = true;
 							break;
@@ -791,11 +705,11 @@ namespace QueueBits
 
 						RaycastHit[] hitsDiaRight = Physics.RaycastAll(
 							new Vector3(x, y * -1, 0), 
-							new Vector3(1 , 1), 
+							new Vector3(1, 1), 
 							length, 
 							layermask);
 						
-						if(hitsDiaRight.Length == numPiecesToWin - 1)
+						if (hitsDiaRight.Length == numPiecesToWin - 1)
 						{
 							gameOver = true;
 							break;
@@ -809,7 +723,7 @@ namespace QueueBits
 			}
 
 			// if Game Over update the winning text to show who has won
-			if(gameOver == true)
+			if (gameOver == true)
 			{
 				//Shivani Puli Data Collection -> store winner
 				if (isPlayersTurn)
@@ -849,7 +763,7 @@ namespace QueueBits
 			else 
 			{
 				// check if there are any empty cells left, if not set game over and update text to show a draw
-				if(!FieldContainsEmptyCell())
+				if (!FieldContainsEmptyCell())
 				{
 					//Shivani Puli Data Collection -> store winner
 					mydata.winner = 0;
@@ -896,11 +810,11 @@ namespace QueueBits
 		/// <returns><c>true</c>, if it contains empty cell, <c>false</c> otherwise.</returns>
 		bool FieldContainsEmptyCell()
 		{
-			for(int x = 0; x < numColumns; x++)
+			for (int x = 0; x < numColumns; x++)
 			{
-				for(int y = 0; y < numRows; y++)
+				for (int y = 0; y < numRows; y++)
 				{
-					if(field[x, y] == (int)Piece.Empty)
+					if (field[x, y] == (int)Piece.Empty)
 						return true;
 				}
 			}

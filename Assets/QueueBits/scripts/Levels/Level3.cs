@@ -54,11 +54,11 @@ namespace QueueBits
 		[Header("GameObjects - Superposition")]
 		public GameObject pieceSuperposition;
 		// public GameObject piece25;
-		// public GameObject piece50;
+		public GameObject piece50;
 		public GameObject piece75;
 		public GameObject piece25red_turn;
-		// public GameObject piece50red_turn;
-		public GameObject piece75red_turn;
+		public GameObject piece50red_turn;
+		// public GameObject piece75red_turn;
 		public GameObject playerTurnText;
 
 		//Piece Count Displays
@@ -69,12 +69,12 @@ namespace QueueBits
 		[Header("GameObjects - BLUE Display")]
 		public GameObject pieceBlue100;
 		public GameObject pieceBlue75;
-		// public GameObject pieceBlue50;
+		public GameObject pieceBlue50;
 		// public GameObject pieceBlue25;
 
 		public GameObject pieceBlue100Text;
 		public GameObject pieceBlue75Text;
-		// public GameObject pieceBlue50Text;
+		public GameObject pieceBlue50Text;
 		// public GameObject pieceBlue25Text;
 
 		public GameObject pieceCounterText;
@@ -83,12 +83,12 @@ namespace QueueBits
 		[Header("GameObjects - RED Display")]
 		public GameObject pieceRed100;
 		public GameObject pieceRed75;
-		// public GameObject pieceRed50;
+		public GameObject pieceRed50;
 		// public GameObject pieceRed25;
 
 		public GameObject pieceRed100Text;
 		public GameObject pieceRed75Text;
-		// public GameObject pieceRed50Text;
+		public GameObject pieceRed50Text;
 		// public GameObject pieceRed25Text;
 
 		public int probability;
@@ -250,7 +250,6 @@ namespace QueueBits
 	};
 
 		// Select Tokens
-		[Header("Select Tokens")]
 		GameObject SelectTokenText;
 		GameObject choice50;
 		GameObject choice50text;
@@ -269,18 +268,12 @@ namespace QueueBits
 		public GameObject playerTurnObject;
 
 		public GameObject resultBG;
-
 		public string playerWonText = "You Won!";
 		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
 		public GameObject probText;
 		// public GameObject starText;
-
-		// public GameObject btnPlayAgain;
-		// bool btnPlayAgainTouching = false;
-		// Color btnPlayAgainOrigColor;
-		// Color btnPlayAgainHoverColor = new Color(255, 143, 4);
 
 		GameObject gameObjectField;
 
@@ -307,21 +300,12 @@ namespace QueueBits
 		int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
 		HashSet<(int, int)> visited = new HashSet<(int, int)>();
 
-		//public GameObject tutorial_text;
-		//public GameObject tutorial_button;
-		//public bool tutorial_button_touching = false;
-		//public bool tutorial_phase = false;
-		//public GameObject tutorial_background;
-
-		// public GameObject btnNextLevel;
-		// bool btnNextLevelTouching = false;
-
 		// dialogue
 		bool dialoguePhase = false;
 
-		//Shivani Puli Data Collection
-		Data mydata = new Data();
+		// Shivani Puli Data Collection
 		int turn = 0;
+		Data mydata = new Data();
 
 		// Use this for initialization
 		void Start()
@@ -355,15 +339,14 @@ namespace QueueBits
 				mydata.superposition[i] = 0;
 				mydata.reveal_order[i] = 0;
 				mydata.outcome[i] = 0;
-
 			}
 			foreach ((Piece pi, int c, int r) in prefilledBoard)
 			{
 				turn++;
 				int index = r * numColumns + c;
 				mydata.placement_order[index] = turn;
-				mydata.superposition[index] = 100;
 				mydata.reveal_order[index] = turn;
+				mydata.superposition[index] = 100;
 				if (pi == Piece.Blue)//if Yellow
 				{
 					mydata.outcome[index] = 1;
@@ -375,7 +358,6 @@ namespace QueueBits
 					playMove(c, "2");
 				}
 			}
-
 			//Shivani Puli Data collection
 
 			redProbs.Add(75, 7);
@@ -391,10 +373,11 @@ namespace QueueBits
 
 			CreateField();
 
-			isPlayersTurn = false;
-			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 			GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
 			levelText.GetComponent<TextMesh>().text = "Level 3";
+
+			isPlayersTurn = false;
+			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
 
 			if (isPlayersTurn)
 			{
@@ -406,8 +389,6 @@ namespace QueueBits
 				playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
 				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 			}
-
-			// btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
 		}
 
 		// dialogue
@@ -422,33 +403,7 @@ namespace QueueBits
 		/// </summary>
 		void CreateField()
 		{
-//			// TUTORIAL
-//			tutorial_background.transform.localScale += new Vector3(0.5f, 0.5f, 0);
-//			//Color tempcolor = tutorial_background.GetComponent<MeshRenderer>().material.color;
-//			//tempcolor.a = .5f;
-//			//tutorial_background.GetComponent<Renderer>().material.color = tempcolor;
-//			tutorial_background.GetComponent<Renderer>().sortingOrder = 14;
-//			//tutorial_background.GetComponent<SpriteRenderer>().size = new Vector2(2000, 2000);
-//			tutorial_background.SetActive(true);
-
-//			tutorial_text = Instantiate(pieceCounterText, new Vector3(-3.0f, -1.0f, -1), Quaternion.identity) as GameObject;
-//			tutorial_text.GetComponent<TextMesh>().color = Color.black;
-//			tutorial_text.GetComponent<TextMesh>().text = "Welcome to Level 3! \nThe rules of this game are the same as \nin Level 1 and 2 — but with a twist! \n Instead of having purely red or yellow pieces, \nyou will now drop pieces that have a \nprobability of being red or yellow. You will have \n75 % yellow tokens and 100 % yellow tokens, \nbut you can’t place two 100 % tokens in a row.";
-//			tutorial_text.GetComponent<TextMesh>().alignment = TextAlignment.Center;
-//			tutorial_text.GetComponent<Renderer>().sortingOrder = 15;
-//			tutorial_text.SetActive(true);
-
-//			tutorial_button.transform.position = new Vector3(
-//(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 2, tutorial_button.transform.position.z);
-//			tutorial_button.GetComponent<TextMesh>().color = Color.black;
-//			tutorial_button.GetComponent<TextMesh>().text = "OK";
-//			tutorial_button.GetComponent<TextMesh>().fontSize = 70;
-//			tutorial_button.GetComponent<Renderer>().sortingOrder = 15;
-//			tutorial_button.SetActive(true);
-
 			winningText.SetActive(false);
-			// btnPlayAgain.SetActive(false);
-			// btnNextLevel.SetActive(false);
 			playerTurnText.SetActive(true);
 			playerTurnText.GetComponent<Renderer>().sortingOrder = 4;
 
@@ -483,7 +438,7 @@ namespace QueueBits
 				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
 				if (prefilledBoard[i].Item1 == Piece.Blue)
                 {
-					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, - prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
+					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
 				}
 				else
                 {
@@ -500,12 +455,6 @@ namespace QueueBits
 
 			winningText.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
-
-// 			btnNextLevel.transform.position = new Vector3(
-// (numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f), btnNextLevel.transform.position.z);
-
-            //btnPlayAgain.transform.position = new Vector3(
-            //    (numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 3, btnPlayAgain.transform.position.z);
 
             playerTurnText.transform.position = new Vector3(
 			(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
@@ -600,7 +549,6 @@ namespace QueueBits
 			return score;
 		}
 
-
 		int evaluatePosition(int r, int c, string color)
 		{
 			int i = index(r, c);
@@ -660,7 +608,7 @@ namespace QueueBits
 
 				rd_counter++;
 				i += 8;
-				if((i%7)==0)
+				if ((i % 7) == 0)
 					i = state.Length;
 			}
 			rd_counter = Mathf.Min(4, rd_counter);
@@ -840,19 +788,16 @@ namespace QueueBits
 			{
 				playMove(column, "2");
 				int value = minimax(0, 3, false);
-				print("Column " + column + ": " + value);
+				Debug.Log("Column " + column + ": " + value);
 				if (value > bestVal)
 				{
 					bestVal = value;
 					bestMove = column;
 				}
-				
 				reverseMove(column);
 			}
 			return bestMove;
 		}
-
-
 
 		int minimax(int depth, int maxDepth, bool isMaximizing)
 		{
@@ -933,11 +878,11 @@ namespace QueueBits
 					pieceSuperposition = piece75;
 					pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
 				}
-				// else if (prob == 50)
-				// {
-				// 	pieceSuperposition = piece50;
-				// 	pieceBlue50Text.GetComponent<TextMesh>().text = blueProbs[50].ToString();
-				// }
+				else if (prob == 50)
+				{
+					pieceSuperposition = piece50;
+					pieceBlue50Text.GetComponent<TextMesh>().text = blueProbs[50].ToString();
+				}
 				else
 				{
 					// pieceSuperposition = piece25;
@@ -971,11 +916,11 @@ namespace QueueBits
 					pieceSuperposition = piece25red_turn;
 					pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
 				}
-				// else if (prob == 50)
-				// {
-				// 	pieceSuperposition = piece50red_turn;
-				// 	pieceRed50Text.GetComponent<TextMesh>().text = redProbs[50].ToString();
-				// }
+				else if (prob == 50)
+				{
+					pieceSuperposition = piece50red_turn;
+					pieceRed50Text.GetComponent<TextMesh>().text = redProbs[50].ToString();
+				}
 				else
 				{
 					// pieceSuperposition = piece75red_turn;
@@ -1037,35 +982,14 @@ namespace QueueBits
 			if (isCheckingForWinner)
 				return;
 
-			//if (tutorial_phase)
-			//{
-			//	UpdateTutorialButton();
-			//	return;
-			//}
-
 			if (gameOver)
 			{
 				winningText.SetActive(true);
-				// btnPlayAgain.SetActive(false);
-				// btnNextLevel.SetActive(false);
-
 				playerTurnText.SetActive(false);
 				playerTurnObject.SetActive(false);
 
-				// fix play again button
-				/* btnPlayAgain.transform.position = new Vector3(
-	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
-				btnPlayAgain.GetComponent<TextMesh>().color = Color.white;
-				btnPlayAgain.GetComponent<TextMesh>().text = "EXIT TO MENU";
-				btnPlayAgain.GetComponent<TextMesh>().fontSize = 70; */
-
-				UpdatePlayAgainButton();
-				// UpdateNextLevelButton();
-
 				return;
 			}
-
-			UpdatePlayAgainButton();
 
 			if (isPlayersTurn)
 			{
@@ -1212,7 +1136,7 @@ namespace QueueBits
 						probText.SetActive(false);
 						//Task.Delay(2000);
 						Thread.Sleep(1000);
-						Debug.Log(gameObjectTurn.transform.position.ToString());
+						// Debug.Log(gameObjectTurn.transform.position.ToString());
 						StartCoroutine(dropPiece(gameObjectTurn, probText, probability));
 					}
 				}
@@ -1350,7 +1274,6 @@ namespace QueueBits
 
 					break;
 				}
-
 			}
 
 			if (foundFreeCell)
@@ -1586,30 +1509,6 @@ namespace QueueBits
 			yield return 0;
 		}
 
-		void UpdateNextLevelButton()
-		{
-			RaycastHit hit;
-			//ray shooting out of the camera from where the mouse is
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-			/* if (Physics.Raycast(ray, out hit) && hit.collider.name == btnNextLevel.name)
-			{
-				//check if the left mouse has been pressed down this frame
-				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnNextLevelTouching == false)
-				{
-					btnNextLevelTouching = true;
-
-					//CreateField();
-					SceneManager.LoadScene("level3");
-				}
-			}
-
-			if (Input.touchCount == 0)
-			{
-				btnNextLevelTouching = false;
-			} */
-		}
-
 		void ShowStarSystem()
 		{
 			// Star System
@@ -1638,59 +1537,6 @@ namespace QueueBits
 				Star3 = Instantiate(starFilled, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
 			}
 		}
-
-		void UpdatePlayAgainButton()
-		{
-			RaycastHit hit;
-			//ray shooting out of the camera from where the mouse is
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-			/* if (Physics.Raycast(ray, out hit) && hit.collider.name == btnPlayAgain.name)
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainHoverColor;
-				//check if the left mouse has been pressed down this frame
-				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnPlayAgainTouching == false)
-				{
-					btnPlayAgainTouching = true;
-
-					//CreateField();
-					Application.LoadLevel(0);
-				}
-			}
-			else
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainOrigColor;
-			}
-
-			if (Input.touchCount == 0)
-			{
-				btnPlayAgainTouching = false;
-			} */
-		}
-
-		//void UpdateTutorialButton()
-		//{
-		//	RaycastHit hit;
-		//	//ray shooting out of the camera from where the mouse is
-		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-		//	if (Physics.Raycast(ray, out hit) && hit.collider.name == tutorial_button.name)
-		//	{
-		//		//check if the left mouse has been pressed down this frame
-		//		if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && tutorial_button_touching == false)
-		//		{
-		//			tutorial_button_touching = true;
-		//			tutorial_phase = false;
-		//			tutorial_button.SetActive(false);
-		//			tutorial_text.SetActive(false);
-		//			tutorial_background.SetActive(false);
-		//		}
-		//	}
-		//	if (Input.touchCount == 0)
-		//	{
-		//		tutorial_button_touching = false;
-		//	}
-		//}
 
 		/// <summary>
 		/// check if the field contains an empty cell

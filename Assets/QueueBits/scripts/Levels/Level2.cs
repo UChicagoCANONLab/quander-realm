@@ -42,24 +42,16 @@ namespace QueueBits
 		public GameObject pieceBlue;
 		public GameObject pieceField;
 
+		[Header("Texts")]
 		public GameObject winningText;
 		public GameObject resultBG;
 
-		[Header("Texts")]
 		public string playerWonText = "You Won!";
 		public string playerLoseText = "Byte Won!";
 		public string drawText = "Draw!";
 
 		// public GameObject probText;
 		// public GameObject starText;
-
-		/* public GameObject btnPlayAgain;
-		bool btnPlayAgainTouching = false;
-		Color btnPlayAgainOrigColor;
-		Color btnPlayAgainHoverColor = new Color(255, 143, 4);
-
-		public GameObject btnNextLevel;
-		bool btnNextLevelTouching = false; */
 
 		GameObject gameObjectField;
 
@@ -92,8 +84,6 @@ namespace QueueBits
 		// Shivani Puli Data Collection
 		int turn = 0;
 		Data mydata = new Data();
-
-
 
 		// Use this for initialization
 		void Start()
@@ -137,8 +127,6 @@ namespace QueueBits
 
 			// GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
 			// levelText.GetComponent<TextMesh>().text = "Level 2";
-
-			// btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
 		}
 
 		// dialogue
@@ -154,8 +142,6 @@ namespace QueueBits
 		void CreateField()
 		{
 			winningText.SetActive(false);
-			// btnPlayAgain.SetActive(false);
-			// btnNextLevel.SetActive(false);
 
 			isLoading = true;
 
@@ -189,12 +175,6 @@ namespace QueueBits
 
 			winningText.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
-
-	// 		btnNextLevel.transform.position = new Vector3(
-	// (numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnNextLevel.transform.position.z);
-
-			//btnPlayAgain.transform.position = new Vector3(
-			//	(numColumns-1) / 2.0f, -((numRows-1) / 2.0f) - 2, btnPlayAgain.transform.position.z);
 		}
 
 		int index(int r, int c)
@@ -499,59 +479,6 @@ namespace QueueBits
 			}
 		}
 
-		void UpdatePlayAgainButton()
-		{
-			RaycastHit hit;
-			//ray shooting out of the camera from where the mouse is
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-			/* if (Physics.Raycast(ray, out hit) && hit.collider.name == btnPlayAgain.name)
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainHoverColor;
-				//check if the left mouse has been pressed down this frame
-				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnPlayAgainTouching == false)
-				{
-					btnPlayAgainTouching = true;
-
-					//CreateField();
-					Application.LoadLevel(0);
-				}
-			}
-			else
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainOrigColor;
-			}
-
-			if (Input.touchCount == 0)
-			{
-				btnPlayAgainTouching = false;
-			} */
-		}
-
-		void UpdateNextLevelButton()
-		{
-			RaycastHit hit;
-			//ray shooting out of the camera from where the mouse is
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-			/* if (Physics.Raycast(ray, out hit) && hit.collider.name == btnNextLevel.name)
-			{
-				//check if the left mouse has been pressed down this frame
-				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnNextLevelTouching == false)
-				{
-					btnNextLevelTouching = true;
-
-					//CreateField();
-					SceneManager.LoadScene("level2");
-				}
-			}
-
-			if (Input.touchCount == 0)
-			{
-				btnNextLevelTouching = false;
-			} */
-		}
-
 		// Update is called once per frame
 		void Update()
 		{
@@ -567,18 +494,6 @@ namespace QueueBits
 			if (gameOver)
 			{
 				winningText.SetActive(true);
-				/* btnPlayAgain.SetActive(false);
-				btnNextLevel.SetActive(false);
-
-				// fix play again button
-				btnPlayAgain.transform.position = new Vector3(
-	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
-				btnPlayAgain.GetComponent<TextMesh>().color = Color.white;
-				btnPlayAgain.GetComponent<TextMesh>().text = "EXIT TO MENU";
-				btnPlayAgain.GetComponent<TextMesh>().fontSize = 70; */
-
-				UpdatePlayAgainButton();
-				UpdateNextLevelButton();
 
 				return;
 			}
@@ -616,7 +531,6 @@ namespace QueueBits
 							mydata.superposition[index] = 100;
 							mydata.reveal_order[index] = turn;
 							mydata.outcome[index] = 1;
-
 
 							playMove(column, "1");
 							StartCoroutine(dropPiece(gameObjectTurn));

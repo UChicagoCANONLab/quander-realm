@@ -266,11 +266,6 @@ namespace QueueBits
 		public GameObject probText;
 		public GameObject starText;
 
-		// public GameObject btnPlayAgain;
-		// bool btnPlayAgainTouching = false;
-		// Color btnPlayAgainOrigColor;
-		// Color btnPlayAgainHoverColor = new Color(255, 143, 4);
-
 		GameObject gameObjectField;
 
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
@@ -308,12 +303,6 @@ namespace QueueBits
 
 		bool gameOver = false;
 		bool isCheckingForWinner = false;
-
-		//public GameObject tutorial_text;
-		//public GameObject tutorial_button;
-		//public bool tutorial_button_touching = false;
-		//public bool tutorial_phase = true;
-		//public GameObject tutorial_background;
 
 		// dialogue
 		bool dialoguePhase = false;
@@ -409,8 +398,6 @@ namespace QueueBits
 				playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity) as GameObject;
 				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 			}
-
-			// btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
 		}
 
 		// dialogue
@@ -425,32 +412,7 @@ namespace QueueBits
 		/// </summary>
 		void CreateField()
 		{
-//			// TUTORIAL
-//			tutorial_background.transform.localScale += new Vector3(0.5f, 0.5f, 0);
-//			//Color tempcolor = tutorial_background.GetComponent<MeshRenderer>().material.color;
-//			//tempcolor.a = .5f;
-//			//tutorial_background.GetComponent<Renderer>().material.color = tempcolor;
-//			tutorial_background.GetComponent<Renderer>().sortingOrder = 14;
-//			//tutorial_background.GetComponent<SpriteRenderer>().size = new Vector2(2000, 2000);
-//			tutorial_background.SetActive(true);
-
-//			tutorial_text = Instantiate(pieceCounterText, new Vector3(-3.0f, -1.0f, -1), Quaternion.identity) as GameObject;
-//			tutorial_text.GetComponent<TextMesh>().color = Color.black;
-//			tutorial_text.GetComponent<TextMesh>().text = "This time, when you drop a token \nit won’t reveal itself to be red or yellow. \nInstead, it will stay in superposition \n until the whole board fills up. \n Then the tokens will break their superposition \n and reveal themselves to be red or yellow \n in the order that the tokens were dropped. \nOnce again, you can’t place two 100% tokens in a row. \n Have fun!";
-//			tutorial_text.GetComponent<TextMesh>().alignment = TextAlignment.Center;
-//			tutorial_text.GetComponent<Renderer>().sortingOrder = 15;
-//			tutorial_text.SetActive(true);
-
-//			tutorial_button.transform.position = new Vector3(
-//(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 2, tutorial_button.transform.position.z);
-//			tutorial_button.GetComponent<TextMesh>().color = Color.black;
-//			tutorial_button.GetComponent<TextMesh>().text = "OK";
-//			tutorial_button.GetComponent<TextMesh>().fontSize = 70;
-//			tutorial_button.GetComponent<Renderer>().sortingOrder = 15;
-//			tutorial_button.SetActive(true);
-
 			winningText.SetActive(false);
-			// btnPlayAgain.SetActive(false);
 
 			playerTurnText.SetActive(true);
 			playerTurnText.GetComponent<Renderer>().sortingOrder = 4;
@@ -545,9 +507,6 @@ namespace QueueBits
 
 			winningText.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
-
-			//btnPlayAgain.transform.position = new Vector3(
-			//	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
 
 			playerTurnText.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
@@ -1089,34 +1048,15 @@ namespace QueueBits
 				return;
 			}
 
-			//if (tutorial_phase)
-			//{
-			//	UpdateTutorialButton();
-			//	return;
-			//}
-
-
 			if (gameOver)
 			{
 				winningText.SetActive(true);
-				// btnPlayAgain.SetActive(false);
-
-				// fix play again button
-	// 			btnPlayAgain.transform.position = new Vector3(
-	// (numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
-	// 			btnPlayAgain.GetComponent<TextMesh>().color = Color.white;
-	// 			btnPlayAgain.GetComponent<TextMesh>().text = "EXIT TO MENU";
-	// 			btnPlayAgain.GetComponent<TextMesh>().fontSize = 70;
-
-				// UpdatePlayAgainButton();
 
 				playerTurnText.SetActive(false);
 				playerTurnObject.SetActive(false);
 
 				return;
 			}
-
-			// UpdatePlayAgainButton();
 
 			if (isPlayersTurn)
 			{
@@ -1795,59 +1735,6 @@ namespace QueueBits
 				Star3 = Instantiate(starFilled, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
 			}
 		}
-
-		/* void UpdatePlayAgainButton()
-		{
-			RaycastHit hit;
-			//ray shooting out of the camera from where the mouse is
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-			if (Physics.Raycast(ray, out hit) && hit.collider.name == btnPlayAgain.name)
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainHoverColor;
-				//check if the left mouse has been pressed down this frame
-				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnPlayAgainTouching == false)
-				{
-					btnPlayAgainTouching = true;
-
-					//CreateField();
-					Application.LoadLevel(0);
-				}
-			}
-			else
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainOrigColor;
-			}
-
-			if (Input.touchCount == 0)
-			{
-				btnPlayAgainTouching = false;
-			}
-		} */
-
-		//void UpdateTutorialButton()
-		//{
-		//	RaycastHit hit;
-		//	//ray shooting out of the camera from where the mouse is
-		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-		//	if (Physics.Raycast(ray, out hit) && hit.collider.name == tutorial_button.name)
-		//	{
-		//		//check if the left mouse has been pressed down this frame
-		//		if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && tutorial_button_touching == false)
-		//		{
-		//			tutorial_button_touching = true;
-		//			tutorial_phase = false;
-		//			tutorial_button.SetActive(false);
-		//			tutorial_text.SetActive(false);
-		//			tutorial_background.SetActive(false);
-		//		}
-		//	}
-		//	if (Input.touchCount == 0)
-		//	{
-		//		tutorial_button_touching = false;
-		//	}
-		//}
 
 		/// <summary>
 		/// check if the field contains an empty cell

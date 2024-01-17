@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using System.Threading.Tasks;
 using System.Threading;
+using UnityEngine.SceneManagement;
 
 //using System;
 //using MySql.Data.MySqlClient;
@@ -274,11 +275,6 @@ namespace QueueBits
 		public GameObject probText;
 		// public GameObject starText;
 
-		// public GameObject btnPlayAgain;
-		// bool btnPlayAgainTouching = false;
-		// Color btnPlayAgainOrigColor;
-		// Color btnPlayAgainHoverColor = new Color(255, 143, 4);
-
 		GameObject gameObjectField;
 
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
@@ -300,7 +296,8 @@ namespace QueueBits
 		bool gameOver = false;
 		bool isCheckingForWinner = false;
 
-		string state = "000000000000000000000000000000000000000000";//"000000000000000020020002201010110122021012";
+		string state = "000000000000000000000000000000000000000000";
+		// string state = "000000000000000020020002201010110122021012";
 		int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
 		HashSet<(int, int)> visited = new HashSet<(int, int)>();
 
@@ -310,7 +307,6 @@ namespace QueueBits
 		// Shivani Puli Data Collection
 		int turn = 0;
 		Data mydata = new Data();
-		//Shivani Puli Data Collection
 
 		// Use this for initialization
 		void Start()
@@ -397,8 +393,6 @@ namespace QueueBits
 				playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity) as GameObject;
 				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 			}
-
-			// btnPlayAgainOrigColor = btnPlayAgain.GetComponent<Renderer>().material.color;
 		}
 
 		// dialogue
@@ -414,7 +408,6 @@ namespace QueueBits
 		void CreateField()
 		{
 			winningText.SetActive(false);
-			// btnPlayAgain.SetActive(false);
 			playerTurnText.SetActive(true);
 			playerTurnText.GetComponent<Renderer>().sortingOrder = 4;
 
@@ -466,9 +459,6 @@ namespace QueueBits
 
 			winningText.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
-
-			//btnPlayAgain.transform.position = new Vector3(
-			//	(numColumns-1) / 2.0f, -((numRows-1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
 
 			playerTurnText.transform.position = new Vector3(
 			(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
@@ -827,13 +817,15 @@ namespace QueueBits
 		int minimax(int depth, int maxDepth, bool isMaximizing)
 		{
 			List<int> moves = getMoves(colPointers);
+			int bestVal;
 
 			if (moves.Count == 0 || depth == maxDepth)
+			{
 				return evaluateState();
-
+			}
 			if (isMaximizing)
 			{
-				int bestVal = int.MinValue;
+				bestVal = int.MinValue;
 				foreach (int column in moves)
 				{
 					playMove(column, "2");
@@ -841,12 +833,11 @@ namespace QueueBits
 					bestVal = Mathf.Max(bestVal, value);
 					reverseMove(column);
 				}
-				return bestVal;
 			}
 
 			else
 			{
-				int bestVal = int.MaxValue;
+				bestVal = int.MaxValue;
 				foreach (int column in moves)
 				{
 					playMove(column, "1");
@@ -854,9 +845,8 @@ namespace QueueBits
 					bestVal = Mathf.Min(bestVal, value);
 					reverseMove(column);
 				}
-				return bestVal;
 			}
-
+			return bestVal;
 		}
 
 		/// <summary>
@@ -977,7 +967,6 @@ namespace QueueBits
 				if (moves.Count > 0)
 				{
 					int column = findBestMove(colPointers);
-
 					spawnPos = new Vector3(column, 0, 0);
 				}
 			}
@@ -1011,24 +1000,11 @@ namespace QueueBits
 			if (gameOver)
 			{
 				winningText.SetActive(true);
-				// btnPlayAgain.SetActive(false);
-
 				playerTurnText.SetActive(false);
 				playerTurnObject.SetActive(false);
 
-				// fix play again button
-				/* btnPlayAgain.transform.position = new Vector3(
-	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) - 1, btnPlayAgain.transform.position.z);
-				btnPlayAgain.GetComponent<TextMesh>().color = Color.white;
-				btnPlayAgain.GetComponent<TextMesh>().text = "EXIT TO MENU";
-				btnPlayAgain.GetComponent<TextMesh>().fontSize = 70; */
-
-				UpdatePlayAgainButton();
-
 				return;
 			}
-
-			UpdatePlayAgainButton();
 
 			if (isPlayersTurn)
 			{
@@ -1188,7 +1164,6 @@ namespace QueueBits
 		/// <param name="gObject">Game Object.</param>
 		IEnumerator dropPiece(GameObject gObject, GameObject probText, int probability)
 		{
-
 			isDropping = true;
 			//Debug.Log(state);
 			Vector3 startPosition = gObject.transform.position;
@@ -1365,7 +1340,6 @@ namespace QueueBits
 			}
 
 			isDropping = false;
-
 			yield return 0;
 		}
 
@@ -1501,7 +1475,6 @@ namespace QueueBits
 					//Shivani Puli Data Collection -> store winner
 					mydata.winner = 0;
 					saveData.Save(mydata);
-					//Data Collection
 
 					// star system
 					if (!starUpdated)
@@ -1564,35 +1537,6 @@ namespace QueueBits
 				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
 				Star3 = Instantiate(starFilled, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
 			}
-		}
-
-		void UpdatePlayAgainButton()
-		{
-			RaycastHit hit;
-			//ray shooting out of the camera from where the mouse is
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-			/* if (Physics.Raycast(ray, out hit) && hit.collider.name == btnPlayAgain.name)
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainHoverColor;
-				//check if the left mouse has been pressed down this frame
-				if (Input.GetMouseButtonDown(0) || Input.touchCount > 0 && btnPlayAgainTouching == false)
-				{
-					btnPlayAgainTouching = true;
-
-					//CreateField();
-					Application.LoadLevel(0);
-				}
-			}
-			else
-			{
-				btnPlayAgain.GetComponent<Renderer>().material.color = btnPlayAgainOrigColor;
-			}
-
-			if (Input.touchCount == 0)
-			{
-				btnPlayAgainTouching = false;
-			} */
 		}
 
 		/// <summary>
