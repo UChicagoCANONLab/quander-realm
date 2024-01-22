@@ -43,6 +43,7 @@ namespace QueueBits
 		public GameObject Star1;
 		public GameObject Star2;
 		public GameObject Star3;
+		public GameObject starHolder;
 
 		// Gameobjects 
 		[Header("GameObjects")]
@@ -50,6 +51,8 @@ namespace QueueBits
 		public GameObject pieceBlue;
 		public GameObject pieceField;
 		public GameObject finalColor;
+		public GameObject initBoardHolder;
+		public GameObject displayHolder;
 
 		[Header("GameObjects - Superposition")]
 		public GameObject pieceSuperposition;
@@ -375,8 +378,8 @@ namespace QueueBits
 
 			CreateField();
 
-			GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
-			levelText.GetComponent<TextMesh>().text = "Level 3";
+			// GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
+			// levelText.GetComponent<TextMesh>().text = "Level 3";
 
 			isPlayersTurn = false;
 			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
@@ -440,11 +443,11 @@ namespace QueueBits
 				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
 				if (prefilledBoard[i].Item1 == Piece.Blue)
                 {
-					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
+					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, initBoardHolder.transform) as GameObject;
 				}
 				else
                 {
-					GameObject obj = Instantiate(pieceRed, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
+					GameObject obj = Instantiate(pieceRed, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, initBoardHolder.transform) as GameObject;
 				}
 			}
 
@@ -461,7 +464,8 @@ namespace QueueBits
             playerTurnText.transform.position = new Vector3(
 			(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
 
-			//Piece Count Displays
+			// Piece Count Displays
+
 			// blueTitle.transform.position = new Vector3(-4, 0, 0);
 			// blueTitle.GetComponent<Renderer>().sortingOrder = 10;
 			// blueTitle.SetActive(true);
@@ -470,34 +474,34 @@ namespace QueueBits
 			// redTitle.GetComponent<Renderer>().sortingOrder = 10;
 			// redTitle.SetActive(true);
 
-			pieceBlue100 = Instantiate(pieceBlue, new Vector3(-2, -1, -1), Quaternion.identity) as GameObject;
+			pieceBlue100 = Instantiate(pieceBlue, new Vector3(-2, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			pieceBlue100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
-			pieceBlue75 = Instantiate(piece75, new Vector3(-2, -2, -1), Quaternion.identity) as GameObject;
+			pieceBlue75 = Instantiate(piece75, new Vector3(-2, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			pieceBlue75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
 			//Piece Count Texts - BLUE
-			pieceBlue100Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -1, -1), Quaternion.identity) as GameObject;
+			pieceBlue100Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
 			pieceBlue100Text.SetActive(true);
 
-			pieceBlue75Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -2, -1), Quaternion.identity) as GameObject;
+			pieceBlue75Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
 			pieceBlue75Text.SetActive(true);
 
 			//Piece Count Displays - RED
-			pieceRed100 = Instantiate(pieceRed, new Vector3(8, -1, -1), Quaternion.identity) as GameObject;
+			pieceRed100 = Instantiate(pieceRed, new Vector3(8, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			pieceRed100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
-			pieceRed75 = Instantiate(piece25red_turn, new Vector3(8, -2, -1), Quaternion.identity) as GameObject;
+			pieceRed75 = Instantiate(piece25red_turn, new Vector3(8, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			pieceRed75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
 			//Piece Count Texts - RED
-			pieceRed100Text = Instantiate(pieceCounterText, new Vector3(8.5f, -1, -1), Quaternion.identity) as GameObject;
+			pieceRed100Text = Instantiate(pieceCounterText, new Vector3(8.5f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
 			pieceRed100Text.SetActive(true);
 
-			pieceRed75Text = Instantiate(pieceCounterText, new Vector3(8.5f, -2, -1), Quaternion.identity) as GameObject;
+			pieceRed75Text = Instantiate(pieceCounterText, new Vector3(8.5f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
 			pieceRed75Text.SetActive(true);
 
@@ -999,23 +1003,23 @@ namespace QueueBits
 				{
 					if (!SelectMenuGenerated)
                     {
-						SelectTokenText = Instantiate(pieceCounterText, new Vector3(1.5f, 2, -1), Quaternion.identity) as GameObject;
+						SelectTokenText = Instantiate(pieceCounterText, new Vector3(1.5f, 2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 						SelectTokenText.GetComponent<TextMesh>().text = "SELECT TOKEN";
 						SelectTokenText.GetComponent<TextMesh>().color = Color.white;
 						SelectTokenText.SetActive(true);
 
 						if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
                         {
-							choice100 = Instantiate(pieceBlue, new Vector3(-1f, 1, -1), Quaternion.identity) as GameObject;
-							choice100text = Instantiate(probText, new Vector3(-0.4f, 1, -1), Quaternion.identity) as GameObject;
+							choice100 = Instantiate(pieceBlue, new Vector3(-1f, 1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+							choice100text = Instantiate(probText, new Vector3(-0.4f, 1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 							choice100text.GetComponent<TextMesh>().text = "100% YELLOW";
 							choice100text.transform.localScale = new Vector3(0.04f, 0.04f, 0.05f);
 							choice100text.SetActive(true);
 						}
 						if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
 						{
-							choice75 = Instantiate(piece75, new Vector3(3, 1, -1), Quaternion.identity) as GameObject;
-							choice75text = Instantiate(probText, new Vector3(3.5f, 1, -1), Quaternion.identity) as GameObject;
+							choice75 = Instantiate(piece75, new Vector3(3, 1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+							choice75text = Instantiate(probText, new Vector3(3.5f, 1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 							choice75text.GetComponent<TextMesh>().text = "75% YELLOW";
 							choice75text.transform.localScale = new Vector3(0.04f, 0.04f, 0.05f);
 							choice75text.SetActive(true);
@@ -1193,7 +1197,7 @@ namespace QueueBits
 								pieceBlue, // is players turn = spawn blue, else spawn red
 								new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
 								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
-								Quaternion.identity) as GameObject;
+								Quaternion.identity, gameObjectField.transform) as GameObject;
 							field[x, i] = (int)Piece.Blue;
 							//Shivani Puli data collection
 							int r = colPointers[x];
@@ -1213,7 +1217,7 @@ namespace QueueBits
 								pieceRed, // is players turn = spawn blue, else spawn red
 								new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
 								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
-								Quaternion.identity) as GameObject;
+								Quaternion.identity, gameObjectField.transform) as GameObject;
 							field[x, i] = (int)Piece.Red;
 							//Shivani Puli data collection
 							int r = colPointers[x];
@@ -1237,7 +1241,7 @@ namespace QueueBits
 								pieceRed, // is players turn = spawn blue, else spawn red
 								new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
 								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
-								Quaternion.identity) as GameObject;
+								Quaternion.identity, gameObjectField.transform) as GameObject;
 							field[x, i] = (int)Piece.Red;
 							//Shivani Puli data collection
 							int r = colPointers[x];
@@ -1257,7 +1261,7 @@ namespace QueueBits
 								pieceBlue, // is players turn = spawn blue, else spawn red
 								new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
 								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
-								Quaternion.identity) as GameObject;
+								Quaternion.identity, gameObjectField.transform) as GameObject;
 							field[x, i] = (int)Piece.Blue;
 							//Shivani Puli data collection
 							int r = colPointers[x];
@@ -1324,12 +1328,12 @@ namespace QueueBits
 
 				if (isPlayersTurn)
 				{
-					playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
+					playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity, initBoardHolder.transform) as GameObject;
 					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 				}
 				else
 				{
-					playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity) as GameObject;
+					playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity, initBoardHolder.transform) as GameObject;
 					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
 				}
@@ -1516,27 +1520,27 @@ namespace QueueBits
 			// Star System
 			if (GameManager.saveData.starSystem[3] == 0)
 			{
-				Star1 = Instantiate(starEmpty, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
-				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
-				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star1 = Instantiate(starEmpty, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
+				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
+				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 			}
 			else if (GameManager.saveData.starSystem[3] == 1)
 			{
-				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
-				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
-				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
+				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
+				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 			}
 			else if (GameManager.saveData.starSystem[3] == 2)
 			{
-				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
-				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
-				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
+				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
+				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 			}
 			else if (GameManager.saveData.starSystem[3] == 3)
 			{
-				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity) as GameObject;
-				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity) as GameObject;
-				Star3 = Instantiate(starFilled, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity) as GameObject;
+				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
+				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
+				Star3 = Instantiate(starFilled, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 			}
 		}
 
