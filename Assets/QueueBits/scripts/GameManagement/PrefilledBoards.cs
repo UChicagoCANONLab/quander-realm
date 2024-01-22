@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using QueueBits;
 
 namespace QueueBits {
     public class PrefilledBoards : MonoBehaviour
     {
-        public enum Piece
+        /* public enum Piece
 		{
 			Empty = 0,
 			Blue = 1,
 			Red = 2
-		}
+		} */
 
 		public (string, List<(Piece, int, int, int)>) getRandomBoard(int level) 
 		{

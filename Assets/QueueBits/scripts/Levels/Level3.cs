@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine.SceneManagement;
 using TMPro;
+using QueueBits;
 
 //using System;
 //using MySql.Data.MySqlClient;
@@ -16,12 +17,13 @@ namespace QueueBits
 {
 	public class Level3 : MonoBehaviour
 	{
-		enum Piece
-		{
+		/* public enum Piece {
 			Empty = 0,
 			Blue = 1,
 			Red = 2
-		}
+		} */
+
+		public enum Results { Draw, Win, Lose };
 
 		[Range(3, 8)]
 		private int numRows = 6;

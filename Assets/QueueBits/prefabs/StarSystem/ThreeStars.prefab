@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8920754423412598374
 RectTransform:
   m_ObjectHideFlags: 0
@@ -170,7 +170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4806778500426655564
 RectTransform:
   m_ObjectHideFlags: 0
@@ -316,6 +316,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7614944616556613577}
   - component: {fileID: 561338877755698341}
+  - component: {fileID: 3315725714186443368}
   - component: {fileID: 8714228227868553627}
   m_Layer: 5
   m_Name: ThreeStars
@@ -355,6 +356,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7790098924782065357}
   m_CullTransparentMesh: 1
+--- !u!114 &3315725714186443368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7790098924782065357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3584be9db41444dec95f7be257f53d64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stars:
+  - {fileID: 1727992325923467301}
+  - {fileID: 6338015925552439246}
+  - {fileID: 8884263872929802390}
 --- !u!114 &8714228227868553627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -475,7 +492,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5288891684145557046
 RectTransform:
   m_ObjectHideFlags: 0
