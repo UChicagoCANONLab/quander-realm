@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 //using System;
 //using MySql.Data.MySqlClient;
@@ -34,6 +35,8 @@ namespace QueueBits
 		public bool allowDiagonally = true;
 
 		public float dropTime = 4f;
+
+		public int probability;
 
 		// star system
 		[Header("Star System")]
@@ -69,32 +72,37 @@ namespace QueueBits
 		// public GameObject redTitle;
 
 		//BLUE
-		[Header("GameObjects - BLUE Display")]
-		public GameObject pieceBlue100;
-		public GameObject pieceBlue75;
-		public GameObject pieceBlue50;
+		[Header("GameObjects - Display")]
+		// public GameObject pieceBlue100;
+		// public GameObject pieceBlue75;
+		// public GameObject pieceBlue50;
 		// public GameObject pieceBlue25;
 
-		public GameObject pieceBlue100Text;
-		public GameObject pieceBlue75Text;
-		public GameObject pieceBlue50Text;
+		// public GameObject pieceBlue100Text;
+		// public GameObject pieceBlue75Text;
+		// public GameObject pieceBlue50Text;
 		// public GameObject pieceBlue25Text;
 
 		public GameObject pieceCounterText;
 
+		public TMP_Text counterBlue100;
+		public TMP_Text counterBlue75;
+		public TMP_Text counterBlue50;
+
 		//RED
-		[Header("GameObjects - RED Display")]
-		public GameObject pieceRed100;
-		public GameObject pieceRed75;
-		public GameObject pieceRed50;
+		// public GameObject pieceRed100;
+		// public GameObject pieceRed75;
+		// public GameObject pieceRed50;
 		// public GameObject pieceRed25;
 
-		public GameObject pieceRed100Text;
-		public GameObject pieceRed75Text;
-		public GameObject pieceRed50Text;
+		// public GameObject pieceRed100Text;
+		// public GameObject pieceRed75Text;
+		// public GameObject pieceRed50Text;
 		// public GameObject pieceRed25Text;
 
-		public int probability;
+		public TMP_Text counterRed100;
+		public TMP_Text counterRed75;
+		public TMP_Text counterRed50;
 
 		Dictionary<int, (int, (int, int))> probDict = new Dictionary<int, (int, (int, int))>();
 
@@ -270,10 +278,14 @@ namespace QueueBits
 
 		public GameObject playerTurnObject;
 
-		public GameObject resultBG;
-		public string playerWonText = "You Won!";
-		public string playerLoseText = "Byte Won!";
-		public string drawText = "Draw!";
+		// public GameObject resultBG;
+		// public string playerWonText = "You Won!";
+		// public string playerLoseText = "Byte Won!";
+		// public string drawText = "Draw!";
+
+		public GameObject resultWon;
+		public GameObject resultDraw;
+		public GameObject resultLose;
 
 		public GameObject probText;
 		// public GameObject starText;
@@ -474,36 +486,40 @@ namespace QueueBits
 			// redTitle.GetComponent<Renderer>().sortingOrder = 10;
 			// redTitle.SetActive(true);
 
-			pieceBlue100 = Instantiate(pieceBlue, new Vector3(-2, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			pieceBlue100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
+			// pieceBlue100 = Instantiate(pieceBlue, new Vector3(-2, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+			// pieceBlue100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
-			pieceBlue75 = Instantiate(piece75, new Vector3(-2, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			pieceBlue75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
+			// pieceBlue75 = Instantiate(piece75, new Vector3(-2, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+			// pieceBlue75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
 			//Piece Count Texts - BLUE
-			pieceBlue100Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
-			pieceBlue100Text.SetActive(true);
+			// pieceBlue100Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+			// pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
+			// pieceBlue100Text.SetActive(true);
+			counterBlue100.text = blueProbs[100].ToString();
 
-			pieceBlue75Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
-			pieceBlue75Text.SetActive(true);
+			// pieceBlue75Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+			// pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
+			// pieceBlue75Text.SetActive(true);
+			counterBlue75.text = blueProbs[75].ToString();
 
 			//Piece Count Displays - RED
-			pieceRed100 = Instantiate(pieceRed, new Vector3(8, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			pieceRed100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
+			// pieceRed100 = Instantiate(pieceRed, new Vector3(8, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+			// pieceRed100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
-			pieceRed75 = Instantiate(piece25red_turn, new Vector3(8, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			pieceRed75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
+			// pieceRed75 = Instantiate(piece25red_turn, new Vector3(8, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+			// pieceRed75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
 			//Piece Count Texts - RED
-			pieceRed100Text = Instantiate(pieceCounterText, new Vector3(8.5f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
-			pieceRed100Text.SetActive(true);
+			// pieceRed100Text = Instantiate(pieceCounterText, new Vector3(8.5f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+			// pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
+			// pieceRed100Text.SetActive(true);
+			counterRed100.text = redProbs[100].ToString();
 
-			pieceRed75Text = Instantiate(pieceCounterText, new Vector3(8.5f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
-			pieceRed75Text.SetActive(true);
+			// pieceRed75Text = Instantiate(pieceCounterText, new Vector3(8.5f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
+			// pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
+			// pieceRed75Text.SetActive(true);
+			counterRed75.text = redProbs[75].ToString();
 
 			pieceCounterText.SetActive(false);
 		}
@@ -877,17 +893,20 @@ namespace QueueBits
 				if (prob == 100)
 				{
 					pieceSuperposition = pieceBlue;
-					pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
+					// pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
+					counterBlue100.text = blueProbs[100].ToString();
 				}
 				else if (prob == 75)
 				{
 					pieceSuperposition = piece75;
-					pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
+					// pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
+					counterBlue75.text = blueProbs[75].ToString();
 				}
 				else if (prob == 50)
 				{
 					pieceSuperposition = piece50;
-					pieceBlue50Text.GetComponent<TextMesh>().text = blueProbs[50].ToString();
+					// pieceBlue50Text.GetComponent<TextMesh>().text = blueProbs[50].ToString();
+					counterBlue50.text = blueProbs[50].ToString();
 				}
 				else
 				{
@@ -915,17 +934,20 @@ namespace QueueBits
 				if (prob == 100)
 				{
 					pieceSuperposition = pieceRed;
-					pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
+					// pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
+					counterRed100.text = redProbs[100].ToString();
 				}
 				else if (prob == 75)
 				{
 					pieceSuperposition = piece25red_turn;
-					pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
+					// pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
+					counterRed75.text = redProbs[75].ToString();
 				}
 				else if (prob == 50)
 				{
 					pieceSuperposition = piece50red_turn;
-					pieceRed50Text.GetComponent<TextMesh>().text = redProbs[50].ToString();
+					// pieceRed50Text.GetComponent<TextMesh>().text = redProbs[50].ToString();
+					counterRed50.text = redProbs[50].ToString();
 				}
 				else
 				{
@@ -990,9 +1012,11 @@ namespace QueueBits
 
 			if (gameOver)
 			{
-				winningText.SetActive(true);
+				// winningText.SetActive(true);
 				playerTurnText.SetActive(false);
 				playerTurnObject.SetActive(false);
+				initBoardHolder.SetActive(false);
+				gameObjectField.SetActive(false);
 
 				return;
 			}
@@ -1355,7 +1379,8 @@ namespace QueueBits
 		{
 			isCheckingForWinner = true;
 
-			bool blueWon = false;
+			// bool blueWon = false;
+			int winCode = 2; // 0 = tie; 1 = player won; 2 = CPU won
 
 			for (int x = 0; x < numColumns; x++)
 			{
@@ -1369,7 +1394,8 @@ namespace QueueBits
 						if (y >= 3 && field[x, y - 1] == color && field[x, y - 2] == color && field[x, y - 3] == color)
 						{
 							if (color == 1)
-								blueWon = true;
+								// blueWon = true;
+								winCode = 1;
 							gameOver = true;
 						}
 
@@ -1377,7 +1403,8 @@ namespace QueueBits
 						if (y <= numRows - 4 && field[x, y + 1] == color && field[x, y + 2] == color && field[x, y + 3] == color)
 						{
 							if (color == 1)
-								blueWon = true;
+								// blueWon = true;
+								winCode = 1;
 							gameOver = true;
 						}
 
@@ -1385,7 +1412,8 @@ namespace QueueBits
 						if (x >= 3 && field[x - 1, y] == color && field[x - 2, y] == color && field[x - 3, y] == color)
 						{
 							if (color == 1)
-								blueWon = true;
+								// blueWon = true;
+								winCode = 1;
 							gameOver = true;
 						}
 
@@ -1393,7 +1421,8 @@ namespace QueueBits
 						if (x <= numColumns - 4 && field[x + 1, y] == color && field[x + 2, y] == color && field[x + 3, y] == color)
 						{
 							if (color == 1)
-								blueWon = true;
+								// blueWon = true;
+								winCode = 1;
 							gameOver = true;
 						}
 
@@ -1401,7 +1430,8 @@ namespace QueueBits
 						if (y >= 3 && x >= 3 && field[x - 1, y - 1] == color && field[x - 2, y - 2] == color && field[x - 3, y - 3] == color)
 						{
 							if (color == 1)
-								blueWon = true;
+								// blueWon = true;
+								winCode = 1;
 							gameOver = true;
 						}
 
@@ -1409,7 +1439,8 @@ namespace QueueBits
 						if (y >= 3 && x <= numColumns - 4 && field[x + 1, y - 1] == color && field[x + 2, y - 2] == color && field[x + 3, y - 3] == color)
 						{
 							if (color == 1)
-								blueWon = true;
+								// blueWon = true;
+								winCode = 1;
 							gameOver = true;
 						}
 
@@ -1417,16 +1448,25 @@ namespace QueueBits
 						if (x >= 3 && y <= numRows - 4 && field[x - 1, y + 1] == color && field[x - 2, y + 2] == color && field[x - 3, y + 3] == color)
 						{
 							if (color == 1)
-								blueWon = true;
+								// blueWon = true;
+								winCode = 1;
 							gameOver = true;
 						}
 
-						//check lower right diagonal
+						// check lower right diagonal
 						if (x <= numColumns - 4 && y <= numRows - 4 && field[x + 1, y + 1] == color && field[x + 2, y + 2] == color && field[x + 3, y + 3] == color)
 						{
 							if (color == 1)
-								blueWon = true;
+								// blueWon = true;
+								winCode = 1;
 							gameOver = true;
+						}
+
+						// check if it's a tie
+						if (!FieldContainsEmptyCell())
+						{
+							gameOver = true;
+							winCode = 0;
 						}
 					}
 					yield return null;
@@ -1439,10 +1479,11 @@ namespace QueueBits
 			if (gameOver == true)
 			{
 				//Shivani Puli Data Collection -> store winner
-				if (blueWon)
-					mydata.winner = 1;
-				else
-					mydata.winner = 2;
+				// if (blueWon)
+				// 	mydata.winner = 1;
+				// else 
+				// 	mydata.winner = 2;
+				mydata.winner = winCode;
 				saveData.Save(mydata);
 				//Data Collection
 
@@ -1462,9 +1503,19 @@ namespace QueueBits
 				DestroyImmediate(Star3);
 				ShowStarSystem();
 
-				GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
-				winningText.GetComponent<TextMesh>().text = blueWon ? playerWonText : playerLoseText;
+				// GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
+				// winningText.GetComponent<TextMesh>().text = blueWon ? playerWonText : playerLoseText;
 				// GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
+
+				if (winCode == 1) {
+					resultWon.SetActive(true);
+				}
+				else if (winCode == 2) {
+					resultLose.SetActive(true);
+				}
+				else {
+					resultDraw.SetActive(true);
+				}
 
 				// Reward System
 				if (GameManager.rewardSystem[3])
@@ -1472,7 +1523,7 @@ namespace QueueBits
 					Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 3);
 				}
 			}
-			else
+			/* else
 			{
 				// check if there are any empty cells left, if not set game over and update text to show a draw
 				if (!FieldContainsEmptyCell())
@@ -1508,7 +1559,7 @@ namespace QueueBits
 						Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 3);
 					}
 				}
-			}
+			}*/
 
 			isCheckingForWinner = false;
 
