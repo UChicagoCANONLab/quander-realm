@@ -24,17 +24,17 @@ namespace QueueBits
 		}
 
 		[Range(3, 8)]
-		public int numRows = 6;
+		private int numRows = 6;
 		[Range(3, 8)]
-		public int numColumns = 7;
+		private int numColumns = 7;
 
 		[Tooltip("How many pieces have to be connected to win.")]
-		public int numPiecesToWin = 4;
+		private int numPiecesToWin = 4;
 
 		[Tooltip("Allow diagonally connected Pieces?")]
-		public bool allowDiagonally = true;
+		private bool allowDiagonally = true;
 
-		public float dropTime = 4f;
+		private float dropTime = 4f;
 
 		public int probability;
 
@@ -46,7 +46,11 @@ namespace QueueBits
 		public GameObject Star1;
 		public GameObject Star2;
 		public GameObject Star3;
+
+		[Header("Parent Objects")]
 		public GameObject starHolder;
+		public GameObject initBoardHolder;
+		public GameObject displayHolder;
 
 		// Gameobjects 
 		[Header("GameObjects")]
@@ -54,17 +58,14 @@ namespace QueueBits
 		public GameObject pieceBlue;
 		public GameObject pieceField;
 		public GameObject finalColor;
-		public GameObject initBoardHolder;
-		public GameObject displayHolder;
+		public GameObject playerTurnObject;
 
 		[Header("GameObjects - Superposition")]
 		public GameObject pieceSuperposition;
-		// public GameObject piece25;
 		public GameObject piece50;
 		public GameObject piece75;
 		public GameObject piece25red_turn;
 		public GameObject piece50red_turn;
-		// public GameObject piece75red_turn;
 		public GameObject playerTurnText;
 
 		//Piece Count Displays
@@ -72,7 +73,7 @@ namespace QueueBits
 		// public GameObject redTitle;
 
 		//BLUE
-		[Header("GameObjects - Display")]
+		[Header("Piece Counters")]
 		// public GameObject pieceBlue100;
 		// public GameObject pieceBlue75;
 		// public GameObject pieceBlue50;
@@ -273,19 +274,16 @@ namespace QueueBits
 
 		int bturns = 0;
 
-		[Header("Texts")]
+		[Header("Winner Displays")]
+		public GameObject resultWon;
+		public GameObject resultDraw;
+		public GameObject resultLose;
 		// public GameObject winningText;
-
-		public GameObject playerTurnObject;
 
 		// public GameObject resultBG;
 		// public string playerWonText = "You Won!";
 		// public string playerLoseText = "Byte Won!";
 		// public string drawText = "Draw!";
-
-		public GameObject resultWon;
-		public GameObject resultDraw;
-		public GameObject resultLose;
 
 		public GameObject probText;
 		// public GameObject starText;
