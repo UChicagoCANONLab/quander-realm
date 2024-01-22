@@ -274,7 +274,7 @@ namespace QueueBits
 		int bturns = 0;
 
 		[Header("Texts")]
-		public GameObject winningText;
+		// public GameObject winningText;
 
 		public GameObject playerTurnObject;
 
@@ -420,7 +420,7 @@ namespace QueueBits
 		/// </summary>
 		void CreateField()
 		{
-			winningText.SetActive(false);
+			// winningText.SetActive(false);
 			playerTurnText.SetActive(true);
 			playerTurnText.GetComponent<Renderer>().sortingOrder = 4;
 
@@ -470,8 +470,8 @@ namespace QueueBits
 			Camera.main.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f), Camera.main.transform.position.z);
 
-			winningText.transform.position = new Vector3(
-				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
+			// winningText.transform.position = new Vector3(
+			// 	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
 
             playerTurnText.transform.position = new Vector3(
 			(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
@@ -1491,12 +1491,28 @@ namespace QueueBits
 				if (!starUpdated)
 				{
 					starUpdated = true;
-					if (GameManager.saveData.starSystem[3] + 1 <= 3)
-					{
-						GameManager.saveData.starSystem[3] = GameManager.saveData.starSystem[3] + 1;
+					int starsWon;
+
+					if (winCode == 1) { // If player wins => 3 stars
+						starsWon = 3;
+					} else if (winCode == 2) { // If player loses => 1 star
+						starsWon = 1;
+					} else { // If there's a tie => 2 stars
+						starsWon = 2;
+					}
+
+					if (GameManager.saveData.starSystem[3] <= starsWon) {
+						GameManager.saveData.starSystem[3] = starsWon;
 						GameManager.Save();
 					}
+
+					// if (GameManager.saveData.starSystem[3] + 1 <= 3)
+					// {
+					// 	GameManager.saveData.starSystem[3] = GameManager.saveData.starSystem[3] + 1;
+					// 	GameManager.Save();
+					// }
 				}
+
 				// StarSystem
 				DestroyImmediate(Star1);
 				DestroyImmediate(Star2);
@@ -1509,17 +1525,14 @@ namespace QueueBits
 
 				if (winCode == 1) {
 					resultWon.SetActive(true);
-				}
-				else if (winCode == 2) {
+				} else if (winCode == 2) {
 					resultLose.SetActive(true);
-				}
-				else {
+				} else {
 					resultDraw.SetActive(true);
 				}
 
 				// Reward System
-				if (GameManager.rewardSystem[3])
-				{
+				if (GameManager.rewardSystem[3]) {
 					Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 3);
 				}
 			}
