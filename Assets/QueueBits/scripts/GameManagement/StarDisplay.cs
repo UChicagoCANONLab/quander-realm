@@ -38,5 +38,17 @@ namespace QueueBits {
                 setDisplay(0);
             }
         }
+
+        public int getResults(Results winner) {
+            if (winner == Results.Draw) {
+                return 2;
+            } else if (winner == Results.Win) {
+                return 3;
+            } else if (winner == Results.Lose) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 }

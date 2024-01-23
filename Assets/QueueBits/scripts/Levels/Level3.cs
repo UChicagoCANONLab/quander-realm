@@ -23,7 +23,7 @@ namespace QueueBits
 			Red = 2
 		} */
 
-		public enum Results { Draw, Win, Lose };
+		// public enum Results { Draw, Win, Lose };
 
 		[Range(3, 8)]
 		private int numRows = 6;
@@ -43,15 +43,15 @@ namespace QueueBits
 		// star system
 		[Header("Star System")]
 		public bool starUpdated = false;
-		public GameObject starFilled;
-		public GameObject starEmpty;
-		public GameObject Star1;
-		public GameObject Star2;
-		public GameObject Star3;
+		// public GameObject starFilled;
+		// public GameObject starEmpty;
+		// public GameObject Star1;
+		// public GameObject Star2;
+		// public GameObject Star3;
+		public StarDisplay starDisplay;
 
 		[Header("Parent Objects")]
-		public GameObject starHolder;
-		public GameObject initBoardHolder;
+		// public GameObject starHolder;
 		public GameObject displayHolder;
 
 		// Gameobjects 
@@ -76,6 +76,9 @@ namespace QueueBits
 
 		//BLUE
 		[Header("Piece Counters")]
+		public TokenCounter tokenCounterBlue;
+		public TokenCounter tokenCounterRed;
+
 		// public GameObject pieceBlue100;
 		// public GameObject pieceBlue75;
 		// public GameObject pieceBlue50;
@@ -88,9 +91,9 @@ namespace QueueBits
 
 		public GameObject pieceCounterText;
 
-		public TMP_Text counterBlue100;
-		public TMP_Text counterBlue75;
-		public TMP_Text counterBlue50;
+		// public TMP_Text counterBlue100;
+		// public TMP_Text counterBlue75;
+		// public TMP_Text counterBlue50;
 
 		//RED
 		// public GameObject pieceRed100;
@@ -103,9 +106,9 @@ namespace QueueBits
 		// public GameObject pieceRed50Text;
 		// public GameObject pieceRed25Text;
 
-		public TMP_Text counterRed100;
-		public TMP_Text counterRed75;
-		public TMP_Text counterRed50;
+		// public TMP_Text counterRed100;
+		// public TMP_Text counterRed75;
+		// public TMP_Text counterRed50;
 
 		Dictionary<int, (int, (int, int))> probDict = new Dictionary<int, (int, (int, int))>();
 
@@ -277,9 +280,10 @@ namespace QueueBits
 		int bturns = 0;
 
 		[Header("Winner Displays")]
-		public GameObject resultWon;
-		public GameObject resultDraw;
-		public GameObject resultLose;
+		// public GameObject resultWon;
+		// public GameObject resultDraw;
+		// public GameObject resultLose;
+		public GameOverScreen resultDisplay;
 		// public GameObject winningText;
 
 		// public GameObject resultBG;
@@ -290,7 +294,7 @@ namespace QueueBits
 		public GameObject probText;
 		// public GameObject starText;
 
-		GameObject gameObjectField;
+		public GameObject gameObjectField;
 
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
 		GameObject gameObjectTurn;
@@ -426,19 +430,19 @@ namespace QueueBits
 
 			isLoading = true;
 
-			gameObjectField = GameObject.Find("Field");
-			if (gameObjectField != null)
-			{
-				DestroyImmediate(gameObjectField);
-			}
-			gameObjectField = new GameObject("Field");
+			// gameObjectField = GameObject.Find("Field");
+			// if (gameObjectField != null)
+			// {
+			// 	DestroyImmediate(gameObjectField);
+			// }
+			// gameObjectField = new GameObject("Field");
 
 			// create an empty field and instantiate the cells
 			field = new int[numColumns, numRows];
 
 			// initialize the wood board image
-			GameObject g = Instantiate(pieceField, new Vector3(3, -2.8f, 1), Quaternion.identity) as GameObject;
-			g.transform.parent = gameObjectField.transform;
+			// GameObject g = Instantiate(pieceField, new Vector3(3, -2.8f, 1), Quaternion.identity) as GameObject;
+			// g.transform.parent = gameObjectField.transform;
 
 			// initialize field for pieces
 			for (int x = 0; x < numColumns; x++)
@@ -455,11 +459,11 @@ namespace QueueBits
 				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
 				if (prefilledBoard[i].Item1 == Piece.Blue)
                 {
-					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, initBoardHolder.transform) as GameObject;
+					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, gameObjectField.transform) as GameObject;
 				}
 				else
                 {
-					GameObject obj = Instantiate(pieceRed, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, initBoardHolder.transform) as GameObject;
+					GameObject obj = Instantiate(pieceRed, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, gameObjectField.transform) as GameObject;
 				}
 			}
 
@@ -496,12 +500,15 @@ namespace QueueBits
 			// pieceBlue100Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			// pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
 			// pieceBlue100Text.SetActive(true);
-			counterBlue100.text = blueProbs[100].ToString();
+			// counterBlue100.text = blueProbs[100].ToString();
+			tokenCounterBlue.setCounter(100, blueProbs[100]);
 
 			// pieceBlue75Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			// pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
 			// pieceBlue75Text.SetActive(true);
-			counterBlue75.text = blueProbs[75].ToString();
+			// counterBlue75.text = blueProbs[75].ToString();
+			tokenCounterBlue.setCounter(75, blueProbs[75]);
+			tokenCounterBlue.disable50();
 
 			//Piece Count Displays - RED
 			// pieceRed100 = Instantiate(pieceRed, new Vector3(8, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
@@ -514,12 +521,15 @@ namespace QueueBits
 			// pieceRed100Text = Instantiate(pieceCounterText, new Vector3(8.5f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			// pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
 			// pieceRed100Text.SetActive(true);
-			counterRed100.text = redProbs[100].ToString();
+			// counterRed100.text = redProbs[100].ToString();
+			tokenCounterRed.setCounter(100, redProbs[100]);
 
 			// pieceRed75Text = Instantiate(pieceCounterText, new Vector3(8.5f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
 			// pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
 			// pieceRed75Text.SetActive(true);
-			counterRed75.text = redProbs[75].ToString();
+			// counterRed75.text = redProbs[75].ToString();
+			tokenCounterRed.setCounter(75, redProbs[75]);
+			tokenCounterRed.disable50();
 
 			pieceCounterText.SetActive(false);
 		}
@@ -894,19 +904,22 @@ namespace QueueBits
 				{
 					pieceSuperposition = pieceBlue;
 					// pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
-					counterBlue100.text = blueProbs[100].ToString();
+					// counterBlue100.text = blueProbs[100].ToString();
+					tokenCounterBlue.setCounter(100, blueProbs[100]);
 				}
 				else if (prob == 75)
 				{
 					pieceSuperposition = piece75;
 					// pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
-					counterBlue75.text = blueProbs[75].ToString();
+					// counterBlue75.text = blueProbs[75].ToString();
+					tokenCounterBlue.setCounter(75, blueProbs[75]);
 				}
 				else if (prob == 50)
 				{
 					pieceSuperposition = piece50;
 					// pieceBlue50Text.GetComponent<TextMesh>().text = blueProbs[50].ToString();
-					counterBlue50.text = blueProbs[50].ToString();
+					// counterBlue50.text = blueProbs[50].ToString();
+					tokenCounterBlue.setCounter(50, blueProbs[50]);
 				}
 				else
 				{
@@ -935,19 +948,22 @@ namespace QueueBits
 				{
 					pieceSuperposition = pieceRed;
 					// pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
-					counterRed100.text = redProbs[100].ToString();
+					// counterRed100.text = redProbs[100].ToString();
+					tokenCounterRed.setCounter(100, redProbs[100]);
 				}
 				else if (prob == 75)
 				{
 					pieceSuperposition = piece25red_turn;
 					// pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
-					counterRed75.text = redProbs[75].ToString();
+					// counterRed75.text = redProbs[75].ToString();
+					tokenCounterRed.setCounter(75, redProbs[75]);
 				}
 				else if (prob == 50)
 				{
 					pieceSuperposition = piece50red_turn;
 					// pieceRed50Text.GetComponent<TextMesh>().text = redProbs[50].ToString();
-					counterRed50.text = redProbs[50].ToString();
+					// counterRed50.text = redProbs[50].ToString();
+					tokenCounterRed.setCounter(50, redProbs[50]);
 				}
 				else
 				{
@@ -1015,8 +1031,8 @@ namespace QueueBits
 				// winningText.SetActive(true);
 				playerTurnText.SetActive(false);
 				playerTurnObject.SetActive(false);
-				initBoardHolder.SetActive(false);
 				gameObjectField.SetActive(false);
+				resultDisplay.gameObject.SetActive(true);
 
 				return;
 			}
@@ -1352,12 +1368,12 @@ namespace QueueBits
 
 				if (isPlayersTurn)
 				{
-					playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity, initBoardHolder.transform) as GameObject;
+					playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity, gameObjectField.transform) as GameObject;
 					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 				}
 				else
 				{
-					playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity, initBoardHolder.transform) as GameObject;
+					playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity, gameObjectField.transform) as GameObject;
 					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
 				}
@@ -1379,8 +1395,7 @@ namespace QueueBits
 		{
 			isCheckingForWinner = true;
 
-			// bool blueWon = false;
-			int winCode = 2; // 0 = tie; 1 = player won; 2 = CPU won
+			Results winCode = Results.Lose;
 
 			for (int x = 0; x < numColumns; x++)
 			{
@@ -1395,7 +1410,7 @@ namespace QueueBits
 						{
 							if (color == 1)
 								// blueWon = true;
-								winCode = 1;
+								winCode = Results.Win;
 							gameOver = true;
 						}
 
@@ -1404,7 +1419,7 @@ namespace QueueBits
 						{
 							if (color == 1)
 								// blueWon = true;
-								winCode = 1;
+								winCode = Results.Win;
 							gameOver = true;
 						}
 
@@ -1413,7 +1428,7 @@ namespace QueueBits
 						{
 							if (color == 1)
 								// blueWon = true;
-								winCode = 1;
+								winCode = Results.Win;
 							gameOver = true;
 						}
 
@@ -1422,7 +1437,7 @@ namespace QueueBits
 						{
 							if (color == 1)
 								// blueWon = true;
-								winCode = 1;
+								winCode = Results.Win;
 							gameOver = true;
 						}
 
@@ -1431,7 +1446,7 @@ namespace QueueBits
 						{
 							if (color == 1)
 								// blueWon = true;
-								winCode = 1;
+								winCode = Results.Win;
 							gameOver = true;
 						}
 
@@ -1440,7 +1455,7 @@ namespace QueueBits
 						{
 							if (color == 1)
 								// blueWon = true;
-								winCode = 1;
+								winCode = Results.Win;
 							gameOver = true;
 						}
 
@@ -1449,7 +1464,7 @@ namespace QueueBits
 						{
 							if (color == 1)
 								// blueWon = true;
-								winCode = 1;
+								winCode = Results.Win;
 							gameOver = true;
 						}
 
@@ -1458,7 +1473,7 @@ namespace QueueBits
 						{
 							if (color == 1)
 								// blueWon = true;
-								winCode = 1;
+								winCode = Results.Win;
 							gameOver = true;
 						}
 
@@ -1466,7 +1481,7 @@ namespace QueueBits
 						if (!FieldContainsEmptyCell())
 						{
 							gameOver = true;
-							winCode = 0;
+							winCode = Results.Draw;
 						}
 					}
 					yield return null;
@@ -1483,7 +1498,7 @@ namespace QueueBits
 				// 	mydata.winner = 1;
 				// else 
 				// 	mydata.winner = 2;
-				mydata.winner = winCode;
+				mydata.winner = (int)winCode;
 				saveData.Save(mydata);
 				//Data Collection
 
@@ -1491,15 +1506,15 @@ namespace QueueBits
 				if (!starUpdated)
 				{
 					starUpdated = true;
-					int starsWon;
+					int starsWon = starDisplay.getResults(winCode);
 
-					if (winCode == 1) { // If player wins => 3 stars
-						starsWon = 3;
-					} else if (winCode == 2) { // If player loses => 1 star
-						starsWon = 1;
-					} else { // If there's a tie => 2 stars
-						starsWon = 2;
-					}
+					// if (winCode == 1) { // If player wins => 3 stars
+					// 	starsWon = 3;
+					// } else if (winCode == 2) { // If player loses => 1 star
+					// 	starsWon = 1;
+					// } else { // If there's a tie => 2 stars
+					// 	starsWon = 2;
+					// }
 
 					if (GameManager.saveData.starSystem[3] <= starsWon) {
 						GameManager.saveData.starSystem[3] = starsWon;
@@ -1514,22 +1529,24 @@ namespace QueueBits
 				}
 
 				// StarSystem
-				DestroyImmediate(Star1);
-				DestroyImmediate(Star2);
-				DestroyImmediate(Star3);
+				// DestroyImmediate(Star1);
+				// DestroyImmediate(Star2);
+				// DestroyImmediate(Star3);
 				ShowStarSystem();
 
 				// GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
 				// winningText.GetComponent<TextMesh>().text = blueWon ? playerWonText : playerLoseText;
 				// GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
 
-				if (winCode == 1) {
-					resultWon.SetActive(true);
-				} else if (winCode == 2) {
-					resultLose.SetActive(true);
-				} else {
-					resultDraw.SetActive(true);
-				}
+				// if (winCode == 1) {
+				// 	resultWon.SetActive(true);
+				// } else if (winCode == 2) {
+				// 	resultLose.SetActive(true);
+				// } else {
+				// 	resultDraw.SetActive(true);
+				// }
+
+				resultDisplay.GameOver(winCode);
 
 				// Reward System
 				if (GameManager.rewardSystem[3]) {
@@ -1581,8 +1598,10 @@ namespace QueueBits
 
 		void ShowStarSystem()
 		{
+			starDisplay.resetStars();
+			starDisplay.setDisplay(GameManager.saveData.starSystem[3]);
 			// Star System
-			if (GameManager.saveData.starSystem[3] == 0)
+			/* if (GameManager.saveData.starSystem[3] == 0)
 			{
 				Star1 = Instantiate(starEmpty, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
@@ -1605,7 +1624,7 @@ namespace QueueBits
 				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star3 = Instantiate(starFilled, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-			}
+			} */
 		}
 
 		/// <summary>
