@@ -9,30 +9,18 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using QueueBits;
 
-//using System;
-//using MySql.Data.MySqlClient;
-//using Data;
-
 namespace QueueBits
 {
 	public class Level3 : MonoBehaviour
 	{
-		/* public enum Piece {
-			Empty = 0,
-			Blue = 1,
-			Red = 2
-		} */
-
-		// public enum Results { Draw, Win, Lose };
+		public int LEVEL_NUMBER = 3;
 
 		[Range(3, 8)]
 		private int numRows = 6;
 		[Range(3, 8)]
 		private int numColumns = 7;
-
 		[Tooltip("How many pieces have to be connected to win.")]
 		private int numPiecesToWin = 4;
-
 		[Tooltip("Allow diagonally connected Pieces?")]
 		private bool allowDiagonally = true;
 
@@ -43,258 +31,47 @@ namespace QueueBits
 		// star system
 		[Header("Star System")]
 		public bool starUpdated = false;
-		// public GameObject starFilled;
-		// public GameObject starEmpty;
-		// public GameObject Star1;
-		// public GameObject Star2;
-		// public GameObject Star3;
-		public StarDisplay starDisplay;
+		
 
-		[Header("Parent Objects")]
-		// public GameObject starHolder;
+		[Header("Display Objects")]
 		public GameObject displayHolder;
-
-		// Gameobjects 
-		[Header("GameObjects")]
-		public GameObject pieceRed;
-		public GameObject pieceBlue;
-		public GameObject pieceField;
-		public GameObject finalColor;
-		public GameObject playerTurnObject;
-
-		[Header("GameObjects - Superposition")]
-		public GameObject pieceSuperposition;
-		public GameObject piece50;
-		public GameObject piece75;
-		public GameObject piece25red_turn;
-		public GameObject piece50red_turn;
-		public GameObject playerTurnText;
-
-		//Piece Count Displays
-		// public GameObject blueTitle;
-		// public GameObject redTitle;
-
-		//BLUE
-		[Header("Piece Counters")]
+		public GameObject turnSign;
+		public StarDisplay starDisplay;
 		public TokenCounter tokenCounterBlue;
 		public TokenCounter tokenCounterRed;
+		public GameOverScreen resultDisplay;
 
-		// public GameObject pieceBlue100;
-		// public GameObject pieceBlue75;
-		// public GameObject pieceBlue50;
-		// public GameObject pieceBlue25;
+		// Gameobjects 
+		[Header("Red Pieces")]
+		public GameObject pieceRed;
+		public GameObject piece25red_turn; //75%
+		public GameObject piece50red_turn; //50%
 
-		// public GameObject pieceBlue100Text;
-		// public GameObject pieceBlue75Text;
-		// public GameObject pieceBlue50Text;
-		// public GameObject pieceBlue25Text;
+		[Header("Blue Pieces")]
+		public GameObject pieceBlue;
+		public GameObject piece50;
+		public GameObject piece75;
 
-		public GameObject pieceCounterText;
+		[Header("GameObjects")]
+		public GameObject pieceTemp;
+		public GameObject pieceField;
+		public GameObject finalColor;
+		public GameObject gameObjectField;
 
-		// public TMP_Text counterBlue100;
-		// public TMP_Text counterBlue75;
-		// public TMP_Text counterBlue50;
-
-		//RED
-		// public GameObject pieceRed100;
-		// public GameObject pieceRed75;
-		// public GameObject pieceRed50;
-		// public GameObject pieceRed25;
-
-		// public GameObject pieceRed100Text;
-		// public GameObject pieceRed75Text;
-		// public GameObject pieceRed50Text;
-		// public GameObject pieceRed25Text;
-
-		// public TMP_Text counterRed100;
-		// public TMP_Text counterRed75;
-		// public TMP_Text counterRed50;
-
-		Dictionary<int, (int, (int, int))> probDict = new Dictionary<int, (int, (int, int))>();
 
 		Dictionary<int, int> redProbs = new Dictionary<int, int>();
 		Dictionary<int, int> blueProbs = new Dictionary<int, int>();
 
-		// define prefilled board
-		List<(Piece, int, int)> prefilledBoard = new List<(Piece piece, int col, int row)>();
-
-		Dictionary<int, List<(Piece, int, int)>> prefilledBoardList = new Dictionary<int, List<(Piece, int, int)>>
-		{
-		{0, new List<(Piece piece, int col, int row)> // 5.2 flipped
-			{
-				(Piece.Red, 3, 5),
-				(Piece.Blue, 3, 4),
-				(Piece.Red, 2, 5),
-				(Piece.Blue, 4, 5),
-				(Piece.Red, 3, 3),
-				(Piece.Blue, 4, 4),
-				(Piece.Red, 4, 3),
-				(Piece.Blue, 2, 4),
-				(Piece.Red, 6, 5),
-				(Piece.Blue, 6, 4),
-				(Piece.Red, 3, 2),
-				(Piece.Blue, 6, 3),
-				(Piece.Red, 3, 1),
-				(Piece.Blue, 3, 0)
-			}
-		},
-		{1, new List<(Piece piece, int col, int row)> //5.1
-			{
-				(Piece.Red, 3, 5),
-				(Piece.Blue, 3, 4),
-				(Piece.Red, 2, 5),
-				(Piece.Blue, 4, 5),
-				(Piece.Red, 2, 4),
-				(Piece.Blue, 2, 3),
-				(Piece.Red, 1, 5),
-				(Piece.Blue, 0, 5),
-				(Piece.Red, 0, 4),
-				(Piece.Blue, 1, 4),
-				(Piece.Red, 0, 3),
-				(Piece.Blue, 0, 2),
-				(Piece.Red, 4, 4),
-				(Piece.Blue, 2, 2)
-			}
-		},
-		{2, new List<(Piece piece, int col, int row)> //5.2
-			{
-				(Piece.Red, 3, 5),
-				(Piece.Blue, 3, 4),
-				(Piece.Red, 4, 5),
-				(Piece.Blue, 2, 5),
-				(Piece.Red, 3, 3),
-				(Piece.Blue, 2, 4),
-				(Piece.Red, 2, 3),
-				(Piece.Blue, 4, 4),
-				(Piece.Red, 0, 5),
-				(Piece.Blue, 0, 4),
-				(Piece.Red, 3, 2),
-				(Piece.Blue, 0, 3),
-				(Piece.Red, 3, 1),
-				(Piece.Blue, 3, 0)
-			}
-		},
-		{3, new List<(Piece piece, int col, int row)> //5.3
-			{
-				(Piece.Red, 3, 5),
-				(Piece.Blue, 3, 4),
-				(Piece.Red, 3, 3),
-				(Piece.Blue, 3, 2),
-				(Piece.Red, 3, 1),
-				(Piece.Blue, 1, 5),
-				(Piece.Red, 1, 4),
-				(Piece.Blue, 1, 3),
-				(Piece.Red, 2, 5),
-				(Piece.Blue, 4, 5),
-				(Piece.Red, 1, 2),
-				(Piece.Blue, 4, 4),
-				(Piece.Red, 4, 3),
-				(Piece.Blue, 4, 2)
-			}
-		},
-		{4, new List<(Piece piece, int col, int row)> //5.4
-			{
-				(Piece.Red, 3, 5),
-				(Piece.Blue, 3, 4),
-				(Piece.Red, 2, 5),
-				(Piece.Blue, 4, 5),
-				(Piece.Red, 0, 5),
-				(Piece.Blue, 1, 5),
-				(Piece.Red, 4, 4),
-				(Piece.Blue, 2, 4),
-				(Piece.Red, 1, 4),
-				(Piece.Blue, 3, 3),
-				(Piece.Red, 1, 3),
-				(Piece.Blue, 5, 5),
-				(Piece.Red, 5, 4),
-				(Piece.Blue, 0, 4)
-			}
-		},
-		{5, new List<(Piece piece, int col, int row)> //5.5
-			{
-				(Piece.Red, 3, 5),
-				(Piece.Blue, 4, 5),
-				(Piece.Red, 2, 5),
-				(Piece.Blue, 3, 4),
-				(Piece.Red, 2, 4),
-				(Piece.Blue, 3, 3),
-				(Piece.Red, 1, 5),
-				(Piece.Blue, 0, 5),
-				(Piece.Red, 2, 3),
-				(Piece.Blue, 2, 2),
-				(Piece.Red, 3, 2),
-				(Piece.Blue, 0, 4),
-				(Piece.Red, 4, 4),
-				(Piece.Blue, 3, 1)
-			}
-		},
-		{6, new List<(Piece piece, int col, int row)> //5.6
-			{
-				(Piece.Red, 4, 5),
-				(Piece.Blue, 1, 5),
-				(Piece.Red, 3, 5),
-				(Piece.Blue, 5, 5),
-				(Piece.Red, 1, 4),
-				(Piece.Blue, 4, 4),
-				(Piece.Red, 5, 4),
-				(Piece.Blue, 4, 3),
-				(Piece.Red, 4, 2),
-				(Piece.Blue, 3, 4),
-				(Piece.Red, 3, 3),
-				(Piece.Blue, 3, 2),
-				(Piece.Red, 1, 3),
-				(Piece.Blue, 3, 1)
-			}
-		},
-		{7, new List<(Piece piece, int col, int row)> //5.3 flipped
-			{
-				(Piece.Red, 3, 5),
-				(Piece.Blue, 3, 4),
-				(Piece.Red, 3, 3),
-				(Piece.Blue, 3, 2),
-				(Piece.Red, 3, 1),
-				(Piece.Blue, 5, 5),
-				(Piece.Red, 5, 4),
-				(Piece.Blue, 5, 3),
-				(Piece.Red, 4, 5),
-				(Piece.Blue, 2, 5),
-				(Piece.Red, 5, 2),
-				(Piece.Blue, 2, 4),
-				(Piece.Red, 2, 3),
-				(Piece.Blue, 2, 2)
-			}
-		}
-	};
+		[Header("Prefilled Boards")]
+		public PrefilledBoards PB;
+		public List<(Piece, int, int, int)> prefilledBoard = new List<(Piece piece, int col, int row, int prob)>();
+		public string boardName;
 
 		// Select Tokens
-		GameObject SelectTokenText;
 		GameObject choice50;
-		GameObject choice50text;
 		GameObject choice75;
-		GameObject choice75text;
 		GameObject choice100;
-		GameObject choice100text;
-		bool SelectMenuGenerated = false;
 		int choice;
-
-		int bturns = 0;
-
-		[Header("Winner Displays")]
-		// public GameObject resultWon;
-		// public GameObject resultDraw;
-		// public GameObject resultLose;
-		public GameOverScreen resultDisplay;
-		// public GameObject winningText;
-
-		// public GameObject resultBG;
-		// public string playerWonText = "You Won!";
-		// public string playerLoseText = "Byte Won!";
-		// public string drawText = "Draw!";
-
-		public GameObject probText;
-		// public GameObject starText;
-
-		public GameObject gameObjectField;
 
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
 		GameObject gameObjectTurn;
@@ -314,6 +91,7 @@ namespace QueueBits
 
 		bool gameOver = false;
 		bool isCheckingForWinner = false;
+		// bool SelectMenuGenerated;
 		
 		string state = "000000000000000000000000000000000000000000";
 		int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
@@ -332,22 +110,25 @@ namespace QueueBits
 			ShowStarSystem();
 
 			// dialogue
-			if (GameManager.saveData.dialogueSystem[3])
+			if (GameManager.saveData.dialogueSystem[LEVEL_NUMBER])
 			{
 				dialoguePhase = true;
-				Wrapper.Events.StartDialogueSequence?.Invoke("QB_Level3");
-				GameManager.saveData.dialogueSystem[3] = false;
+				Wrapper.Events.StartDialogueSequence?.Invoke($"QB_Level{LEVEL_NUMBER}");
+				GameManager.saveData.dialogueSystem[LEVEL_NUMBER] = false;
 				GameManager.Save();
 				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
 			}
 
-			int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
-            prefilledBoard = prefilledBoardList[board_num];
+			// int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
+            // prefilledBoard = prefilledBoardList[board_num];
+
+			(boardName, prefilledBoard) = PB.getRandomBoard(LEVEL_NUMBER);
 
 			//Shivani Puli Data Collection
-			mydata.level = 3;
+			mydata.level = LEVEL_NUMBER;
 			mydata.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
-			mydata.prefilledBoard = board_num;
+			// mydata.prefilledBoard = board_num;
+			mydata.newPrefilledBoard = boardName;
 			mydata.placement_order = new int[numColumns * numRows];
 			mydata.superposition = new int[numColumns * numRows];
 			mydata.reveal_order = new int[numColumns * numRows];
@@ -360,14 +141,14 @@ namespace QueueBits
 				mydata.outcome[i] = 0;
 			}
 
-			foreach ((Piece pi, int c, int r) in prefilledBoard)
+			foreach ((Piece pi, int c, int r, int p) in prefilledBoard)
 			{
 				turn++;
 				int index = r * numColumns + c;
 				mydata.placement_order[index] = turn;
 				
 				mydata.reveal_order[index] = turn;
-				mydata.superposition[index] = 100;
+				mydata.superposition[index] = p;
 				if (pi == Piece.Blue)//if Yellow
 				{
 					mydata.outcome[index] = 1;
@@ -394,13 +175,10 @@ namespace QueueBits
 
 			CreateField();
 
-			// GameObject levelText = Instantiate(probText, new Vector3(numColumns - 5f, -7f, -1), Quaternion.identity) as GameObject;
-			// levelText.GetComponent<TextMesh>().text = "Level 3";
-
 			isPlayersTurn = false;
-			playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
+			turnSign.SetActive(isPlayersTurn);
 
-			if (isPlayersTurn)
+			/* if (isPlayersTurn)
 			{
 				playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
 				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
@@ -409,7 +187,7 @@ namespace QueueBits
 			{
 				playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
 				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-			}
+			} */
 		}
 
 		// dialogue
@@ -424,9 +202,7 @@ namespace QueueBits
 		/// </summary>
 		void CreateField()
 		{
-			// winningText.SetActive(false);
-			playerTurnText.SetActive(true);
-			playerTurnText.GetComponent<Renderer>().sortingOrder = 4;
+			turnSign.SetActive(true);
 
 			isLoading = true;
 
@@ -474,64 +250,15 @@ namespace QueueBits
 			Camera.main.transform.position = new Vector3(
 				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f), Camera.main.transform.position.z);
 
-			// winningText.transform.position = new Vector3(
-			// 	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f) + 0.2f, winningText.transform.position.z);
-
-            playerTurnText.transform.position = new Vector3(
-			(numColumns - 1) / 2.0f, -6.3f, playerTurnText.transform.position.z);
 
 			// Piece Count Displays
-
-			// blueTitle.transform.position = new Vector3(-4, 0, 0);
-			// blueTitle.GetComponent<Renderer>().sortingOrder = 10;
-			// blueTitle.SetActive(true);
-
-			// redTitle.transform.position = new Vector3(7.75f, 0, 0);
-			// redTitle.GetComponent<Renderer>().sortingOrder = 10;
-			// redTitle.SetActive(true);
-
-			// pieceBlue100 = Instantiate(pieceBlue, new Vector3(-2, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			// pieceBlue100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-
-			// pieceBlue75 = Instantiate(piece75, new Vector3(-2, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			// pieceBlue75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-
-			//Piece Count Texts - BLUE
-			// pieceBlue100Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			// pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
-			// pieceBlue100Text.SetActive(true);
-			// counterBlue100.text = blueProbs[100].ToString();
 			tokenCounterBlue.setCounter(100, blueProbs[100]);
-
-			// pieceBlue75Text = Instantiate(pieceCounterText, new Vector3(-2.75f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			// pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
-			// pieceBlue75Text.SetActive(true);
-			// counterBlue75.text = blueProbs[75].ToString();
 			tokenCounterBlue.setCounter(75, blueProbs[75]);
 			tokenCounterBlue.disable50();
 
-			//Piece Count Displays - RED
-			// pieceRed100 = Instantiate(pieceRed, new Vector3(8, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			// pieceRed100.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-
-			// pieceRed75 = Instantiate(piece25red_turn, new Vector3(8, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			// pieceRed75.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-
-			//Piece Count Texts - RED
-			// pieceRed100Text = Instantiate(pieceCounterText, new Vector3(8.5f, -1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			// pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
-			// pieceRed100Text.SetActive(true);
-			// counterRed100.text = redProbs[100].ToString();
 			tokenCounterRed.setCounter(100, redProbs[100]);
-
-			// pieceRed75Text = Instantiate(pieceCounterText, new Vector3(8.5f, -2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-			// pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
-			// pieceRed75Text.SetActive(true);
-			// counterRed75.text = redProbs[75].ToString();
 			tokenCounterRed.setCounter(75, redProbs[75]);
 			tokenCounterRed.disable50();
-
-			pieceCounterText.SetActive(false);
 		}
 
 		int index(int r, int c)
@@ -887,7 +614,7 @@ namespace QueueBits
 		/// Spawns a piece at mouse position above the first row
 		/// </summary>
 		/// <returns>The piece.</returns>
-		(GameObject, int, GameObject) SpawnPiece()
+		public (GameObject, int) SpawnPiece(int choice)
 		{
 			Vector3 spawnPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			int prob = 0;
@@ -902,38 +629,26 @@ namespace QueueBits
 
 				if (prob == 100)
 				{
-					pieceSuperposition = pieceBlue;
-					// pieceBlue100Text.GetComponent<TextMesh>().text = blueProbs[100].ToString();
-					// counterBlue100.text = blueProbs[100].ToString();
+					pieceTemp = pieceBlue;
 					tokenCounterBlue.setCounter(100, blueProbs[100]);
 				}
 				else if (prob == 75)
 				{
-					pieceSuperposition = piece75;
-					// pieceBlue75Text.GetComponent<TextMesh>().text = blueProbs[75].ToString();
-					// counterBlue75.text = blueProbs[75].ToString();
+					pieceTemp = piece75;
 					tokenCounterBlue.setCounter(75, blueProbs[75]);
 				}
 				else if (prob == 50)
 				{
-					pieceSuperposition = piece50;
-					// pieceBlue50Text.GetComponent<TextMesh>().text = blueProbs[50].ToString();
-					// counterBlue50.text = blueProbs[50].ToString();
+					pieceTemp = piece50;
 					tokenCounterBlue.setCounter(50, blueProbs[50]);
-				}
-				else
-				{
-					// pieceSuperposition = piece25;
-					// pieceBlue25Text.GetComponent<TextMesh>().text = blueProbs[25].ToString();
 				}
 
 				if (blueProbs[prob] == 0)
 				{
 					blueProbs.Remove(prob);
 				}
-
-				probText.GetComponent<TextMesh>().text = prob.ToString() + "% YELLOW";
 			}
+
 			else
 			{
 				int ind = Random.Range(0, redProbs.Keys.Count);
@@ -946,37 +661,24 @@ namespace QueueBits
 
 				if (prob == 100)
 				{
-					pieceSuperposition = pieceRed;
-					// pieceRed100Text.GetComponent<TextMesh>().text = redProbs[100].ToString();
-					// counterRed100.text = redProbs[100].ToString();
+					pieceTemp = pieceRed;
 					tokenCounterRed.setCounter(100, redProbs[100]);
 				}
 				else if (prob == 75)
 				{
-					pieceSuperposition = piece25red_turn;
-					// pieceRed75Text.GetComponent<TextMesh>().text = redProbs[75].ToString();
-					// counterRed75.text = redProbs[75].ToString();
+					pieceTemp = piece25red_turn;
 					tokenCounterRed.setCounter(75, redProbs[75]);
 				}
 				else if (prob == 50)
 				{
-					pieceSuperposition = piece50red_turn;
-					// pieceRed50Text.GetComponent<TextMesh>().text = redProbs[50].ToString();
-					// counterRed50.text = redProbs[50].ToString();
+					pieceTemp = piece50red_turn;
 					tokenCounterRed.setCounter(50, redProbs[50]);
-				}
-				else
-				{
-					// pieceSuperposition = piece75red_turn;
-					// pieceRed25Text.GetComponent<TextMesh>().text = redProbs[25].ToString();
 				}
 
 				if (redProbs[prob] == 0)
 				{
 					redProbs.Remove(prob);
 				}
-
-				probText.GetComponent<TextMesh>().text = prob.ToString() + "% RED";
 
 
 				List<int> moves = GetPossibleMoves();
@@ -1000,18 +702,13 @@ namespace QueueBits
 				}
 			}
 
-			GameObject g = Instantiate(pieceSuperposition,
+			GameObject g = Instantiate(pieceTemp,
 					new Vector3(
 					Mathf.Clamp(spawnPos.x, 0, numColumns - 1),
 					gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
 					Quaternion.identity) as GameObject;
 
-			probText.transform.position = new Vector3(1.5f, 2, -1);
-			// probText.transform.parent = g.transform;
-
-			probText.SetActive(true);
-
-			return (g, prob, probText);
+			return (g, prob);
 		}
 
 		// Update is called once per frame
@@ -1028,10 +725,8 @@ namespace QueueBits
 
 			if (gameOver)
 			{
-				// winningText.SetActive(true);
-				playerTurnText.SetActive(false);
-				playerTurnObject.SetActive(false);
 				gameObjectField.SetActive(false);
+				displayHolder.SetActive(false);
 				resultDisplay.gameObject.SetActive(true);
 
 				return;
@@ -1041,39 +736,19 @@ namespace QueueBits
 			{
 				if (gameObjectTurn == null)
 				{
-					if (!SelectMenuGenerated)
-                    {
-						SelectTokenText = Instantiate(pieceCounterText, new Vector3(1.5f, 2, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-						SelectTokenText.GetComponent<TextMesh>().text = "SELECT TOKEN";
-						SelectTokenText.GetComponent<TextMesh>().color = Color.white;
-						SelectTokenText.SetActive(true);
 
 						if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
                         {
-							choice100 = Instantiate(pieceBlue, new Vector3(-1f, 1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-							choice100text = Instantiate(probText, new Vector3(-0.4f, 1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-							choice100text.GetComponent<TextMesh>().text = "100% YELLOW";
-							choice100text.transform.localScale = new Vector3(0.04f, 0.04f, 0.05f);
-							choice100text.SetActive(true);
+							choice100 = Instantiate(pieceBlue, new Vector3(-1f, 1, -1), Quaternion.identity) as GameObject;
 						}
 						if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
 						{
-							choice75 = Instantiate(piece75, new Vector3(3, 1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-							choice75text = Instantiate(probText, new Vector3(3.5f, 1, -1), Quaternion.identity, displayHolder.transform) as GameObject;
-							choice75text.GetComponent<TextMesh>().text = "75% YELLOW";
-							choice75text.transform.localScale = new Vector3(0.04f, 0.04f, 0.05f);
-							choice75text.SetActive(true);
+							choice75 = Instantiate(piece75, new Vector3(3, 1, -1), Quaternion.identity) as GameObject;
 						}
-						/* if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
+						if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
 						{
 							choice50 = Instantiate(piece50, new Vector3(6.6f, 1, -1), Quaternion.identity) as GameObject;
-							choice50text = Instantiate(probText, new Vector3(7.15f, 1, -1), Quaternion.identity) as GameObject;
-							choice50text.GetComponent<TextMesh>().text = "50% YELLOW";
-							choice50text.transform.localScale = new Vector3(0.04f, 0.04f, 0.05f);
-							choice50text.SetActive(true);
-						} */
-						SelectMenuGenerated = true;
-					}
+						}
 
 					if (Input.GetMouseButtonDown(0))
                     {
@@ -1087,59 +762,46 @@ namespace QueueBits
 							if (blueProbs.ContainsKey(100) && blueProbs[100] > 0 && clickedObjectID == choice100.GetInstanceID())
                             {
 								choice = 100;
-								SelectTokenText.SetActive(false);
 								DestroyImmediate(choice100);
-								choice100text.SetActive(false);
 								if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
 								{
 									DestroyImmediate(choice75);
-									choice75text.SetActive(false);
 								}
 								if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
 								{
 									DestroyImmediate(choice50);
-									choice50text.SetActive(false);
 								}
-								(gameObjectTurn, probability, probText) = SpawnPiece();
-								SelectMenuGenerated = false;
+								(gameObjectTurn, probability) = SpawnPiece(choice);
 							}
 							if (blueProbs.ContainsKey(75) && blueProbs[75] > 0 && clickedObjectID == choice75.GetInstanceID())
 							{
 								choice = 75;
-								SelectTokenText.SetActive(false);
 								if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
 								{
 									DestroyImmediate(choice100);
-									choice100text.SetActive(false);
 								}
 								DestroyImmediate(choice75);
-								choice75text.SetActive(false);
 								if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
 								{
 									DestroyImmediate(choice50);
-									choice50text.SetActive(false);
 								}
-								(gameObjectTurn, probability, probText) = SpawnPiece();
-								SelectMenuGenerated = false;
+								(gameObjectTurn, probability) = SpawnPiece(choice);
+								// SelectMenuGenerated = false;
 							}
 							if (blueProbs.ContainsKey(50) && blueProbs[50] > 0 && clickedObjectID == choice50.GetInstanceID())
 							{
 								choice = 50;
-								SelectTokenText.SetActive(false);
 								if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
 								{
 									DestroyImmediate(choice100);
-									choice100text.SetActive(false);
 								}
 								if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
 								{
 									DestroyImmediate(choice75);
-									choice75text.SetActive(false);
 								}
 								DestroyImmediate(choice50);
-								choice50text.SetActive(false);
-								(gameObjectTurn, probability, probText) = SpawnPiece();
-								SelectMenuGenerated = false;
+								(gameObjectTurn, probability) = SpawnPiece(choice);
+								// SelectMenuGenerated = false;
 							}
 						}
 					}
@@ -1157,10 +819,7 @@ namespace QueueBits
 					{
 						mouseButtonPressed = true;
 
-						probText.transform.parent = null;
-						probText.SetActive(false);
-
-						StartCoroutine(dropPiece(gameObjectTurn, probText, probability));
+						StartCoroutine(dropPiece(gameObjectTurn, probability));
 					}
 					else
 					{
@@ -1172,18 +831,16 @@ namespace QueueBits
 			{
 				if (gameObjectTurn == null)
 				{
-					(gameObjectTurn, probability, probText) = SpawnPiece();
+					(gameObjectTurn, probability) = SpawnPiece(choice);
 				}
 				else
 				{
 					if (!isDropping)
 					{
-						probText.transform.parent = null;
-						probText.SetActive(false);
 						//Task.Delay(2000);
 						Thread.Sleep(1000);
 						// Debug.Log(gameObjectTurn.transform.position.ToString());
-						StartCoroutine(dropPiece(gameObjectTurn, probText, probability));
+						StartCoroutine(dropPiece(gameObjectTurn, probability));
 					}
 				}
 			}
@@ -1194,7 +851,7 @@ namespace QueueBits
 		/// the object fall down into this cell
 		/// </summary>
 		/// <param name="gObject">Game Object.</param>
-		IEnumerator dropPiece(GameObject gObject, GameObject probText, int probability)
+		IEnumerator dropPiece(GameObject gObject, int probability)
 		{
 			isDropping = true;
 			string s = "";
@@ -1329,10 +986,6 @@ namespace QueueBits
 				gameObjectTurn.GetComponent<Renderer>().enabled = false;
 				finalColor.GetComponent<Renderer>().enabled = false;
 
-				//GameObject p = Instantiate(probText) as GameObject;
-				//p.transform.parent = g.transform;
-				//p.SetActive(true);
-
 				float distance = Vector3.Distance(startPosition, endPosition);
 
 				float t = 0;
@@ -1346,10 +999,6 @@ namespace QueueBits
 
 				g.transform.parent = gameObjectField.transform;
 
-				//if (isPlayersTurn)
-				//	probDict.Add(g.transform.GetInstanceID(), (probability, tempLocation));
-				//else
-				//	probDict.Add(g.transform.GetInstanceID(), (100 - probability, tempLocation));
 
 				// remove the temporary gameobject
 				DestroyImmediate(gameObjectTurn);
@@ -1362,11 +1011,11 @@ namespace QueueBits
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				playerTurnText.GetComponent<TextMesh>().text = isPlayersTurn ? "Your Turn" : "Byte's Turn";
+				turnSign.SetActive(isPlayersTurn);
 
-				DestroyImmediate(playerTurnObject);
+				// DestroyImmediate(playerTurnObject);
 
-				if (isPlayersTurn)
+				/* if (isPlayersTurn)
 				{
 					playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity, gameObjectField.transform) as GameObject;
 					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
@@ -1376,12 +1025,7 @@ namespace QueueBits
 					playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity, gameObjectField.transform) as GameObject;
 					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 
-				}
-			}
-			else
-            {
-				probText.SetActive(true);
-				probText.transform.position = new Vector3(1.5f, 2, -1);
+				} */
 			}
 
 			isDropping = false;
@@ -1490,7 +1134,6 @@ namespace QueueBits
 				yield return null;
 			}
 
-			// if Game Over update the winning text to show who has won
 			if (gameOver == true)
 			{
 				//Shivani Puli Data Collection -> store winner
@@ -1516,14 +1159,14 @@ namespace QueueBits
 					// 	starsWon = 2;
 					// }
 
-					if (GameManager.saveData.starSystem[3] <= starsWon) {
-						GameManager.saveData.starSystem[3] = starsWon;
+					if (GameManager.saveData.starSystem[LEVEL_NUMBER] <= starsWon) {
+						GameManager.saveData.starSystem[LEVEL_NUMBER] = starsWon;
 						GameManager.Save();
 					}
 
-					// if (GameManager.saveData.starSystem[3] + 1 <= 3)
+					// if (GameManager.saveData.starSystem[LEVEL_NUMBER] + 1 <= 3)
 					// {
-					// 	GameManager.saveData.starSystem[3] = GameManager.saveData.starSystem[3] + 1;
+					// 	GameManager.saveData.starSystem[LEVEL_NUMBER] = GameManager.saveData.starSystem[LEVEL_NUMBER] + 1;
 					// 	GameManager.Save();
 					// }
 				}
@@ -1533,10 +1176,6 @@ namespace QueueBits
 				// DestroyImmediate(Star2);
 				// DestroyImmediate(Star3);
 				ShowStarSystem();
-
-				// GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
-				// winningText.GetComponent<TextMesh>().text = blueWon ? playerWonText : playerLoseText;
-				// GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
 
 				// if (winCode == 1) {
 				// 	resultWon.SetActive(true);
@@ -1549,47 +1188,10 @@ namespace QueueBits
 				resultDisplay.GameOver(winCode);
 
 				// Reward System
-				if (GameManager.rewardSystem[3]) {
+				if (GameManager.rewardSystem[LEVEL_NUMBER]) {
 					Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 3);
 				}
 			}
-			/* else
-			{
-				// check if there are any empty cells left, if not set game over and update text to show a draw
-				if (!FieldContainsEmptyCell())
-				{
-					//Shivani Puli Data Collection
-					mydata.winner = 0;
-					saveData.Save(mydata);
-
-					// star system
-					if (!starUpdated)
-					{
-						starUpdated = true;
-						if (GameManager.saveData.starSystem[3] + 1 <= 3)
-						{
-							GameManager.saveData.starSystem[3] = GameManager.saveData.starSystem[3] + 1;
-							GameManager.Save();
-						}
-					}
-					// StarSystem
-					DestroyImmediate(Star1);
-					DestroyImmediate(Star2);
-					DestroyImmediate(Star3);
-					ShowStarSystem();
-
-					GameObject bg = Instantiate(resultBG, new Vector3(3, -2.5f, -1), Quaternion.identity) as GameObject;
-					gameOver = true;
-					winningText.GetComponent<TextMesh>().text = drawText;
-					// GameObject star = Instantiate(starText, new Vector3(-0.7f, -3.5f, -1), Quaternion.identity) as GameObject;
-
-					// Reward System
-					if (GameManager.rewardSystem[3])
-					{
-						Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 3);
-					}
-				}
-			}*/
 
 			isCheckingForWinner = false;
 
@@ -1599,27 +1201,27 @@ namespace QueueBits
 		void ShowStarSystem()
 		{
 			starDisplay.resetStars();
-			starDisplay.setDisplay(GameManager.saveData.starSystem[3]);
+			starDisplay.setDisplay(GameManager.saveData.starSystem[LEVEL_NUMBER]);
 			// Star System
-			/* if (GameManager.saveData.starSystem[3] == 0)
+			/* if (GameManager.saveData.starSystem[LEVEL_NUMBER] == 0)
 			{
 				Star1 = Instantiate(starEmpty, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 			}
-			else if (GameManager.saveData.starSystem[3] == 1)
+			else if (GameManager.saveData.starSystem[LEVEL_NUMBER] == 1)
 			{
 				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 			}
-			else if (GameManager.saveData.starSystem[3] == 2)
+			else if (GameManager.saveData.starSystem[LEVEL_NUMBER] == 2)
 			{
 				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 			}
-			else if (GameManager.saveData.starSystem[3] == 3)
+			else if (GameManager.saveData.starSystem[LEVEL_NUMBER] == 3)
 			{
 				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
 				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;

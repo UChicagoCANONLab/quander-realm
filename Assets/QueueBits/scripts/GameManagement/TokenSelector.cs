@@ -15,8 +15,10 @@ namespace QueueBits {
 
         public bool visible;
 
+        public Level3 GM;
 
-        public void updateSelectorDisplay() {
+
+        /* public void updateSelectorDisplay() {
             if (visible) { 
                 this.gameObject.SetActive(true); 
             }
@@ -28,6 +30,14 @@ namespace QueueBits {
             } if (TC.counter50.text == "0") {
                 select50.SetActive(false);
             }
+        } */
+        
+        public void updateSelectorDisplay(int prob, int value) {
+            if (value == 0) {
+                if (prob == 100) { select100.SetActive(false); }
+                else if (prob == 75) { select75.SetActive(false); }
+                else if (prob == 50) { select50.SetActive(false); }
+            }
         }
 
         public void toggleDisplay() {
@@ -38,6 +48,7 @@ namespace QueueBits {
         public void SelectToken(int prob) {
             if (prob == 100 && TC.counter100.text != "0") {
                 Debug.Log("Selected 100!");
+                // GM.SpawnPiece(100);
             }
             if (prob == 75 && TC.counter75.text != "0") {
                 Debug.Log("Selected 75!");

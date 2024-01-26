@@ -18,18 +18,18 @@ namespace QueueBits {
         public TokenSelector TS;
 
         public void setCounter(int prob, int value) {
-            if (prob == 100) {counter100.text = value.ToString();}
-            else if (prob == 75) {counter75.text = value.ToString();}
-            else {counter50.text = value.ToString();}
+            if (prob == 100) { counter100.text = value.ToString();}
+            else if (prob == 75) { counter75.text = value.ToString();}
+            else if (prob == 50) { counter50.text = value.ToString();}
 
-            if (isPlayer) { TS.updateSelectorDisplay(); }
+            if (isPlayer) { TS.updateSelectorDisplay(prob, value); }
         }
 
         public void disable50() {
             foreach (GameObject i in counterObjects50) {
                 i.SetActive(false);
             }
-            if (isPlayer) { TS.updateSelectorDisplay(); }
+            if (isPlayer) { TS.updateSelectorDisplay(50, 0); }
         }
         
     }

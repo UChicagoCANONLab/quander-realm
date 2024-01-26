@@ -283,7 +283,7 @@ MonoBehaviour:
   select100: {fileID: 1387897219829957793}
   select75: {fileID: 4123568190192592127}
   select50: {fileID: 2862632902376869627}
-  TK: {fileID: 0}
+  TC: {fileID: 0}
   visible: 1
 --- !u!114 &7752276262544508676
 MonoBehaviour:
@@ -473,7 +473,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3183431510573420979}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 9018018025923274354}
+        m_TargetAssemblyTypeName: QueueBits.TokenSelector, Assembly-CSharp
+        m_MethodName: SelectToken
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 75
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6080326455878454612
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,7 +741,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1684070691356704829}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 9018018025923274354}
+        m_TargetAssemblyTypeName: QueueBits.TokenSelector, Assembly-CSharp
+        m_MethodName: SelectToken
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 100
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7694706501591011474
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,4 +1279,16 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3874754504795910300}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 9018018025923274354}
+        m_TargetAssemblyTypeName: QueueBits.TokenSelector, Assembly-CSharp
+        m_MethodName: SelectToken
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 50
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

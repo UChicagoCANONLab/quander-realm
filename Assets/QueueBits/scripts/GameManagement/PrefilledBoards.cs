@@ -10,6 +10,7 @@ namespace QueueBits {
 		{
 			string boardName = boardsPerLevel[level][Random.Range(0,8)];
 			List<(Piece, int, int, int)> board = boards[boardName];
+			Debug.Log(board);
 
 			return (boardName, board);
 		}
