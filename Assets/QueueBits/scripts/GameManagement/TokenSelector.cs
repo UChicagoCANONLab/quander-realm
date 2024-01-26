@@ -11,11 +11,12 @@ namespace QueueBits {
         public GameObject select75;
         public GameObject select50;
 
+        public GameObject playerDisplay;
+
         public TokenCounter TC;
+        public Level3 GM;
 
         public bool visible;
-
-        public Level3 GM;
 
 
         /* public void updateSelectorDisplay() {
@@ -43,6 +44,10 @@ namespace QueueBits {
         public void toggleDisplay() {
             this.gameObject.SetActive(!visible);
             visible = !visible;
+        }
+
+        public void switchTurns(bool showing) {
+            playerDisplay.SetActive(showing);
         }
 
         public void SelectToken(int prob) {

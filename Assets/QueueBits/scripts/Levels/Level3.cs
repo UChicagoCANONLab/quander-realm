@@ -28,11 +28,8 @@ namespace QueueBits
 
 		public int probability;
 
-		// star system
-		[Header("Star System")]
-		public bool starUpdated = false;
+		public CPUBrain cpuAI;
 		
-
 		[Header("Display Objects")]
 		public GameObject displayHolder;
 		public GameObject turnSign;
@@ -40,6 +37,7 @@ namespace QueueBits
 		public TokenCounter tokenCounterBlue;
 		public TokenCounter tokenCounterRed;
 		public GameOverScreen resultDisplay;
+		public TokenSelector tokenSelector;
 
 		// Gameobjects 
 		[Header("Red Pieces")]
@@ -78,9 +76,7 @@ namespace QueueBits
 
 		/// <summary>
 		/// The Game field.
-		/// 0 = Empty
-		/// 1 = Blue
-		/// 2 = Red
+		/// 0 = Empty, 1 = Blue, 2 = Red
 		/// </summary>
 		int[,] field;
 
@@ -88,14 +84,15 @@ namespace QueueBits
 		bool isLoading = true;
 		bool isDropping = false;
 		bool mouseButtonPressed = false;
-
 		bool gameOver = false;
 		bool isCheckingForWinner = false;
-		// bool SelectMenuGenerated;
+		bool starUpdated = false;
+		bool SelectMenuGenerated = false;
 		
-		string state = "000000000000000000000000000000000000000000";
-		int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
-		HashSet<(int, int)> visited = new HashSet<(int, int)>();
+		// For the AI 
+		// string state = "000000000000000000000000000000000000000000";
+		// int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
+		// HashSet<(int, int)> visited = new HashSet<(int, int)>();
 
 		// dialogue
 		bool dialoguePhase = false;
@@ -121,7 +118,6 @@ namespace QueueBits
 
 			// int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
             // prefilledBoard = prefilledBoardList[board_num];
-
 			(boardName, prefilledBoard) = PB.getRandomBoard(LEVEL_NUMBER);
 
 			//Shivani Puli Data Collection
@@ -152,12 +148,12 @@ namespace QueueBits
 				if (pi == Piece.Blue)//if Yellow
 				{
 					mydata.outcome[index] = 1;
-					playMove(c, "1");
+					cpuAI.playMove(c, "1");
 				}
 				else
 				{
 					mydata.outcome[index] = 2;
-					playMove(c, "2");
+					cpuAI.playMove(c, "2");
 				}
 			}
 			//Shivani Puli Data collection
@@ -177,6 +173,7 @@ namespace QueueBits
 
 			isPlayersTurn = false;
 			turnSign.SetActive(isPlayersTurn);
+			tokenSelector.switchTurns(isPlayersTurn);
 
 			/* if (isPlayersTurn)
 			{
@@ -203,15 +200,9 @@ namespace QueueBits
 		void CreateField()
 		{
 			turnSign.SetActive(true);
+			tokenSelector.switchTurns(true);
 
 			isLoading = true;
-
-			// gameObjectField = GameObject.Find("Field");
-			// if (gameObjectField != null)
-			// {
-			// 	DestroyImmediate(gameObjectField);
-			// }
-			// gameObjectField = new GameObject("Field");
 
 			// create an empty field and instantiate the cells
 			field = new int[numColumns, numRows];
@@ -261,6 +252,8 @@ namespace QueueBits
 			tokenCounterRed.disable50();
 		}
 
+
+/* 
 		int index(int r, int c)
 		{
 			int i = r * 7 + c;
@@ -274,6 +267,7 @@ namespace QueueBits
 			return (r, c);
 		}
 
+		// DEBUGGING
 		void printState()
 		{
 			string p_state = "";
@@ -591,7 +585,7 @@ namespace QueueBits
 				}
 			}
 			return bestVal;
-		}
+		} */
 
 		/// <summary>
 		/// Gets all the possible moves.
@@ -697,7 +691,7 @@ namespace QueueBits
 
 				if (moves.Count > 0)
 				{
-					int column = findBestMove(colPointers);
+					int column = cpuAI.findBestMove(cpuAI.colPointers);
 					spawnPos = new Vector3(column, 0, 0);
 				}
 			}
@@ -736,7 +730,8 @@ namespace QueueBits
 			{
 				if (gameObjectTurn == null)
 				{
-
+					if (!SelectMenuGenerated)
+					{
 						if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
                         {
 							choice100 = Instantiate(pieceBlue, new Vector3(-1f, 1, -1), Quaternion.identity) as GameObject;
@@ -749,6 +744,8 @@ namespace QueueBits
 						{
 							choice50 = Instantiate(piece50, new Vector3(6.6f, 1, -1), Quaternion.identity) as GameObject;
 						}
+						SelectMenuGenerated = true;
+					}
 
 					if (Input.GetMouseButtonDown(0))
                     {
@@ -772,6 +769,7 @@ namespace QueueBits
 									DestroyImmediate(choice50);
 								}
 								(gameObjectTurn, probability) = SpawnPiece(choice);
+								SelectMenuGenerated = false;
 							}
 							if (blueProbs.ContainsKey(75) && blueProbs[75] > 0 && clickedObjectID == choice75.GetInstanceID())
 							{
@@ -786,7 +784,7 @@ namespace QueueBits
 									DestroyImmediate(choice50);
 								}
 								(gameObjectTurn, probability) = SpawnPiece(choice);
-								// SelectMenuGenerated = false;
+								SelectMenuGenerated = false;
 							}
 							if (blueProbs.ContainsKey(50) && blueProbs[50] > 0 && clickedObjectID == choice50.GetInstanceID())
 							{
@@ -801,7 +799,7 @@ namespace QueueBits
 								}
 								DestroyImmediate(choice50);
 								(gameObjectTurn, probability) = SpawnPiece(choice);
-								// SelectMenuGenerated = false;
+								SelectMenuGenerated = false;
 							}
 						}
 					}
@@ -863,7 +861,7 @@ namespace QueueBits
 				
 					s += (int)field[p, j];
 				}*/
-				s += state.Substring(j * numColumns, numColumns);
+				s += cpuAI.state.Substring(j * numColumns, numColumns);
 				s += "\n";
 			}
 			//Debug.Log(s);
@@ -897,7 +895,7 @@ namespace QueueBits
 								Quaternion.identity, gameObjectField.transform) as GameObject;
 							field[x, i] = (int)Piece.Blue;
 							//Shivani Puli data collection
-							int r = colPointers[x];
+							int r = cpuAI.colPointers[x];
 							int index = r * numColumns + x;
 							turn++;
 							mydata.placement_order[index] = turn;
@@ -905,7 +903,7 @@ namespace QueueBits
 							mydata.reveal_order[index] = turn;
 							mydata.outcome[index] = 1;
 							// data collection
-							playMove(x, "1");
+							cpuAI.playMove(x, "1");
 						}
 						else
 						{
@@ -917,7 +915,7 @@ namespace QueueBits
 								Quaternion.identity, gameObjectField.transform) as GameObject;
 							field[x, i] = (int)Piece.Red;
 							//Shivani Puli data collection
-							int r = colPointers[x];
+							int r = cpuAI.colPointers[x];
 							int index = r * numColumns + x;
 							turn++;
 							mydata.placement_order[index] = turn;
@@ -925,10 +923,10 @@ namespace QueueBits
 							mydata.reveal_order[index] = turn;
 							mydata.outcome[index] = 2;
 							// data collection
-							playMove(x, "2");
+							cpuAI.playMove(x, "2");
 						}
 					}
-					else
+					else // CPU's turn
 					{
 						int p = Random.Range(1, 101);
 						if (p < probability)
@@ -941,7 +939,7 @@ namespace QueueBits
 								Quaternion.identity, gameObjectField.transform) as GameObject;
 							field[x, i] = (int)Piece.Red;
 							//Shivani Puli data collection
-							int r = colPointers[x];
+							int r = cpuAI.colPointers[x];
 							int index = r * numColumns + x;
 							turn++;
 							mydata.placement_order[index] = turn;
@@ -949,7 +947,7 @@ namespace QueueBits
 							mydata.reveal_order[index] = turn;
 							mydata.outcome[index] = 2;
 							// data collection
-							playMove(x, "2");
+							cpuAI.playMove(x, "2");
 						}
 						else
 						{
@@ -961,7 +959,7 @@ namespace QueueBits
 								Quaternion.identity, gameObjectField.transform) as GameObject;
 							field[x, i] = (int)Piece.Blue;
 							//Shivani Puli data collection
-							int r = colPointers[x];
+							int r = cpuAI.colPointers[x];
 							int index = r * numColumns + x;
 							turn++;
 							mydata.placement_order[index] = turn;
@@ -969,7 +967,7 @@ namespace QueueBits
 							mydata.reveal_order[index] = turn;
 							mydata.outcome[index] = 1;
 							// data collection
-							playMove(x, "1");
+							cpuAI.playMove(x, "1");
 						}
 					}
 
@@ -1012,6 +1010,7 @@ namespace QueueBits
 
 				isPlayersTurn = !isPlayersTurn;
 				turnSign.SetActive(isPlayersTurn);
+				tokenSelector.switchTurns(isPlayersTurn);
 
 				// DestroyImmediate(playerTurnObject);
 
