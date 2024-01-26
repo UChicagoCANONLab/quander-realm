@@ -15,6 +15,11 @@ namespace QueueBits
 #endif
 
 
+        public void setCurrentLevel(int lev) {
+            this.currentLevel = lev;
+        }
+        
+
         public void loadlevel (string level)
         {
 #if LITE_VERSION

@@ -6,13 +6,6 @@ using QueueBits;
 namespace QueueBits {
     public class PrefilledBoards : MonoBehaviour
     {
-        /* public enum Piece
-		{
-			Empty = 0,
-			Blue = 1,
-			Red = 2
-		} */
-
 		public (string, List<(Piece, int, int, int)>) getRandomBoard(int level) 
 		{
 			string boardName = boardsPerLevel[level][Random.Range(0,8)];
