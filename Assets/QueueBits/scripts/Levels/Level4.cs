@@ -803,7 +803,7 @@ namespace QueueBits
 					return column;
 				}
 				int value = minimax(0, 3, false);
-				Debug.Log("Column " + column + ": " + value);
+				// Debug.Log("Column " + column + ": " + value);
 				if (value > bestVal)
 				{
 					bestVal = value;

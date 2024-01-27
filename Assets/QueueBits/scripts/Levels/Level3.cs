@@ -64,9 +64,9 @@ namespace QueueBits
 		public string boardName;
 
 		// Select Tokens
-		GameObject choice50;
-		GameObject choice75;
-		GameObject choice100;
+		// GameObject choice50;
+		// GameObject choice75;
+		// GameObject choice100;
 		int choice;
 
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
@@ -81,7 +81,7 @@ namespace QueueBits
 		bool isPlayersTurn = true;
 		bool isLoading = true;
 		bool isDropping = false;
-		bool mouseButtonPressed = false;
+		// bool mouseButtonPressed = false;
 		bool gameOver = false;
 		bool isCheckingForWinner = false;
 		bool starUpdated = false;
@@ -359,94 +359,17 @@ namespace QueueBits
 
 			if (gameOver)
 			{
-				fieldObject.SetActive(false);
-				displayHolder.SetActive(false);
-				resultDisplay.gameObject.SetActive(true);
+				// fieldObject.SetActive(false);
+				// displayHolder.SetActive(false);
+				// resultDisplay.gameObject.SetActive(true);
 
 				return;
 			}
 
 			if (isPlayersTurn)
 			{
-				// if (gameObjectTurn == null)
 				if (gameObjectTurn != null)
 				{
-					/* if (!SelectMenuGenerated)
-					{
-						if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
-                        {
-							choice100 = Instantiate(pieceBlue, new Vector3(-1f, 1, -1), Quaternion.identity) as GameObject;
-						}
-						if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
-						{
-							choice75 = Instantiate(piece75, new Vector3(3, 1, -1), Quaternion.identity) as GameObject;
-						}
-						if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
-						{
-							choice50 = Instantiate(piece50, new Vector3(6.6f, 1, -1), Quaternion.identity) as GameObject;
-						}
-						SelectMenuGenerated = true;
-					} */
-
-					/* if (Input.GetMouseButtonDown(0))
-                    {
-						Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-						RaycastHit hit;
-
-						if (Physics.Raycast(ray, out hit))
-						{
-							GameObject piece = hit.transform.gameObject;
-							int clickedObjectID = piece.GetInstanceID();
-							if (blueProbs.ContainsKey(100) && blueProbs[100] > 0 && clickedObjectID == choice100.GetInstanceID())
-                            {
-								choice = 100;
-								DestroyImmediate(choice100);
-								if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
-								{
-									DestroyImmediate(choice75);
-								}
-								if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
-								{
-									DestroyImmediate(choice50);
-								}
-								(gameObjectTurn, probability) = SpawnPiece(choice);
-								SelectMenuGenerated = false;
-							}
-							if (blueProbs.ContainsKey(75) && blueProbs[75] > 0 && clickedObjectID == choice75.GetInstanceID())
-							{
-								choice = 75;
-								if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
-								{
-									DestroyImmediate(choice100);
-								}
-								DestroyImmediate(choice75);
-								if (blueProbs.ContainsKey(50) && blueProbs[50] > 0)
-								{
-									DestroyImmediate(choice50);
-								}
-								(gameObjectTurn, probability) = SpawnPiece(choice);
-								SelectMenuGenerated = false;
-							}
-							if (blueProbs.ContainsKey(50) && blueProbs[50] > 0 && clickedObjectID == choice50.GetInstanceID())
-							{
-								choice = 50;
-								if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
-								{
-									DestroyImmediate(choice100);
-								}
-								if (blueProbs.ContainsKey(75) && blueProbs[75] > 0)
-								{
-									DestroyImmediate(choice75);
-								}
-								DestroyImmediate(choice50);
-								(gameObjectTurn, probability) = SpawnPiece(choice);
-								SelectMenuGenerated = false;
-							}
-						}
-					} */
-				// }
-				// else
-				// {
 					// update the objects position
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					gameObjectTurn.transform.position = new Vector3(
@@ -454,15 +377,14 @@ namespace QueueBits
 						fieldObject.transform.position.y + 1, 0);
 
 					// click the left mouse button to drop the piece into the selected column
-					if (Input.GetMouseButtonDown(0) && !mouseButtonPressed && !isDropping)
+					if (Input.GetMouseButtonDown(0) && !isDropping)
 					{
-						mouseButtonPressed = true;
-
+						// mouseButtonPressed = true;
 						StartCoroutine(dropPiece(gameObjectTurn, probability));
 					}
 					else
 					{
-						mouseButtonPressed = false;
+						// mouseButtonPressed = false;
 					}
 				}
 			}
@@ -557,6 +479,7 @@ namespace QueueBits
 					mydata.reveal_order[index] = turn;
 					mydata.outcome[index] = numOutcome;
 					// data collection
+					cpuAI.superpositionArray = mydata.superposition;
 					cpuAI.playMove(x, $"{numOutcome}");
 
 					endPosition = new Vector3(x, i * -1, startPosition.z);
@@ -758,6 +681,10 @@ namespace QueueBits
 				// 	resultDraw.SetActive(true);
 				// }
 
+				fieldObject.SetActive(false);
+				displayHolder.SetActive(false);
+				resultDisplay.gameObject.SetActive(true);
+				
 				resultDisplay.GameOver(winCode);
 
 				// Reward System

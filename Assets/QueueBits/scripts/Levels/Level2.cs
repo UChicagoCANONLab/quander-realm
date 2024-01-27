@@ -234,7 +234,7 @@ namespace QueueBits
 
 			// look right
 			int r_counter = 0;
-			while(i < state.Length && state.Substring(i, 1).Equals(color))
+			while (i < state.Length && state.Substring(i, 1).Equals(color))
 			{
 				pos = reverse_index(i);
 				visited.Add(pos);
@@ -377,13 +377,15 @@ namespace QueueBits
 		int minimax(int depth, int maxDepth, bool isMaximizing)
 		{
 			List<int> moves = getMoves(colPointers);
+			int bestVal;
 
 			if (moves.Count == 0 || depth == maxDepth)
+			{
 				return evaluateState();
-
+			}
 			if (isMaximizing)
 			{
-				int bestVal = int.MinValue;
+				bestVal = int.MinValue;
 				foreach (int column in moves)
 				{
 					playMove(column, "2");
@@ -391,12 +393,11 @@ namespace QueueBits
 					bestVal = Mathf.Max(bestVal, value);
 					reverseMove(column);
 				}
-				return bestVal;
 			}
 
 			else
 			{
-				int bestVal = int.MaxValue;
+				bestVal = int.MaxValue;
 				foreach (int column in moves)
 				{
 					playMove(column, "1");
@@ -404,10 +405,10 @@ namespace QueueBits
 					bestVal = Mathf.Min(bestVal, value);
 					reverseMove(column);
 				}
-				return bestVal;
 			}
-
+		return bestVal;
 		}
+
 		/// <summary>
 		/// Spawns a piece at mouse position above the first row
 		/// </summary>
@@ -415,15 +416,15 @@ namespace QueueBits
 		GameObject SpawnPiece()
 		{
 			Vector3 spawnPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
+					
 			if (!isPlayersTurn)
 			{
 				List<int> moves = GetPossibleMoves();
 
 				if (moves.Count > 0)
 				{
-					int column = findBestMove(colPointers);
-
+					int column = moves[Random.Range(0, moves.Count)];
+					
 					//Shivani Puli changed for data collection
 					int r = colPointers[column];
 					int index = r * numColumns + column;
@@ -432,9 +433,9 @@ namespace QueueBits
 					mydata.superposition[index] = 100;
 					mydata.reveal_order[index] = turn;
 					mydata.outcome[index] = 2;
-
+					// data collection
+					
 					playMove(column, "2");
-
 					spawnPos = new Vector3(column, 0, 0);
 				}
 
@@ -443,7 +444,7 @@ namespace QueueBits
 			GameObject g = Instantiate(
 					isPlayersTurn ? pieceBlue : pieceRed, // is players turn = spawn blue, else spawn red
 					new Vector3(
-					Mathf.Clamp(spawnPos.x, 0, numColumns - 1),
+					Mathf.Clamp(spawnPos.x, 0, numColumns - 1), 
 					gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
 					Quaternion.identity) as GameObject;
 

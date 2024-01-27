@@ -6,12 +6,18 @@ using QueueBits;
 namespace QueueBits {
     public class CPUBrain : MonoBehaviour
     {
-        // From Level3.cs
-        // Lines 250-600ish (AFTER heavy editing)
+        // Origninally copied from Level3.cs, compared to other levels 
+
+        public int difficulty = 0;
+        // Difficulty 0: Level 1, 2, 3
+        // Difficulty 1: Level 4, 5
+        // Difficulty 2: Level 6+ (I think this is where measurement is no longer upon drop?)
 
         public string state = "000000000000000000000000000000000000000000";
 		public int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };
 		public HashSet<(int, int)> visited = new HashSet<(int, int)>();
+
+        public int[] superpositionArray;
 
 
 		public int index(int r, int c)
@@ -28,7 +34,7 @@ namespace QueueBits {
 		}
 
 		// DEBUGGING
-		/* public void printState()
+		public void printState()
 		{
 			string p_state = "";
 			for (int r = 0; r < 6; r++)
@@ -37,7 +43,7 @@ namespace QueueBits {
 				p_state += state.Substring(i, 7) + "\n";
 			}
 			Debug.Log(p_state);
-		} */
+		}
 
 		public int evaluateState()
 		{
@@ -56,6 +62,7 @@ namespace QueueBits {
 					else if (state.Substring(i, 1).Equals("1"))
 					{
 						score -= evaluatePosition(r, c, "1");
+                        // In level 1 this is -= 2 * evaluatePosition
 					}
 				}
 			}
@@ -83,6 +90,8 @@ namespace QueueBits {
 
 				r_counter++;
 				i++;
+
+                // Below not in level 1
 				if ((i % 7) == 0)
 					i = state.Length;
 			}
@@ -121,6 +130,8 @@ namespace QueueBits {
 
 				rd_counter++;
 				i += 8;
+
+                // Below not in level 1
 				if ((i % 7) == 0)
 					i = state.Length;
 			}
@@ -141,6 +152,8 @@ namespace QueueBits {
 
 				ld_counter++;
 				i += 6;
+
+                // Below not in level 1
 				if ((i % 7) == 6)
 					i = state.Length;
 			}
@@ -149,6 +162,120 @@ namespace QueueBits {
 
 			int score = 100 * num_connected[3] + 20 * num_connected[2] + 3 * num_connected[1] + 10 * hasCenter;
 			return score;
+		}
+
+        bool isWin(int r, int c, string color)
+		{
+			int i = index(r, c);
+			// look right
+			int r_counter = 0;
+			while (i < state.Length && state.Substring(i, 1).Equals(color))
+			{
+				r_counter++;
+				i++;
+				if ((i % 7) == 0)
+					i = state.Length;
+                if (difficulty > 1) {
+                    if (color == "1" && i < state.Length && superpositionArray[i] != 100)
+					    i = state.Length; }
+			}
+
+			i = index(r, c);
+			while (i >= 0 && state.Substring(i, 1).Equals(color))
+			{
+				r_counter++;
+				i--;
+				if ((i % 7) == 6)
+					i = -1;
+                if (difficulty > 1) {
+                    if (color == "1" && i >= 0 && superpositionArray[i] != 100)
+                        i = -1; }
+			}
+			r_counter--; // center val counted twice
+			if (r_counter >= 4)
+				return true;
+
+			// look down
+			i = index(r, c);
+			int d_counter = 0;
+			while (i < state.Length && state.Substring(i, 1).Equals(color))
+			{
+				d_counter++;
+				i += 7;
+                if (difficulty > 1) {
+                    if (color == "1" && i < state.Length && superpositionArray[i] != 100)
+                        i = state.Length;
+				}
+			}
+            // Level 6+ says below section not needed, vertical case redundant
+			// i = index(r, c);
+			// while (i >= 0 && state.Substring(i, 1).Equals(color))
+			// {
+			// 	d_counter++;
+			// 	i -= 7;
+			// }
+			// d_counter--; //center val counted twice
+
+			if (d_counter >= 4)
+				return true;
+
+			// look diagonal right-down
+			i = index(r, c);
+			int rd_counter = 0;
+			while (i < state.Length && state.Substring(i, 1).Equals(color))
+			{
+				rd_counter++;
+				i += 8;
+				if ((i % 7) == 0)
+					i = state.Length;
+                if (difficulty > 1) {
+                    if (color == "1" && i < state.Length && superpositionArray[i] != 100)
+                        i = state.Length; }
+			}
+			i = index(r, c);
+			while (i >= 0 && state.Substring(i, 1).Equals(color))
+			{
+				rd_counter++;
+				i -= 8;
+				if ((i % 7) == 6)
+					i = -1;
+                if (difficulty > 1) {
+                    if (color == "1" && i >= 0 && superpositionArray[i] != 100)
+                        i = -1; }
+			}
+			rd_counter--;
+			if (rd_counter >= 4)
+				return true;
+
+			// look diagonal left-down
+			i = index(r, c);
+			int ld_counter = 0;
+			while (i < state.Length && state.Substring(i, 1).Equals(color))
+			{
+				ld_counter++;
+				i += 6;
+				if ((i % 7) == 6)
+					i = state.Length;
+                if (difficulty > 1) {
+                    if (color == "1" && i < state.Length && superpositionArray[i] != 100)
+                        i = state.Length; }
+			}
+			i = index(r, c);
+			while (i >= 0 && state.Substring(i, 1).Equals(color))
+			{
+				ld_counter++;
+				i -= 6;
+				if ((i % 7) == 0)
+					i = -1;
+                if (difficulty > 1) {
+                    if (color == "1" && i >= 0 && superpositionArray[i] != 100)
+                        i = -1; }
+			}
+			ld_counter--;
+			if (ld_counter >= 4)
+				return true;
+
+			return false;
 		}
 
 		public List<int> getMoves(int[] cols)
@@ -191,117 +318,40 @@ namespace QueueBits {
 
 		}
 
-		public int checkForWinner(int r, int c)
-        {
-			int i = index(r, c);
-			char color = state[i];
-
-			//horizontal win
-			int horizontal = 1;
-			int searchInd = i + 1;
-			//look right
-			while ((searchInd % 7)!=0 && state[searchInd]==color)
-			{
-				horizontal++;
-				searchInd++;
-			}
-			//look left
-			searchInd = i - 1;
-			while ((searchInd % 7) != 6 && state[searchInd] == color)
-			{
-				horizontal++;
-				searchInd--;
-			}
-			if (horizontal == 4)
-			{
-				if (color == '2')
-					return 1;
-				else
-					return -1;
-			}
-
-			// look down
-			int vertical = 1;
-			searchInd = i - 7;
-			while (searchInd >= 0 && state[searchInd] == color)
-			{
-				vertical++;
-				searchInd -= 7;
-			}
-			//look up
-			searchInd = i + 7;
-			while (searchInd < state.Length && state[searchInd] == color)
-			{
-				vertical++;
-				searchInd += 7;
-			}
-			if (vertical == 4)
-			{
-				if (color == '2')
-					return 1;
-				else
-					return -1;
-			}
-
-			// look diagonal right-down
-			searchInd = i+8;
-			int diagright = 1;
-			while (searchInd < state.Length && state[searchInd]==color)
-			{
-				diagright++;
-				searchInd += 8;
-			}
-			//look diagonal up-left
-			searchInd = i - 8;
-			while (searchInd >= 0 && state[searchInd] == color)
-			{
-				diagright++;
-				searchInd -= 8;
-			}
-			if (diagright == 4)
-			{
-				if (color == '2')
-					return 1;
-				else
-					return -1;
-			}
-
-			// look diagonal left-down
-			searchInd = i + 6;
-			int leftdown = 1;
-			while (searchInd < state.Length && state[searchInd] == color)
-			{
-				leftdown++;
-				i += 6;
-			}
-			//look diagonal up-right
-			searchInd = i - 6;
-			while ((searchInd % 7) !=0 && state[searchInd] == color)
-			{
-				leftdown++;
-				i -= 6;
-			}
-			if (leftdown == 4)
-			{
-				if (color == '2')
-					return 1;
-				else
-					return -1;
-			}
-			return 0;
-		}
-
 		public int findBestMove(int[] cols)
 		{
 			int bestVal = int.MinValue;
 			int bestMove = -1;
 
 			List<int> moves = getMoves(cols);
+
+            if (difficulty > 1) { //checking for all 100% yellow win
+                foreach (int column in moves)
+			    {
+				    playMove(column, "1");
+				    if (isWin(colPointers[column] + 1, column, "1"))
+                    {
+                        reverseMove(column);
+                        return column;
+                    }
+                    reverseMove(column);
+			    }
+            }
+
 			foreach (int column in moves)
 			{
 				playMove(column, "2");
+
+                if (difficulty > 0) {
+                    if (isWin(colPointers[column] + 1, column, "2"))
+                    {
+                        reverseMove(column);
+                        return column;
+                    }
+                }
+
 				int value = minimax(0, 3, false);
-				Debug.Log("Column " + column + ": " + value);
+
 				if (value > bestVal)
 				{
 					bestVal = value;
@@ -318,10 +368,9 @@ namespace QueueBits {
 			int bestVal;
 
 			if (moves.Count == 0 || depth == maxDepth)
-			{
 				return evaluateState();
-			}
-			if (isMaximizing)
+
+			if (isMaximizing) // None of them are ever maximizing
 			{
 				bestVal = int.MinValue;
 				foreach (int column in moves)
@@ -346,7 +395,6 @@ namespace QueueBits {
 			}
 			return bestVal;
 		}
-
 
     }
 }

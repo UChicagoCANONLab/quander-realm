@@ -820,8 +820,9 @@ namespace QueueBits
 			List<int> moves = getMoves(colPointers);
 
 			if (moves.Count == 0 || depth == maxDepth)
+			{
 				return evaluateState();
-
+			}
 			if (isMaximizing)
 			{
 				int bestVal = int.MinValue;
