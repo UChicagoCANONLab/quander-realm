@@ -52,10 +52,8 @@ namespace QueueBits
 
 		[Header("GameObjects")]
 		public GameObject pieceTemp;
-		public GameObject pieceField;
 		public GameObject finalColor;
-		public GameObject gameObjectField;
-
+		public GameObject fieldObject;
 
 		Dictionary<int, int> redProbs = new Dictionary<int, int>();
 		Dictionary<int, int> blueProbs = new Dictionary<int, int>();
@@ -174,17 +172,6 @@ namespace QueueBits
 			isPlayersTurn = false;
 			turnSign.SetActive(isPlayersTurn);
 			tokenSelector.switchTurns(isPlayersTurn);
-
-			/* if (isPlayersTurn)
-			{
-				playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
-				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-			}
-			else
-			{
-				playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
-				playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-			} */
 		}
 
 		// dialogue
@@ -209,7 +196,7 @@ namespace QueueBits
 
 			// initialize the wood board image
 			// GameObject g = Instantiate(pieceField, new Vector3(3, -2.8f, 1), Quaternion.identity) as GameObject;
-			// g.transform.parent = gameObjectField.transform;
+			// g.transform.parent = fieldObject.transform;
 
 			// initialize field for pieces
 			for (int x = 0; x < numColumns; x++)
@@ -226,11 +213,11 @@ namespace QueueBits
 				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
 				if (prefilledBoard[i].Item1 == Piece.Blue)
                 {
-					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, gameObjectField.transform) as GameObject;
+					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, fieldObject.transform) as GameObject;
 				}
 				else
                 {
-					GameObject obj = Instantiate(pieceRed, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, gameObjectField.transform) as GameObject;
+					GameObject obj = Instantiate(pieceRed, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, fieldObject.transform) as GameObject;
 				}
 			}
 
@@ -238,8 +225,8 @@ namespace QueueBits
 			gameOver = false;
 
 			// center camera
-			Camera.main.transform.position = new Vector3(
-				(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f), Camera.main.transform.position.z);
+			// Camera.main.transform.position = new Vector3(
+			// 	(numColumns - 1) / 2.0f, -((numRows - 1) / 2.0f), Camera.main.transform.position.z);
 
 
 			// Piece Count Displays
@@ -251,341 +238,6 @@ namespace QueueBits
 			tokenCounterRed.setCounter(75, redProbs[75]);
 			tokenCounterRed.disable50();
 		}
-
-
-/* 
-		int index(int r, int c)
-		{
-			int i = r * 7 + c;
-			return i;
-		}
-
-		(int, int) reverse_index(int i)
-		{
-			int r = i / 7;
-			int c = i % 7;
-			return (r, c);
-		}
-
-		// DEBUGGING
-		void printState()
-		{
-			string p_state = "";
-			for (int r = 0; r < 6; r++)
-			{
-				int i = index(r, 0);
-				p_state += state.Substring(i, 7) + "\n";
-			}
-			Debug.Log(p_state);
-		}
-
-		int evaluateState()
-		{
-			int score = 0;
-			visited.Clear();
-
-			for (int r = 0; r < 6; r++)
-			{
-				for (int c = 0; c < 7; c++)
-				{
-					int i = index(r, c);
-					if (state.Substring(i, 1).Equals("2")) // && !visited.Contains((r,c)) -- adding this causes missed connections, but speed?
-					{
-						score += evaluatePosition(r, c, "2");
-					}
-					else if (state.Substring(i, 1).Equals("1"))
-					{
-						score -= evaluatePosition(r, c, "1");
-					}
-				}
-			}
-			return score;
-		}
-
-		int evaluatePosition(int r, int c, string color)
-		{
-			int i = index(r, c);
-			(int, int) pos;
-
-			int[] num_connected = new int[4];
-			int hasCenter = 0;
-
-			// look right
-			int r_counter = 0;
-			while (i < state.Length && state.Substring(i, 1).Equals(color))
-			{
-				pos = reverse_index(i);
-				visited.Add(pos);
-
-				(int row, int col) = pos;
-				if (col >= 2 && col <= 4)
-					hasCenter = 1;
-
-				r_counter++;
-				i++;
-				if ((i % 7) == 0)
-					i = state.Length;
-			}
-			r_counter = Mathf.Min(4, r_counter); // if 5 or more connected, goes to 4.
-			num_connected[r_counter - 1]++;
-
-			// look down
-			i = index(r, c);
-			int d_counter = 0;
-			while (i < state.Length && state.Substring(i, 1).Equals(color))
-			{
-				pos = reverse_index(i);
-				visited.Add(pos);
-
-				(int row, int col) = pos;
-				if (col >= 2 && col <= 4)
-					hasCenter = 1;
-
-				d_counter++;
-				i += 7;
-			}
-			d_counter = Mathf.Min(4, d_counter);
-			num_connected[d_counter - 1]++;
-
-			// look diagonal right-down
-			i = index(r, c);
-			int rd_counter = 0;
-			while (i < state.Length && state.Substring(i, 1).Equals(color))
-			{
-				pos = reverse_index(i);
-				visited.Add(pos);
-
-				(int row, int col) = pos;
-				if (col >= 2 && col <= 4)
-					hasCenter = 1;
-
-				rd_counter++;
-				i += 8;
-				if ((i % 7) == 0)
-					i = state.Length;
-			}
-			rd_counter = Mathf.Min(4, rd_counter);
-			num_connected[rd_counter - 1]++;
-
-			// look diagonal left-down
-			i = index(r, c);
-			int ld_counter = 0;
-			while (i < state.Length && state.Substring(i, 1).Equals(color))
-			{
-				pos = reverse_index(i);
-				visited.Add(pos);
-
-				(int row, int col) = pos;
-				if (col >= 2 && col <= 4)
-					hasCenter = 1;
-
-				ld_counter++;
-				i += 6;
-				if ((i % 7) == 6)
-					i = state.Length;
-			}
-			ld_counter = Mathf.Min(4, ld_counter);
-			num_connected[ld_counter - 1]++;
-
-			int score = 100 * num_connected[3] + 20 * num_connected[2] + 3 * num_connected[1] + 10 * hasCenter;
-			return score;
-		}
-
-		List<int> getMoves(int[] cols)
-		{
-			List<int> possCols = new List<int>();
-			for (int i = 0; i < cols.Length; i++)
-			{
-				if (cols[i] != -1)
-					possCols.Add(i);
-			}
-			return possCols;
-		}
-
-		void playMove(int column, string color)
-		{
-			int r = colPointers[column];
-			colPointers[column] -= 1;
-
-			int i = index(r, column);
-
-			if (i == 0)
-				state = color + state.Substring(1); //prevents substring with length 0 error
-			else
-				state = state.Substring(0, i) + color + state.Substring(i + 1);
-		}
-
-		void reverseMove(int column)
-		{
-			colPointers[column] += 1;
-			int r = colPointers[column];
-
-			int i = index(r, column);
-
-			if (i == 0)
-				state = "0" + state.Substring(1); //prevents substring with length 0 error
-			else
-			{
-				state = state.Substring(0, i) + "0" + state.Substring(i + 1);
-			}
-
-		}
-
-		int checkForWinner(int r, int c)
-        {
-			int i = index(r, c);
-			char color = state[i];
-
-			//horizontal win
-			int horizontal = 1;
-			int searchInd = i + 1;
-			//look right
-			while ((searchInd % 7)!=0 && state[searchInd]==color)
-			{
-				horizontal++;
-				searchInd++;
-			}
-			//look left
-			searchInd = i - 1;
-			while ((searchInd % 7) != 6 && state[searchInd] == color)
-			{
-				horizontal++;
-				searchInd--;
-			}
-			if (horizontal == 4)
-			{
-				if (color == '2')
-					return 1;
-				else
-					return -1;
-			}
-
-			// look down
-			int vertical = 1;
-			searchInd = i - 7;
-			while (searchInd >= 0 && state[searchInd] == color)
-			{
-				vertical++;
-				searchInd -= 7;
-			}
-			//look up
-			searchInd = i + 7;
-			while (searchInd < state.Length && state[searchInd] == color)
-			{
-				vertical++;
-				searchInd += 7;
-			}
-			if (vertical == 4)
-			{
-				if (color == '2')
-					return 1;
-				else
-					return -1;
-			}
-
-			// look diagonal right-down
-			searchInd = i+8;
-			int diagright = 1;
-			while (searchInd < state.Length && state[searchInd]==color)
-			{
-				diagright++;
-				searchInd += 8;
-			}
-			//look diagonal up-left
-			searchInd = i - 8;
-			while (searchInd >= 0 && state[searchInd] == color)
-			{
-				diagright++;
-				searchInd -= 8;
-			}
-			if (diagright == 4)
-			{
-				if (color == '2')
-					return 1;
-				else
-					return -1;
-			}
-
-			// look diagonal left-down
-			searchInd = i + 6;
-			int leftdown = 1;
-			while (searchInd < state.Length && state[searchInd] == color)
-			{
-				leftdown++;
-				i += 6;
-			}
-			//look diagonal up-right
-			searchInd = i - 6;
-			while ((searchInd % 7) !=0 && state[searchInd] == color)
-			{
-				leftdown++;
-				i -= 6;
-			}
-			if (leftdown == 4)
-			{
-				if (color == '2')
-					return 1;
-				else
-					return -1;
-			}
-			return 0;
-		}
-
-		int findBestMove(int[] cols)
-		{
-			int bestVal = int.MinValue;
-			int bestMove = -1;
-
-			List<int> moves = getMoves(cols);
-			foreach (int column in moves)
-			{
-				playMove(column, "2");
-				int value = minimax(0, 3, false);
-				Debug.Log("Column " + column + ": " + value);
-				if (value > bestVal)
-				{
-					bestVal = value;
-					bestMove = column;
-				}
-				reverseMove(column);
-			}
-			return bestMove;
-		}
-
-		int minimax(int depth, int maxDepth, bool isMaximizing)
-		{
-			List<int> moves = getMoves(colPointers);
-			int bestVal;
-
-			if (moves.Count == 0 || depth == maxDepth)
-			{
-				return evaluateState();
-			}
-			if (isMaximizing)
-			{
-				bestVal = int.MinValue;
-				foreach (int column in moves)
-				{
-					playMove(column, "2");
-					int value = minimax(depth + 1, maxDepth, !isMaximizing);
-					bestVal = Mathf.Max(bestVal, value);
-					reverseMove(column);
-				}
-			}
-
-			else
-			{
-				bestVal = int.MaxValue;
-				foreach (int column in moves)
-				{
-					playMove(column, "1");
-					int value = minimax(depth + 1, maxDepth, !isMaximizing);
-					bestVal = Mathf.Min(bestVal, value);
-					reverseMove(column);
-				}
-			}
-			return bestVal;
-		} */
 
 		/// <summary>
 		/// Gets all the possible moves.
@@ -677,18 +329,6 @@ namespace QueueBits
 
 				List<int> moves = GetPossibleMoves();
 
-				/*for (int i = 0; i < numColumns; i++)
-				{
-					for (int j = 0; j < numRows; j++)
-					{
-						if (field[i, j] != 0)
-						{
-							colPointers[i] = j - 1;
-							break;
-						}
-					}
-				}*/
-
 				if (moves.Count > 0)
 				{
 					int column = cpuAI.findBestMove(cpuAI.colPointers);
@@ -699,7 +339,7 @@ namespace QueueBits
 			GameObject g = Instantiate(pieceTemp,
 					new Vector3(
 					Mathf.Clamp(spawnPos.x, 0, numColumns - 1),
-					gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
+					fieldObject.transform.position.y + 1, 0), // spawn it above the first row
 					Quaternion.identity) as GameObject;
 
 			return (g, prob);
@@ -719,7 +359,7 @@ namespace QueueBits
 
 			if (gameOver)
 			{
-				gameObjectField.SetActive(false);
+				fieldObject.SetActive(false);
 				displayHolder.SetActive(false);
 				resultDisplay.gameObject.SetActive(true);
 
@@ -728,9 +368,10 @@ namespace QueueBits
 
 			if (isPlayersTurn)
 			{
-				if (gameObjectTurn == null)
+				// if (gameObjectTurn == null)
+				if (gameObjectTurn != null)
 				{
-					if (!SelectMenuGenerated)
+					/* if (!SelectMenuGenerated)
 					{
 						if (blueProbs.ContainsKey(100) && blueProbs[100] > 0)
                         {
@@ -745,9 +386,9 @@ namespace QueueBits
 							choice50 = Instantiate(piece50, new Vector3(6.6f, 1, -1), Quaternion.identity) as GameObject;
 						}
 						SelectMenuGenerated = true;
-					}
+					} */
 
-					if (Input.GetMouseButtonDown(0))
+					/* if (Input.GetMouseButtonDown(0))
                     {
 						Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 						RaycastHit hit;
@@ -802,15 +443,15 @@ namespace QueueBits
 								SelectMenuGenerated = false;
 							}
 						}
-					}
-				}
-				else
-				{
+					} */
+				// }
+				// else
+				// {
 					// update the objects position
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					gameObjectTurn.transform.position = new Vector3(
 						Mathf.Clamp(pos.x, 0, numColumns - 1),
-						gameObjectField.transform.position.y + 1, 0);
+						fieldObject.transform.position.y + 1, 0);
 
 					// click the left mouse button to drop the piece into the selected column
 					if (Input.GetMouseButtonDown(0) && !mouseButtonPressed && !isDropping)
@@ -842,6 +483,12 @@ namespace QueueBits
 					}
 				}
 			}
+		}
+
+		// New funtion to spawn piece when clicking buttons on TokenSelector
+		public void tokenSelectedByButton(int prob) {
+			choice = prob;
+			(gameObjectTurn, probability) = SpawnPiece(choice);
 		}
 
 		/// <summary>
@@ -882,97 +529,37 @@ namespace QueueBits
 				if (field[x, i] == 0)
 				{
 					foundFreeCell = true;
-					if (isPlayersTurn)
-					{
-						int p = Random.Range(1, 101);
-						if (p < probability)
-						{
-							Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-							finalColor = Instantiate(
-								pieceBlue, // is players turn = spawn blue, else spawn red
-								new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
-								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
-								Quaternion.identity, gameObjectField.transform) as GameObject;
-							field[x, i] = (int)Piece.Blue;
-							//Shivani Puli data collection
-							int r = cpuAI.colPointers[x];
-							int index = r * numColumns + x;
-							turn++;
-							mydata.placement_order[index] = turn;
-							mydata.superposition[index] = probability;
-							mydata.reveal_order[index] = turn;
-							mydata.outcome[index] = 1;
-							// data collection
-							cpuAI.playMove(x, "1");
-						}
-						else
-						{
-							Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-							finalColor = Instantiate(
-								pieceRed, // is players turn = spawn blue, else spawn red
-								new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
-								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
-								Quaternion.identity, gameObjectField.transform) as GameObject;
-							field[x, i] = (int)Piece.Red;
-							//Shivani Puli data collection
-							int r = cpuAI.colPointers[x];
-							int index = r * numColumns + x;
-							turn++;
-							mydata.placement_order[index] = turn;
-							mydata.superposition[index] = probability;
-							mydata.reveal_order[index] = turn;
-							mydata.outcome[index] = 2;
-							// data collection
-							cpuAI.playMove(x, "2");
-						}
+					GameObject pieceColorObject = pieceBlue;
+					int numOutcome = 1;
+
+					int p = Random.Range(1, 101);
+					if ((p < probability && isPlayersTurn) || (p >= probability && !isPlayersTurn)) {
+						pieceColorObject = pieceBlue;
+						numOutcome = (int)Piece.Blue;
+					} else if ((p >= probability && isPlayersTurn) || (p < probability && !isPlayersTurn)){
+						pieceColorObject = pieceRed;
+						numOutcome = (int)Piece.Red;
 					}
-					else // CPU's turn
-					{
-						int p = Random.Range(1, 101);
-						if (p < probability)
-						{
-							Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-							finalColor = Instantiate(
-								pieceRed, // is players turn = spawn blue, else spawn red
-								new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
-								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
-								Quaternion.identity, gameObjectField.transform) as GameObject;
-							field[x, i] = (int)Piece.Red;
-							//Shivani Puli data collection
-							int r = cpuAI.colPointers[x];
-							int index = r * numColumns + x;
-							turn++;
-							mydata.placement_order[index] = turn;
-							mydata.superposition[index] = probability;
-							mydata.reveal_order[index] = turn;
-							mydata.outcome[index] = 2;
-							// data collection
-							cpuAI.playMove(x, "2");
-						}
-						else
-						{
-							Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-							finalColor = Instantiate(
-								pieceBlue, // is players turn = spawn blue, else spawn red
-								new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
-								gameObjectField.transform.position.y + 1, 0), // spawn it above the first row
-								Quaternion.identity, gameObjectField.transform) as GameObject;
-							field[x, i] = (int)Piece.Blue;
-							//Shivani Puli data collection
-							int r = cpuAI.colPointers[x];
-							int index = r * numColumns + x;
-							turn++;
-							mydata.placement_order[index] = turn;
-							mydata.superposition[index] = probability;
-							mydata.reveal_order[index] = turn;
-							mydata.outcome[index] = 1;
-							// data collection
-							cpuAI.playMove(x, "1");
-						}
-					}
+
+					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+					finalColor = Instantiate(
+						pieceColorObject, // is players turn = spawn blue, else spawn red
+						new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
+						fieldObject.transform.position.y + 1, 0), // spawn it above the first row
+						Quaternion.identity, fieldObject.transform) as GameObject;
+					field[x, i] = numOutcome;
+					//Shivani Puli data collection
+					int r = cpuAI.colPointers[x];
+					int index = r * numColumns + x;
+					turn++;
+					mydata.placement_order[index] = turn;
+					mydata.superposition[index] = probability;
+					mydata.reveal_order[index] = turn;
+					mydata.outcome[index] = numOutcome;
+					// data collection
+					cpuAI.playMove(x, $"{numOutcome}");
 
 					endPosition = new Vector3(x, i * -1, startPosition.z);
-
 					break;
 				}
 			}
@@ -995,7 +582,7 @@ namespace QueueBits
 					yield return null;
 				}
 
-				g.transform.parent = gameObjectField.transform;
+				g.transform.parent = fieldObject.transform;
 
 
 				// remove the temporary gameobject
@@ -1013,18 +600,6 @@ namespace QueueBits
 				tokenSelector.switchTurns(isPlayersTurn);
 
 				// DestroyImmediate(playerTurnObject);
-
-				/* if (isPlayersTurn)
-				{
-					playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity, gameObjectField.transform) as GameObject;
-					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-				}
-				else
-				{
-					playerTurnObject = Instantiate(pieceRed, new Vector3(numColumns - 2.25f, -6.3f, -1), Quaternion.identity, gameObjectField.transform) as GameObject;
-					playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
-
-				} */
 			}
 
 			isDropping = false;
@@ -1058,7 +633,7 @@ namespace QueueBits
 						}
 
 						//check down
-						if (y <= numRows - 4 && field[x, y + 1] == color && field[x, y + 2] == color && field[x, y + 3] == color)
+						else if (y <= numRows - 4 && field[x, y + 1] == color && field[x, y + 2] == color && field[x, y + 3] == color)
 						{
 							if (color == 1)
 								// blueWon = true;
@@ -1067,7 +642,7 @@ namespace QueueBits
 						}
 
 						//check left
-						if (x >= 3 && field[x - 1, y] == color && field[x - 2, y] == color && field[x - 3, y] == color)
+						else if (x >= 3 && field[x - 1, y] == color && field[x - 2, y] == color && field[x - 3, y] == color)
 						{
 							if (color == 1)
 								// blueWon = true;
@@ -1076,7 +651,7 @@ namespace QueueBits
 						}
 
 						//check right
-						if (x <= numColumns - 4 && field[x + 1, y] == color && field[x + 2, y] == color && field[x + 3, y] == color)
+						else if (x <= numColumns - 4 && field[x + 1, y] == color && field[x + 2, y] == color && field[x + 3, y] == color)
 						{
 							if (color == 1)
 								// blueWon = true;
@@ -1085,7 +660,7 @@ namespace QueueBits
 						}
 
 						//check upper left diagonal
-						if (y >= 3 && x >= 3 && field[x - 1, y - 1] == color && field[x - 2, y - 2] == color && field[x - 3, y - 3] == color)
+						else if (y >= 3 && x >= 3 && field[x - 1, y - 1] == color && field[x - 2, y - 2] == color && field[x - 3, y - 3] == color)
 						{
 							if (color == 1)
 								// blueWon = true;
@@ -1094,7 +669,7 @@ namespace QueueBits
 						}
 
 						// check upper right diagonal
-						if (y >= 3 && x <= numColumns - 4 && field[x + 1, y - 1] == color && field[x + 2, y - 2] == color && field[x + 3, y - 3] == color)
+						else if (y >= 3 && x <= numColumns - 4 && field[x + 1, y - 1] == color && field[x + 2, y - 2] == color && field[x + 3, y - 3] == color)
 						{
 							if (color == 1)
 								// blueWon = true;
@@ -1103,7 +678,7 @@ namespace QueueBits
 						}
 
 						// check lower left diagonal
-						if (x >= 3 && y <= numRows - 4 && field[x - 1, y + 1] == color && field[x - 2, y + 2] == color && field[x - 3, y + 3] == color)
+						else if (x >= 3 && y <= numRows - 4 && field[x - 1, y + 1] == color && field[x - 2, y + 2] == color && field[x - 3, y + 3] == color)
 						{
 							if (color == 1)
 								// blueWon = true;
@@ -1112,7 +687,7 @@ namespace QueueBits
 						}
 
 						// check lower right diagonal
-						if (x <= numColumns - 4 && y <= numRows - 4 && field[x + 1, y + 1] == color && field[x + 2, y + 2] == color && field[x + 3, y + 3] == color)
+						else if (x <= numColumns - 4 && y <= numRows - 4 && field[x + 1, y + 1] == color && field[x + 2, y + 2] == color && field[x + 3, y + 3] == color)
 						{
 							if (color == 1)
 								// blueWon = true;
@@ -1121,7 +696,7 @@ namespace QueueBits
 						}
 
 						// check if it's a tie
-						if (!FieldContainsEmptyCell())
+						else if (!FieldContainsEmptyCell())
 						{
 							gameOver = true;
 							winCode = Results.Draw;
@@ -1129,7 +704,6 @@ namespace QueueBits
 					}
 					yield return null;
 				}
-
 				yield return null;
 			}
 
@@ -1201,31 +775,6 @@ namespace QueueBits
 		{
 			starDisplay.resetStars();
 			starDisplay.setDisplay(GameManager.saveData.starSystem[LEVEL_NUMBER]);
-			// Star System
-			/* if (GameManager.saveData.starSystem[LEVEL_NUMBER] == 0)
-			{
-				Star1 = Instantiate(starEmpty, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-			}
-			else if (GameManager.saveData.starSystem[LEVEL_NUMBER] == 1)
-			{
-				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-				Star2 = Instantiate(starEmpty, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-			}
-			else if (GameManager.saveData.starSystem[LEVEL_NUMBER] == 2)
-			{
-				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-				Star3 = Instantiate(starEmpty, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-			}
-			else if (GameManager.saveData.starSystem[LEVEL_NUMBER] == 3)
-			{
-				Star1 = Instantiate(starFilled, new Vector3(-3.3f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-				Star2 = Instantiate(starFilled, new Vector3(-2.4f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-				Star3 = Instantiate(starFilled, new Vector3(-1.5f, -6.9f, 1), Quaternion.identity, starHolder.transform) as GameObject;
-			} */
 		}
 
 		/// <summary>
