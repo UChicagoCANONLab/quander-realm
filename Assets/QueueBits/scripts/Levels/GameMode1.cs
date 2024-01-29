@@ -15,29 +15,29 @@ namespace QueueBits
 	{
 		public int LEVEL_NUMBER;
 
-		[Range(3, 8)]
-		private int numRows = 6;
-		[Range(3, 8)]
-		private int numColumns = 7;
-		[Tooltip("How many pieces have to be connected to win.")]
-		private int numPiecesToWin = 4;
-		[Tooltip("Allow diagonally connected Pieces?")]
-		private bool allowDiagonally = true;
+		// [Range(3, 8)]
+		// private int numRows = 6;
+		// // [Range(3, 8)]
+		// private int numColumns = 7;
+		// [Tooltip("How many pieces have to be connected to win.")]
+		// private int numPiecesToWin = 4;
+		// [Tooltip("Allow diagonally connected Pieces?")]
+		// private bool allowDiagonally = true;
 
-		private float dropTime = 4f;
+		// private float dropTime = 4f;
 
 		public int probability;
 
 		public CPUBrain cpuAI;
 		
 		[Header("Display Objects")]
-		public GameObject displayHolder;
-		public GameObject turnSign;
+		// public GameObject displayHolder;
+		// public GameObject turnSign;
 		public StarDisplay starDisplay;
-		public GameOverScreen resultDisplay;
-		public TokenSelector tokenSelector;
-
+		// public GameOverScreen resultDisplay;
+		// public TokenSelector tokenSelector;
 		public DisplayManager DM;
+		public GameController GC;
 
 		// Gameobjects 
 		[Header("CPU Pieces")]
@@ -53,12 +53,14 @@ namespace QueueBits
 		public GameObject piecePlayer75;
 
 		[Header("GameObjects")]
-		public GameObject pieceTemp;
+		// public GameObject pieceTemp;
 		public GameObject finalColor;
 		public GameObject fieldObject;
 
 		Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
 		Dictionary<int, int> playerProbs = new Dictionary<int, int>();
+
+		public int[] playerProbs1;
 
 		[Header("Prefilled Boards")]
 		public PrefilledBoards PB;
@@ -126,11 +128,11 @@ namespace QueueBits
 			mydata.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
 			// mydata.prefilledBoard = board_num;
 			mydata.newPrefilledBoard = boardName;
-			mydata.placement_order = new int[numColumns * numRows];
-			mydata.superposition = new int[numColumns * numRows];
-			mydata.reveal_order = new int[numColumns * numRows];
-			mydata.outcome = new int[numColumns * numRows];
-			for (int i = 0; i < numColumns * numRows; i++)
+			mydata.placement_order = new int[GC.numColumns * GC.numRows];
+			mydata.superposition = new int[GC.numColumns * GC.numRows];
+			mydata.reveal_order = new int[GC.numColumns * GC.numRows];
+			mydata.outcome = new int[GC.numColumns * GC.numRows];
+			for (int i = 0; i < GC.numColumns * GC.numRows; i++)
 			{
 				mydata.placement_order[i] = 0;
 				mydata.superposition[i] = 0;
@@ -141,12 +143,13 @@ namespace QueueBits
 			foreach ((Piece pi, int c, int r, int pr) in prefilledBoard)
 			{
 				turn++;
-				int index = r * numColumns + c;
+				int index = r * GC.numColumns + c;
 				mydata.placement_order[index] = turn;
 				
 				mydata.reveal_order[index] = turn;
 				mydata.superposition[index] = pr;
-				if (pi == Piece1.Player)//if Yellow
+				//if (pi == Piece1.Player)//if Yellow
+				if ((int)pi == (int)Piece1.Player)//if Yellow
 				{
 					cpuAI.playMove(c, "1");
 					mydata.outcome[index] = 1;
@@ -171,16 +174,19 @@ namespace QueueBits
 			playerProbs.Add(75, 7);
 			playerProbs.Add(100, 7);
 
-			int max = Mathf.Max(numRows, numColumns);
+			playerProbs1 = tokenCounterPlayer.tokenCountsPerLevel[LEVEL_NUMBER];
 
-			if (numPiecesToWin > max)
-				numPiecesToWin = max;
+			int max = Mathf.Max(GC.numRows, GC.numColumns);
+
+			if (GC.numPiecesToWin > max)
+				GC.numPiecesToWin = max;
 
 			CreateField();
 
 			isPlayersTurn = false;
-			turnSign.SetActive(isPlayersTurn);
-			tokenSelector.switchTurns(isPlayersTurn);
+			// turnSign.SetActive(isPlayersTurn);
+			// tokenSelector.switchTurns(isPlayersTurn);
+			DM.SwitchPlayer(isPlayersTurn);
 		}
 
 		// dialogue
@@ -195,17 +201,18 @@ namespace QueueBits
 		/// </summary>
 		void CreateField()
 		{
-			turnSign.SetActive(true);
-			tokenSelector.switchTurns(true);
+			// turnSign.SetActive(true);
+			// tokenSelector.switchTurns(true);
+			DM.SwitchPlayer(true);
 
 			isLoading = true;
 
 			// create an empty field and instantiate the cells
-			field = new int[numColumns, numRows];
+			field = new int[GC.numColumns, GC.numRows];
 
 			// initialize field for pieces
-			for (int x = 0; x < numColumns; x++) {
-				for (int y = 0; y < numRows; y++) {
+			for (int x = 0; x < GC.numColumns; x++) {
+				for (int y = 0; y < GC.numRows; y++) {
 					field[x, y] = (int)Piece1.Empty;
 				}
 			}
@@ -214,7 +221,8 @@ namespace QueueBits
 			for (int i = 0; i < prefilledBoard.Count; i++)
             {
 				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
-				if (prefilledBoard[i].Item1 == Piece1.Player) {
+				// if (prefilledBoard[i].Item1 == Piece1.Player) {
+				if ((int)prefilledBoard[i].Item1 == (int)Piece1.Player) {
 					GameObject obj = Instantiate(piecePlayer100, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, fieldObject.transform) as GameObject;
 				}
 				else {
@@ -263,6 +271,7 @@ namespace QueueBits
 			tokenCounterPlayer.setCounter(100, playerProbs[100]);
 			tokenCounterPlayer.setCounter(75, playerProbs[75]);
 			tokenCounterPlayer.disable50();
+			tokenCounterPlayer.initCounter(LEVEL_NUMBER);
 
 			tokenCounterCPU.setCounter(100, CPUProbs[100]);
 			tokenCounterCPU.setCounter(75, CPUProbs[75]);
@@ -276,7 +285,7 @@ namespace QueueBits
 		public List<int> GetPossibleMoves()
 		{
 			List<int> possibleMoves = new List<int>();
-			for (int x = 0; x < numColumns; x++)
+			for (int x = 0; x < GC.numColumns; x++)
 			{
 				if (field[x, 0] == 0)
 				{
@@ -294,6 +303,7 @@ namespace QueueBits
 		{
 			Vector3 spawnPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			int prob = 0;
+			GameObject pieceTemp = piecePlayer100;
 
 			if (isPlayersTurn)
 			{
@@ -352,8 +362,8 @@ namespace QueueBits
 				List<int> moves = GetPossibleMoves();
 
 				// FROM LEVEL 4, 5, 6
-				/* for (int i = 0; i < numColumns; i++) {
-					for (int j = 0; j < numRows; j++) {
+				/* for (int i = 0; i < GC.numColumns; i++) {
+					for (int j = 0; j < GC.numRows; j++) {
 						if (field[i, j] != 0)
 						{
 							colPointers[i] = j - 1;
@@ -371,7 +381,7 @@ namespace QueueBits
 
 			GameObject g = Instantiate(pieceTemp,
 					new Vector3(
-					Mathf.Clamp(spawnPos.x, 0, numColumns - 1),
+					Mathf.Clamp(spawnPos.x, 0, GC.numColumns - 1),
 					fieldObject.transform.position.y + 1, 0), // spawn it above the first row
 					Quaternion.identity) as GameObject;
 
@@ -406,7 +416,7 @@ namespace QueueBits
 					// update the objects position
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					gameObjectTurn.transform.position = new Vector3(
-						Mathf.Clamp(pos.x, 0, numColumns - 1),
+						Mathf.Clamp(pos.x, 0, GC.numColumns - 1),
 						fieldObject.transform.position.y + 1, 0);
 
 					// click the left mouse button to drop the piece into the selected column
@@ -458,13 +468,13 @@ namespace QueueBits
 			Vector3 endPosition = new Vector3();
 
 			/* string s = "";
-			for (int j = 0; j< numRows; j++)
+			for (int j = 0; j< GC.numRows; j++)
 			{
-				for (int p = 0; p < numColumns; p++)
+				for (int p = 0; p < GC.numColumns; p++)
 				{
 					s += (int)field[p, j];
 				}
-				s += cpuAI.state.Substring(j * numColumns, numColumns);
+				s += cpuAI.state.Substring(j * GC.numColumns, GC.numColumns);
 				s += "\n";
 			}
 			//Debug.Log(s); */
@@ -477,7 +487,7 @@ namespace QueueBits
 			bool foundFreeCell = false;
 			(int, int) tempLocation = (-1, -1);
 
-			for (int i = numRows - 1; i >= 0; i--)
+			for (int i = GC.numRows - 1; i >= 0; i--)
 			{
 				if (field[x, i] == 0)
 				{
@@ -497,13 +507,13 @@ namespace QueueBits
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					finalColor = Instantiate(
 						pieceColorObject, // is players turn = spawn player, else spawn CPU
-						new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
+						new Vector3(Mathf.Clamp(pos.x, 0, GC.numColumns - 1),
 						fieldObject.transform.position.y + 1, 0), // spawn it above the first row
 						Quaternion.identity, fieldObject.transform) as GameObject;
 					field[x, i] = numOutcome;
 					//Shivani Puli data collection
 					int r = cpuAI.colPointers[x];
-					int index = r * numColumns + x;
+					int index = r * GC.numColumns + x;
 					turn++;
 					mydata.placement_order[index] = turn;
 					mydata.superposition[index] = probability;
@@ -530,7 +540,7 @@ namespace QueueBits
 				float t = 0;
 				while (t < 1)
 				{
-					t += Time.deltaTime * dropTime * ((numRows - distance) + 1);
+					t += Time.deltaTime * GC.dropTime * ((GC.numRows - distance) + 1);
 
 					g.transform.position = Vector3.Lerp(startPosition, endPosition, t);
 					yield return null;
@@ -550,8 +560,9 @@ namespace QueueBits
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				turnSign.SetActive(isPlayersTurn);
-				tokenSelector.switchTurns(isPlayersTurn);
+				// turnSign.SetActive(isPlayersTurn);
+				// tokenSelector.switchTurns(isPlayersTurn);
+				DM.SwitchPlayer(isPlayersTurn);
 
 				// DestroyImmediate(playerTurnObject);
 			}
@@ -569,9 +580,9 @@ namespace QueueBits
 
 			Results winCode = Results.Lose;
 
-			for (int x = 0; x < numColumns; x++)
+			for (int x = 0; x < GC.numColumns; x++)
 			{
-				for (int y = 0; y < numRows; y++)
+				for (int y = 0; y < GC.numRows; y++)
 				{
 					//if somebody won, gameOver = true;
 					int color = field[x, y];
@@ -585,7 +596,7 @@ namespace QueueBits
 						}
 
 						//check down
-						else if (y <= numRows - 4 && field[x, y + 1] == color && field[x, y + 2] == color && field[x, y + 3] == color)
+						else if (y <= GC.numRows - 4 && field[x, y + 1] == color && field[x, y + 2] == color && field[x, y + 3] == color)
 						{
 							if (color == 1) { winCode = Results.Win; }
 							gameOver = true;
@@ -599,7 +610,7 @@ namespace QueueBits
 						}
 
 						//check right
-						else if (x <= numColumns - 4 && field[x + 1, y] == color && field[x + 2, y] == color && field[x + 3, y] == color)
+						else if (x <= GC.numColumns - 4 && field[x + 1, y] == color && field[x + 2, y] == color && field[x + 3, y] == color)
 						{
 							if (color == 1) { winCode = Results.Win; }
 							gameOver = true;
@@ -613,21 +624,21 @@ namespace QueueBits
 						}
 
 						// check upper right diagonal
-						else if (y >= 3 && x <= numColumns - 4 && field[x + 1, y - 1] == color && field[x + 2, y - 2] == color && field[x + 3, y - 3] == color)
+						else if (y >= 3 && x <= GC.numColumns - 4 && field[x + 1, y - 1] == color && field[x + 2, y - 2] == color && field[x + 3, y - 3] == color)
 						{
 							if (color == 1) { winCode = Results.Win; }
 							gameOver = true;
 						}
 
 						// check lower left diagonal
-						else if (x >= 3 && y <= numRows - 4 && field[x - 1, y + 1] == color && field[x - 2, y + 2] == color && field[x - 3, y + 3] == color)
+						else if (x >= 3 && y <= GC.numRows - 4 && field[x - 1, y + 1] == color && field[x - 2, y + 2] == color && field[x - 3, y + 3] == color)
 						{
 							if (color == 1) { winCode = Results.Win; }
 							gameOver = true;
 						}
 
 						// check lower right diagonal
-						else if (x <= numColumns - 4 && y <= numRows - 4 && field[x + 1, y + 1] == color && field[x + 2, y + 2] == color && field[x + 3, y + 3] == color)
+						else if (x <= GC.numColumns - 4 && y <= GC.numRows - 4 && field[x + 1, y + 1] == color && field[x + 2, y + 2] == color && field[x + 3, y + 3] == color)
 						{
 							if (color == 1) { winCode = Results.Win; }
 							gameOver = true;
@@ -672,10 +683,10 @@ namespace QueueBits
 				ShowStarSystem();
 
 				fieldObject.SetActive(false);
-				displayHolder.SetActive(false);
-				resultDisplay.gameObject.SetActive(true);
-				
-				resultDisplay.GameOver(winCode);
+				// displayHolder.SetActive(false);
+				// resultDisplay.gameObject.SetActive(true);
+				// resultDisplay.GameOver(winCode);
+				DM.GameOver(winCode);
 
 				// Reward System
 				if (GameManager.rewardSystem[LEVEL_NUMBER]) {
@@ -700,9 +711,9 @@ namespace QueueBits
 		/// <returns><c>true</c>, if it contains empty cell, <c>false</c> otherwise.</returns>
 		bool FieldContainsEmptyCell()
 		{
-			for (int x = 0; x < numColumns; x++)
+			for (int x = 0; x < GC.numColumns; x++)
 			{
-				for (int y = 0; y < numRows; y++)
+				for (int y = 0; y < GC.numRows; y++)
 				{
 					if (field[x, y] == (int)Piece1.Empty)
 						return true;

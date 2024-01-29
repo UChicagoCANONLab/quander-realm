@@ -17,29 +17,29 @@ namespace QueueBits {
 
         public TokenSelector TS;
 
-        public int[,] tokenCountsPerLevel = new int[,] { // {100%, 75%, 50%}
-            {0, 0, 0},  // Buffer so index == level number
-            {21, 0, 0}, // Level 1, no prefilled
-            {21, 0, 0},
-            {7, 7, 0},  // Level 3, measured upon drop
-            {5, 5, 4},
-            {4, 4, 6},
-            {7, 7, 0},  // Level 6, measured in order at end
-            {5, 5, 4},
-            {4, 6, 4},
-            {4, 4, 6},
-            {2, 6, 6},
-            {7, 7, 0},  // Level 11, measured by choice at end
-            {5, 5, 4},
-            {4, 6, 4},
-            {4, 4, 6},
-            {2, 6, 6}
+        public int[][] tokenCountsPerLevel = new int[][] { // {100%, 75%, 50%}
+            new int[] {0, 0, 0},  // Buffer so index == level number
+            new int[] {21, 0, 0}, // Level 1, no prefilled
+            new int[] {21, 0, 0},
+            new int[] {7, 7, 0},  // Level 3, measured upon drop
+            new int[] {5, 5, 4},
+            new int[] {4, 4, 6},
+            new int[] {7, 7, 0},  // Level 6, measured in order at end
+            new int[] {5, 5, 4},
+            new int[] {4, 6, 4},
+            new int[] {4, 4, 6},
+            new int[] {2, 6, 6},
+            new int[] {7, 7, 0},  // Level 11, measured by choice at end
+            new int[] {5, 5, 4},
+            new int[] {4, 6, 4},
+            new int[] {4, 4, 6},
+            new int[] {2, 6, 6}
         };
 
         public void initCounter(int level) {
-            counter100.text = tokenCountsPerLevel[level, 0].ToString();
-            counter75.text = tokenCountsPerLevel[level, 1].ToString();
-            counter50.text = tokenCountsPerLevel[level, 2].ToString();
+            counter100.text = tokenCountsPerLevel[level][0].ToString();
+            counter75.text = tokenCountsPerLevel[level][1].ToString();
+            counter50.text = tokenCountsPerLevel[level][2].ToString();
         }
 
         public int getCounter(int prob) {

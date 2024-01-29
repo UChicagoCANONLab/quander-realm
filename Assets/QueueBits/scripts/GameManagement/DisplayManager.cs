@@ -14,7 +14,7 @@ namespace QueueBits {
 
         public GameOverScreen resultDisplay;
         public TokenSelector tokenSelector;
-        public StarDisplay starDisplay;
+        // public StarDisplay starDisplay;
 
 
         public void SwitchPlayer(bool isPlayer) {
