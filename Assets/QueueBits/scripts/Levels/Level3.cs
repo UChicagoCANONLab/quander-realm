@@ -429,8 +429,8 @@ namespace QueueBits
 				{
 					if (!isDropping)
 					{
-						//Task.Delay(2000);
-						// Thread.Sleep(1000);
+						// Task.Delay(2000);
+						Thread.Sleep(1000);
 						// Debug.Log(gameObjectTurn.transform.position.ToString());
 						StartCoroutine(dropPiece(gameObjectTurn, probability));
 					}

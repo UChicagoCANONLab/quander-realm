@@ -42,6 +42,14 @@ namespace QueueBits {
             counter50.text = tokenCountsPerLevel[level][2].ToString();
         }
 
+        public Dictionary<int, int> getCounterDict(int level) {
+            Dictionary<int, int> dict = new Dictionary<int, int>();
+            dict.Add(100, tokenCountsPerLevel[level][0]);
+            dict.Add(75, tokenCountsPerLevel[level][1]);
+            dict.Add(50, tokenCountsPerLevel[level][2]);
+            return dict;
+        }
+
         public int getCounter(int prob) {
             if (prob == 100) { return int.Parse(counter100.text);}
             else if (prob == 75) { return int.Parse(counter75.text);}

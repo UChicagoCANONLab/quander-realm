@@ -54,13 +54,11 @@ namespace QueueBits
 
 		[Header("GameObjects")]
 		// public GameObject pieceTemp;
-		public GameObject finalColor;
+		// public GameObject finalColor;
 		public GameObject fieldObject;
 
 		Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
 		Dictionary<int, int> playerProbs = new Dictionary<int, int>();
-
-		public int[] playerProbs1;
 
 		[Header("Prefilled Boards")]
 		public PrefilledBoards PB;
@@ -78,14 +76,6 @@ namespace QueueBits
 		/// 0 = Empty, 1 = Player, 2 = CPU
 		/// </summary>
 		int[,] field;
-
-		// FROM LEVEL 6
-		/* int probCounter = 0;
-		int numSuperpositionPieces = 0;
-		bool revealingProbs = false;
-		bool currentlyRevealing = false; //Shivani: previously choosingreveal
-		bool revealAuto = false;
-		bool revealManual = false; */
 
 		bool isPlayersTurn = true;
 		bool isLoading = true;
@@ -168,13 +158,13 @@ namespace QueueBits
 			}
 			//Shivani Puli Data collection
 
-			CPUProbs.Add(75, 7);
-			CPUProbs.Add(100, 7);
+			// CPUProbs.Add(75, 7);
+			// CPUProbs.Add(100, 7);
+			CPUProbs = tokenCounterCPU.getCounterDict(LEVEL_NUMBER);
 
-			playerProbs.Add(75, 7);
-			playerProbs.Add(100, 7);
-
-			playerProbs1 = tokenCounterPlayer.tokenCountsPerLevel[LEVEL_NUMBER];
+			// playerProbs.Add(75, 7);
+			// playerProbs.Add(100, 7);
+			playerProbs = tokenCounterPlayer.getCounterDict(LEVEL_NUMBER);
 
 			int max = Mathf.Max(GC.numRows, GC.numColumns);
 
@@ -268,14 +258,15 @@ namespace QueueBits
 			gameOver = false;
 
 			// Piece Count Displays
-			tokenCounterPlayer.setCounter(100, playerProbs[100]);
-			tokenCounterPlayer.setCounter(75, playerProbs[75]);
+			// tokenCounterPlayer.setCounter(100, playerProbs[100]);
+			// tokenCounterPlayer.setCounter(75, playerProbs[75]);
 			tokenCounterPlayer.disable50();
 			tokenCounterPlayer.initCounter(LEVEL_NUMBER);
 
-			tokenCounterCPU.setCounter(100, CPUProbs[100]);
-			tokenCounterCPU.setCounter(75, CPUProbs[75]);
+			// tokenCounterCPU.setCounter(100, CPUProbs[100]);
+			// tokenCounterCPU.setCounter(75, CPUProbs[75]);
 			tokenCounterCPU.disable50();
+			tokenCounterCPU.initCounter(LEVEL_NUMBER);
 		}
 
 		/// <summary>
@@ -441,8 +432,8 @@ namespace QueueBits
 				{
 					if (!isDropping)
 					{
-						//Task.Delay(2000);
-						// Thread.Sleep(1000);
+						// Task.Delay(2000);
+						Thread.Sleep(1000);
 						// Debug.Log(gameObjectTurn.transform.position.ToString());
 						StartCoroutine(dropPiece(gameObjectTurn, probability));
 					}
@@ -487,6 +478,8 @@ namespace QueueBits
 			bool foundFreeCell = false;
 			(int, int) tempLocation = (-1, -1);
 
+			GameObject finalColor = null;
+
 			for (int i = GC.numRows - 1; i >= 0; i--)
 			{
 				if (field[x, i] == 0)
@@ -514,6 +507,7 @@ namespace QueueBits
 					//Shivani Puli data collection
 					int r = cpuAI.colPointers[x];
 					int index = r * GC.numColumns + x;
+					
 					turn++;
 					mydata.placement_order[index] = turn;
 					mydata.superposition[index] = probability;
