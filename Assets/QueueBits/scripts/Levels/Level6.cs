@@ -355,6 +355,7 @@ namespace QueueBits
 				if (pi == Piece.Blue)//if Yellow
 				{
 					playMove(c, "1");
+					// DIFFERENT FROM LEVEL 3 HERE
 					if (pr == 100)
 						mydata.outcome[index] = 1;
 				}

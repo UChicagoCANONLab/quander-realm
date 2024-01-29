@@ -40,6 +40,9 @@ namespace QueueBits {
 
 		Dictionary<string, List<(Piece, int, int, int)>> boards = new Dictionary<string, List<(Piece, int, int, int)>> 
 		{
+			/* {"0", new List<(Piece, int, int, int)> {
+				(Piece.Empty, 0, 0, 100)
+			}}, */
 			{"5.1", new List<(Piece, int, int, int)> {
 				(Piece.Red, 3, 5, 100),
 				(Piece.Blue, 3, 4, 100),

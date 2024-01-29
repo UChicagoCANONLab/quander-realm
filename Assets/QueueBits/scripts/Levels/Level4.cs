@@ -952,6 +952,7 @@ namespace QueueBits
 
 				List<int> moves = GetPossibleMoves();
 
+				// NOT IN LEVEL3
 				for (int i = 0; i < numColumns; i++)
 				{
 					for (int j = 0; j < numRows; j++)

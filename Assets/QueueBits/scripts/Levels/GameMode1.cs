@@ -11,9 +11,9 @@ using QueueBits;
 
 namespace QueueBits
 {
-	public class Level3 : MonoBehaviour
+	public class GameMode1 : MonoBehaviour
 	{
-		public int LEVEL_NUMBER = 3;
+		public int LEVEL_NUMBER;
 
 		[Range(3, 8)]
 		private int numRows = 6;
@@ -34,29 +34,31 @@ namespace QueueBits
 		public GameObject displayHolder;
 		public GameObject turnSign;
 		public StarDisplay starDisplay;
-		public TokenCounter tokenCounterBlue;
-		public TokenCounter tokenCounterRed;
 		public GameOverScreen resultDisplay;
 		public TokenSelector tokenSelector;
 
-		// Gameobjects 
-		[Header("Red Pieces")]
-		public GameObject pieceRed;
-		public GameObject piece25red_turn; //75%
-		public GameObject piece50red_turn; //50%
+		public DisplayManager DM;
 
-		[Header("Blue Pieces")]
-		public GameObject pieceBlue;
-		public GameObject piece50;
-		public GameObject piece75;
+		// Gameobjects 
+		[Header("CPU Pieces")]
+		public TokenCounter tokenCounterCPU;
+		public GameObject pieceCPU100;
+		public GameObject pieceCPU75; 
+		public GameObject pieceCPU50; 
+
+		[Header("Player Pieces")]
+		public TokenCounter tokenCounterPlayer;
+		public GameObject piecePlayer100;
+		public GameObject piecePlayer50;
+		public GameObject piecePlayer75;
 
 		[Header("GameObjects")]
 		public GameObject pieceTemp;
 		public GameObject finalColor;
 		public GameObject fieldObject;
 
-		Dictionary<int, int> redProbs = new Dictionary<int, int>();
-		Dictionary<int, int> blueProbs = new Dictionary<int, int>();
+		Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
+		Dictionary<int, int> playerProbs = new Dictionary<int, int>();
 
 		[Header("Prefilled Boards")]
 		public PrefilledBoards PB;
@@ -71,7 +73,7 @@ namespace QueueBits
 
 		/// <summary>
 		/// The Game field.
-		/// 0 = Empty, 1 = Blue, 2 = Red
+		/// 0 = Empty, 1 = Player, 2 = CPU
 		/// </summary>
 		int[,] field;
 
@@ -144,7 +146,7 @@ namespace QueueBits
 				
 				mydata.reveal_order[index] = turn;
 				mydata.superposition[index] = pr;
-				if (pi == Piece.Blue)//if Yellow
+				if (pi == Piece1.Player)//if Yellow
 				{
 					cpuAI.playMove(c, "1");
 					mydata.outcome[index] = 1;
@@ -163,11 +165,11 @@ namespace QueueBits
 			}
 			//Shivani Puli Data collection
 
-			redProbs.Add(75, 7);
-			redProbs.Add(100, 7);
+			CPUProbs.Add(75, 7);
+			CPUProbs.Add(100, 7);
 
-			blueProbs.Add(75, 7);
-			blueProbs.Add(100, 7);
+			playerProbs.Add(75, 7);
+			playerProbs.Add(100, 7);
 
 			int max = Mathf.Max(numRows, numColumns);
 
@@ -204,7 +206,7 @@ namespace QueueBits
 			// initialize field for pieces
 			for (int x = 0; x < numColumns; x++) {
 				for (int y = 0; y < numRows; y++) {
-					field[x, y] = (int)Piece.Empty;
+					field[x, y] = (int)Piece1.Empty;
 				}
 			}
 
@@ -212,11 +214,11 @@ namespace QueueBits
 			for (int i = 0; i < prefilledBoard.Count; i++)
             {
 				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
-				if (prefilledBoard[i].Item1 == Piece.Blue) {
-					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, fieldObject.transform) as GameObject;
+				if (prefilledBoard[i].Item1 == Piece1.Player) {
+					GameObject obj = Instantiate(piecePlayer100, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, fieldObject.transform) as GameObject;
 				}
 				else {
-					GameObject obj = Instantiate(pieceRed, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, fieldObject.transform) as GameObject;
+					GameObject obj = Instantiate(pieceCPU100, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, fieldObject.transform) as GameObject;
 				}
 
 				// FROM LEVEL 6
@@ -224,24 +226,24 @@ namespace QueueBits
                 {
 					field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)Piece.Unknown;
 					GameObject obj;
-					if (prefilledBoard[i].Item1 == Piece.Blue)
+					if (prefilledBoard[i].Item1 == Piece1.Player)
 					{
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75) {
-							obj = Instantiate(piece75, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
+							obj = Instantiate(piecePlayer75, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
 						}
 						else {
-							obj = Instantiate(piece50, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
+							obj = Instantiate(piecePlayer50, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
 						}
 					}
 					else
 					{
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 100 - prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75) {
-							obj = Instantiate(piece25red_turn, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
+							obj = Instantiate(pieceCPU75, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
 						}
 						else {
-							obj = Instantiate(piece50red_turn, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
+							obj = Instantiate(pieceCPU50, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity) as GameObject;
 						}
 					}
 					Color c = obj.GetComponent<MeshRenderer>().material.color;
@@ -258,13 +260,13 @@ namespace QueueBits
 			gameOver = false;
 
 			// Piece Count Displays
-			tokenCounterBlue.setCounter(100, blueProbs[100]);
-			tokenCounterBlue.setCounter(75, blueProbs[75]);
-			tokenCounterBlue.disable50();
+			tokenCounterPlayer.setCounter(100, playerProbs[100]);
+			tokenCounterPlayer.setCounter(75, playerProbs[75]);
+			tokenCounterPlayer.disable50();
 
-			tokenCounterRed.setCounter(100, redProbs[100]);
-			tokenCounterRed.setCounter(75, redProbs[75]);
-			tokenCounterRed.disable50();
+			tokenCounterCPU.setCounter(100, CPUProbs[100]);
+			tokenCounterCPU.setCounter(75, CPUProbs[75]);
+			tokenCounterCPU.disable50();
 		}
 
 		/// <summary>
@@ -296,53 +298,53 @@ namespace QueueBits
 			if (isPlayersTurn)
 			{
 				prob = choice;
-				int freq = blueProbs[prob];
+				int freq = playerProbs[prob];
 
 				// delete probability from player's list
-				blueProbs[prob] -= 1;
+				playerProbs[prob] -= 1;
 
 				if (prob == 100) {
-					pieceTemp = pieceBlue;
-					tokenCounterBlue.setCounter(100, blueProbs[100]);
+					pieceTemp = piecePlayer100;
+					tokenCounterPlayer.setCounter(100, playerProbs[100]);
 				}
 				else if (prob == 75) {
-					pieceTemp = piece75;
-					tokenCounterBlue.setCounter(75, blueProbs[75]);
+					pieceTemp = piecePlayer75;
+					tokenCounterPlayer.setCounter(75, playerProbs[75]);
 				}
 				else if (prob == 50) {
-					pieceTemp = piece50;
-					tokenCounterBlue.setCounter(50, blueProbs[50]);
+					pieceTemp = piecePlayer50;
+					tokenCounterPlayer.setCounter(50, playerProbs[50]);
 				}
 
-				if (blueProbs[prob] == 0) {
-					blueProbs.Remove(prob);
+				if (playerProbs[prob] == 0) {
+					playerProbs.Remove(prob);
 				}
 			}
 
 			else
 			{
-				int ind = Random.Range(0, redProbs.Keys.Count);
-				List<int> keyList = new List<int>(redProbs.Keys);
+				int ind = Random.Range(0, CPUProbs.Keys.Count);
+				List<int> keyList = new List<int>(CPUProbs.Keys);
 				prob = keyList[ind];
-				int freq = redProbs[prob];
+				int freq = CPUProbs[prob];
 
 				// delete probability from player's list
-				redProbs[prob] -= 1;
+				CPUProbs[prob] -= 1;
 
 				if (prob == 100) {
-					pieceTemp = pieceRed;
-					tokenCounterRed.setCounter(100, redProbs[100]);
+					pieceTemp = pieceCPU100;
+					tokenCounterCPU.setCounter(100, CPUProbs[100]);
 				}
 				else if (prob == 75) {
-					pieceTemp = piece25red_turn;
-					tokenCounterRed.setCounter(75, redProbs[75]); }
+					pieceTemp = pieceCPU75;
+					tokenCounterCPU.setCounter(75, CPUProbs[75]); }
 				else if (prob == 50) {
-					pieceTemp = piece50red_turn;
-					tokenCounterRed.setCounter(50, redProbs[50]);
+					pieceTemp = pieceCPU50;
+					tokenCounterCPU.setCounter(50, CPUProbs[50]);
 				}
 
-				if (redProbs[prob] == 0) {
-					redProbs.Remove(prob);
+				if (CPUProbs[prob] == 0) {
+					CPUProbs.Remove(prob);
 				}
 
 			// IN LEVEL 6 the ELSE ends here
@@ -480,21 +482,21 @@ namespace QueueBits
 				if (field[x, i] == 0)
 				{
 					foundFreeCell = true;
-					GameObject pieceColorObject = pieceBlue;
+					GameObject pieceColorObject = piecePlayer100;
 					int numOutcome = 1;
 
 					int p = Random.Range(1, 101);
 					if ((p < probability && isPlayersTurn) || (p >= probability && !isPlayersTurn)) {
-						pieceColorObject = pieceBlue;
-						numOutcome = (int)Piece.Blue;
+						pieceColorObject = piecePlayer100;
+						numOutcome = (int)Piece1.Player;
 					} else if ((p >= probability && isPlayersTurn) || (p < probability && !isPlayersTurn)){
-						pieceColorObject = pieceRed;
-						numOutcome = (int)Piece.Red;
+						pieceColorObject = pieceCPU100;
+						numOutcome = (int)Piece1.CPU;
 					}
 
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					finalColor = Instantiate(
-						pieceColorObject, // is players turn = spawn blue, else spawn red
+						pieceColorObject, // is players turn = spawn player, else spawn CPU
 						new Vector3(Mathf.Clamp(pos.x, 0, numColumns - 1),
 						fieldObject.transform.position.y + 1, 0), // spawn it above the first row
 						Quaternion.identity, fieldObject.transform) as GameObject;
@@ -646,7 +648,7 @@ namespace QueueBits
 			if (gameOver == true)
 			{
 				//Shivani Puli Data Collection -> store winner
-				// if (blueWon)
+				// if (playerWon)
 				// 	mydata.winner = 1;
 				// else 
 				// 	mydata.winner = 2;
@@ -702,7 +704,7 @@ namespace QueueBits
 			{
 				for (int y = 0; y < numRows; y++)
 				{
-					if (field[x, y] == (int)Piece.Empty)
+					if (field[x, y] == (int)Piece1.Empty)
 						return true;
 				}
 			}

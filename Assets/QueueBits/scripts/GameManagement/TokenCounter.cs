@@ -17,6 +17,38 @@ namespace QueueBits {
 
         public TokenSelector TS;
 
+        public int[,] tokenCountsPerLevel = new int[,] { // {100%, 75%, 50%}
+            {0, 0, 0},  // Buffer so index == level number
+            {21, 0, 0}, // Level 1, no prefilled
+            {21, 0, 0},
+            {7, 7, 0},  // Level 3, measured upon drop
+            {5, 5, 4},
+            {4, 4, 6},
+            {7, 7, 0},  // Level 6, measured in order at end
+            {5, 5, 4},
+            {4, 6, 4},
+            {4, 4, 6},
+            {2, 6, 6},
+            {7, 7, 0},  // Level 11, measured by choice at end
+            {5, 5, 4},
+            {4, 6, 4},
+            {4, 4, 6},
+            {2, 6, 6}
+        };
+
+        public void initCounter(int level) {
+            counter100.text = tokenCountsPerLevel[level, 0].ToString();
+            counter75.text = tokenCountsPerLevel[level, 1].ToString();
+            counter50.text = tokenCountsPerLevel[level, 2].ToString();
+        }
+
+        public int getCounter(int prob) {
+            if (prob == 100) { return int.Parse(counter100.text);}
+            else if (prob == 75) { return int.Parse(counter75.text);}
+            else if (prob == 50) { return int.Parse(counter50.text);}
+            return 0;
+        }
+
         public void setCounter(int prob, int value) {
             if (prob == 100) { counter100.text = value.ToString();}
             else if (prob == 75) { counter75.text = value.ToString();}

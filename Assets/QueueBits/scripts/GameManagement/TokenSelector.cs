@@ -52,15 +52,15 @@ namespace QueueBits {
 
         public void SelectToken(int prob) {
             if (prob == 100 && TC.counter100.text != "0") {
-                Debug.Log("Selected 100!");
+                // Debug.Log("Selected 100!");
                 GM.tokenSelectedByButton(100);
             }
             if (prob == 75 && TC.counter75.text != "0") {
-                Debug.Log("Selected 75!");
+                // Debug.Log("Selected 75!");
                 GM.tokenSelectedByButton(75);
             }
             if (prob == 50 && TC.counter50.text != "0") {
-                Debug.Log("Selected 50!");
+                // Debug.Log("Selected 50!");
                 GM.tokenSelectedByButton(50);
             }
         }

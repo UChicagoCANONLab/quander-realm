@@ -7,12 +7,6 @@ using QueueBits;
 namespace QueueBits {
     public class GameOverScreen : MonoBehaviour
     {
-        /* public enum Results {
-            Draw = 0,
-            Win = 1,
-            Lose = 2
-        } */
-
         public TMP_Text message;
         public StarDisplay starsWon;
         

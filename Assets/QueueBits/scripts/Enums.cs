@@ -7,6 +7,13 @@ namespace QueueBits
         Blue,
         Red
     };
+    
+    public enum Piece1 
+    {
+        Empty,
+        Player,
+        CPU
+    };
 
     public enum Results 
     {
@@ -14,5 +21,12 @@ namespace QueueBits
         Win,
         Lose
     };
+
+    public enum Prob
+    {
+        Pr100,
+        Pr75,
+        Pr50
+    }
 
 }
