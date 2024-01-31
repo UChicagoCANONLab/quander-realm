@@ -260,12 +260,12 @@ namespace QueueBits
 			// Piece Count Displays
 			// tokenCounterPlayer.setCounter(100, playerProbs[100]);
 			// tokenCounterPlayer.setCounter(75, playerProbs[75]);
-			tokenCounterPlayer.disable50();
+			// tokenCounterPlayer.disable(50);
 			tokenCounterPlayer.initCounter(LEVEL_NUMBER);
 
 			// tokenCounterCPU.setCounter(100, CPUProbs[100]);
 			// tokenCounterCPU.setCounter(75, CPUProbs[75]);
-			tokenCounterCPU.disable50();
+			// tokenCounterCPU.disable(50);
 			tokenCounterCPU.initCounter(LEVEL_NUMBER);
 		}
 

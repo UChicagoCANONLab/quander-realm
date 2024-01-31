@@ -258,13 +258,15 @@ namespace QueueBits
 			gameOver = false;
 
 			// Piece Count Displays
-			tokenCounterBlue.setCounter(100, blueProbs[100]);
-			tokenCounterBlue.setCounter(75, blueProbs[75]);
-			tokenCounterBlue.disable50();
+			// tokenCounterBlue.setCounter(100, blueProbs[100]);
+			// tokenCounterBlue.setCounter(75, blueProbs[75]);
+			// tokenCounterBlue.disable(50);
+			tokenCounterBlue.initCounter(LEVEL_NUMBER);
 
-			tokenCounterRed.setCounter(100, redProbs[100]);
-			tokenCounterRed.setCounter(75, redProbs[75]);
-			tokenCounterRed.disable50();
+			// tokenCounterRed.setCounter(100, redProbs[100]);
+			// tokenCounterRed.setCounter(75, redProbs[75]);
+			// tokenCounterRed.disable(50);
+			tokenCounterRed.initCounter(LEVEL_NUMBER);
 		}
 
 		/// <summary>

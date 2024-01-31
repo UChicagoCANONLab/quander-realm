@@ -7,13 +7,10 @@ using QueueBits;
 namespace QueueBits {
     public class TokenCounter : MonoBehaviour
     {
-        public TMP_Text counter100;
-        public TMP_Text counter75;
-        public TMP_Text counter50;
+        public TMP_Text[] counterText;
+        public GameObject[] counterObjects;
 
         public bool isPlayer;
-
-        public GameObject[] counterObjects50;
 
         public TokenSelector TS;
 
@@ -36,10 +33,23 @@ namespace QueueBits {
             new int[] {2, 6, 6}
         };
 
+        private Dictionary<int, int> indexToProb = new Dictionary<int, int>() {
+            {0, 100}, {1, 75}, {2, 50}
+        };
+        private Dictionary<int, int> probToIndex = new Dictionary<int, int>() {
+            {100, 0}, {75, 1}, {50, 2}
+        };
+
         public void initCounter(int level) {
-            counter100.text = tokenCountsPerLevel[level][0].ToString();
-            counter75.text = tokenCountsPerLevel[level][1].ToString();
-            counter50.text = tokenCountsPerLevel[level][2].ToString();
+            for (int i=0; i<3; i++) {
+                counterText[i].text = tokenCountsPerLevel[level][i].ToString();
+                if (tokenCountsPerLevel[level][i] == 0) {
+                    disableCounter(indexToProb[i]);
+                }
+            }
+            // counterText[0].text = tokenCountsPerLevel[level][0].ToString();
+            // counterText[1].text = tokenCountsPerLevel[level][1].ToString();
+            // counterText[2].text = tokenCountsPerLevel[level][2].ToString();
         }
 
         public Dictionary<int, int> getCounterDict(int level) {
@@ -51,25 +61,33 @@ namespace QueueBits {
         }
 
         public int getCounter(int prob) {
-            if (prob == 100) { return int.Parse(counter100.text);}
-            else if (prob == 75) { return int.Parse(counter75.text);}
-            else if (prob == 50) { return int.Parse(counter50.text);}
+            if (probToIndex.ContainsKey(prob)) {
+                return int.Parse(counterText[probToIndex[prob]].text);
+            }
+            // if (prob == 100) { return int.Parse(counterText[0].text);}
+            // else if (prob == 75) { return int.Parse(counterText[1].text);}
+            // else if (prob == 50) { return int.Parse(counterText[2].text);}
             return 0;
         }
 
         public void setCounter(int prob, int value) {
-            if (prob == 100) { counter100.text = value.ToString();}
-            else if (prob == 75) { counter75.text = value.ToString();}
-            else if (prob == 50) { counter50.text = value.ToString();}
+            if (probToIndex.ContainsKey(prob)) {
+                counterText[probToIndex[prob]].text = value.ToString();
+            }
+            // if (prob == 100) { counterText[0].text = value.ToString();}
+            // else if (prob == 75) { counterText[1].text = value.ToString();}
+            // else if (prob == 50) { counterText[2].text = value.ToString();}
 
             if (isPlayer) { TS.updateSelectorDisplay(prob, value); }
         }
 
-        public void disable50() {
-            foreach (GameObject i in counterObjects50) {
-                i.SetActive(false);
+        public void disableCounter(int prob) {
+            if (probToIndex.ContainsKey(prob)) {
+                counterObjects[probToIndex[prob]].SetActive(false);
             }
-            if (isPlayer) { TS.updateSelectorDisplay(50, 0); }
+            // if (prob == 100) { counterObjects[0].SetActive(false); }
+            // else if (prob == 75) { counterObjects[1].SetActive(false); }
+            // else if (prob == 50) { counterObjects[2].SetActive(false); }
         }
         
     }
