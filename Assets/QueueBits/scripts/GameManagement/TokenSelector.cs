@@ -14,7 +14,7 @@ namespace QueueBits {
         public GameObject playerDisplay;
 
         public TokenCounter TC;
-        public Level3 GM;
+        public GameMode1 GM;
 
         public bool visible;
 

@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4132790913002462424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5546045477294432358}
+  - component: {fileID: 264767458676781904}
+  - component: {fileID: 6714360481171548628}
+  - component: {fileID: 3062452013166423053}
+  - component: {fileID: 5906797852090972968}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5546045477294432358
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4132790913002462424}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &264767458676781904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4132790913002462424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5fdcec6c727c94cb03acde772511d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LEVEL_NUMBER: 0
+  numRows: 6
+  numColumns: 7
+  numPiecesToWin: 4
+  dropTime: 4
+  myData:
+    userID: 
+    level: 0
+    winner: 0
+    prefilledBoard: 0
+    newPrefilledBoard: 
+    placement_order: 
+    superposition: 
+    reveal_order: 
+    outcome: 
+  turn: 0
+  cpuAI: {fileID: 5906797852090972968}
+  DM: {fileID: 0}
+  starDisplay: {fileID: 0}
+  fieldObject: {fileID: 0}
+  PB: {fileID: 3062452013166423053}
+  boardName: 
+--- !u!114 &6714360481171548628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4132790913002462424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33738430e00e149d19766ef31484fccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  probability: 0
+  cpuAI: {fileID: 5906797852090972968}
+  starDisplay: {fileID: 0}
+  DM: {fileID: 0}
+  GC: {fileID: 264767458676781904}
+  tokenCounterCPU: {fileID: 0}
+  pieceCPU100: {fileID: 100000, guid: 7faddc12bb4db9c469c873982168faa2, type: 3}
+  pieceCPU75: {fileID: 4608484838109469838, guid: 17dbc722852f449928bfb0905a8bf5c1, type: 3}
+  pieceCPU50: {fileID: 3879601427800147772, guid: b5076ba3666cb4039b5f609d08342e71, type: 3}
+  tokenCounterPlayer: {fileID: 0}
+  piecePlayer100: {fileID: 100000, guid: f1274e8c2df69e74eadfe7559af71d3f, type: 3}
+  piecePlayer75: {fileID: 8150960631473965944, guid: 90d0f43ca212041f4acdae7324c2542d, type: 3}
+  piecePlayer50: {fileID: 3879601427800147772, guid: 28e49c60cf48f48e4b4b1a67b302ef02, type: 3}
+  PB: {fileID: 3062452013166423053}
+  boardName: 
+--- !u!114 &3062452013166423053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4132790913002462424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e9cca74799a24880b0507fd58c5be75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5906797852090972968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4132790913002462424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4fbacd693c7449dea2dc1daebfe202a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  difficulty: 0
+  state: 000000000000000000000000000000000000000000
+  colPointers: 05000000050000000500000005000000050000000500000005000000
+  superpositionArray: 

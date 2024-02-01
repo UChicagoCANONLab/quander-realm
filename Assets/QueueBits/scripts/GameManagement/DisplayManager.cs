@@ -14,6 +14,7 @@ namespace QueueBits {
 
         public GameOverScreen resultDisplay;
         public TokenSelector tokenSelector;
+        public LevelNumberDisplay numDisplay;
         // public StarDisplay starDisplay;
 
 
@@ -26,11 +27,19 @@ namespace QueueBits {
             displayHolder.SetActive(false);
             resultDisplay.gameObject.SetActive(true);
             resultDisplay.GameOver(result);
+            numDisplay.resetLevelNumber();
         }
 
         /* public void initTokenCounters(int level) {
             tokenCounterPlayer.initCounter(level);
             tokenCounterCPU.initCounter(level);
         } */
+
+        public void initDisplay(int level) {
+            displayHolder.SetActive(true);
+            resultDisplay.gameObject.SetActive(false);
+            numDisplay.initLevelNumber(level);
+        }
+
     }
 }

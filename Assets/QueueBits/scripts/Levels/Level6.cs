@@ -59,7 +59,7 @@ namespace QueueBits
 		// public GameObject redTitle;
 
 		//BLUE
-		[Header("GameObjects - BLUE Dispaly")]
+		[Header("GameObjects - BLUE Display")]
 		public GameObject pieceBlue100;
 		public GameObject pieceBlue75;
 		public GameObject pieceBlue50;
@@ -414,7 +414,6 @@ namespace QueueBits
 		void CreateField()
 		{
 			winningText.SetActive(false);
-
 			playerTurnText.SetActive(true);
 			playerTurnText.GetComponent<Renderer>().sortingOrder = 4;
 
@@ -691,7 +690,7 @@ namespace QueueBits
 				i++;
 				if ((i % 7) == 0)
 					i = state.Length;
-				if (color == "1" && i<state.Length && mydata.superposition[i] != 100)
+				if (color == "1" && i < state.Length && mydata.superposition[i] != 100)
 					i = state.Length;
 			}
 
@@ -702,7 +701,7 @@ namespace QueueBits
 				i--;
 				if ((i % 7) == 6)
 					i = -1;
-				if (color == "1" && i>=0 && mydata.superposition[i] != 100)
+				if (color == "1" && i >= 0 && mydata.superposition[i] != 100)
 					i = -1;
 			}
 			r_counter--; // center val counted twice
@@ -716,7 +715,7 @@ namespace QueueBits
 			{
 				d_counter++;
 				i += 7;
-				if (color == "1" && i<state.Length && mydata.superposition[i] != 100)
+				if (color == "1" && i < state.Length && mydata.superposition[i] != 100)
 				{
 					i = state.Length;
 				}
@@ -734,7 +733,7 @@ namespace QueueBits
 				i += 8;
 				if ((i % 7) == 0)
 					i = state.Length;
-				if (color == "1" && i<state.Length && mydata.superposition[i] != 100)
+				if (color == "1" && i < state.Length && mydata.superposition[i] != 100)
 					i = state.Length;
 			}
 			i = index(r, c);
@@ -744,7 +743,7 @@ namespace QueueBits
 				i -= 8;
 				if ((i % 7) == 6)
 					i = -1;
-				if (color == "1" && i>=0 && mydata.superposition[i] != 100)
+				if (color == "1" && i >= 0 && mydata.superposition[i] != 100)
 					i = -1;
 			}
 			rd_counter--;
@@ -760,7 +759,7 @@ namespace QueueBits
 				i += 6;
 				if ((i % 7) == 6)
 					i = state.Length;
-				if (color == "1" && i<state.Length && mydata.superposition[i] != 100)
+				if (color == "1" && i < state.Length && mydata.superposition[i] != 100)
 					i = state.Length;
 			}
 			i = index(r, c);
@@ -770,7 +769,7 @@ namespace QueueBits
 				i -= 6;
 				if ((i % 7) == 0)
 					i = -1;
-				if (color == "1" && i>=0 && mydata.superposition[i] != 100)
+				if (color == "1" && i >= 0 && mydata.superposition[i] != 100)
 					i = -1;
 			}
 			ld_counter--;
@@ -827,12 +826,11 @@ namespace QueueBits
 
 			List<int> moves = getMoves(cols);
 
-
 			//check for all 100% yellow win
 			foreach (int column in moves)
 			{
-				playMove(column,"1");
-				if (isWin(colPointers[column]+1, column, "1"))
+				playMove(column, "1");
+				if (isWin(colPointers[column] + 1, column, "1"))
 				{
 					reverseMove(column);
 					return column;
@@ -1052,7 +1050,6 @@ namespace QueueBits
 			if (gameOver)
 			{
 				winningText.SetActive(true);
-
 				playerTurnText.SetActive(false);
 				playerTurnObject.SetActive(false);
 
@@ -1495,7 +1492,6 @@ namespace QueueBits
 
 						if (isPlayersTurn)
 						{
-
 							playerTurnObject = Instantiate(pieceBlue, new Vector3(numColumns - 1.75f, -6.3f, -1), Quaternion.identity) as GameObject;
 							playerTurnObject.transform.localScale -= new Vector3(0.5f, 0.5f, 0);
 						}
