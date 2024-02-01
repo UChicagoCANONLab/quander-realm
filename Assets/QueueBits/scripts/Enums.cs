@@ -5,14 +5,16 @@ namespace QueueBits
     {
         Empty,
         Blue,
-        Red
+        Red,
+        Unknown
     };
     
     public enum Piece1 
     {
         Empty,
         Player,
-        CPU
+        CPU,
+        Unknown
     };
 
     public enum Results 

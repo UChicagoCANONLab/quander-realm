@@ -14,32 +14,15 @@ namespace QueueBits
 	public class GameMode1 : MonoBehaviour
 	{
 		private int LEVEL_NUMBER;
+		private int probability;
 
-		// [Range(3, 8)]
-		// private int numRows = 6;
-		// // [Range(3, 8)]
-		// private int numColumns = 7;
-		// [Tooltip("How many pieces have to be connected to win.")]
-		// private int numPiecesToWin = 4;
-		// [Tooltip("Allow diagonally connected Pieces?")]
-		// private bool allowDiagonally = true;
-
-		// private float dropTime = 4f;
-
-		public int probability;
-
-		public CPUBrain cpuAI;
-		
-		[Header("Display Objects")]
-		// public GameObject displayHolder;
-		// public GameObject turnSign;
-		public StarDisplay starDisplay;
-		// public GameOverScreen resultDisplay;
-		// public TokenSelector tokenSelector;
+		[Header("External Objects")]
+		// public StarDisplay starDisplay;
 		public DisplayManager DM;
 		public GameController GC;
+		public CPUBrain cpuAI;
+		private Data mydata; // = new Data();
 
-		// Gameobjects 
 		[Header("CPU Pieces")]
 		public TokenCounter tokenCounterCPU;
 		public GameObject pieceCPU100;
@@ -52,154 +35,58 @@ namespace QueueBits
 		public GameObject piecePlayer75;
 		public GameObject piecePlayer50;
 
-		[Header("GameObjects")]
-		// public GameObject pieceTemp;
-		// public GameObject finalColor;
-		// public GameObject fieldObject;
 
-		Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
-		Dictionary<int, int> playerProbs = new Dictionary<int, int>();
+		private Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
+		private Dictionary<int, int> playerProbs = new Dictionary<int, int>();
 
-		[Header("Prefilled Boards")]
-		public PrefilledBoards PB;
-		public List<(Piece, int, int, int)> prefilledBoard = new List<(Piece piece, int col, int row, int prob)>();
-		public string boardName;
+		private List<(Piece, int, int, int)> prefilledBoard = new List<(Piece piece, int col, int row, int prob)>();
 
 		
-		int choice;
-
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
-		GameObject gameObjectTurn;
+		private GameObject gameObjectTurn;
 
 		/// <summary>
-		/// The Game field.
-		/// 0 = Empty, 1 = Player, 2 = CPU
+		/// The Game field. 0 = Empty, 1 = Player, 2 = CPU
 		/// </summary>
-		int[,] field;
+		public int[,] field;
 
 		bool isPlayersTurn = true;
-		bool isLoading = true;
-		bool isDropping = false;
-		// bool mouseButtonPressed = false;
-		bool gameOver = false;
-		bool isCheckingForWinner = false;
-		bool starUpdated = false;
-		bool SelectMenuGenerated = false;
-	
-
-		// dialogue
-		bool dialoguePhase = false;
+		private bool isDropping = false;
+		private bool isCheckingForWinner = false;
+		private bool gameOver = false;
 
 		// Shivani Puli Data Collection
 		int turn = 0;
-		Data mydata; // = new Data();
+
 
 		// Use this for initialization
 		void Start()
 		{
-			// ShowStarSystem();
-
 			GC.StartGame();
+			
+			// Sync with GameController
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
 			mydata = GC.myData;
+			cpuAI = GC.cpuAI;
+			prefilledBoard = GC.prefilledBoard;
 
-			// dialogue
-			/* if (GameManager.saveData.dialogueSystem[LEVEL_NUMBER])
-			{
-				dialoguePhase = true;
-				Wrapper.Events.StartDialogueSequence?.Invoke($"QB_Level{LEVEL_NUMBER}");
-				GameManager.saveData.dialogueSystem[LEVEL_NUMBER] = false;
-				GameManager.Save();
-				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
-			} */
-
-			// int board_num = Random.Range(0, prefilledBoardList.Keys.Count);
-            // prefilledBoard = prefilledBoardList[board_num];
-			// (boardName, prefilledBoard) = PB.getRandomBoard(LEVEL_NUMBER);
-
-			//Shivani Puli Data Collection
-			/* mydata.level = LEVEL_NUMBER;
-			mydata.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
-			// mydata.prefilledBoard = board_num;
-			mydata.newPrefilledBoard = boardName;
-			mydata.placement_order = new int[GC.numColumns * GC.numRows];
-			mydata.superposition = new int[GC.numColumns * GC.numRows];
-			mydata.reveal_order = new int[GC.numColumns * GC.numRows];
-			mydata.outcome = new int[GC.numColumns * GC.numRows];
-			for (int i = 0; i < GC.numColumns * GC.numRows; i++)
-			{
-				mydata.placement_order[i] = 0;
-				mydata.superposition[i] = 0;
-				mydata.reveal_order[i] = 0;
-				mydata.outcome[i] = 0;
-			} */
-
-			/* foreach ((Piece pi, int c, int r, int pr) in prefilledBoard)
-			{
-				turn++;
-				int index = r * GC.numColumns + c;
-				mydata.placement_order[index] = turn;
-				
-				mydata.reveal_order[index] = turn;
-				mydata.superposition[index] = pr;
-				//if (pi == Piece1.Player)//if Yellow
-				if ((int)pi == (int)Piece1.Player)//if Yellow
-				{
-					cpuAI.playMove(c, "1");
-					// mydata.outcome[index] = 1;
-					// FROM LEVEL 6
-					if (pr == 100)
-						mydata.outcome[index] = 1;
-				}
-				else
-				{
-					cpuAI.playMove(c, "2");
-					// mydata.outcome[index] = 2;
-					// FROM LEVEL 6
-					if (pr == 100)
-						mydata.outcome[index] = 2;
-				}
-			} */
-			//Shivani Puli Data collection
-
-			// CPUProbs.Add(75, 7);
-			// CPUProbs.Add(100, 7);
-			CPUProbs = tokenCounterCPU.getCounterDict(LEVEL_NUMBER);
-
-			// playerProbs.Add(75, 7);
-			// playerProbs.Add(100, 7);
+			// init Player token counter
 			playerProbs = tokenCounterPlayer.getCounterDict(LEVEL_NUMBER);
-
-			// int max = Mathf.Max(GC.numRows, GC.numColumns);
-
-			// if (GC.numPiecesToWin > max)
-			// 	GC.numPiecesToWin = max;
+			tokenCounterPlayer.initCounter(LEVEL_NUMBER);
+			// init CPU token counter
+			CPUProbs = tokenCounterCPU.getCounterDict(LEVEL_NUMBER);
+			tokenCounterCPU.initCounter(LEVEL_NUMBER);
 
 			CreateField();
 
 			isPlayersTurn = false;
-			// turnSign.SetActive(isPlayersTurn);
-			// tokenSelector.switchTurns(isPlayersTurn);
-			// DM.SwitchPlayer(isPlayersTurn);
 		}
 
-		// dialogue
-		/* void updateDialoguePhase()
-		{
-			dialoguePhase = false;
-			Wrapper.Events.DialogueSequenceEnded -= updateDialoguePhase;
-		} */
 
-		/// <summary>
-		/// Creates the field.
-		/// </summary>
+		// Initializes Field
 		void CreateField()
 		{
-			// turnSign.SetActive(true);
-			// tokenSelector.switchTurns(true);
 			DM.SwitchPlayer(true);
-
-			isLoading = true;
 
 			// create an empty field and instantiate the cells
 			field = new int[GC.numColumns, GC.numRows];
@@ -211,7 +98,6 @@ namespace QueueBits
 				}
 			}
 
-			prefilledBoard = GC.prefilledBoard;
 			// initialize prefilled board
 			for (int i = 0; i < prefilledBoard.Count; i++)
             {
@@ -224,45 +110,17 @@ namespace QueueBits
 					GameObject obj = Instantiate(pieceCPU100, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 				}
 			}
-
-			isLoading = false;
-			gameOver = false;
-
-			// Piece Count Displays
-			tokenCounterPlayer.initCounter(LEVEL_NUMBER);
-			tokenCounterCPU.initCounter(LEVEL_NUMBER);
 		}
 
-		/// <summary>
-		/// Gets all the possible moves.
-		/// </summary>
-		/// <returns>The possible moves.</returns>
-		/* public List<int> GetPossibleMoves()
-		{
-			List<int> possibleMoves = new List<int>();
-			for (int x = 0; x < GC.numColumns; x++)
-			{
-				if (field[x, 0] == 0)
-				{
-					possibleMoves.Add(x);
-				}
-			}
-			return possibleMoves;
-		} */
-
-		/// <summary>
-		/// Spawns a piece at mouse position above the first row
-		/// </summary>
-		/// <returns>The piece.</returns>
-		public (GameObject, int) SpawnPiece(int choice)
+		
+		// Spawns a piece at mouse position above the first row
+		public (GameObject, int) SpawnPiece(int prob)
 		{
 			Vector3 spawnPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			int prob = 0;
 			GameObject pieceTemp = piecePlayer100;
 
 			if (isPlayersTurn)
 			{
-				prob = choice;
 				int freq = playerProbs[prob];
 
 				// delete probability from player's list
@@ -323,8 +181,6 @@ namespace QueueBits
 					}
 				}
 
-				// List<int> moves = GetPossibleMoves();
-				// if (moves.Count > 0)
 				if (GC.FieldContainsUnknownCell(field))
 				{
 					int column = cpuAI.findBestMove(cpuAI.colPointers);
@@ -344,23 +200,8 @@ namespace QueueBits
 		// Update is called once per frame
 		void Update()
 		{
-			// if (isLoading)
-			// 	return;
-
-			// if (dialoguePhase)
-			// 	return;
-
-			if (isCheckingForWinner)
+			if (isCheckingForWinner || gameOver)
 				return;
-
-			/* if (gameOver)
-			{
-				// GC.fieldObject.SetActive(false);
-				// displayHolder.SetActive(false);
-				// resultDisplay.gameObject.SetActive(true);
-
-				return;
-			} */
 
 			if (isPlayersTurn)
 			{
@@ -375,12 +216,7 @@ namespace QueueBits
 					// click the left mouse button to drop the piece into the selected column
 					if (Input.GetMouseButtonDown(0) && !isDropping)
 					{
-						// mouseButtonPressed = true;
 						StartCoroutine(dropPiece(gameObjectTurn, probability));
-					}
-					else
-					{
-						// mouseButtonPressed = false;
 					}
 				}
 			}
@@ -388,7 +224,7 @@ namespace QueueBits
 			{
 				if (gameObjectTurn == null)
 				{
-					(gameObjectTurn, probability) = SpawnPiece(choice);
+					(gameObjectTurn, probability) = SpawnPiece(-1); 
 				}
 				else
 				{
@@ -405,32 +241,16 @@ namespace QueueBits
 
 		// New funtion to spawn piece when clicking buttons on TokenSelector
 		public void tokenSelectedByButton(int prob) {
-			choice = prob;
-			(gameObjectTurn, probability) = SpawnPiece(choice);
+			(gameObjectTurn, probability) = SpawnPiece(prob);
 		}
 
-		/// <summary>
-		/// This method searches for a empty cell and lets 
-		/// the object fall down into this cell
-		/// </summary>
-		/// <param name="gObject">Game Object.</param>
+
+		// This method searches for a empty cell and lets the object fall down into this cell
 		IEnumerator dropPiece(GameObject gObject, int probability)
 		{
 			isDropping = true;
 			Vector3 startPosition = gObject.transform.position;
 			Vector3 endPosition = new Vector3();
-
-			/* string s = "";
-			for (int j = 0; j< GC.numRows; j++)
-			{
-				for (int p = 0; p < GC.numColumns; p++)
-				{
-					s += (int)field[p, j];
-				}
-				s += cpuAI.state.Substring(j * GC.numColumns, GC.numColumns);
-				s += "\n";
-			}
-			//Debug.Log(s); */
 
 			// round to a grid cell
 			int x = Mathf.RoundToInt(startPosition.x);
@@ -461,7 +281,7 @@ namespace QueueBits
 
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					finalColor = Instantiate(
-						pieceColorObject, // is players turn = spawn player, else spawn CPU
+						pieceColorObject, // isPlayersTurn = spawn player, else spawn CPU
 						new Vector3(Mathf.Clamp(pos.x, 0, GC.numColumns - 1),
 						GC.fieldObject.transform.position.y + 1, 0), // spawn it above the first row
 						Quaternion.identity, GC.fieldObject.transform) as GameObject;
@@ -470,12 +290,13 @@ namespace QueueBits
 					int r = cpuAI.colPointers[x];
 					int index = r * GC.numColumns + x;
 					
+					// Update myData here
 					turn++;
 					mydata.placement_order[index] = turn;
 					mydata.superposition[index] = probability;
 					mydata.reveal_order[index] = turn;
 					mydata.outcome[index] = numOutcome;
-					// data collection
+
 					cpuAI.superpositionArray = mydata.superposition;
 					cpuAI.playMove(x, $"{numOutcome}");
 
@@ -516,25 +337,19 @@ namespace QueueBits
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				// turnSign.SetActive(isPlayersTurn);
-				// tokenSelector.switchTurns(isPlayersTurn);
 				DM.SwitchPlayer(isPlayersTurn);
-
-				// DestroyImmediate(playerTurnObject);
 			}
 
 			isDropping = false;
 			yield return 0;
 		}
 
-		/// <summary>
-		/// Check for Winner
-		/// </summary>
+		// Checks for winner
 		IEnumerator Won()
 		{
 			isCheckingForWinner = true;
-
 			Results winCode = Results.Lose;
+			// bool gameOver = false;
 
 			for (int x = 0; x < GC.numColumns; x++)
 			{
@@ -612,73 +427,12 @@ namespace QueueBits
 				yield return null;
 			}
 
-			if (gameOver == true)
-			{
+			if (gameOver == true) {
 				GC.EndGame(winCode);
-				//Shivani Puli Data Collection -> store winner
-				// if (playerWon)
-				// 	mydata.winner = 1;
-				// else 
-				// 	mydata.winner = 2;
-				
-				// mydata.winner = (int)winCode;
-				// saveData.Save(mydata);
-
-				// star system
-				/* if (!starUpdated)
-				{
-					starUpdated = true;
-					int starsWon = starDisplay.getResults(winCode);
-
-					if (GameManager.saveData.starSystem[LEVEL_NUMBER] <= starsWon) {
-						GameManager.saveData.starSystem[LEVEL_NUMBER] = starsWon;
-						GameManager.Save();
-					}
-				} */
-
-				// StarSystem
-				// ShowStarSystem();
-
-				// GC.fieldObject.SetActive(false);
-
-				// displayHolder.SetActive(false);
-				// resultDisplay.gameObject.SetActive(true);
-				// resultDisplay.GameOver(winCode);
-				
-				// DM.GameOver(winCode);
-
-				// Reward System
-				/* if (GameManager.rewardSystem[LEVEL_NUMBER]) {
-					Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 3);
-				} */
 			}
 
 			isCheckingForWinner = false;
-
 			yield return 0;
 		}
-
-		/* void ShowStarSystem()
-		{
-			starDisplay.resetStars();
-			starDisplay.setDisplay(GameManager.saveData.starSystem[LEVEL_NUMBER]);
-		} */
-
-		/// <summary>
-		/// check if the field contains an empty cell
-		/// </summary>
-		/// <returns><c>true</c>, if it contains empty cell, <c>false</c> otherwise.</returns>
-		/* bool FieldContainsEmptyCell()
-		{
-			for (int x = 0; x < GC.numColumns; x++)
-			{
-				for (int y = 0; y < GC.numRows; y++)
-				{
-					if (field[x, y] == (int)Piece1.Empty)
-						return true;
-				}
-			}
-			return false;
-		} */
 	}
 }

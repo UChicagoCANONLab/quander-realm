@@ -134,7 +134,6 @@ namespace QueueBits
 			}
 		}
 
-
 		/// <summary>
 		/// check if the field contains an empty cell
 		/// </summary>
