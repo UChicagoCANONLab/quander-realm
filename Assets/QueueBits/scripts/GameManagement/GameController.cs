@@ -14,6 +14,7 @@ namespace QueueBits
 	public class GameController : MonoBehaviour 
 	{
 		public int LEVEL_NUMBER; 
+		public int difficulty;
 
 		public int numRows = 6; 	// [Range(3, 8)]
 		public int numColumns = 7; 	// [Range(3, 8)]
@@ -98,7 +99,8 @@ namespace QueueBits
 				myData.superposition[i] = 0;
 				myData.reveal_order[i] = 0;
 				myData.outcome[i] = 0;
-			}	
+			}
+			cpuAI.superpositionArray = myData.superposition;
 		}
 
 		// dialogue
@@ -116,7 +118,9 @@ namespace QueueBits
 				int index = r * numColumns + c;
 				myData.placement_order[index] = turn;
 				
-				myData.reveal_order[index] = turn;
+				if (LEVEL_NUMBER < 6) {
+					myData.reveal_order[index] = turn;
+				}
 				myData.superposition[index] = pr;
 				//if (pi == Piece1.Player)//if Yellow
 				if ((int)pi == (int)Piece1.Player)//if Yellow
