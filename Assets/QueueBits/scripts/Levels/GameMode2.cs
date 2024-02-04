@@ -57,7 +57,7 @@ namespace QueueBits
 		int numSuperpositionPieces = 0;
 		int probCounter = 0;
 		bool revealingProbs = false;
-		bool currentlyRevealing = false; //Shivani: previously choosingreveal
+		// bool currentlyRevealing = false; 
 
 		bool isPlayersTurn = true;
 		private bool isDropping = false;
@@ -70,7 +70,7 @@ namespace QueueBits
 
 
 		// Use this for initialization
-		void Start()
+		public void Start()
 		{
 			GC.StartGame();
 			
@@ -98,7 +98,7 @@ namespace QueueBits
 
 
 		// Initializes Field
-		void CreateField()
+		public void CreateField()
 		{
 			DM.SwitchPlayer(true);
 
@@ -170,16 +170,17 @@ namespace QueueBits
 
 
 		// Update is called once per frame
-		void Update()
+		public void Update()
 		{
 			if (isCheckingForWinner || gameOver)
 				return;
 
 			if (revealingProbs) {
-				if (!currentlyRevealing) {
+				return;
+				/* if (!currentlyRevealing) {
 					StartCoroutine(revealProbabilities());
 					return;
-				}
+				} */
 			}
 
 			if (isPlayersTurn)
@@ -211,7 +212,6 @@ namespace QueueBits
 					{
 						// Task.Delay(2000);
 						Thread.Sleep(1000);
-						// Debug.Log(gameObjectTurn.transform.position.ToString());
 						StartCoroutine(dropPiece(gameObjectTurn, probability));
 					}
 				}
@@ -310,7 +310,7 @@ namespace QueueBits
 
 
 		// This method searches for a empty cell and lets the object fall down into this cell
-		IEnumerator dropPiece(GameObject gObject, int probability)
+		public IEnumerator dropPiece(GameObject gObject, int probability)
 		{
 			isDropping = true;
 			Vector3 startPosition = gObject.transform.position;
@@ -436,9 +436,6 @@ namespace QueueBits
 
 				probCounter++;
 
-				// remove the temporary gameobject
-				DestroyImmediate(gameObjectTurn);
-
 				// run coroutine to check if someone has won
 				StartCoroutine(Won());
 
@@ -446,9 +443,13 @@ namespace QueueBits
 				while (isCheckingForWinner)
 					yield return null;
 
+				// remove the temporary gameobject
+				DestroyImmediate(gameObjectTurn);
+
 				if (probCounter == 42) {
-					currentlyRevealing = false;
+					// currentlyRevealing = false;
 					revealingProbs = true;
+					StartCoroutine(revealProbabilities());
 				} 
 
 				isPlayersTurn = !isPlayersTurn;
@@ -459,7 +460,7 @@ namespace QueueBits
 			yield return 0;
 		}
 
-		void revealProbabilitiesThroughClick()
+		/* void revealProbabilitiesThroughClick()
 		{
 			if (Input.GetMouseButtonDown(0))
 			{
@@ -505,11 +506,11 @@ namespace QueueBits
 			if (gameOver) {
 				revealingProbs = false;
 			}
-		}
+		} */
 
-		IEnumerator revealProbabilities()
+		public IEnumerator revealProbabilities()
 		{
-			currentlyRevealing = true;
+			// currentlyRevealing = true;
 			int x, y;
 			//GameObject piece;
 			for (int i = 0; i < numSuperpositionPieces; i++)
@@ -567,12 +568,12 @@ namespace QueueBits
 
 				yield return new WaitForSeconds(1);
 			}
-			currentlyRevealing = false;
+			// currentlyRevealing = false;
 			yield return 0;
 		}
 
 		// Checks for winner
-		IEnumerator Won()
+		public IEnumerator Won()
 		{
 			isCheckingForWinner = true;
 			Results winCode = Results.Lose;

@@ -60,7 +60,7 @@ namespace QueueBits
 
 
 		// Use this for initialization
-		void Start()
+		public void Start()
 		{
 			GC.StartGame();
 			
@@ -84,7 +84,7 @@ namespace QueueBits
 
 
 		// Initializes Field
-		void CreateField()
+		public void CreateField()
 		{
 			DM.SwitchPlayer(true);
 
@@ -113,7 +113,7 @@ namespace QueueBits
 		}
 
 		// Update is called once per frame
-		void Update()
+		public void Update()
 		{
 			if (isCheckingForWinner || gameOver)
 				return;
@@ -147,7 +147,6 @@ namespace QueueBits
 					{
 						// Task.Delay(2000);
 						Thread.Sleep(1000);
-						// Debug.Log(gameObjectTurn.transform.position.ToString());
 						StartCoroutine(dropPiece(gameObjectTurn, probability));
 					}
 				}
@@ -156,7 +155,6 @@ namespace QueueBits
 
 		// New funtion to spawn piece when clicking buttons on TokenSelector
 		public void tokenSelectedByButton(int prob) {
-			Debug.Log("at GM1");
 			(gameObjectTurn, probability) = SpawnPiece(prob);
 		}
 
@@ -247,7 +245,7 @@ namespace QueueBits
 
 
 		// This method searches for a empty cell and lets the object fall down into this cell
-		IEnumerator dropPiece(GameObject gObject, int probability)
+		public IEnumerator dropPiece(GameObject gObject, int probability)
 		{
 			isDropping = true;
 			Vector3 startPosition = gObject.transform.position;
@@ -346,7 +344,7 @@ namespace QueueBits
 		}
 
 		// Checks for winner
-		IEnumerator Won()
+		public IEnumerator Won()
 		{
 			isCheckingForWinner = true;
 			Results winCode = Results.Lose;

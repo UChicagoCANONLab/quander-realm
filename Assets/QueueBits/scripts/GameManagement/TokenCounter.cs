@@ -45,6 +45,7 @@ namespace QueueBits {
                 counterText[i].text = tokenCountsPerLevel[level][i].ToString();
                 if (tokenCountsPerLevel[level][i] == 0) {
                     disableCounter(indexToProb[i]);
+                    if (isPlayer) { TS.updateSelectorDisplay(indexToProb[i], 0); }
                 }
             }
             // counterText[0].text = tokenCountsPerLevel[level][0].ToString();

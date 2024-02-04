@@ -117,7 +117,6 @@ namespace QueueBits
 		// New funtion to spawn piece when clicking buttons on TokenSelector
 		public void tokenSelectedByButton(int prob) {
 			if (LEVEL_NUMBER < 6) {
-				Debug.Log("Made it to GC");
 				GM1.tokenSelectedByButton(prob);
 			} else {
 				GM2.tokenSelectedByButton(prob);
