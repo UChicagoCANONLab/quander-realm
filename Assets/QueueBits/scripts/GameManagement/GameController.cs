@@ -36,6 +36,10 @@ namespace QueueBits
 		public List<(Piece, int, int, int)> prefilledBoard = new List<(Piece piece, int col, int row, int prob)>();
 		public string boardName;
 
+		[Header("GameModes")]
+		public GameMode1 GM1;
+		public GameMode2 GM2;
+
 		// [Header("Booleans")]
 		// public bool isPlayersTurn;
 
@@ -108,6 +112,17 @@ namespace QueueBits
 		{
 			// dialoguePhase = false;
 			Wrapper.Events.DialogueSequenceEnded -= updateDialoguePhase;
+		}
+
+		// New funtion to spawn piece when clicking buttons on TokenSelector
+		public void tokenSelectedByButton(int prob) {
+			if (LEVEL_NUMBER < 6) {
+				Debug.Log("Made it to GC");
+				GM1.tokenSelectedByButton(prob);
+			} else {
+				GM2.tokenSelectedByButton(prob);
+			}
+			
 		}
 
 		public void initPrefilledBoard() 

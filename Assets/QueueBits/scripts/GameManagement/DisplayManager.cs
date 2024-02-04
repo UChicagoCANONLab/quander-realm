@@ -6,6 +6,8 @@ using QueueBits;
 namespace QueueBits {
     public class DisplayManager : MonoBehaviour
     {
+        public int LEVEL_NUMBER;
+
         public GameObject displayHolder;
         public GameObject turnSign;
 
@@ -15,6 +17,7 @@ namespace QueueBits {
         public GameOverScreen resultDisplay;
         public TokenSelector tokenSelector;
         public LevelNumberDisplay numDisplay;
+        public LoadLevel menu;
         // public StarDisplay starDisplay;
 
 
@@ -26,7 +29,7 @@ namespace QueueBits {
         public void GameOver(Results result) {
             displayHolder.SetActive(false);
             resultDisplay.gameObject.SetActive(true);
-            resultDisplay.GameOver(result);
+            resultDisplay.GameOver(result, LEVEL_NUMBER);
             numDisplay.resetLevelNumber();
         }
 
@@ -39,6 +42,9 @@ namespace QueueBits {
             displayHolder.SetActive(true);
             resultDisplay.gameObject.SetActive(false);
             numDisplay.initLevelNumber(level);
+            menu.currentLevel = level;
+
+            LEVEL_NUMBER = level;
         }
 
     }

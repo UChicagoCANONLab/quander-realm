@@ -675,7 +675,7 @@ namespace QueueBits
 				displayHolder.SetActive(false);
 				resultDisplay.gameObject.SetActive(true);
 				
-				resultDisplay.GameOver(winCode);
+				resultDisplay.GameOver(winCode, LEVEL_NUMBER);
 
 				// Reward System
 				if (GameManager.rewardSystem[LEVEL_NUMBER]) {

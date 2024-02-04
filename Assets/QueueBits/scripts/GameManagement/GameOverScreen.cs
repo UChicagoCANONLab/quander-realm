@@ -9,12 +9,14 @@ namespace QueueBits {
     {
         public TMP_Text message;
         public StarDisplay starsWon;
+        public LoadLevel menu;
         
         public GameObject[] characterResults;
         public string[] textResults = {"You Tied", "You Won!", "You Lost..."};
         
-        public void GameOver(Results result) 
+        public void GameOver(Results result, int level) 
         {
+            menu.currentLevel = level;
             characterResults[(int)result].SetActive(true);
             message.text = textResults[(int)result];
             starsWon.setResults(result);
@@ -22,6 +24,7 @@ namespace QueueBits {
 
         public void reset() 
         {
+            menu.currentLevel = 0;
             message.text = "";
             starsWon.resetStars();
             foreach (GameObject icon in characterResults) {

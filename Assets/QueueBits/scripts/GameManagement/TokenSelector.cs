@@ -14,7 +14,7 @@ namespace QueueBits {
         public GameObject playerDisplay;
 
         public TokenCounter TC;
-        public GameMode1 GM;
+        public GameController GC;
 
         public bool visible;
 
@@ -52,16 +52,16 @@ namespace QueueBits {
 
         public void SelectToken(int prob) {
             if (prob == 100 && TC.counterText[0].text != "0") {
-                // Debug.Log("Selected 100!");
-                GM.tokenSelectedByButton(100);
+                Debug.Log("Selected 100!");
+                GC.tokenSelectedByButton(100);
             }
             if (prob == 75 && TC.counterText[1].text != "0") {
                 // Debug.Log("Selected 75!");
-                GM.tokenSelectedByButton(75);
+                GC.tokenSelectedByButton(75);
             }
             if (prob == 50 && TC.counterText[2].text != "0") {
                 // Debug.Log("Selected 50!");
-                GM.tokenSelectedByButton(50);
+                GC.tokenSelectedByButton(50);
             }
         }
 

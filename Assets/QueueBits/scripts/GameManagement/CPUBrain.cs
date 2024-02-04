@@ -296,7 +296,7 @@ namespace QueueBits {
 
 			int i = index(r, column);
 
-			if (i == 0)
+			if (i <= 0)
 				state = color + state.Substring(1); //prevents substring with length 0 error
 			else
 				state = state.Substring(0, i) + color + state.Substring(i + 1);

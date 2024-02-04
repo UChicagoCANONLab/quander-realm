@@ -212,11 +212,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e259394444fb40c38457dbeb47d049c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LEVEL_NUMBER: 0
   displayHolder: {fileID: 6976023486943514085}
   turnSign: {fileID: 850530540567688515}
   resultDisplay: {fileID: 2964818673111012327}
   tokenSelector: {fileID: 6796489611650649694}
   numDisplay: {fileID: 2698242117721868805}
+  menu: {fileID: 750890961909766870}
 --- !u!223 &7833743558935715928
 Canvas:
   m_ObjectHideFlags: 0
@@ -236,7 +238,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!114 &7833743558935715929
 MonoBehaviour:
@@ -1362,6 +1364,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8851a4b2f197a4f959ccd093aec8edd6, type: 3}
+--- !u!114 &750890961909766870 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7412009209311877301, guid: 8851a4b2f197a4f959ccd093aec8edd6, type: 3}
+  m_PrefabInstance: {fileID: 7833743558759383651}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 209d342ce7b9f47b4ba6abfce0429074, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6134699069996903662 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4149460186707144333, guid: 8851a4b2f197a4f959ccd093aec8edd6, type: 3}

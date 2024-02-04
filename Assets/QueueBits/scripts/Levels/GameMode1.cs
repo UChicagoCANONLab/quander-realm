@@ -156,6 +156,7 @@ namespace QueueBits
 
 		// New funtion to spawn piece when clicking buttons on TokenSelector
 		public void tokenSelectedByButton(int prob) {
+			Debug.Log("at GM1");
 			(gameObjectTurn, probability) = SpawnPiece(prob);
 		}
 
