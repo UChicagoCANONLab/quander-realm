@@ -232,8 +232,7 @@ namespace Wrapper
                 } else {
                     if (!bool.Parse(www.downloadHandler.text)) {
                         Debug.Log("HERE TO SET AGE");
-                        // DO POP-UP TO GET AGE
-                        // SET AGE WITH USERSAVE
+                        Events.DisplayAgeSelector();
                     }
                 }
             }

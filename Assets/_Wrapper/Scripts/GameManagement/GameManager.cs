@@ -130,8 +130,6 @@ namespace Wrapper
             Events.PlayMusic?.Invoke("W_Music");
             currentGame = Game.None;
             StarTracker.ST.gameObject.SetActive(true);
-
-            DisplayAgeSelector();
         }
 
         private void ToggleLoadingScreen()

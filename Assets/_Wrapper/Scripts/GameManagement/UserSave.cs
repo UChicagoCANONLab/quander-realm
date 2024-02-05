@@ -117,18 +117,4 @@ namespace Wrapper
         }
 
     }
-
-    [System.Serializable]
-    public class UserCode
-    {
-        public string Username = string.Empty;
-
-        public void setUsername(string researchCode) {
-            Username = researchCode;
-        }
-
-        public string getUsername() {
-            return Username;
-        }
-    }
 }
