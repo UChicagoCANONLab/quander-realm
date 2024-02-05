@@ -55,9 +55,11 @@ namespace QueueBits {
 
         public Dictionary<int, int> getCounterDict(int level) {
             Dictionary<int, int> dict = new Dictionary<int, int>();
-            dict.Add(100, tokenCountsPerLevel[level][0]);
-            dict.Add(75, tokenCountsPerLevel[level][1]);
-            dict.Add(50, tokenCountsPerLevel[level][2]);
+            for (int i=0; i<3; i++) {
+                if (tokenCountsPerLevel[level][i] != 0) {
+                    dict.Add(indexToProb[i], tokenCountsPerLevel[level][i]);
+                }
+            }
             return dict;
         }
 

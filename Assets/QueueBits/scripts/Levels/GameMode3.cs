@@ -78,11 +78,10 @@ namespace QueueBits
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
 			mydata = GC.myData;
 			cpuAI = GC.cpuAI;
+			prefilledBoard = GC.prefilledBoard;
 			
 			// Setting CPU difficulty
 			GC.cpuAI.difficulty = 2;
-
-			prefilledBoard = GC.prefilledBoard;
 
 			// init Player token counter
 			playerProbs = tokenCounterPlayer.getCounterDict(LEVEL_NUMBER);
@@ -131,7 +130,7 @@ namespace QueueBits
 				}
 				else
 				{
-					field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)Piece.Unknown;
+					field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)Piece1.Unknown;
 					GameObject obj;
 					if ((int)prefilledBoard[i].Item1 == (int)Piece1.Player)
 					{
@@ -180,6 +179,7 @@ namespace QueueBits
 				return;
 
 			if (revealingProbs) {
+				StartCoroutine(revealProbabilitiesThroughClick());
 				return;
 			}
 
@@ -261,6 +261,8 @@ namespace QueueBits
 				List<int> keyList = new List<int>(CPUProbs.Keys);
 				prob = keyList[ind];
 				int freq = CPUProbs[prob];
+
+				Debug.Log(string.Join(", ", keyList));
 
 				// delete probability from player's list
 				CPUProbs[prob] -= 1;
@@ -456,7 +458,7 @@ namespace QueueBits
 			isDropping = false;
 			yield return 0;
 		}
-		
+
 
 		public IEnumerator revealProbabilitiesThroughClick()
 		{
@@ -482,7 +484,7 @@ namespace QueueBits
 								finalColor = Instantiate(
 									piecePlayer100,
 									new Vector3(pos.x, pos.y, 0),
-									Quaternion.identity) as GameObject;
+									Quaternion.identity, GC.fieldObject.transform) as GameObject;
 								DestroyImmediate(piece);
 								//Data Collection
 								int index = coord_y * GC.numColumns + coord_x;
@@ -497,7 +499,7 @@ namespace QueueBits
 								finalColor = Instantiate(
 									pieceCPU100,
 									new Vector3(pos.x, pos.y, 0),
-									Quaternion.identity) as GameObject;
+									Quaternion.identity, GC.fieldObject.transform) as GameObject;
 								DestroyImmediate(piece);
 								//Data Collection
 								int index = coord_y * GC.numColumns + coord_x;
@@ -522,7 +524,7 @@ namespace QueueBits
 				int p = Random.Range(1, 101);
 				if (p < probability)
 				{
-					finalColor = Instantiate(piecePlayer100, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
+					finalColor = Instantiate(piecePlayer100, new Vector3(x, y, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 					DestroyImmediate(token);
 					//Data Collection
 					int index = coord_y * GC.numColumns + coord_x;
@@ -533,7 +535,7 @@ namespace QueueBits
 				}
 				else
 				{
-					finalColor = Instantiate(pieceCPU100, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
+					finalColor = Instantiate(pieceCPU100, new Vector3(x, y, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 					DestroyImmediate(token);
 					//Data Collection
 					int index = coord_y * GC.numColumns + coord_x;
@@ -548,7 +550,8 @@ namespace QueueBits
 
 				StartCoroutine(Won());
 			}
-
+			
+			DM.SwitchPlayer(isPlayersTurn);
 			if (gameOver) {
 				revealingProbs = false;
 			}
