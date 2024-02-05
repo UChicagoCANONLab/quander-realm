@@ -13,16 +13,13 @@ namespace Wrapper
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject gameContainer;
         [SerializeField] private QButton okButton;
-        [SerializeField] private QButton backgroundButton;
         public TMP_Dropdown ageSelector;
         public string selection;
         public string[] ageGroups = {"8-10", "11-13", "13-18", "over 18"};
 
         private void Awake()
         {
-            // okButton.onClick.AddListener(() => ToggleDisplay(false));
             okButton.onClick.AddListener(() => StartCoroutine(SetAge()));
-            backgroundButton.onClick.AddListener(() => ToggleDisplay(false));
         }
 
         public IEnumerator DisplayAgePopup()
@@ -31,35 +28,22 @@ namespace Wrapper
             Events.PlaySound?.Invoke("W_Reward");
 
             ageSelector.onValueChanged.AddListener(delegate { dropdownValueChanged(ageSelector); });
-            // Reset Game display
-            // ToggleGameShown(Game.Circuits, false);
-            // ToggleGameShown(Game.QueueBits, false);
-            // ToggleGameShown(Game.BlackBox, false);
-            // GameObject gameDisplay = ToggleGameShown(game, true);
             
             ToggleDisplay(true);
 
             yield return null;
-            // while (!(gameDisplay.activeInHierarchy))
-            //     yield return null;
-            // gameDisplay.GetComponent<Animator>().SetBool("Disabled", false);
         }
 
-        public GameObject GetContainerMount()
-        {
-            return gameContainer;
-        }
-
-        private void ToggleDisplay(bool isOn)
-        {
+        private void ToggleDisplay(bool isOn) {
             animator.SetBool("PopupOn", isOn);
         }
 
+        // Setting age in database
         public IEnumerator SetAge() {
             ToggleDisplay(false);
 
-            UserAge userAgeObj = new UserAge(Events.GetPlayerResearchCode(), selection);
-            string userAgeJson = JsonUtility.ToJson(userAgeObj);
+            // Sending new age verification to database
+            string userAgeJson = JsonUtility.ToJson(new UserAge(Events.GetPlayerResearchCode(), selection));
             byte[] ageBytes = new System.Text.UTF8Encoding().GetBytes(userAgeJson);
 
             string url = "https://backend-quantime.link/set_research_code_age";
@@ -80,7 +64,7 @@ namespace Wrapper
         public void dropdownValueChanged(TMP_Dropdown selector) {
             selection = ageGroups[selector.value];
             okButton.gameObject.SetActive(true);
-            Debug.Log(selection);
+            // Debug.Log(selection);
         }
     }
 
@@ -104,12 +88,8 @@ namespace Wrapper
     {
         public string Username = string.Empty;
 
-        public void setUsername(string researchCode) {
-            Username = researchCode;
-        }
-
-        public string getUsername() {
-            return Username;
+        public UserCode(string name) {
+            Username = name;
         }
     }
 

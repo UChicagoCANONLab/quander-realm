@@ -13,7 +13,6 @@ namespace Wrapper
         public bool introDialogueSeen = false;
         public bool rewardDialogueSeen = false;
         public int totalStars = 0;
-        public bool ageVerified;
 
         public UserSave(string idString = "", string rewardID = "")
         {
