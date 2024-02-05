@@ -218,7 +218,6 @@ namespace Labyrinth
             }
 
             pb.resestBar();
-            Debug.Log(pathLength);
             pb.initializeBar(pathLength);
         }
 
