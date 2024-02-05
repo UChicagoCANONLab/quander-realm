@@ -118,7 +118,7 @@ namespace Wrapper
 
         public void InitStarTracker_Lite() {
             ResetStarCounts();
-            GameObject.Find("MapCanvas 1/MapPanel").GetComponent<MapManager>().InitMap();
+            GameObject.Find("MapCanvas/MapPanel").GetComponent<MapManager>().InitMap();
         }
 
         public void InitStarTracker() {
@@ -129,7 +129,7 @@ namespace Wrapper
             InitBTStars();
 
             ResetStarDisplay();
-            GameObject.Find("MapCanvas 1/MapPanel").GetComponent<MapManager>().InitMap();
+            GameObject.Find("MapCanvas/MapPanel").GetComponent<MapManager>().InitMap();
             // PrintDict();
         }
 
