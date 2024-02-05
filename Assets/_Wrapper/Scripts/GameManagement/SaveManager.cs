@@ -213,6 +213,20 @@ namespace Wrapper
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
 
+            // Checking if age is set in database
+            string url = awsURL + "/check_research_code";
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            {
+                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                www.SetRequestHeader("Username", "application/json");
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log("Could not retrieve age verification from aws: " + www.error);
+                }
+            }
+
             StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
 #else
@@ -285,6 +299,21 @@ namespace Wrapper
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
+
+            // Checking if age is set in database
+            string url = awsURL + "/check_research_code";
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            {
+                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                www.SetRequestHeader("Username", "application/json");
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log("Could not retrieve age verification from aws: " + www.error);
+                }
+            }
+
 
             StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
