@@ -22,6 +22,7 @@ namespace QueueBits
 
         public void loadlevel (string level)
         {
+            // GameManager.saveData.LEVEL = int.Parse(level);
 #if LITE_VERSION
             if (level=="Level9") {
                 level = "LevelSelect";

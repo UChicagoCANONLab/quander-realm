@@ -65,9 +65,6 @@ namespace QueueBits
 				// myData.prefilledBoard = board_num;
 				myData.newPrefilledBoard = boardName;
 			}
-
-			// isPlayersTurn = false;
-			// DM.SwitchPlayer(isPlayersTurn);
 		}
 
 
@@ -86,7 +83,7 @@ namespace QueueBits
 			DM.GameOver(result);
 
 			if (GameManager.rewardSystem[LEVEL_NUMBER]) {
-				Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, 3);
+				Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER);
 			}
 		}
 

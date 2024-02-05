@@ -262,8 +262,6 @@ namespace QueueBits
 				prob = keyList[ind];
 				int freq = CPUProbs[prob];
 
-				Debug.Log(string.Join(", ", keyList));
-
 				// delete probability from player's list
 				CPUProbs[prob] -= 1;
 
