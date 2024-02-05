@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2540278537483488500
 RectTransform:
   m_ObjectHideFlags: 0
@@ -441,9 +441,13 @@ MonoBehaviour:
   animator: {fileID: 9106030073018439036}
   gameContainer: {fileID: 0}
   okButton: {fileID: 5286487778218699505}
-  backgroundButton: {fileID: 4095971957440052181}
   ageSelector: {fileID: 5170405159779168971}
   selection: 0
+  ageGroups:
+  - 8-10
+  - 11-13
+  - 13-18
+  - over 18
 --- !u!1 &507202628467417252
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,7 +565,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 30, y: 0}
+  m_AnchoredPosition: {x: 55, y: 0}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4734214122773267027
@@ -850,9 +854,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6845587029919636476
 MonoBehaviour:
@@ -1172,10 +1176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'You haven''t inputted your age!
-
-
-    Please select one before continuing'
+  m_text: "We don't have \nyour age!\n\nPlease select one before playing"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e22a107f4e05fa947934372689c3ad58, type: 2}
   m_sharedMaterial: {fileID: -8796864176872457744, guid: e22a107f4e05fa947934372689c3ad58, type: 2}
@@ -1432,7 +1433,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1922,7 +1923,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.0000076293945}
   m_SizeDelta: {x: 0, y: 90}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &7821943845385818896
