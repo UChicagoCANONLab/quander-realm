@@ -427,7 +427,7 @@ namespace QueueBits
 			}
 
 			if (gameOver == true) {
-				GC.EndGame(winCode);
+				GC.EndGame(winCode, mydata);
 			}
 
 			isCheckingForWinner = false;

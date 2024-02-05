@@ -20,7 +20,7 @@ namespace QueueBits
         }
         
 
-        public void loadlevel (string level)
+        /* public void loadlevel (string level)
         {
             // GameManager.saveData.LEVEL = int.Parse(level);
 #if LITE_VERSION
@@ -29,20 +29,41 @@ namespace QueueBits
             }
 #endif
             SceneManager.LoadScene("QB_" + level);
+        } */
+
+        public void loadLevel(int level) {
+            GameManager.LEVEL = level;
+            GameManager.Save();
+
+            SceneManager.LoadScene("QB_Level4");
         }
 
-        public void restart() {
-            SceneManager.LoadScene($"QB_Level{currentLevel}");
-        }
 
         public void nextLevel() {
             if (currentLevel < MAXLEVEL) {
-                SceneManager.LoadScene($"QB_Level{currentLevel+1}");
+                GameManager.LEVEL += 1;
+                GameManager.Save();
+
+                SceneManager.LoadScene("QB_Level4");
             }
             else {
                 SceneManager.LoadScene("QB_LevelSelect");
             }
             
+        }
+
+        // Functions that will always load the same scene
+        // Loads Level Select
+        public void loadLevelSelect() {
+            SceneManager.LoadScene("QB_LevelSelect");
+        }
+        // Loads Home page
+        public void loadMenu() {
+            SceneManager.LoadScene("QB_Home");
+        }
+        // Reloads current scenes
+        public void restart() {
+            SceneManager.LoadScene($"QB_Level{currentLevel}");
         }
     }
 }

@@ -746,6 +746,7 @@ GameObject:
   - component: {fileID: 477268261}
   - component: {fileID: 477268263}
   - component: {fileID: 477268262}
+  - component: {fileID: 477268264}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -811,6 +812,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477268260}
   m_CullTransparentMesh: 1
+--- !u!114 &477268264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 477268260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 100, y: 100}
+  m_Spacing: {x: 20, y: 20}
+  m_Constraint: 1
+  m_ConstraintCount: 5
 --- !u!1 &495808425
 GameObject:
   m_ObjectHideFlags: 0
@@ -917,55 +942,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be5fdcec6c727c94cb03acde772511d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LEVEL_NUMBER: 0
+  difficulty: 0
   numRows: 6
   numColumns: 7
   numPiecesToWin: 4
-  allowDiagonally: 1
   dropTime: 4
-  pieceRed: {fileID: 0}
-  pieceBlue: {fileID: 0}
-  pieceField: {fileID: 0}
-  finalColor: {fileID: 0}
-  pieceSuperposition: {fileID: 0}
-  piece25: {fileID: 0}
-  piece50: {fileID: 0}
-  piece75: {fileID: 0}
-  playerTurnText: {fileID: 0}
-  blueTitle: {fileID: 3928999488545140943, guid: ca827983d4596430aa643230760c4d65, type: 3}
-  redTitle: {fileID: 6178012229886456686, guid: 80b5491a85e6a487fb84f0cac1cbda71, type: 3}
-  pieceBlue100: {fileID: 0}
-  pieceBlue75: {fileID: 0}
-  pieceBlue50: {fileID: 0}
-  pieceBlue25: {fileID: 0}
-  pieceBlue100Count: 7
-  pieceBlue75Count: 4
-  pieceBlue50Count: 5
-  pieceBlue25Count: 5
-  pieceBlue100Text: {fileID: 0}
-  pieceBlue75Text: {fileID: 0}
-  pieceBlue50Text: {fileID: 0}
-  pieceBlue25Text: {fileID: 0}
-  pieceCounterText: {fileID: 4589598482384573743, guid: 41bd74ff0c354447188d6ac17fceb905, type: 3}
-  pieceRed100: {fileID: 0}
-  pieceRed75: {fileID: 0}
-  pieceRed50: {fileID: 0}
-  pieceRed25: {fileID: 0}
-  pieceRed100Count: 7
-  pieceRed75Count: 4
-  pieceRed50Count: 5
-  pieceRed25Count: 5
-  pieceRed100Text: {fileID: 0}
-  pieceRed75Text: {fileID: 0}
-  pieceRed50Text: {fileID: 0}
-  pieceRed25Text: {fileID: 0}
-  probability: 0
-  winningText: {fileID: 0}
-  playerTurnObject: {fileID: 0}
-  playerWonText: Yellow Won!
-  playerLoseText: Red Won!
-  drawText: Draw!
-  probText: {fileID: 0}
-  btnPlayAgain: {fileID: 0}
+  myData:
+    userID: 
+    level: 0
+    winner: 0
+    prefilledBoard: 0
+    newPrefilledBoard: 
+    placement_order: 
+    superposition: 
+    reveal_order: 
+    outcome: 
+  turn: 0
+  cpuAI: {fileID: 0}
+  DM: {fileID: 0}
+  starDisplay: {fileID: 0}
+  fieldObject: {fileID: 0}
+  PB: {fileID: 0}
+  boardName: 
+  GM1: {fileID: 0}
+  GM2: {fileID: 0}
+  GM3: {fileID: 0}
 --- !u!4 &627246447
 Transform:
   m_ObjectHideFlags: 0
@@ -1118,6 +1120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 209d342ce7b9f47b4ba6abfce0429074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentLevel: 0
 --- !u!224 &1060338426
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1151,29 +1154,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelHolder: {fileID: 477268260}
-  iconStar0: {fileID: 3161413207277570135, guid: 1f2582d1167054b01a0db87a69b7c498, type: 3}
-  iconStar1: {fileID: 3161413207277570135, guid: e0d4549d1095a4d4ba576d0171383957, type: 3}
-  iconStar2: {fileID: 3161413207277570135, guid: fc75bd5d1e7e942a685ffdc113862e4a, type: 3}
-  iconStar3: {fileID: 3161413207277570135, guid: 15aa9dae8bbbb40b6ba237bf012d614b, type: 3}
-  thisCanvas: {fileID: 1040613574}
-  iconSpacing: {x: 150, y: 160}
-  levelNumArray:
-  - {fileID: -1686826169, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: -42499984, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: -317569732, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: 1583767081, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: -910079045, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: -1915241250, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: 1508562729, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: 1816110165, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: -1041198274, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: 2050351499, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: -230590959, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: 1878094446, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: 566160851, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: -1981890900, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
-  - {fileID: -1808558255, guid: 04ff3fff5fa3f4a36b3b8259015db0bc, type: 3}
+  iconStar: {fileID: 3003352229020063232, guid: 73c2fd8508e0c4e71a5fbacee8e93d5a, type: 3}
   litePanel: {fileID: 495808425}
+  levelLoader: {fileID: 1060338425}
 --- !u!1 &1432809738
 GameObject:
   m_ObjectHideFlags: 0
@@ -1678,3 +1661,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 209d342ce7b9f47b4ba6abfce0429074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentLevel: 0

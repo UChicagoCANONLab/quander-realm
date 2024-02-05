@@ -44,6 +44,27 @@ namespace QueueBits
 		// [Header("Booleans")]
 		// public bool isPlayersTurn;
 
+		void Start() {
+			GM1.gameObject.SetActive(false);
+			GM2.gameObject.SetActive(false);
+			GM3.gameObject.SetActive(false);
+
+			// GM1.enabled = false;
+			// GM2.enabled = false;
+			// GM3.enabled = false;
+
+			LEVEL_NUMBER = GameManager.LEVEL;
+
+			if (LEVEL_NUMBER < 6) {
+				GM1.gameObject.SetActive(true);
+			} else if (LEVEL_NUMBER < 11) {
+				GM2.gameObject.SetActive(true);
+			} else {
+				GM3.gameObject.SetActive(true);
+			}
+		}
+
+
 		public void StartGame() 
 		{
 			if (GameManager.saveData.dialogueSystem[LEVEL_NUMBER])
@@ -68,8 +89,9 @@ namespace QueueBits
 		}
 
 
-		public void EndGame(Results result)
+		public void EndGame(Results result, Data finalData)
 		{
+			myData = finalData;
 			myData.winner = (int)result;
 			saveData.Save(myData);
 

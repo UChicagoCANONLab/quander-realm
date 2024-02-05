@@ -21,31 +21,28 @@ namespace QueueBits {
         // public StarDisplay starDisplay;
 
 
+        // Initialize display at beginning of level
+        public void initDisplay(int level) {
+            LEVEL_NUMBER = level;
+
+            displayHolder.SetActive(true);
+            resultDisplay.gameObject.SetActive(false);
+            numDisplay.initLevelNumber(level);
+            menu.currentLevel = level;
+        }
+
+        // Switch display when player switches turns
         public void SwitchPlayer(bool isPlayer) {
             turnSign.SetActive(isPlayer);
             tokenSelector.switchTurns(isPlayer);
         }
 
+        // Display when the game is over
         public void GameOver(Results result) {
             displayHolder.SetActive(false);
             resultDisplay.gameObject.SetActive(true);
             resultDisplay.GameOver(result, LEVEL_NUMBER);
             numDisplay.resetLevelNumber();
         }
-
-        /* public void initTokenCounters(int level) {
-            tokenCounterPlayer.initCounter(level);
-            tokenCounterCPU.initCounter(level);
-        } */
-
-        public void initDisplay(int level) {
-            displayHolder.SetActive(true);
-            resultDisplay.gameObject.SetActive(false);
-            numDisplay.initLevelNumber(level);
-            menu.currentLevel = level;
-
-            LEVEL_NUMBER = level;
-        }
-
     }
 }
