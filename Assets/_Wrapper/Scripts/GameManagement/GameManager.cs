@@ -23,6 +23,7 @@ namespace Wrapper
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private CardPopup cardPopup;
         [SerializeField] private GamePopup gamePopup;
+        [SerializeField] private AgePopup agePopup;
         [SerializeField] private GameObject loadingScreenPrefab;
         [SerializeField] Button universalBackButton;
 
@@ -80,6 +81,7 @@ namespace Wrapper
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
             Events.UnlockAndDisplayGame += UnlockAndDisplayGame;
+            Events.DisplayAgeSelector += DisplayAgeSelector;
             Events.ToggleBackButton += ToggleBackButton;
             Events.Logout += Logout;
             Events.PlayIntroDialog += PlayIntroDialog;
@@ -97,6 +99,7 @@ namespace Wrapper
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
             Events.UnlockAndDisplayGame -= UnlockAndDisplayGame;
+            Events.DisplayAgeSelector -= DisplayAgeSelector;
             Events.ToggleBackButton -= ToggleBackButton;
             Events.Logout -= Logout;
             Events.PlayIntroDialog -= PlayIntroDialog;
@@ -127,6 +130,8 @@ namespace Wrapper
             Events.PlayMusic?.Invoke("W_Music");
             currentGame = Game.None;
             StarTracker.ST.gameObject.SetActive(true);
+
+            DisplayAgeSelector();
         }
 
         private void ToggleLoadingScreen()
@@ -164,6 +169,10 @@ namespace Wrapper
 
         private void UnlockAndDisplayGame(Game game) {
             Routine.Start(gamePopup.DisplayGame(game));
+        }
+
+        private void DisplayAgeSelector() {
+            Routine.Start(agePopup.DisplayAgePopup());
         }
 
         private GameObject CreateCard(string rewardID, GameObject mount, DisplayType displayType)

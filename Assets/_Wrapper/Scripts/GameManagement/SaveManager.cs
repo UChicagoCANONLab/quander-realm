@@ -214,16 +214,27 @@ namespace Wrapper
             isUserLoggedIn = true;
 
             // Checking if age is set in database
+            UserCode usernameObj = new UserCode { Username = researchCode };
+            string usernameJson = JsonUtility.ToJson(usernameObj);
+            byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(usernameJson);
+
             string url = awsURL + "/check_research_code";
             using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
             {
+                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
                 www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                www.SetRequestHeader("Username", "application/json");
+                www.SetRequestHeader("Content-Type", "application/json");
                 yield return www.SendWebRequest();
 
                 if (www.result != UnityWebRequest.Result.Success)
                 {
                     Debug.Log("Could not retrieve age verification from aws: " + www.error);
+                } else {
+                    if (!bool.Parse(www.downloadHandler.text)) {
+                        Debug.Log("HERE TO SET AGE");
+                        // DO POP-UP TO GET AGE
+                        // SET AGE WITH USERSAVE
+                    }
                 }
             }
 
@@ -300,10 +311,13 @@ namespace Wrapper
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
 
-            // Checking if age is set in database
+            /* // Checking if age is set in database
+            byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(researchCode);
+
             string url = awsURL + "/check_research_code";
             using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
             {
+                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
                 www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 www.SetRequestHeader("Username", "application/json");
                 yield return www.SendWebRequest();
@@ -312,7 +326,7 @@ namespace Wrapper
                 {
                     Debug.Log("Could not retrieve age verification from aws: " + www.error);
                 }
-            }
+            } */
 
 
             StarTracker.ST.Invoke("InitStarTracker", 0.2f);
