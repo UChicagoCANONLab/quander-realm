@@ -85,9 +85,9 @@ namespace Labyrinth
                             Invoke("goalTime", 0.3f);
                         }
                     }
-                    else {
+                    /* else {
                         //Debug.Log("Can't go there!");
-                    }
+                    } */
                 }
                 if ((Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || (
                 buttonMov == new Vector3(0,-1,0)) || 
@@ -116,9 +116,9 @@ namespace Labyrinth
                             Invoke("goalTime", 0.3f);
                         }
                     }
-                    else {
+                    /* else {
                         //Debug.Log("Can't go there!");
-                    }
+                    } */
                 }
             }
             mov = "none";
