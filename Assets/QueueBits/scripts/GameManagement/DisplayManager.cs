@@ -6,7 +6,7 @@ using QueueBits;
 namespace QueueBits {
     public class DisplayManager : MonoBehaviour
     {
-        public int LEVEL_NUMBER;
+        private int LEVEL_NUMBER;
 
         public GameObject displayHolder;
         public GameObject turnSign;

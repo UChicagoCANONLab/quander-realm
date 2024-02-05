@@ -39,6 +39,7 @@ namespace QueueBits
 		[Header("GameModes")]
 		public GameMode1 GM1;
 		public GameMode2 GM2;
+		public GameMode3 GM3;
 
 		// [Header("Booleans")]
 		// public bool isPlayersTurn;
@@ -118,8 +119,10 @@ namespace QueueBits
 		public void tokenSelectedByButton(int prob) {
 			if (LEVEL_NUMBER < 6) {
 				GM1.tokenSelectedByButton(prob);
-			} else {
+			} else if (LEVEL_NUMBER < 11) {
 				GM2.tokenSelectedByButton(prob);
+			} else {
+				GM3.tokenSelectedByButton(prob);
 			}
 			
 		}
@@ -132,7 +135,7 @@ namespace QueueBits
 				int index = r * numColumns + c;
 				myData.placement_order[index] = turn;
 				
-				if (LEVEL_NUMBER < 6) {
+				if (LEVEL_NUMBER > 5 && LEVEL_NUMBER < 11) {
 					myData.reveal_order[index] = turn;
 				}
 				myData.superposition[index] = pr;

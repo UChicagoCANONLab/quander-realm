@@ -5,13 +5,14 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Linq;
 using UnityEngine.SceneManagement;
 using TMPro;
 using QueueBits;
 
 namespace QueueBits
 {
-	public class GameMode2 : MonoBehaviour
+	public class GameMode3 : MonoBehaviour
 	{
 		private int LEVEL_NUMBER;
 		private int probability;
@@ -41,7 +42,7 @@ namespace QueueBits
 
 		private List<(Piece, int, int, int)> prefilledBoard = new List<(Piece piece, int col, int row, int prob)>();
 
-		private Dictionary<int, (int, (int, int))> probDict = new Dictionary<int, (int, (int, int))>();
+		private Dictionary<int, (int, (int, int), (float, float), GameObject)> probDict = new Dictionary<int, (int, (int, int), (float, float), GameObject)>();
 
 		
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
@@ -54,18 +55,18 @@ namespace QueueBits
 		public int[,] probField;
 		(int, int)[] dropOrder = new (int, int)[42];
 		GameObject[] pieces = new GameObject[42];
+
 		int numSuperpositionPieces = 0;
 		int probCounter = 0;
 		bool revealingProbs = false;
+		int revealturn = 0;
+		int turn = 0;
 
 		bool isPlayersTurn = true;
 		private bool isDropping = false;
 		private bool isCheckingForWinner = false;
 		private bool gameOver = false;
-		private GameObject finalColor = null;
-
-		// Shivani Puli Data Collection
-		int turn = 0;
+		private GameObject finalColor = null;		
 
 
 		// Use this for initialization
@@ -156,6 +157,10 @@ namespace QueueBits
 							obj = Instantiate(pieceCPU50, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 						}
 					}
+					(int, int) tempLocation = (prefilledBoard[i].Item2, prefilledBoard[i].Item3);
+					(float, float) piecePos = (obj.transform.position.x, obj.transform.position.y);
+					probDict.Add(obj.transform.GetInstanceID(), (probability, tempLocation, piecePos, obj));
+					
 					Color c = obj.GetComponent<MeshRenderer>().material.color;
 					c.a = 0.5f;
 					obj.GetComponent<MeshRenderer>().material.color = c;
@@ -397,7 +402,6 @@ namespace QueueBits
 				// Instantiate a new Piece, disable the temporary
 				GameObject g = Instantiate(gObject) as GameObject;
 				gameObjectTurn.GetComponent<Renderer>().enabled = false;
-				// finalColor.GetComponent<Renderer>().enabled = false;
 
 				if (probability != 100) {
 					Color c = g.GetComponent<MeshRenderer>().material.color;
@@ -417,17 +421,20 @@ namespace QueueBits
 				}
 
 				g.transform.parent = GC.fieldObject.transform;
-
-				if (isPlayersTurn) {
-					probDict.Add(g.transform.GetInstanceID(), (probability, tempLocation));
-				} else {
-					probDict.Add(g.transform.GetInstanceID(), (100 - probability, tempLocation));
-				}
-
+				
 				if (probability != 100) {
+					(float, float) piecePos = (g.transform.position.x, g.transform.position.y);
+					if (isPlayersTurn) {
+						probDict.Add(g.transform.GetInstanceID(), (probability, tempLocation, piecePos, g));
+					} else {
+						probDict.Add(g.transform.GetInstanceID(), (100 - probability, tempLocation, piecePos, g));
+					}
 					pieces[numSuperpositionPieces] = g;
 					numSuperpositionPieces++;
 				}
+
+				// remove the temporary gameobject
+				DestroyImmediate(gameObjectTurn);
 
 				probCounter++;
 
@@ -438,71 +445,117 @@ namespace QueueBits
 				while (isCheckingForWinner)
 					yield return null;
 
-				// remove the temporary gameobject
-				DestroyImmediate(gameObjectTurn);
-
 				if (probCounter == 42) {
 					revealingProbs = true;
-					StartCoroutine(revealProbabilities());
+					StartCoroutine(revealProbabilitiesThroughClick());
 				} 
 
 				isPlayersTurn = !isPlayersTurn;
 				DM.SwitchPlayer(isPlayersTurn);
 			}
-
 			isDropping = false;
 			yield return 0;
 		}
+		
 
-		/* void revealProbabilitiesThroughClick()
+		public IEnumerator revealProbabilitiesThroughClick()
 		{
-			if (Input.GetMouseButtonDown(0))
+			if (isPlayersTurn)
 			{
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit;
-
-				if (Physics.Raycast(ray, out hit))
+				if (Input.GetMouseButtonDown(0))
 				{
-					GameObject piece = hit.transform.gameObject;
-					int clickedObjectID = piece.GetInstanceID();
+					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+					RaycastHit hit;
 
-					if (probDict.ContainsKey(clickedObjectID - 2))
+					if (Physics.Raycast(ray, out hit))
 					{
-						(int probability, (int x, int y)) = probDict[clickedObjectID - 2];
-						Debug.Log(probability + " " + x + " " + y);
-						int p = Random.Range(1, 101);
-						if (p < probability)
+						GameObject piece = hit.transform.gameObject;
+						int clickedObjectID = piece.GetInstanceID();
+
+						if (probDict.ContainsKey(clickedObjectID - 2))
 						{
-							Vector3 pos = piece.transform.position;
-							finalColor = Instantiate(
-								piecePlayer100,
-								new Vector3(pos.x, pos.y, 0),
-								Quaternion.identity, GC.fieldObject.transform) as GameObject;
-							DestroyImmediate(piece);
-							field[x, y] = 1;
+							(int probability, (int coord_x, int coord_y), (float x, float y), GameObject token) = probDict[clickedObjectID - 2];
+							int p = Random.Range(1, 101);
+							if (p < probability)
+							{
+								Vector3 pos = piece.transform.position;
+								finalColor = Instantiate(
+									piecePlayer100,
+									new Vector3(pos.x, pos.y, 0),
+									Quaternion.identity) as GameObject;
+								DestroyImmediate(piece);
+								//Data Collection
+								int index = coord_y * GC.numColumns + coord_x;
+								revealturn++;
+								mydata.reveal_order[index] = revealturn;
+								mydata.outcome[index] = 1;
+								field[coord_x, coord_y] = 1;
+							}
+							else
+							{
+								Vector3 pos = piece.transform.position;
+								finalColor = Instantiate(
+									pieceCPU100,
+									new Vector3(pos.x, pos.y, 0),
+									Quaternion.identity) as GameObject;
+								DestroyImmediate(piece);
+								//Data Collection
+								int index = coord_y * GC.numColumns + coord_x;
+								revealturn++;
+								mydata.reveal_order[index] = revealturn;
+								mydata.outcome[index] = 2;
+								field[coord_x, coord_y] = 2;
+							}
+							isPlayersTurn = !isPlayersTurn;
+							probDict.Remove(clickedObjectID - 2);
 						}
-						else
-						{
-							Vector3 pos = piece.transform.position;
-							finalColor = Instantiate(
-								pieceCPU100,
-								new Vector3(pos.x, pos.y, 0),
-								Quaternion.identity, GC.fieldObject.transform) as GameObject;
-							DestroyImmediate(piece);
-							field[x, y] = 2;
-						}
-						isPlayersTurn = !isPlayersTurn;
+						StartCoroutine(Won());
 					}
-					StartCoroutine(Won());
 				}
+			}
+			else
+			{
+				Thread.Sleep(1000);
+				int chosenObjectID = probDict.ElementAt(Random.Range(0, probDict.Count)).Key;
+				(int probability, (int coord_x, int coord_y), (float x, float y), GameObject token) = probDict[chosenObjectID];
+				
+				int p = Random.Range(1, 101);
+				if (p < probability)
+				{
+					finalColor = Instantiate(piecePlayer100, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
+					DestroyImmediate(token);
+					//Data Collection
+					int index = coord_y * GC.numColumns + coord_x;
+					revealturn++;
+					mydata.reveal_order[index] = revealturn;
+					mydata.outcome[index] = 1;
+					field[coord_x, coord_y] = 1;
+				}
+				else
+				{
+					finalColor = Instantiate(pieceCPU100, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
+					DestroyImmediate(token);
+					//Data Collection
+					int index = coord_y * GC.numColumns + coord_x;
+					revealturn++;
+					mydata.reveal_order[index] = revealturn;
+					mydata.outcome[index] = 2;
+					field[coord_x, coord_y] = 2;
+				}
+
+				isPlayersTurn = !isPlayersTurn;
+				probDict.Remove(chosenObjectID);
+
+				StartCoroutine(Won());
 			}
 
 			if (gameOver) {
 				revealingProbs = false;
 			}
-		} */
+			yield return 0;
+		}
 
-		public IEnumerator revealProbabilities()
+		/* public IEnumerator revealProbabilities()
 		{
 			int x, y;
 			//GameObject piece;
@@ -562,7 +615,7 @@ namespace QueueBits
 				yield return new WaitForSeconds(1);
 			}
 			yield return 0;
-		}
+		} */
 
 		// Checks for winner
 		public IEnumerator Won()

@@ -1030,7 +1030,6 @@ namespace QueueBits
 		// Update is called once per frame
 		void Update()
 		{
-
 			if (isLoading)
 				return;
 
@@ -1203,7 +1202,6 @@ namespace QueueBits
 						StartCoroutine(dropPiece(gameObjectTurn, probText, probability));
 					}
 				}
-
 			}
 		}
 
@@ -1286,14 +1284,14 @@ namespace QueueBits
 				GameObject p = Instantiate(probText) as GameObject;
 				p.transform.parent = g.transform;
 
+				float distance = Vector3.Distance(startPosition, endPosition);
+
 				if (probability != 100)
 				{
 					Color c = g.GetComponent<MeshRenderer>().material.color;
 					c.a = 0.5f;
 					g.GetComponent<MeshRenderer>().material.color = c;
 				}
-
-				float distance = Vector3.Distance(startPosition, endPosition);
 
 				float t = 0;
 				while (t < 1)

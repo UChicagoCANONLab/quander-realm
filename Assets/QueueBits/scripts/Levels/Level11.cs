@@ -863,7 +863,7 @@ namespace QueueBits
 			foreach (int column in moves)
 			{
 				playMove(column, "2");
-				if(isWin(colPointers[column]+1,column,"2"))
+				if (isWin(colPointers[column] + 1, column, "2"))
                 {
 					reverseMove(column);
 					return column;
@@ -937,7 +937,6 @@ namespace QueueBits
 		/// <returns>The piece.</returns>
 		(GameObject, int, GameObject) SpawnPiece()
 		{
-			// PROBABILITY
 			Vector3 spawnPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			int prob = 0;
 
@@ -1756,7 +1755,6 @@ if (!resultBGshown)
 					}
 				}
 			}
-
 			isCheckingForWinner = false;
 
 			yield return 0;
