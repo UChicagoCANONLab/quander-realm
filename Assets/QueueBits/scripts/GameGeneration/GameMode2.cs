@@ -21,7 +21,6 @@ namespace QueueBits
 		public DisplayManager DM;
 		public GameController GC;
 		public CPUBrain cpuAI;
-		private Data mydata; // = new Data();
 
 		[Header("CPU Pieces")]
 		public TokenCounter tokenCounterCPU;
@@ -75,7 +74,6 @@ namespace QueueBits
 			
 			// Sync with GameController
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
-			mydata = GC.myData;
 			cpuAI = GC.cpuAI;
 			prefilledBoard = GC.prefilledBoard;
 			
@@ -107,7 +105,7 @@ namespace QueueBits
 			// initialize field for pieces
 			for (int x = 0; x < GC.numColumns; x++) {
 				for (int y = 0; y < GC.numRows; y++) {
-					field[x, y] = (int)Piece1.Empty;
+					field[x, y] = (int)Piece.Empty;
 					probField[x, y] = -1;
 				}
 			}
@@ -119,8 +117,8 @@ namespace QueueBits
 				if (prefilledBoard[i].Item4 == 100) 
 				{
 					field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
-					// if (prefilledBoard[i].Item1 == Piece1.Player) {
-					if ((int)prefilledBoard[i].Item1 == (int)Piece1.Player) {
+					// if (prefilledBoard[i].Item1 == Piece.Player) {
+					if (prefilledBoard[i].Item1 == Piece.Player) {
 						GameObject obj = Instantiate(piecePlayer100, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 					}
 					else {
@@ -131,7 +129,7 @@ namespace QueueBits
 				{
 					field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)Piece.Unknown;
 					GameObject obj;
-					if ((int)prefilledBoard[i].Item1 == (int)Piece1.Player)
+					if (prefilledBoard[i].Item1 == Piece.Player)
 					{
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75)
@@ -324,9 +322,9 @@ namespace QueueBits
 					turn++;
 					int index = i * GC.numColumns + x;
 
-					mydata.placement_order[index] = turn;
-					mydata.superposition[index] = probability;
-					cpuAI.superpositionArray = mydata.superposition;
+					GC.myData.placement_order[index] = turn;
+					GC.myData.superposition[index] = probability;
+					cpuAI.superpositionArray = GC.myData.superposition;
 
 					foundFreeCell = true;
 
@@ -334,7 +332,7 @@ namespace QueueBits
 						probField[x,i] = probability; // probability of being Player piece
 						cpuAI.playMove(x, "1");
 						if (probability == 100) {
-							mydata.outcome[index] = 1;
+							GC.myData.outcome[index] = 1;
 							field[x, i] = 1;
 						} else {
 							field[x, i] = 3;
@@ -343,7 +341,7 @@ namespace QueueBits
 						probField[x,i] = 100 - probability; // probability of being Player piece
 						cpuAI.playMove(x, "2");
 						if (probability == 100) {
-							mydata.outcome[index] = 2;
+							GC.myData.outcome[index] = 2;
 							field[x, i] = 2;
 						} else {
 							field[x, i] = 3;
@@ -431,7 +429,7 @@ namespace QueueBits
 				(x, y) = dropOrder[i];
 				//Data Collection
 				int index = y * GC.numColumns + x;
-				mydata.reveal_order[index] = i + 1;
+				GC.myData.reveal_order[index] = i + 1;
 
 				int probability = probField[x, y];
 				int p = Random.Range(1, 101);
@@ -447,7 +445,7 @@ namespace QueueBits
 						DestroyImmediate(pieces[i]);
 
 						//Data Collection
-						mydata.outcome[index] = 1;
+						GC.myData.outcome[index] = 1;
 						field[x, y] = 1;
 					}
 				}
@@ -463,7 +461,7 @@ namespace QueueBits
 						DestroyImmediate(pieces[i]);
 						
 						//Data Collection
-						mydata.outcome[index] = 2;
+						GC.myData.outcome[index] = 2;
 						field[x, y] = 2;
 					}
 				}
@@ -574,7 +572,7 @@ namespace QueueBits
 			}
 
 			if (gameOver == true) {
-				GC.EndGame(winCode, mydata);
+				GC.EndGame(winCode);
 			}
 
 			isCheckingForWinner = false;

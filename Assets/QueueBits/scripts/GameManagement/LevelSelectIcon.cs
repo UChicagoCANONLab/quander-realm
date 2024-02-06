@@ -5,6 +5,7 @@ using TMPro;
 
 namespace QueueBits 
 {
+    // Icon that appears in QU_LevelSelect, has button component set in LevelSelect.cs
     public class LevelSelectIcon : MonoBehaviour
     {
         public TMP_Text levelNum;

@@ -85,10 +85,9 @@ namespace QueueBits
 		}
 
 		// Ends game, sets display and saves relevant data
-		public void EndGame(Results result, Data finalData)
+		public void EndGame(Results result)
 		{
 			// Save data
-			myData = finalData;
 			myData.winner = (int)result;
 			saveData.Save(myData);
 
@@ -159,8 +158,8 @@ namespace QueueBits
 					myData.reveal_order[index] = turn;
 				}
 				myData.superposition[index] = pr;
-				//if (pi == Piece1.Player)//if Yellow
-				if ((int)pi == (int)Piece1.Player)//if Yellow
+				//if (pi == Piece.Player)//if Yellow
+				if (pi == Piece.Player)//if Yellow
 				{
 					cpuAI.playMove(c, "1");
 					if (pr == 100)

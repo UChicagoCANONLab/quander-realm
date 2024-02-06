@@ -21,7 +21,6 @@ namespace QueueBits
 		public DisplayManager DM;
 		public GameController GC;
 		public CPUBrain cpuAI;
-		private Data mydata; // = new Data();
 
 		[Header("CPU Pieces")]
 		public TokenCounter tokenCounterCPU;
@@ -35,27 +34,24 @@ namespace QueueBits
 		public GameObject piecePlayer75;
 		public GameObject piecePlayer50;
 
-
+		// Dictionaries for token counts
 		private Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
 		private Dictionary<int, int> playerProbs = new Dictionary<int, int>();
 
+		// Prefilled board initializes in GameController
 		private List<(Piece, int, int, int)> prefilledBoard = new List<(Piece piece, int col, int row, int prob)>();
 
-		
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
 		private GameObject gameObjectTurn;
 
-		/// <summary>
-		/// The Game field. 0 = Empty, 1 = Player, 2 = CPU
-		/// </summary>
+		// The Game field. 0 = Empty, 1 = Player, 2 = CPU
 		public int[,] field;
 
+		// Booleans for game management
 		bool isPlayersTurn = true;
 		private bool isDropping = false;
 		private bool isCheckingForWinner = false;
 		private bool gameOver = false;
-
-		// Shivani Puli Data Collection
 		int turn = 0;
 
 
@@ -66,7 +62,6 @@ namespace QueueBits
 			
 			// Sync with GameController
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
-			mydata = GC.myData;
 			cpuAI = GC.cpuAI;
 			prefilledBoard = GC.prefilledBoard;
 			
@@ -101,7 +96,7 @@ namespace QueueBits
 			// initialize field for pieces
 			for (int x = 0; x < GC.numColumns; x++) {
 				for (int y = 0; y < GC.numRows; y++) {
-					field[x, y] = (int)Piece1.Empty;
+					field[x, y] = (int)Piece.Empty;
 				}
 			}
 
@@ -109,8 +104,8 @@ namespace QueueBits
 			for (int i = 0; i < prefilledBoard.Count; i++)
             {
 				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
-				// if (prefilledBoard[i].Item1 == Piece1.Player) {
-				if ((int)prefilledBoard[i].Item1 == (int)Piece1.Player) {
+				// if (prefilledBoard[i].Item1 == Piece.Player) {
+				if (prefilledBoard[i].Item1 == Piece.Player) {
 					GameObject obj = Instantiate(piecePlayer100, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 				}
 				else {
@@ -278,10 +273,10 @@ namespace QueueBits
 					int p = Random.Range(1, 101);
 					if ((p < probability && isPlayersTurn) || (p >= probability && !isPlayersTurn)) {
 						pieceColorObject = piecePlayer100;
-						numOutcome = (int)Piece1.Player;
+						numOutcome = (int)Piece.Player;
 					} else if ((p >= probability && isPlayersTurn) || (p < probability && !isPlayersTurn)){
 						pieceColorObject = pieceCPU100;
-						numOutcome = (int)Piece1.CPU;
+						numOutcome = (int)Piece.CPU;
 					}
 
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -297,12 +292,12 @@ namespace QueueBits
 					
 					// Update myData here
 					turn++;
-					mydata.placement_order[index] = turn;
-					mydata.superposition[index] = probability;
-					mydata.reveal_order[index] = turn;
-					mydata.outcome[index] = numOutcome;
+					GC.myData.placement_order[index] = turn;
+					GC.myData.superposition[index] = probability;
+					GC.myData.reveal_order[index] = turn;
+					GC.myData.outcome[index] = numOutcome;
 
-					cpuAI.superpositionArray = mydata.superposition;
+					cpuAI.superpositionArray = GC.myData.superposition;
 					cpuAI.playMove(x, $"{numOutcome}");
 
 					endPosition = new Vector3(x, i * -1, startPosition.z);
@@ -433,7 +428,7 @@ namespace QueueBits
 			}
 
 			if (gameOver == true) {
-				GC.EndGame(winCode, mydata);
+				GC.EndGame(winCode);
 			}
 
 			isCheckingForWinner = false;

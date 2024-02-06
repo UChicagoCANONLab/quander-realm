@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using QueueBits;
 
-namespace QueueBits {
+namespace QueueBits 
+{
+	// AI for CPU actions, minimax algorithm predominantly
     public class CPUBrain : MonoBehaviour
     {
         // Origninally copied from Level3.cs, compared to other levels 
@@ -11,7 +13,7 @@ namespace QueueBits {
         public int difficulty = 0;
         // Difficulty 0: Level 1, 2, 3
         // Difficulty 1: Level 4, 5
-        // Difficulty 2: Level 6+ (I think this is where measurement is no longer upon drop?)
+        // Difficulty 2: Level 6+ (when measurement is no longer upon drop)
 
         public string state = "000000000000000000000000000000000000000000";
 		public int[] colPointers = { 5, 5, 5, 5, 5, 5, 5 };

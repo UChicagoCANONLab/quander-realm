@@ -4,14 +4,6 @@ namespace QueueBits
     public enum Piece 
     {
         Empty,
-        Blue,
-        Red,
-        Unknown
-    };
-    
-    public enum Piece1 
-    {
-        Empty,
         Player,
         CPU,
         Unknown
