@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using QueueBits;
 
-namespace QueueBits {
+namespace QueueBits 
+{
     public class PrefilledBoards : MonoBehaviour
     {
+		// Function to get a random prefilled board based on level number
 		public (string, List<(Piece, int, int, int)>) getRandomBoard(int level) 
 		{
 			string boardName = boardsPerLevel[level][Random.Range(0,8)];
 			List<(Piece, int, int, int)> board = boards[boardName];
-			Debug.Log(board);
-
 			return (boardName, board);
 		}
 
+		// Function to get a prefilled board called by name
 		public List<(Piece, int, int, int)> getSpecificBoard(string name)
 		{
 			List<(Piece, int, int, int)> board = boards[name];
 			return board;
 		}
 
+		// Dictionary of all the prefilled board names by level
         Dictionary<int, string[]> boardsPerLevel = new Dictionary<int, string[]> 
 		{
             {3,   new string[] {"5.2F",  "5.1",   "5.2",   "5.3",   "5.4",   "5.5",   "5.6",   "5.3F"}},
@@ -38,11 +40,10 @@ namespace QueueBits {
             {15,  new string[] {"8.9",   "8.10",  "7.11F", "7.12F", "8.5F",  "8.6F",  "8.7F",  "8.8F"}}
         };
 
+		// Dictionary of each prefilled board by name
+		// "F" = flipped
 		Dictionary<string, List<(Piece, int, int, int)>> boards = new Dictionary<string, List<(Piece, int, int, int)>> 
 		{
-			/* {"0", new List<(Piece, int, int, int)> {
-				(Piece.Empty, 0, 0, 100)
-			}}, */
 			{"5.1", new List<(Piece, int, int, int)> {
 				(Piece.CPU, 3, 5, 100),
 				(Piece.Player, 3, 4, 100),

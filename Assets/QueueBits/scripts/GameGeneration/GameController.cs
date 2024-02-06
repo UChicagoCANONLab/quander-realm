@@ -15,13 +15,13 @@ namespace QueueBits
 	{
 		public int LEVEL_NUMBER; 
 
+		// Static variables referenced in GameModes and cpuAI
 		public int numRows = 6;
 		public int numColumns = 7;
 		public int numPiecesToWin = 4;
 		public float dropTime = 4f;
 
 		public Data myData = new Data();
-		// public int turn;
 
 		public CPUBrain cpuAI;
 		public DisplayManager DM;

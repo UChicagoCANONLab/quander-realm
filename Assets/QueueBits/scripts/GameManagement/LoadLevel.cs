@@ -7,6 +7,7 @@ namespace QueueBits
 {
     public class LoadLevel : MonoBehaviour
     {
+        // Initializes MAXLEVEL
 #if LITE_VERSION
         int MAXLEVEL = 8;
 #else
@@ -31,8 +32,7 @@ namespace QueueBits
             }
             else {
                 SceneManager.LoadScene("QB_LevelSelect");
-            }
-            
+            }         
         }
 
         // Functions that will always load the same scene
@@ -44,7 +44,7 @@ namespace QueueBits
         public void loadMenu() {
             SceneManager.LoadScene("QB_Home");
         }
-        // Reloads current scenes
+        // Reloads current scene without changing level
         public void restart() {
             SceneManager.LoadScene("QB_Level");
         }

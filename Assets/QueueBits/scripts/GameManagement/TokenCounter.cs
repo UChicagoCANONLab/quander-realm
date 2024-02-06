@@ -10,6 +10,7 @@ namespace QueueBits {
         public TMP_Text[] counterText;
         public GameObject[] counterObjects;
 
+        // Boolean for if this display is for the player or the CPU
         public bool isPlayer;
 
         public TokenSelector TS;
@@ -33,9 +34,11 @@ namespace QueueBits {
             new int[] {2, 6, 6}
         };
 
+        // 0 = 100%, 1 = 75%, 2 = 50%
         private Dictionary<int, int> indexToProb = new Dictionary<int, int>() {
             {0, 100}, {1, 75}, {2, 50}
-        };
+        }; 
+        // 100% = 0, 75% = 1, 50% = 2
         private Dictionary<int, int> probToIndex = new Dictionary<int, int>() {
             {100, 0}, {75, 1}, {50, 2}
         };
@@ -48,9 +51,6 @@ namespace QueueBits {
                     if (isPlayer) { TS.updateSelectorDisplay(indexToProb[i], 0); }
                 }
             }
-            // counterText[0].text = tokenCountsPerLevel[level][0].ToString();
-            // counterText[1].text = tokenCountsPerLevel[level][1].ToString();
-            // counterText[2].text = tokenCountsPerLevel[level][2].ToString();
         }
 
         public Dictionary<int, int> getCounterDict(int level) {
@@ -67,9 +67,6 @@ namespace QueueBits {
             if (probToIndex.ContainsKey(prob)) {
                 return int.Parse(counterText[probToIndex[prob]].text);
             }
-            // if (prob == 100) { return int.Parse(counterText[0].text);}
-            // else if (prob == 75) { return int.Parse(counterText[1].text);}
-            // else if (prob == 50) { return int.Parse(counterText[2].text);}
             return 0;
         }
 
@@ -77,10 +74,6 @@ namespace QueueBits {
             if (probToIndex.ContainsKey(prob)) {
                 counterText[probToIndex[prob]].text = value.ToString();
             }
-            // if (prob == 100) { counterText[0].text = value.ToString();}
-            // else if (prob == 75) { counterText[1].text = value.ToString();}
-            // else if (prob == 50) { counterText[2].text = value.ToString();}
-
             if (isPlayer) { TS.updateSelectorDisplay(prob, value); }
         }
 
@@ -88,9 +81,6 @@ namespace QueueBits {
             if (probToIndex.ContainsKey(prob)) {
                 counterObjects[probToIndex[prob]].SetActive(false);
             }
-            // if (prob == 100) { counterObjects[0].SetActive(false); }
-            // else if (prob == 75) { counterObjects[1].SetActive(false); }
-            // else if (prob == 50) { counterObjects[2].SetActive(false); }
         }
         
     }

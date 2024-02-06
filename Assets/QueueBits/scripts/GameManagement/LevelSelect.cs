@@ -37,16 +37,10 @@ namespace QueueBits
             int numberOfIcons = 15;
 #endif
 
-            LoadIcons(numberOfIcons, levelHolder);
-        }
-
-
-        void LoadIcons(int numberOfIcons, GameObject parentObject)
-        {
             for (int i = 1; i <= numberOfIcons; i++)
             {
                 int currentLevelStar = GameManager.saveData.starSystem[i];
-                LevelSelectIcon icon = Instantiate(iconStar, parentObject.transform);
+                LevelSelectIcon icon = Instantiate(iconStar, levelHolder.transform);
                 icon.initIcon(i, currentLevelStar);
                 icon.name = "Level" + i;
                 
@@ -54,6 +48,5 @@ namespace QueueBits
                 icon.GetComponent<Button>().onClick.AddListener(delegate { levelLoader.loadLevel(chosenLevel); });
             }
         }
-
     }
 }
