@@ -79,8 +79,7 @@ namespace QueueBits
 				(boardName, prefilledBoard) = PB.getRandomBoard(LEVEL_NUMBER);
 				initPrefilledBoard();
 
-				// myData.prefilledBoard = board_num;
-				myData.newPrefilledBoard = boardName;
+				myData.prefilledBoard = boardName;
 			}
 		}
 
@@ -158,7 +157,6 @@ namespace QueueBits
 					myData.reveal_order[index] = turn;
 				}
 				myData.superposition[index] = pr;
-				//if (pi == Piece.Player)//if Yellow
 				if (pi == Piece.Player)//if Yellow
 				{
 					cpuAI.playMove(c, "1");

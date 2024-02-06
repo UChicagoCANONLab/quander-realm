@@ -123,7 +123,7 @@ namespace QueueBits
 			mydata.level = LEVEL_NUMBER;
 			mydata.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
 			// mydata.prefilledBoard = board_num;
-			mydata.newPrefilledBoard = boardName;
+			mydata.prefilledBoard = boardName;
 			mydata.placement_order = new int[numColumns * numRows];
 			mydata.superposition = new int[numColumns * numRows];
 			mydata.reveal_order = new int[numColumns * numRows];
@@ -144,7 +144,7 @@ namespace QueueBits
 				
 				mydata.reveal_order[index] = turn;
 				mydata.superposition[index] = pr;
-				if (pi == Piece.Blue)//if Yellow
+				if (pi == Piece.Player)//if Yellow
 				{
 					cpuAI.playMove(c, "1");
 					mydata.outcome[index] = 1;
@@ -212,7 +212,7 @@ namespace QueueBits
 			for (int i = 0; i < prefilledBoard.Count; i++)
             {
 				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
-				if (prefilledBoard[i].Item1 == Piece.Blue) {
+				if (prefilledBoard[i].Item1 == Piece.Player) {
 					GameObject obj = Instantiate(pieceBlue, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, fieldObject.transform) as GameObject;
 				}
 				else {
@@ -224,7 +224,7 @@ namespace QueueBits
                 {
 					field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)Piece.Unknown;
 					GameObject obj;
-					if (prefilledBoard[i].Item1 == Piece.Blue)
+					if (prefilledBoard[i].Item1 == Piece.Player)
 					{
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75) {
@@ -488,10 +488,10 @@ namespace QueueBits
 					int p = Random.Range(1, 101);
 					if ((p < probability && isPlayersTurn) || (p >= probability && !isPlayersTurn)) {
 						pieceColorObject = pieceBlue;
-						numOutcome = (int)Piece.Blue;
+						numOutcome = (int)Piece.Player;
 					} else if ((p >= probability && isPlayersTurn) || (p < probability && !isPlayersTurn)){
 						pieceColorObject = pieceRed;
-						numOutcome = (int)Piece.Red;
+						numOutcome = (int)Piece.CPU;
 					}
 
 					Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

@@ -328,7 +328,7 @@ namespace QueueBits
 			//Shivani Puli Data Collection
 			mydata.level = 5;
 			mydata.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
-			mydata.prefilledBoard = board_num;
+			// mydata.prefilledBoard = board_num;
 			mydata.placement_order = new int[numColumns * numRows];
 			mydata.superposition = new int[numColumns * numRows];
 			mydata.reveal_order = new int[numColumns * numRows];

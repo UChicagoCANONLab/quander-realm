@@ -16,11 +16,11 @@ namespace QueueBits
         Lose
     };
 
-    public enum Prob
+    /* public enum Prob
     {
         Pr100,
         Pr75,
         Pr50
-    }
+    } */
 
 }

@@ -18,9 +18,7 @@ namespace QueueBits
 
 		[Header("External Objects")]
 		// public StarDisplay starDisplay;
-		public DisplayManager DM;
 		public GameController GC;
-		public CPUBrain cpuAI;
 
 		[Header("CPU Pieces")]
 		public TokenCounter tokenCounterCPU;
@@ -38,7 +36,7 @@ namespace QueueBits
 		private Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
 		private Dictionary<int, int> playerProbs = new Dictionary<int, int>();
 
-		// Prefilled board initializes in GameController
+		// Prefilled board initialized in GameController
 		private List<(Piece, int, int, int)> prefilledBoard = new List<(Piece piece, int col, int row, int prob)>();
 
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
@@ -52,7 +50,7 @@ namespace QueueBits
 		private bool isDropping = false;
 		private bool isCheckingForWinner = false;
 		private bool gameOver = false;
-		int turn = 0;
+		private int turnCounter = 0;
 
 
 		// Use this for initialization
@@ -62,7 +60,6 @@ namespace QueueBits
 			
 			// Sync with GameController
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
-			cpuAI = GC.cpuAI;
 			prefilledBoard = GC.prefilledBoard;
 			
 			// Set AI difficulty
@@ -70,6 +67,11 @@ namespace QueueBits
 				GC.cpuAI.difficulty = 0;
 			} else {
 				GC.cpuAI.difficulty = 1;
+			}
+
+			// Init turnCounter
+			if (LEVEL_NUMBER > 2) {
+				turnCounter = 14; // GameController counts the prefilledBoard pieces
 			}
 
 			// init Player token counter
@@ -88,7 +90,7 @@ namespace QueueBits
 		// Initializes Field with prefilled board tokenss
 		public void CreateField()
 		{
-			DM.SwitchPlayer(true);
+			GC.DM.SwitchPlayer(true);
 
 			// create an empty field and instantiate the cells
 			field = new int[GC.numColumns, GC.numRows];
@@ -104,7 +106,6 @@ namespace QueueBits
 			for (int i = 0; i < prefilledBoard.Count; i++)
             {
 				field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
-				// if (prefilledBoard[i].Item1 == Piece.Player) {
 				if (prefilledBoard[i].Item1 == Piece.Player) {
 					GameObject obj = Instantiate(piecePlayer100, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 				}
@@ -222,7 +223,7 @@ namespace QueueBits
 					for (int j = 0; j < GC.numRows; j++) {
 						if (field[i, j] != 0)
 						{
-							cpuAI.colPointers[i] = j - 1;
+							GC.cpuAI.colPointers[i] = j - 1;
 							break;
 						}
 					}
@@ -230,7 +231,7 @@ namespace QueueBits
 
 				if (GC.FieldContainsUnknownCell(field))
 				{
-					int column = cpuAI.findBestMove(cpuAI.colPointers);
+					int column = GC.cpuAI.findBestMove(GC.cpuAI.colPointers);
 					spawnPos = new Vector3(column, 0, 0);
 				}
 			}
@@ -287,18 +288,18 @@ namespace QueueBits
 						Quaternion.identity, GC.fieldObject.transform) as GameObject;
 					field[x, i] = numOutcome;
 					//Shivani Puli data collection
-					int r = cpuAI.colPointers[x];
+					int r = GC.cpuAI.colPointers[x];
 					int index = r * GC.numColumns + x;
 					
 					// Update myData here
-					turn++;
-					GC.myData.placement_order[index] = turn;
+					turnCounter++;
+					GC.myData.placement_order[index] = turnCounter;
 					GC.myData.superposition[index] = probability;
-					GC.myData.reveal_order[index] = turn;
+					GC.myData.reveal_order[index] = turnCounter;
 					GC.myData.outcome[index] = numOutcome;
 
-					cpuAI.superpositionArray = GC.myData.superposition;
-					cpuAI.playMove(x, $"{numOutcome}");
+					GC.cpuAI.superpositionArray = GC.myData.superposition;
+					GC.cpuAI.playMove(x, $"{numOutcome}");
 
 					endPosition = new Vector3(x, i * -1, startPosition.z);
 					break;
@@ -337,7 +338,7 @@ namespace QueueBits
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
-				DM.SwitchPlayer(isPlayersTurn);
+				GC.DM.SwitchPlayer(isPlayersTurn);
 			}
 
 			isDropping = false;
