@@ -35,7 +35,7 @@ namespace QueueBits
             GameManager.LEVEL = level;
             GameManager.Save();
 
-            SceneManager.LoadScene("QB_Level4");
+            SceneManager.LoadScene("QB_Level");
         }
 
 
@@ -44,7 +44,7 @@ namespace QueueBits
                 GameManager.LEVEL += 1;
                 GameManager.Save();
 
-                SceneManager.LoadScene("QB_Level4");
+                SceneManager.LoadScene("QB_Level");
             }
             else {
                 SceneManager.LoadScene("QB_LevelSelect");
@@ -63,7 +63,7 @@ namespace QueueBits
         }
         // Reloads current scenes
         public void restart() {
-            SceneManager.LoadScene($"QB_Level{currentLevel}");
+            SceneManager.LoadScene("QB_Level");
         }
     }
 }
