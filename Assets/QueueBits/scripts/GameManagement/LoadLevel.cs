@@ -7,30 +7,13 @@ namespace QueueBits
 {
     public class LoadLevel : MonoBehaviour
     {
-        public int currentLevel;
 #if LITE_VERSION
         int MAXLEVEL = 8;
 #else
         int MAXLEVEL = 15;
 #endif
 
-
-        public void setCurrentLevel(int lev) {
-            this.currentLevel = lev;
-        }
-        
-
-        /* public void loadlevel (string level)
-        {
-            // GameManager.saveData.LEVEL = int.Parse(level);
-#if LITE_VERSION
-            if (level=="Level9") {
-                level = "LevelSelect";
-            }
-#endif
-            SceneManager.LoadScene("QB_" + level);
-        } */
-
+        // Loads level chosen by number
         public void loadLevel(int level) {
             GameManager.LEVEL = level;
             GameManager.Save();
@@ -38,9 +21,9 @@ namespace QueueBits
             SceneManager.LoadScene("QB_Level");
         }
 
-
+        // Loads next nevel unless at max level
         public void nextLevel() {
-            if (currentLevel < MAXLEVEL) {
+            if (GameManager.LEVEL < MAXLEVEL) {
                 GameManager.LEVEL += 1;
                 GameManager.Save();
 

@@ -77,11 +77,10 @@ namespace QueueBits
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
 			mydata = GC.myData;
 			cpuAI = GC.cpuAI;
+			prefilledBoard = GC.prefilledBoard;
 			
 			// Setting CPU difficulty
 			GC.cpuAI.difficulty = 2;
-
-			prefilledBoard = GC.prefilledBoard;
 
 			// init Player token counter
 			playerProbs = tokenCounterPlayer.getCounterDict(LEVEL_NUMBER);
@@ -276,7 +275,6 @@ namespace QueueBits
 					CPUProbs.Remove(prob);
 				}
 
-				// FROM LEVEL 4, 5, 6
 				for (int i = 0; i < GC.numColumns; i++) {
 					for (int j = 0; j < GC.numRows; j++) {
 						if (field[i, j] != 0)
@@ -331,17 +329,6 @@ namespace QueueBits
 					cpuAI.superpositionArray = mydata.superposition;
 
 					foundFreeCell = true;
-					// GameObject pieceColorObject = piecePlayer100;
-					// int numOutcome = 1;
-
-					/* int p = Random.Range(1, 101);
-					if ((p < probability && isPlayersTurn) || (p >= probability && !isPlayersTurn)) {
-						pieceColorObject = piecePlayer100;
-						numOutcome = (int)Piece1.Player;
-					} else if ((p >= probability && isPlayersTurn) || (p < probability && !isPlayersTurn)){
-						pieceColorObject = pieceCPU100;
-						numOutcome = (int)Piece1.CPU;
-					} */
 
 					if (isPlayersTurn) {
 						probField[x,i] = probability; // probability of being Player piece
@@ -369,26 +356,6 @@ namespace QueueBits
 					}
 					endPosition = new Vector3(x, i * -1, startPosition.z);
 					break;
-
-					// Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-					// finalColor = Instantiate(
-					// 	pieceColorObject, // isPlayersTurn = spawn player, else spawn CPU
-					// 	new Vector3(Mathf.Clamp(pos.x, 0, GC.numColumns - 1),
-					// 	GC.fieldObject.transform.position.y + 1, 0), // spawn it above the first row
-					// 	Quaternion.identity, GC.fieldObject.transform) as GameObject;
-					// field[x, i] = numOutcome;
-					// //Shivani Puli data collection
-					// int r = cpuAI.colPointers[x];
-					
-					// // Update myData here
-					// mydata.reveal_order[index] = turn;
-					// mydata.outcome[index] = numOutcome;
-
-					// cpuAI.superpositionArray = mydata.superposition;
-					// cpuAI.playMove(x, $"{numOutcome}");
-
-					// endPosition = new Vector3(x, i * -1, startPosition.z);
-					break;
 				}
 			}
 
@@ -397,7 +364,6 @@ namespace QueueBits
 				// Instantiate a new Piece, disable the temporary
 				GameObject g = Instantiate(gObject) as GameObject;
 				gameObjectTurn.GetComponent<Renderer>().enabled = false;
-				// finalColor.GetComponent<Renderer>().enabled = false;
 
 				if (probability != 100) {
 					Color c = g.GetComponent<MeshRenderer>().material.color;
@@ -429,6 +395,9 @@ namespace QueueBits
 					numSuperpositionPieces++;
 				}
 
+				// remove the temporary gameobject
+				DestroyImmediate(gameObjectTurn);
+
 				probCounter++;
 
 				// run coroutine to check if someone has won
@@ -438,9 +407,6 @@ namespace QueueBits
 				while (isCheckingForWinner)
 					yield return null;
 
-				// remove the temporary gameobject
-				DestroyImmediate(gameObjectTurn);
-
 				if (probCounter == 42) {
 					revealingProbs = true;
 					StartCoroutine(revealProbabilities());
@@ -449,58 +415,10 @@ namespace QueueBits
 				isPlayersTurn = !isPlayersTurn;
 				DM.SwitchPlayer(isPlayersTurn);
 			}
-
 			isDropping = false;
 			yield return 0;
 		}
 
-		/* void revealProbabilitiesThroughClick()
-		{
-			if (Input.GetMouseButtonDown(0))
-			{
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit;
-
-				if (Physics.Raycast(ray, out hit))
-				{
-					GameObject piece = hit.transform.gameObject;
-					int clickedObjectID = piece.GetInstanceID();
-
-					if (probDict.ContainsKey(clickedObjectID - 2))
-					{
-						(int probability, (int x, int y)) = probDict[clickedObjectID - 2];
-						Debug.Log(probability + " " + x + " " + y);
-						int p = Random.Range(1, 101);
-						if (p < probability)
-						{
-							Vector3 pos = piece.transform.position;
-							finalColor = Instantiate(
-								piecePlayer100,
-								new Vector3(pos.x, pos.y, 0),
-								Quaternion.identity, GC.fieldObject.transform) as GameObject;
-							DestroyImmediate(piece);
-							field[x, y] = 1;
-						}
-						else
-						{
-							Vector3 pos = piece.transform.position;
-							finalColor = Instantiate(
-								pieceCPU100,
-								new Vector3(pos.x, pos.y, 0),
-								Quaternion.identity, GC.fieldObject.transform) as GameObject;
-							DestroyImmediate(piece);
-							field[x, y] = 2;
-						}
-						isPlayersTurn = !isPlayersTurn;
-					}
-					StartCoroutine(Won());
-				}
-			}
-
-			if (gameOver) {
-				revealingProbs = false;
-			}
-		} */
 
 		public IEnumerator revealProbabilities()
 		{

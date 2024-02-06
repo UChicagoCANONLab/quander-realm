@@ -41,20 +41,18 @@ namespace QueueBits
 		public GameMode2 GM2;
 		public GameMode3 GM3;
 
-		// [Header("Booleans")]
-		// public bool isPlayersTurn;
 
+		// Initializes game based on level from static GameManager
 		void Start() {
+			// All set inactive as a precaution
 			GM1.gameObject.SetActive(false);
 			GM2.gameObject.SetActive(false);
 			GM3.gameObject.SetActive(false);
 
-			// GM1.enabled = false;
-			// GM2.enabled = false;
-			// GM3.enabled = false;
-
+			// Get level number
 			LEVEL_NUMBER = GameManager.LEVEL;
 
+			// Choose GameMode based on level
 			if (LEVEL_NUMBER < 6) {
 				GM1.gameObject.SetActive(true);
 			} else if (LEVEL_NUMBER < 11) {
@@ -64,7 +62,7 @@ namespace QueueBits
 			}
 		}
 
-
+		// Called from GameMode#, sets up dialogue, data, and prefilled board
 		public void StartGame() 
 		{
 			if (GameManager.saveData.dialogueSystem[LEVEL_NUMBER])
@@ -73,7 +71,7 @@ namespace QueueBits
 				Wrapper.Events.StartDialogueSequence?.Invoke($"QB_Level{LEVEL_NUMBER}");
 				GameManager.saveData.dialogueSystem[LEVEL_NUMBER] = false;
 				GameManager.Save();
-				Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
+				// Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
 			}
 
 			initMyData();
@@ -88,7 +86,7 @@ namespace QueueBits
 			}
 		}
 
-
+		// Ends game, sets display and saves relevant data
 		public void EndGame(Results result, Data finalData)
 		{
 			myData = finalData;
@@ -109,7 +107,7 @@ namespace QueueBits
 			}
 		}
 
-
+		// Helper to initialize myData
 		public void initMyData() 
 		{
 			myData.level = LEVEL_NUMBER;
@@ -127,12 +125,12 @@ namespace QueueBits
 			cpuAI.superpositionArray = myData.superposition;
 		}
 
-		// dialogue
-		void updateDialoguePhase()
+		// dialogue, UNSURE IF NEEDED
+		/* void updateDialoguePhase()
 		{
 			// dialoguePhase = false;
 			Wrapper.Events.DialogueSequenceEnded -= updateDialoguePhase;
-		}
+		} */
 
 		// New funtion to spawn piece when clicking buttons on TokenSelector
 		public void tokenSelectedByButton(int prob) {
@@ -143,9 +141,9 @@ namespace QueueBits
 			} else {
 				GM3.tokenSelectedByButton(prob);
 			}
-			
 		}
 
+		// Initializes array that contains Prefilled Board
 		public void initPrefilledBoard() 
 		{
 			foreach ((Piece pi, int c, int r, int pr) in prefilledBoard)
@@ -174,10 +172,7 @@ namespace QueueBits
 			}
 		}
 
-		/// <summary>
-		/// check if the field contains an empty cell
-		/// </summary>
-		/// <returns><c>true</c>, if it contains empty cell, <c>false</c> otherwise.</returns>
+		// Checks if the field contains an empty cell
 		public bool FieldContainsUnknownCell(int[,] field)
 		{
 			for (int x = 0; x < numColumns; x++)

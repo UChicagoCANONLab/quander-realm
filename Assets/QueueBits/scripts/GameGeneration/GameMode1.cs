@@ -69,6 +69,13 @@ namespace QueueBits
 			mydata = GC.myData;
 			cpuAI = GC.cpuAI;
 			prefilledBoard = GC.prefilledBoard;
+			
+			// Set AI difficulty
+			if (LEVEL_NUMBER < 4) {
+				GC.cpuAI.difficulty = 0;
+			} else {
+				GC.cpuAI.difficulty = 1;
+			}
 
 			// init Player token counter
 			playerProbs = tokenCounterPlayer.getCounterDict(LEVEL_NUMBER);
@@ -83,7 +90,7 @@ namespace QueueBits
 		}
 
 
-		// Initializes Field
+		// Initializes Field with prefilled board tokenss
 		public void CreateField()
 		{
 			DM.SwitchPlayer(true);
@@ -216,7 +223,6 @@ namespace QueueBits
 					CPUProbs.Remove(prob);
 				}
 
-				// FROM LEVEL 4, 5, 6
 				for (int i = 0; i < GC.numColumns; i++) {
 					for (int j = 0; j < GC.numRows; j++) {
 						if (field[i, j] != 0)
