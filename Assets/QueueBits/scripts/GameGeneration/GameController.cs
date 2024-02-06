@@ -14,16 +14,14 @@ namespace QueueBits
 	public class GameController : MonoBehaviour 
 	{
 		public int LEVEL_NUMBER; 
-		public int difficulty;
 
-		public int numRows = 6; 	// [Range(3, 8)]
-		public int numColumns = 7; 	// [Range(3, 8)]
+		public int numRows = 6;
+		public int numColumns = 7;
 		public int numPiecesToWin = 4;
-		// public bool allowDiagonally = true;
 		public float dropTime = 4f;
 
 		public Data myData = new Data();
-		public int turn;
+		// public int turn;
 
 		public CPUBrain cpuAI;
 		public DisplayManager DM;
@@ -44,7 +42,7 @@ namespace QueueBits
 
 		// Initializes game based on level from static GameManager
 		void Start() {
-			// All set inactive as a precaution
+			// Set all inactive as a precaution
 			GM1.gameObject.SetActive(false);
 			GM2.gameObject.SetActive(false);
 			GM3.gameObject.SetActive(false);
@@ -89,19 +87,23 @@ namespace QueueBits
 		// Ends game, sets display and saves relevant data
 		public void EndGame(Results result, Data finalData)
 		{
+			// Save data
 			myData = finalData;
 			myData.winner = (int)result;
 			saveData.Save(myData);
 
+			// Manage stars awarded
 			int starsWon = starDisplay.getResults(result);
 			if (GameManager.saveData.starSystem[LEVEL_NUMBER] <= starsWon) {
 				GameManager.saveData.starSystem[LEVEL_NUMBER] = starsWon;
 				GameManager.Save();
 			}
 
+			// Update display
 			fieldObject.SetActive(false);
 			DM.GameOver(result);
 
+			// Check if there's a reward card
 			if (GameManager.rewardSystem[LEVEL_NUMBER]) {
 				Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER);
 			}
@@ -146,6 +148,7 @@ namespace QueueBits
 		// Initializes array that contains Prefilled Board
 		public void initPrefilledBoard() 
 		{
+			int turn = 0;
 			foreach ((Piece pi, int c, int r, int pr) in prefilledBoard)
 			{
 				turn++;
