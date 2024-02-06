@@ -28,7 +28,7 @@ namespace QueueBits {
             displayHolder.SetActive(true);
             resultDisplay.gameObject.SetActive(false);
             numDisplay.initLevelNumber(level);
-            menu.currentLevel = level;
+            // menu.currentLevel = level;
         }
 
         // Switch display when player switches turns
