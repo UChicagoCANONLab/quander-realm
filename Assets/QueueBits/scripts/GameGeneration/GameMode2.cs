@@ -72,7 +72,7 @@ namespace QueueBits
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
 			prefilledBoard = GC.prefilledBoard;
 			
-			// Setting CPU difficulty
+			// Set AI difficulty
 			GC.cpuAI.difficulty = 2;
 
 			// init Player token counter
@@ -88,7 +88,7 @@ namespace QueueBits
 		}
 
 
-		// Initializes Field
+		// Initializes Field with prefilled board tokenss
 		public void CreateField()
 		{
 			GC.DM.SwitchPlayer(true);

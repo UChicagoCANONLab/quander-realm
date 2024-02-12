@@ -4,7 +4,8 @@ using UnityEngine;
 using TMPro;
 using QueueBits;
 
-namespace QueueBits {
+namespace QueueBits 
+{
     public class TokenCounter : MonoBehaviour
     {
         public TMP_Text[] counterText;
@@ -13,8 +14,10 @@ namespace QueueBits {
         // Boolean for if this display is for the player or the CPU
         public bool isPlayer;
 
+        // TokenSelector object
         public TokenSelector TS;
 
+        // Number of tokens available by level
         public int[][] tokenCountsPerLevel = new int[][] { // {100%, 75%, 50%}
             new int[] {0, 0, 0},  // Buffer so index == level number
             new int[] {21, 0, 0}, // Level 1, no prefilled
@@ -34,6 +37,8 @@ namespace QueueBits {
             new int[] {2, 6, 6}
         };
 
+        // TO DO: Phase out below dictionaries, implement via Enums.cs Prob
+        // Prob.Pr100 = 0, Prob.Pr75 = 1, Prob.Pr50 = 2
         // 0 = 100%, 1 = 75%, 2 = 50%
         private Dictionary<int, int> indexToProb = new Dictionary<int, int>() {
             {0, 100}, {1, 75}, {2, 50}
@@ -43,6 +48,7 @@ namespace QueueBits {
             {100, 0}, {75, 1}, {50, 2}
         };
 
+        // Initialize counter display, set texts and disable inactive tokens
         public void initCounter(int level) {
             for (int i=0; i<3; i++) {
                 counterText[i].text = tokenCountsPerLevel[level][i].ToString();
@@ -53,6 +59,7 @@ namespace QueueBits {
             }
         }
 
+        // Return dictionary of counter values
         public Dictionary<int, int> getCounterDict(int level) {
             Dictionary<int, int> dict = new Dictionary<int, int>();
             for (int i=0; i<3; i++) {
@@ -63,6 +70,7 @@ namespace QueueBits {
             return dict;
         }
 
+        // Get the number of tokens available by probability
         public int getCounter(int prob) {
             if (probToIndex.ContainsKey(prob)) {
                 return int.Parse(counterText[probToIndex[prob]].text);
@@ -70,6 +78,7 @@ namespace QueueBits {
             return 0;
         }
 
+        // Set the counter of a certian probability to a value
         public void setCounter(int prob, int value) {
             if (probToIndex.ContainsKey(prob)) {
                 counterText[probToIndex[prob]].text = value.ToString();
@@ -77,6 +86,7 @@ namespace QueueBits {
             if (isPlayer) { TS.updateSelectorDisplay(prob, value); }
         }
 
+        // Disable counter icon, when zero available
         public void disableCounter(int prob) {
             if (probToIndex.ContainsKey(prob)) {
                 counterObjects[probToIndex[prob]].SetActive(false);

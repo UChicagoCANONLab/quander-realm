@@ -46,7 +46,7 @@ namespace QueueBits
 		public int[,] field;
 
 		// Booleans for game management
-		bool isPlayersTurn = true;
+		private bool isPlayersTurn = true;
 		private bool isDropping = false;
 		private bool isCheckingForWinner = false;
 		private bool gameOver = false;
@@ -340,7 +340,6 @@ namespace QueueBits
 				isPlayersTurn = !isPlayersTurn;
 				GC.DM.SwitchPlayer(isPlayersTurn);
 			}
-
 			isDropping = false;
 			yield return 0;
 		}

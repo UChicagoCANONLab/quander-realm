@@ -21,14 +21,18 @@ namespace QueueBits
 		public int numPiecesToWin = 4;
 		public float dropTime = 4f;
 
+		// Create new Data object when loaded
 		public Data myData = new Data();
 
+		// References to AI, Display, and Stars
 		public CPUBrain cpuAI;
 		public DisplayManager DM;
 		public StarDisplay starDisplay;
 
+		// Holder for Board and all tokens
 		public GameObject fieldObject;
 
+		// Prefilled Board objects and name
 		[Header("Prefilled Boards")]
 		public PrefilledBoards PB;
 		public List<(Piece, int, int, int)> prefilledBoard = new List<(Piece piece, int col, int row, int prob)>();
@@ -50,7 +54,7 @@ namespace QueueBits
 			// Get level number
 			LEVEL_NUMBER = GameManager.LEVEL;
 
-			// Choose GameMode based on level
+			// Choose GameMode based on level number
 			if (LEVEL_NUMBER < 6) {
 				GM1.gameObject.SetActive(true);
 			} else if (LEVEL_NUMBER < 11) {
@@ -153,18 +157,17 @@ namespace QueueBits
 				int index = r * numColumns + c;
 				myData.placement_order[index] = turn;
 				
+				// GameMode2 tokens are displayed in order of placement
 				if (LEVEL_NUMBER > 5 && LEVEL_NUMBER < 11) {
 					myData.reveal_order[index] = turn;
 				}
+
 				myData.superposition[index] = pr;
-				if (pi == Piece.Player)//if Yellow
-				{
+				if (pi == Piece.Player) {
 					cpuAI.playMove(c, "1");
 					if (pr == 100)
 						myData.outcome[index] = 1;
-				}
-				else
-				{
+				} else {
 					cpuAI.playMove(c, "2");
 					if (pr == 100)
 						myData.outcome[index] = 2;

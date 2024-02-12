@@ -16,6 +16,7 @@ namespace QueueBits
         Lose
     };
 
+    // TO DO: Implement in TokenSelector, TokenDisplay, GameMode#
     /* public enum Prob
     {
         Pr100,

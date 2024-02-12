@@ -90,7 +90,7 @@ namespace QueueBits
 		}
 
 
-		// Initializes Field
+		// Initializes Field with prefilled board tokenss
 		public void CreateField()
 		{
 			GC.DM.SwitchPlayer(true);

@@ -11,12 +11,15 @@ namespace QueueBits {
         public GameObject displayHolder;
         public GameObject turnSign;
 
+        // TO DO: Implement TokenCounters here instead of in GameMode#
         // public TokenCounter tokenCounterPlayer;
         // public TokenCounter tokenCounterCPU;
 
         public GameOverScreen resultDisplay;
         public TokenSelector tokenSelector;
         public LevelNumberDisplay numDisplay;
+        
+        // TO DO: Use StarDisplay in QB_Level scene
         // public StarDisplay starDisplay;
 
 
