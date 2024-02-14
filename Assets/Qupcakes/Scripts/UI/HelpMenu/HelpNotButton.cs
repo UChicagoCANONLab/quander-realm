@@ -16,9 +16,9 @@ namespace Qupcakery
         {
             startPanel.SetActive(false);
             recipePanel.SetActive(true);
-            recipePanel.GetComponentInChildren<Text>().text = "Flavor-inverter (NOT Gate)";
+            recipePanel.GetComponentInChildren<Text>().text = "NOT Device (NOT Gate)";
 
-            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "NOT").SingleOrDefault();
+            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "NOT-new").SingleOrDefault();
         }
     }
 }

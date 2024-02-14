@@ -16,9 +16,9 @@ namespace Qupcakery
         {
             startPanel.SetActive(false);
             recipePanel.SetActive(true);
-            recipePanel.GetComponentInChildren<Text>().text = "Flavor-swapper (SWAP Gate)";
+            recipePanel.GetComponentInChildren<Text>().text = "Flavor-Swapper (SWAP Gate)";
 
-            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "SWAP").SingleOrDefault();
+            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "SWAP-new").SingleOrDefault();
         }
     }
 }
