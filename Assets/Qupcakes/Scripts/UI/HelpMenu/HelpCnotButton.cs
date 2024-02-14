@@ -17,9 +17,9 @@ namespace Qupcakery
         {
             startPanel.SetActive(false);
             recipePanel.SetActive(true);
-            recipePanel.GetComponentInChildren<Text>().text = "Chocolate-powered Flavor-inverter (CNOT Gate)";
+            recipePanel.GetComponentInChildren<Text>().text = "Chocolate-Powered NOT Device (CNOT Gate)";
 
-            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "CNOT").SingleOrDefault();
+            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "CNOT-new").SingleOrDefault();
         }
     }
 }
