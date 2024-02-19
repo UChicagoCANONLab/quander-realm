@@ -12,6 +12,7 @@ namespace Qupcakery
         public GameObject recipePanel;
         public GameObject startPanel;
         public Image recipeImage;
+        public Sprite graphic;
 
         public void ShowCnotRecipe()
         {
@@ -19,7 +20,8 @@ namespace Qupcakery
             recipePanel.SetActive(true);
             recipePanel.GetComponentInChildren<Text>().text = "Chocolate-Powered NOT Device (CNOT Gate)";
 
-            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "CNOT-new").SingleOrDefault();
+            // recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "CNOT-new").SingleOrDefault();
+            recipeImage.sprite = graphic;
         }
     }
 }
