@@ -65,7 +65,8 @@ namespace Wrapper
                 return true;
             }
             else if (game == Game.Circuits 
-            && starsPerGame[Game.Qupcakes] >= 12) { 
+            // && starsPerGame[Game.Qupcakes] >= 12) { // NORMAL SETTING
+            && starsPerGame[Game.Qupcakes] >= 9) { // BGCC temporary setting
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
                 gameUnlocked[Game.Circuits] = true;
                 return true;
@@ -89,7 +90,8 @@ namespace Wrapper
                 return true;
             }
             else if (game == Game.Circuits 
-            && starsPerGame[Game.Qupcakes] >= 27) {
+            // && starsPerGame[Game.Qupcakes] >= 27) { // NORMAL SETTING
+            && starsPerGame[Game.Qupcakes] >= 9) { // BGCC temporary setting
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
                 gameUnlocked[Game.Circuits] = true;
                 return true;
