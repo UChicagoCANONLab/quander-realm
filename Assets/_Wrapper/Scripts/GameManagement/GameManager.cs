@@ -23,6 +23,7 @@ namespace Wrapper
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private CardPopup cardPopup;
         [SerializeField] private GamePopup gamePopup;
+        [SerializeField] private AgePopup agePopup;
         [SerializeField] private GameObject loadingScreenPrefab;
         [SerializeField] Button universalBackButton;
 
@@ -80,6 +81,7 @@ namespace Wrapper
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
             Events.UnlockAndDisplayGame += UnlockAndDisplayGame;
+            Events.DisplayAgeSelector += DisplayAgeSelector;
             Events.ToggleBackButton += ToggleBackButton;
             Events.Logout += Logout;
             Events.PlayIntroDialog += PlayIntroDialog;
@@ -97,6 +99,7 @@ namespace Wrapper
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
             Events.UnlockAndDisplayGame -= UnlockAndDisplayGame;
+            Events.DisplayAgeSelector -= DisplayAgeSelector;
             Events.ToggleBackButton -= ToggleBackButton;
             Events.Logout -= Logout;
             Events.PlayIntroDialog -= PlayIntroDialog;
@@ -150,7 +153,8 @@ namespace Wrapper
 
             if (rewardAdded)
             {
-                Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+                // Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+                Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
 
                 // if this is the first reward from this game, display the reward dialog 
                 if (Events.GetFirstRewardBool(levelReward.rewardID.Substring(0, 2).ToLower()))
@@ -163,6 +167,10 @@ namespace Wrapper
 
         private void UnlockAndDisplayGame(Game game) {
             Routine.Start(gamePopup.DisplayGame(game));
+        }
+
+        private void DisplayAgeSelector() {
+            Routine.Start(agePopup.DisplayAgePopup());
         }
 
         private GameObject CreateCard(string rewardID, GameObject mount, DisplayType displayType)
@@ -280,7 +288,8 @@ namespace Wrapper
                 return;
             }
 
-            Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+            // Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+            Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
         }
 
         //todo: Utils class?

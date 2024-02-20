@@ -24,7 +24,7 @@ namespace Labyrinth
             DialogueSeen = save.dialogueSeen;
             TotalStars = save.totalStars;
             MaxLevelUnlocked = save.MaxLevelUnlocked;
-            Debug.Log("TTSD: " + TTSDtoString());
+            // Debug.Log("TTSD: " + TTSDtoString());
         }
 
         public string TTSDtoString() {
