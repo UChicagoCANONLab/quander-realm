@@ -42,11 +42,9 @@ namespace Qupcakery
         {
             if (waitingForCake)
             {
-                // Debug.Log(gate.Type + ": I am waiting for cake ");
                 if (AddCakeFromBelt(beltInd))
                 {
                     waitingForCake = false;
-                    // Debug.Log(gate.Type + ": I got a cake ");
                 }
             }
         }
@@ -128,6 +126,7 @@ namespace Qupcakery
                     case GateType.CNOT:
                         sr.flipY = sr.flipY ? false : true; // flip target and control
                         ctrlTgtSwapped = ctrlTgtSwapped ? false : true;
+                        waitingForCake = true;
                         break;
                 }
             }
@@ -149,7 +148,6 @@ namespace Qupcakery
         // Execute gate
         private void executeGate()
         {
-            // Debug.Log("Gatetype is "+ gate.Type);
             switch (gate.Type)
             {
                 case GateType.NOT:
@@ -161,7 +159,6 @@ namespace Qupcakery
                             GetCakeBoxControllerFromCake(targetCakeBoxes[0]);
                         Cake cake = boxController.cake;
                         // Execute gate
-                        // Debug.Log("Executing NOT Gate");
                         gate.ExecuteGate(ref cake);
                     }
                     break;
@@ -242,7 +239,6 @@ namespace Qupcakery
                         targetCakeBoxes.Add(cake);
                     }
                 }
-                // Debug.Log("Target cake box is " + targetCakeBoxes[0]);
                 return true;
             }
             else if (gt == GateType.CNOT)
