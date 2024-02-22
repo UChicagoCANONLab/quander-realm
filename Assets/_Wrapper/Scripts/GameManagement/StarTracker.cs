@@ -75,9 +75,8 @@ namespace Wrapper
                 gameUnlocked[Game.QueueBits] = true;
                 return true;
             }
-            // else if (game == Game.BlackBox
-            // && TotalStars >= 50) { // NORMAL SETTING
-            else if (game == Game.BlackBox) { // Temporary Setting for quantum class
+            else if (game == Game.BlackBox
+            && TotalStars >= 50) { // NORMAL SETTING
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
                 gameUnlocked[Game.BlackBox] = true;
                 return true;
