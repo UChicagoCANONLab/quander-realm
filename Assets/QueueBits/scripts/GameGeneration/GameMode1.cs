@@ -271,7 +271,7 @@ namespace QueueBits
 					GameObject pieceColorObject = piecePlayer100;
 					int numOutcome = 1;
 
-					int p = Random.Range(1, 101);
+					int p = Random.Range(0, 100);
 					if ((p < probability && isPlayersTurn) || (p >= probability && !isPlayersTurn)) {
 						pieceColorObject = piecePlayer100;
 						numOutcome = (int)Piece.Player;
