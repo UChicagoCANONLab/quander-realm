@@ -429,6 +429,7 @@ namespace Circuits
             }
             else
             {
+                StarDisplay.SD.AddPenalty();
                 GameData.incorrectSub();
             }
         }
@@ -505,7 +506,8 @@ namespace Circuits
 
         public void flashHint()
         {
-            StarDisplay.SD.LoseStar();
+            // StarDisplay.SD.LoseStar();
+            StarDisplay.SD.AddPenalty();
 
             for (int y = 0; y < circuit.Count; y++)
             {
