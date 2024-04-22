@@ -51,7 +51,7 @@ namespace Circuits
         // Helper function to save formatted timestamps
         private static void LogAtTime(string type) 
         {
-            log.Add(string.Format(“{0}-{1}-{2}”, saveData.currLevel, type, DateTime.UtcNow.ToString(datePatt)));
+            log.Add(string.Format("{0}-{1}-{2}", saveData.currLevel, type, DateTime.UtcNow.ToString(datePatt)));
         }
         public static void hintRequested()  { LogAtTime("hint"); }
 
