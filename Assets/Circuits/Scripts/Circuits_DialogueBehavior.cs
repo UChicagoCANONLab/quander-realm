@@ -77,7 +77,15 @@ namespace Circuits
                 return;
             }
             else {
-                SceneManager.LoadScene("CircuitsLevelScene");
+                var level = GameData.getCurrLevel();
+                if (level < 3)
+                {
+                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
+                }
+                else
+                {
+                    SceneManager.LoadScene("CircuitsLevelScene");
+                }
             }
         }
 

@@ -17,6 +17,8 @@ namespace Circuits
         void Start()
         {
             buttons = new LevelButtonBehavior[CTConstants.N_LEVELS];
+
+            //Debug.Log(GameData.getCompletedLevels());
             for (int i = 0; i < CTConstants.N_LEVELS; i++)
             {
                 GameObject newButton = Instantiate(buttonPrefab);

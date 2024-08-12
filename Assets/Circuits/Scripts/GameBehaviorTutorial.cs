@@ -9,29 +9,9 @@ using UnityEngine.UI;
 
 namespace Circuits 
 {
-    public class GameBehavior : MonoBehaviour
+    public class GameBehaviorTutorial : GameBehavior
     {
-        public Text textbox;
-
-        //private LevelGenerator levelGen;
-
-        public Color selected;
-
-        public float timeForHint = 5.0f;
-
-        public GameObject gatesObject;
-        public GameObject canvasObject;
-
-        //public GameObject[] stars;
-
-        public Camera camera;
-
-        public GameObject sparkPrefab;
-
-        public GameObject linePrefab;
-
-
-        public Transform linesTransform;
+        
         //private HashSet<LinkedListNode<GateData>> selection = new HashSet<LinkedListNode<GateData>>();
 
         private float timeToNextLevel = float.MaxValue;
@@ -60,7 +40,6 @@ namespace Circuits
         bool simplified = false;
 
         // public bool titleScene = false;
-        public Sprite[] numberSprites;
 
 
         private void renderCircuit(List<List<String>> newCircuit)
@@ -159,10 +138,12 @@ namespace Circuits
                 const string H = "H-0";
                 const string X = "X-0";
                 const string Z = "Z-0";
+                //tanglePortrait.color = Color.clear;
                 switch (GameData.getCurrLevel())
                 {
                     case 0:
                         row.Add(H);
+                        //tanglePortrait.color = Color.white;
                         row.Add(H);
                         
                         break;
@@ -277,6 +258,8 @@ namespace Circuits
                     default:
                         break;
                 }
+
+               
 
                 // Since we are building these circuits by hand we need to make sure that 
                 // all rows are the same length
