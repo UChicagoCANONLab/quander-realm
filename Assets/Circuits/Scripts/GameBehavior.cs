@@ -53,7 +53,7 @@ namespace Circuits
 
         private int sortingIndexOffset = 0;
         private List<List<String>> circuit;
-        private HashSet<BaseGateBehavior> selection;
+        protected HashSet<BaseGateBehavior> selection;
 
         private BaseGateBehavior[,] gateObjects;
 
@@ -62,8 +62,10 @@ namespace Circuits
         // public bool titleScene = false;
         public Sprite[] numberSprites;
 
+        public TutorialManager tutorialManager;
 
-        private void renderCircuit(List<List<String>> newCircuit)
+
+        protected void renderCircuit(List<List<String>> newCircuit)
         {
             foreach (Transform child in gatesObject.transform)
             {
@@ -120,7 +122,7 @@ namespace Circuits
             gatesObject.transform.localScale = Vector3.one * sceneScale;
         }
 
-        private void Start()
+        protected void Start()
         {
             GameData.levelStart();
             selection = new HashSet<BaseGateBehavior>();
@@ -130,6 +132,9 @@ namespace Circuits
             int nGates;
             int nExpansions;
             List<List<String>> tempCircuit = null;
+            if(tutorialManager){
+                tutorialManager.load(GameData.getCurrLevel());
+            }
             try
             {
                 Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.Circuits, GameData.getCurrLevel());
@@ -392,6 +397,7 @@ namespace Circuits
 
         public void toggleGate(BaseGateBehavior gate)
         {
+            // Debug.Log("Test");
             if (gate.selected)
             {
                 selection.Add(gate);
@@ -399,6 +405,10 @@ namespace Circuits
             else
             {
                 selection.Remove(gate);
+            }
+
+            if(tutorialManager){
+                tutorialManager.gatesSelected(selection);
             }
         }
 
@@ -433,6 +443,33 @@ namespace Circuits
                 StarDisplay.SD.AddPenalty();
                 GameData.incorrectSub();
             }
+
+
+            if(tutorialManager){
+                simplified = true;
+                for (int y = 0; y < circuit.Count; y++)
+                {
+                    for (int x = 0; x < circuit[y].Count; x++)
+                    {
+                        string currGate = circuit[y][x];
+                        if (currGate != null && currGate[currGate.Length - 1] == '0')
+                        {
+                            var reductions = LevelGenerator.checkGateReduction(x, y, circuit);
+                            if (reductions.Count > 0)
+                            {
+                                simplified = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (!simplified)
+                    {
+                        break;
+                    }
+                }
+                tutorialManager.substitution(simplified);
+            }
+            
         }
 
 
