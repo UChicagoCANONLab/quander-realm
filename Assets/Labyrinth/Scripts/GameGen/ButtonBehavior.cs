@@ -16,7 +16,7 @@ namespace Labyrinth
         public GameObject[] starsWonArr;
         public GameObject litePanel;
 
-        public Button[] buttons;
+        public Button[] levelButtons;
 
         void Start() {
             if (SceneManager.GetActiveScene().name == "LA_MainMenu") {
@@ -29,25 +29,16 @@ namespace Labyrinth
                 DialogueAndRewards.Instance.levelDialogue[-1] = true;
             }
 
-            if (buttons == null) {
+            if (levelButtons == null) {
                 return;
             }
-            /* else if (buttons.Length > 0) {
-                for (int i=0; i<15; i++) {
-                    if (i < FindObjectOfType<SaveData>().levelUnlocked) {
-                        buttons[i].interactable = true;
-                    }
-                    else {
-                        buttons[i].interactable = false;
-                    }
-                }
-            } */
-            else if (buttons.Length > 0) {
+
+            else if (levelButtons.Length > 0) {
                 string prefix = "Canvas/LevelButtons-New/Container";
                 for (int i=1; i<=15; i++) {
                     GameObject.Find($"StarMessage{i}").GetComponent<StarMessage>().displayStars();
                     if (i > SaveData.Instance.MaxLevelUnlocked) {
-                        buttons[i-1].enabled = false;
+                        levelButtons[i-1].enabled = false;
                         GameObject.Find($"{prefix}/{i}/Locked{i}").SetActive(true);
                     }
                 }
@@ -59,11 +50,6 @@ namespace Labyrinth
 #endif
         }
 
-        /* void Update() {
-            if (Input.GetKeyDown(KeyCode.Escape)) {
-                LoadMainMenu();
-            }
-        } */
 
         public void LoadLevelSelectMenu() {
             Time.timeScale = 1f;
@@ -202,19 +188,7 @@ namespace Labyrinth
             SceneManager.LoadScene(currScene);
         }
 
-        /* public void doDialogue(int level) {
-            if (SaveData.Instance.levelDialogue.ContainsKey(level) &&
-            SaveData.Instance.levelDialogue[level] == true) {
-                Wrapper.Events.StartDialogueSequence?.Invoke("LA_Level"+level);
-                SaveData.Instance.levelDialogue[level] = false;
-            }
-        }
 
-        public void giveReward(int level) {
-            if (Events.IsRewardUnlocked?.Invoke(levelRewards[level]) == false) {
-                Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.Labyrinth, level);
-            }
-        } */
 
         // ~~~~~~~~~~~~~~~ Enabled in Filament Environment ~~~~~~~~~~~~~~~
 

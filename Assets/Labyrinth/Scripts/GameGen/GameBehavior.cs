@@ -9,8 +9,8 @@ namespace Labyrinth
 { 
     public class GameBehavior : MonoBehaviour
     {
-        private int goalsCollected = 0;
-        private int numGoals = 1;
+        // private int goalsCollected = 0;
+        // private int numGoals = 1;
         private bool winner = false;
         public int hintsUsed = 0;
         public int numStars = 3;
@@ -25,7 +25,7 @@ namespace Labyrinth
         public int pathLength;
 
         [Header("Feedback Objects")]
-        public Star[] stars;
+        // public Star[] stars;
         public GameObject levelNumber;
 
         [Header("Time Info (for research)")]
@@ -61,11 +61,6 @@ namespace Labyrinth
 
             Time.timeScale = 1f;
             initTime = Time.time;
-
-            // pm = GameObject.Find("Players").GetComponent<PlayerMovement>();
-            // btn = GameObject.Find("GameManagerLocal").GetComponent<ButtonBehavior>();
-            // maze = GameObject.Find("MazeGen").GetComponent<Maze>();
-            // pb = GameObject.Find("StarCountdown").GetComponent<ProgressBar>();
             
             pm.StartPM();
             maze.StartMaze();
@@ -74,8 +69,6 @@ namespace Labyrinth
                 pathLength = 8;
             }
             else {
-                // string imagePath = $"Canvases/CanvasUnder/LevelNumbers/Level{SaveData.Instance.CurrentLevel}";
-                // GameObject.Find(imagePath).SetActive(true);
                 levelNumber.GetComponent<TextMeshProUGUI>().text = $"{SaveData.Instance.CurrentLevel}";
                 pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
             }
@@ -102,10 +95,10 @@ namespace Labyrinth
         }
 
         public void collectGoal() {
-            goalsCollected++;
+            // goalsCollected++;
             checkNumStars();
 
-            if (goalsCollected == numGoals) {
+            // if (goalsCollected == numGoals) {
                 maze.clearGoal();
                 winner = true;
 
@@ -114,22 +107,22 @@ namespace Labyrinth
                 SaveData.Instance.updateSave(this);
 
                 btn.Win(numStars);
-            }
+            // }
             steps = 0;
         }
 
         public void checkNumStars() {
             pb.detractBar(steps);
             if (steps > (int)(pathLength + 2)) { // 1 mistake
-                stars[2].visibilityOff();
+                // stars[2].visibilityOff();
                 numStars = 2;
             }
             if (steps > (int)(pathLength + 4)) { // 2 mistakes
-                stars[1].visibilityOff();
+                // stars[1].visibilityOff();
                 numStars = 1;
             }
             if (steps > (int)(pathLength + 8)) { // 4 mistakes
-                stars[0].visibilityOff();
+                // stars[0].visibilityOff();
                 numStars = 0;
             }
             return;
@@ -173,9 +166,6 @@ namespace Labyrinth
             hintsUsed++;
         }
 
-        /* public void highlightMovButton(Button movButton) {
-            movButton.color = new Color((1f,1f,1f,Mathf.SmoothStep(0f, 1f, 1f)));
-        } */
 
         public void Restart() {
             // Saving restart data
@@ -203,15 +193,15 @@ namespace Labyrinth
             }
 
             pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
-            goalsCollected = 0;
-            numGoals = 1;
+            // goalsCollected = 0;
+            // numGoals = 1;
             hintsUsed = 0;
             steps = 0;
             numStars = 3;
 
-            for (int i=0; i<3; i++) {
+            /* for (int i=0; i<3; i++) {
                 stars[i].resetStar();
-            }
+            } */
 
             if (pm.player1.current == false) {
                 pm.SwitchPlayer();
