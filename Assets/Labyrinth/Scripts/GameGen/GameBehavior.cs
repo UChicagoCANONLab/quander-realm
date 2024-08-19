@@ -37,7 +37,6 @@ namespace Labyrinth
         [Header("GameObjects")]
         public Maze maze;
         public PlayerMovement pm;
-        // public Camera cam;
         public ButtonBehavior btn;
         public ProgressBar pb;
 
