@@ -62,10 +62,10 @@ namespace Labyrinth
             Time.timeScale = 1f;
             initTime = Time.time;
 
-            pm = GameObject.Find("Players").GetComponent<PlayerMovement>();
-            btn = GameObject.Find("GameManagerLocal").GetComponent<ButtonBehavior>();
-            maze = GameObject.Find("MazeGen").GetComponent<Maze>();
-            pb = GameObject.Find("StarCountdown").GetComponent<ProgressBar>();
+            // pm = GameObject.Find("Players").GetComponent<PlayerMovement>();
+            // btn = GameObject.Find("GameManagerLocal").GetComponent<ButtonBehavior>();
+            // maze = GameObject.Find("MazeGen").GetComponent<Maze>();
+            // pb = GameObject.Find("StarCountdown").GetComponent<ProgressBar>();
             
             pm.StartPM();
             maze.StartMaze();

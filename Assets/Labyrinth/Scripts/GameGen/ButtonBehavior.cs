@@ -145,11 +145,11 @@ namespace Labyrinth
             SaveData.Instance.CurrentLevel = sel;
 
             switch(sel) {
-                /* case 0:
+                case 0:
                     DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 0;
                     currScene = "LA_Tutorial";
-                    break; */
+                    break;
                 case < 3:
                     DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 0;
