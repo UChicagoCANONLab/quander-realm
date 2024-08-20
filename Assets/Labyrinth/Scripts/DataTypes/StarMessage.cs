@@ -16,5 +16,17 @@ namespace Labyrinth
                 stars[i].SetActive(true);
             }
         }
+
+        public void showStars(int numStars) {
+            for (int i=0; i < numStars; i++) {
+                stars[i].SetActive(true);
+            }
+        }
+
+        public void resetStars() {
+            for (int i=0; i < 3; i++) {
+                stars[i].SetActive(false);
+            }
+        }
     }
 }

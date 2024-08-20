@@ -7,6 +7,7 @@ namespace Labyrinth
     public class UIManager : MonoBehaviour
     {
         public GameObject winScreen;
+        public StarMessage starDisplay;
         public GameObject loseScreen;
 
         public GameObject gameplayButtons;
@@ -21,17 +22,24 @@ namespace Labyrinth
             gameplayButtons.SetActive(true);
             gameplayObjects.SetActive(true);
             progressBar.SetActive(true);
+
+            starDisplay.resetStars();
         }
 
-        public void LevelComplete(bool winStatus) {
-            if (!winStatus) {
+        public void LevelComplete(int starsWon) {
+            if (starsWon == 0) {
                 loseScreen.SetActive(true);
-                // loseScreen.GetComponent<Animator>.Play("Popups");
             }
             else {
                 winScreen.SetActive(true);
-                winScreen.GetComponent<Animator>().Play("Popups");
+                starDisplay.showStars(starsWon);
+
+                if (SaveData.Instance.CurrentLevel == SaveData.Instance.MaxLevelUnlocked) {
+                    SaveData.Instance.MaxLevelUnlocked += 1;
+                }
             }
+            Save.Instance.SaveGame();
+
             gameplayButtons.SetActive(false);
             gameplayObjects.SetActive(false);
             progressBar.SetActive(false);

@@ -8,13 +8,16 @@ namespace Labyrinth
 { 
     public class ButtonBehavior : MonoBehaviour
     {
-        public GameObject winScreen;
+        /* public GameObject winScreen;
         public GameObject loseScreen;
 
         public GameObject gameplayButtons;
         public GameObject gameplayObjects;
         public GameObject progressBar;
-        public GameObject[] starsWonArr;
+        public GameObject[] starsWonArr; */
+
+        public UIManager UI;
+
         public GameObject litePanel;
 
         public Button[] levelButtons;
@@ -79,7 +82,9 @@ namespace Labyrinth
         }
 
         public void Win(int starsWon) {      
-            if (starsWon == 0) {
+            
+            UI.LevelComplete(starsWon);
+            /* if (starsWon == 0) {
                 SaveData.Instance.winner = false;
                 loseScreen.SetActive(true);
             }
@@ -87,7 +92,7 @@ namespace Labyrinth
                 SaveData.Instance.winner = true;
                 
                 winScreen.SetActive(true);
-                winScreen.GetComponent<Animator>().Play("Popups");
+                winScreen.GetComponent<Animation>().Play();
                 
                 for (int i=0; i<starsWon; i++) { 
                     starsWonArr[i].SetActive(true); 
@@ -102,7 +107,7 @@ namespace Labyrinth
             
             gameplayButtons.SetActive(false);
             gameplayObjects.SetActive(false);
-            progressBar.SetActive(false);
+            progressBar.SetActive(false); */
 
             // Time.timeScale = 0f;
 
@@ -117,7 +122,8 @@ namespace Labyrinth
         public void UndoWin(int starsWon) {
             SaveData.Instance.winner = false;
 
-            winScreen.SetActive(false);
+            UI.Reset();
+            /* winScreen.SetActive(false);
             loseScreen.SetActive(false);
             gameplayButtons.SetActive(true);
             gameplayObjects.SetActive(true);
@@ -125,7 +131,7 @@ namespace Labyrinth
 
             for (int i=0; i<starsWon; i++) {
                 starsWonArr[i].SetActive(false);
-            }
+            } */
             // Time.timeScale = 1f;
         }
 
