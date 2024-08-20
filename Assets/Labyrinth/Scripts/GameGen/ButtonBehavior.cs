@@ -40,7 +40,7 @@ namespace Labyrinth
             else if (levelButtons.Length > 0) {
                 string prefix = "Canvas/LevelButtons-New/Container";
                 for (int i=1; i<=15; i++) {
-                    GameObject.Find($"StarMessage{i}").GetComponent<StarMessage>().displayStars();
+                    GameObject.Find($"{prefix}/{i}/StarMessage{i}").GetComponent<StarMessage>().displayStars();
                     if (i > SaveData.Instance.MaxLevelUnlocked) {
                         levelButtons[i-1].enabled = false;
                         GameObject.Find($"{prefix}/{i}/Locked{i}").SetActive(true);
