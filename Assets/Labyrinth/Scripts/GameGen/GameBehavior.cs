@@ -138,7 +138,8 @@ namespace Labyrinth
             }
             
             string buttonPath = $"Canvases/CanvasOver/GameplayButtons/MovementButtons/{hintDir}";
-            GameObject.Find(buttonPath).GetComponent<ParticleSystem>().Play();
+            // GameObject.Find(buttonPath).GetComponent<ParticleSystem>().Play();
+            GameObject.Find(buttonPath).GetComponent<Animation>().Play("ButtonHighlight");
             // Button button = GameObject.Find(hintDir); //.GetComponent<SpriteRenderer>();
             // button.IsHighlighted = true;
 
