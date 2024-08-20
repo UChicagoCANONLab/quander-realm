@@ -9,8 +9,6 @@ namespace Labyrinth
 { 
     public class GameBehavior : MonoBehaviour
     {
-        // private int goalsCollected = 0;
-        // private int numGoals = 1;
         private bool winner = false;
         public int hintsUsed = 0;
         public int numStars = 3;
@@ -77,17 +75,7 @@ namespace Labyrinth
 
         void Update() {
             checkNumStars();
-            /* if (winner == true) {
-                endTime = Time.time;
-                timePlayed = endTime - initTime;
-                //SaveSystem.SaveGame(this);
-                FindObjectOfType<SaveData>().updateSave(this);
 
-                btn.Win(numStars);
-            } */
-            /* if (Input.GetKeyDown(KeyCode.Escape)) {
-                btn.MainMenu();
-            } */
             if (Input.GetKeyDown(KeyCode.Space)) {
                 pm.SwitchPlayer();
             }
@@ -113,15 +101,12 @@ namespace Labyrinth
         public void checkNumStars() {
             pb.detractBar(steps);
             if (steps > (int)(pathLength + 2)) { // 1 mistake
-                // stars[2].visibilityOff();
                 numStars = 2;
             }
             if (steps > (int)(pathLength + 4)) { // 2 mistakes
-                // stars[1].visibilityOff();
                 numStars = 1;
             }
             if (steps > (int)(pathLength + 8)) { // 4 mistakes
-                // stars[0].visibilityOff();
                 numStars = 0;
             }
             return;
@@ -133,11 +118,6 @@ namespace Labyrinth
 
         public void GiveHint() {
             string hintDir;
-
-            /* if (hintsUsed == 3) {
-                hintText = "You used all your hints!";
-                return;
-            } */
 
             object[] hint = maze.calcPathToGoal();
             string hintPath = hint[0].ToString();

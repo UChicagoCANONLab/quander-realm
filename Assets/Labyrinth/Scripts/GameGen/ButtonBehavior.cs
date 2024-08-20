@@ -10,6 +10,7 @@ namespace Labyrinth
     {
         public GameObject winScreen;
         public GameObject loseScreen;
+
         public GameObject gameplayButtons;
         public GameObject gameplayObjects;
         public GameObject progressBar;
@@ -84,7 +85,9 @@ namespace Labyrinth
             }
             else {
                 SaveData.Instance.winner = true;
+                
                 winScreen.SetActive(true);
+                winScreen.GetComponent<Animator>().Play("Popups");
                 
                 for (int i=0; i<starsWon; i++) { 
                     starsWonArr[i].SetActive(true); 
