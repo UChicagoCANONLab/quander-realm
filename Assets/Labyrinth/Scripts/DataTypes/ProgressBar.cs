@@ -24,7 +24,7 @@ namespace Labyrinth {
             Invoke("horizOff", 1);
         }
 
-        public void resestBar() {
+        public void resetBar() {
             for (int i=0; i<moveTiles.Length; i++) {
                 GameObject.Find($"{path}/Steps/{moveTiles[i]}").SetActive(true);
             }

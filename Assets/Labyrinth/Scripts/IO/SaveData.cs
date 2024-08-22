@@ -38,7 +38,7 @@ namespace Labyrinth
             DontDestroyOnLoad(gameObject);
         }
 
-        public void updateSave(GameBehavior gb) {
+        public void updateSave(GameBehavior GB) {
             /* if (CurrentLevel == levelUnlocked) {
                 levelUnlocked = CurrentLevel + 1;
             } */
@@ -47,9 +47,9 @@ namespace Labyrinth
                 return;
             }
             else  */
-            if (gb.numStars > starsPerLevel[CurrentLevel - 1]) {
-                totalStars += (gb.numStars - starsPerLevel[CurrentLevel-1]);
-                starsPerLevel[CurrentLevel - 1] = gb.numStars;
+            if (GB.numStars > starsPerLevel[CurrentLevel - 1]) {
+                totalStars += (GB.numStars - starsPerLevel[CurrentLevel-1]);
+                starsPerLevel[CurrentLevel - 1] = GB.numStars;
             }
 
             int i=0;
@@ -60,9 +60,9 @@ namespace Labyrinth
             // MaxLevelUnlocked incremented at ButtonBehavior line 107
 
             level = CurrentLevel;
-            numStars = gb.numStars;
-            time = gb.timePlayed;
-            hintsUsed = gb.hintsUsed;
+            numStars = GB.numStars;
+            time = GB.timePlayed;
+            hintsUsed = GB.hintsUsed;
         }
 
         public string SDtoString() {

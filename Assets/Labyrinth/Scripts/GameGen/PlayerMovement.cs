@@ -7,31 +7,26 @@ namespace Labyrinth
 { 
     public class PlayerMovement : MonoBehaviour
     {
-        public float speed = 5f;
+        private float speed = 5f;
         private float sign = 1f; //1 for 90deg, -1 for -90deg
         private int deg;
         private string mov = "none";
-        
-        public LayerMask goalLayer;
-        public TilemapCollider2D goalCollider;
-        
+                
         public TM maze1;
         public TM maze2;
 
-        private GameBehavior gb;
-        public Camera cam;
+        public GameBehavior GB;
 
         public Player player1;
         public Player player2;
 
         public void StartPM()
         {
-            cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-            gb = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>();
-            deg = gb.degree;
+            // GB = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>();
+            deg = SaveData.Instance.Degree;
 
-            player1 = GameObject.Find("PlayerMain").GetComponent<Player>();
-            player2 = GameObject.Find("PlayerMirror").GetComponent<Player>();
+            // player1 = GameObject.Find("PlayerMain").GetComponent<Player>();
+            // player2 = GameObject.Find("PlayerMirror").GetComponent<Player>();
 
             player1.initPlayer(-1,0);
             player2.initPlayer(1,deg);
@@ -43,12 +38,14 @@ namespace Labyrinth
             Player main; Player mirror;
             
             if (player1.getType == "main") {
-                main = GameObject.Find("PlayerMain").GetComponent<Player>();
-                mirror = GameObject.Find("PlayerMirror").GetComponent<Player>();
+                // main = GameObject.Find("PlayerMain").GetComponent<Player>();
+                // mirror = GameObject.Find("PlayerMirror").GetComponent<Player>();
+                main = player1; mirror = player2;
             }   
             else { // if (player1.getType == "mirror") {
-                main = GameObject.Find("PlayerMirror").GetComponent<Player>();
-                mirror = GameObject.Find("PlayerMain").GetComponent<Player>();
+                // main = GameObject.Find("PlayerMirror").GetComponent<Player>();
+                // mirror = GameObject.Find("PlayerMain").GetComponent<Player>();
+                main = player2; mirror = player1;
             }
 
             main.player.transform.position = Vector3.MoveTowards(main.player.transform.position, main.movepoint.position, speed*Time.deltaTime);
@@ -75,13 +72,13 @@ namespace Labyrinth
 
                         main.move(movementx);
                         mirror.move(mirrorMovementx);
-                        gb.steps++;
+                        GB.steps++;
                         
                         movementx = new Vector3(0,0,0);
                         // Invoke("stopAnim", 0.75f);
             
-                        if ((main.getPloc == new Vector3(gb.size-1, 0, 0)) || 
-                        mirror.getPloc == new Vector3(gb.size-1, 0, 0)) {
+                        if ((main.getPloc == new Vector3(GB.size-1, 0, 0)) || 
+                        mirror.getPloc == new Vector3(GB.size-1, 0, 0)) {
                             Invoke("goalTime", 0.3f);
                         }
                     }
@@ -106,13 +103,13 @@ namespace Labyrinth
                         
                         main.move(movementy);
                         mirror.move(mirrorMovementy);
-                        gb.steps++;
+                        GB.steps++;
 
                         movementy = new Vector3(0,0,0);
                         // Invoke("stopAnim", 0.75f);
             
-                        if ((main.getPloc == new Vector3(gb.size-1, 0, 0)) || 
-                        mirror.getPloc == new Vector3(gb.size-1, 0, 0)) {
+                        if ((main.getPloc == new Vector3(GB.size-1, 0, 0)) || 
+                        mirror.getPloc == new Vector3(GB.size-1, 0, 0)) {
                             Invoke("goalTime", 0.3f);
                         }
                     }
@@ -125,7 +122,7 @@ namespace Labyrinth
         }
 
         public void goalTime() {
-            gb.collectGoal();
+            GB.collectGoal();
         }
 
         /* public void stopAnim() {

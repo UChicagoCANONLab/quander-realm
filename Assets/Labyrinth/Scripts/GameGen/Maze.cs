@@ -18,6 +18,7 @@ namespace Labyrinth
         public TM map2;
         // public TM map3;
 
+        [Header("Tile Textures")]
         public Tile goalTile;
         public Tile startTile;
         // public Tile bottomTile;
@@ -27,8 +28,9 @@ namespace Labyrinth
 
         private Vector3 currGoal;
 
-        private GameBehavior gb;
-        private PlayerMovement pm;
+        [Header("GameObjects")]
+        public GameBehavior GB;
+        public PlayerMovement PM;
 
         private Dictionary<string, string> opposites = new Dictionary<string, string>()
         { {"N", "S"}, {"W", "E"}, {"E", "W"}, {"S", "N"} };
@@ -37,11 +39,8 @@ namespace Labyrinth
     // ~~~~~~~~~~~~~~~ INITIALIZING ~~~~~~~~~~~~~~~
 
         public void StartMaze() {
-            gb = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>();
-            pm = GameObject.Find("Players").GetComponent<PlayerMovement>();
-
-            deg = gb.degree;
-            size = gb.size;
+            deg = SaveData.Instance.Degree;
+            size = GB.size;
 
             generateMazes(); //(size, size);
             renderMazes();
@@ -160,7 +159,7 @@ namespace Labyrinth
                 float randFloat = (float)Random.Range(0f,1f);
                 if (randFloat < 0.5) {
                     float randFloat2 = (float)Random.Range(0f,1f);
-                    if (randFloat2 < gb.wallProb) {
+                    if (randFloat2 < GB.wallProb) {
                         if (oldTile1.isCave()==false && newTile1.isCave()==false && 
                         oldTile2.walls[dir] == false && newTile2.walls[opposites[dir]]==false) {
                             oldTile1.walls[dir] = true;
@@ -181,9 +180,9 @@ namespace Labyrinth
         }
 
         public void distributeGoal(MazeCell[,] maze, Player player) {
-            maze[0, gb.size-1].toggleStart(true);
-            maze[gb.size-1, 0].toggleGoal(true);
-            currGoal = new Vector3(gb.size-1, 0, 0);
+            maze[0, GB.size-1].toggleStart(true);
+            maze[GB.size-1, 0].toggleGoal(true);
+            currGoal = new Vector3(GB.size-1, 0, 0);
         }
 
         public void clearGoal() {
@@ -272,19 +271,19 @@ namespace Labyrinth
             Vector3 start; Vector3 end;
             int degree;
         
-            if (pm.player1.current == true) {
+            if (PM.player1.current == true) {
             //if (currGoal.z == 1) {
-                start = pm.player1.getPloc;
+                start = PM.player1.getPloc;
                 degree = 0;
             }
-            else if (pm.player2.current == true) {
+            else if (PM.player2.current == true) {
             //else if (currGoal.z == 2) {
-                start = pm.player2.getPloc;
+                start = PM.player2.getPloc;
                 degree = deg;
             }
             else { return new object[] {"X", 0}; }
 
-            end = new Vector3(gb.size-1, 0, 0);
+            end = new Vector3(GB.size-1, 0, 0);
 
             // int startx = size-1-(int)start.x;
             // int starty = size-1-(int)start.y;
@@ -388,8 +387,8 @@ namespace Labyrinth
                     maze2[x,y].toggleGoal(false);
                 }
             }
-            distributeGoal(maze1, pm.player1);
-            distributeGoal(maze2, pm.player2); 
+            distributeGoal(maze1, PM.player1);
+            distributeGoal(maze2, PM.player2); 
             
             // RenderMap(maze, map3, 0);
             RenderMap(maze1, map1, 0);

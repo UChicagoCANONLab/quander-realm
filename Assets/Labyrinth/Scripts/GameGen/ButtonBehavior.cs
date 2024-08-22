@@ -8,18 +8,8 @@ namespace Labyrinth
 { 
     public class ButtonBehavior : MonoBehaviour
     {
-        /* public GameObject winScreen;
-        public GameObject loseScreen;
-
-        public GameObject gameplayButtons;
-        public GameObject gameplayObjects;
-        public GameObject progressBar;
-        public GameObject[] starsWonArr; */
-
         public UIManager UI;
-
         public GameObject litePanel;
-
         public Button[] levelButtons;
 
         void Start() {
@@ -36,9 +26,9 @@ namespace Labyrinth
             if (levelButtons == null) {
                 return;
             }
-
             else if (levelButtons.Length > 0) {
                 string prefix = "Canvas/LevelButtons-New/Container";
+
                 for (int i=1; i<=15; i++) {
                     GameObject.Find($"{prefix}/{i}/StarMessage{i}").GetComponent<StarMessage>().displayStars();
                     if (i > SaveData.Instance.MaxLevelUnlocked) {
@@ -56,10 +46,6 @@ namespace Labyrinth
 
 
         public void LoadLevelSelectMenu() {
-            Time.timeScale = 1f;
-            // Load.LoadGame();
-            // DialogueAndRewards.Instance.updateDialogueDict();
-
             /* if (DialogueAndRewards.Instance.levelDialogue[0] == false) {
                 LevelSelect(0);
             }
@@ -70,70 +56,32 @@ namespace Labyrinth
         }
 
         public void LoadMainMenu() {
-            Time.timeScale = 1f;
-            // Load.LoadTTSaveData();
             Load.LoadGame();
             SceneManager.LoadScene("LA_MainMenu");
         }
 
         public void Exit() {
-            // Save.SaveGame();
             Application.Quit();
         }
 
-        public void Win(int starsWon) {      
-            
-            UI.LevelComplete(starsWon);
-            /* if (starsWon == 0) {
-                SaveData.Instance.winner = false;
-                loseScreen.SetActive(true);
-            }
-            else {
-                SaveData.Instance.winner = true;
-                
-                winScreen.SetActive(true);
-                winScreen.GetComponent<Animation>().Play();
-                
-                for (int i=0; i<starsWon; i++) { 
-                    starsWonArr[i].SetActive(true); 
-                }
+        // public void Win(int starsWon) {      
+        //     UI.LevelComplete(starsWon);
 
-                if (SaveData.Instance.CurrentLevel == SaveData.Instance.MaxLevelUnlocked) {
-                    SaveData.Instance.MaxLevelUnlocked += 1;
-                }
-            }
-            
-            Save.Instance.SaveGame();
-            
-            gameplayButtons.SetActive(false);
-            gameplayObjects.SetActive(false);
-            progressBar.SetActive(false); */
+        //     /* if ((SaveData.Instance.CurrentLevel % 5 == 0) 
+        //     && (SaveData.Instance.CurrentLevel != 0)) {
+        //         DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
+        //     } */
+        //     if (SaveData.Instance.CurrentLevel == 15) {
+        //         DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
+        //     }
+        //     DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
+        //     // DialogueAndRewards.Instance.updateDialogueDict();
+        // }
 
-            // Time.timeScale = 0f;
-
-            if ((SaveData.Instance.CurrentLevel % 5 == 0) 
-            && (SaveData.Instance.CurrentLevel != 0)) {
-                DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
-            }
-            DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
-            // DialogueAndRewards.Instance.updateDialogueDict();
-        }
-
-        public void UndoWin(int starsWon) {
+        /* public void UndoWin() {
             SaveData.Instance.winner = false;
-
             UI.Reset();
-            /* winScreen.SetActive(false);
-            loseScreen.SetActive(false);
-            gameplayButtons.SetActive(true);
-            gameplayObjects.SetActive(true);
-            progressBar.SetActive(true);
-
-            for (int i=0; i<starsWon; i++) {
-                starsWonArr[i].SetActive(false);
-            } */
-            // Time.timeScale = 1f;
-        }
+        } */
 
         public void LevelSelect(int sel) {
             string currScene;
@@ -141,7 +89,8 @@ namespace Labyrinth
 
             switch(sel) {
                 case 0:
-                    DialogueAndRewards.Instance.doDialogue(sel);
+                    // DialogueAndRewards.Instance.doDialogue(sel);
+                    // DialogueAndRewards.Instance.levelDialogue[0] = true;
                     SaveData.Instance.Degree = 0;
                     currScene = "LA_Tutorial";
                     break;
@@ -208,7 +157,7 @@ namespace Labyrinth
             Wrapper.Events.MinigameClosed -= DestroyDataObject;
         }
         private void DestroyDataObject() {
-            Time.timeScale = 1f;
+            // Time.timeScale = 1f;
             Destroy(GameObject.Find("ProfileData"));
         }
 
