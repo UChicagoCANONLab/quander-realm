@@ -1013,7 +1013,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 32.92, y: -166.39}
+  m_AnchoredPosition: {x: 32.919983, y: -166.39001}
   m_SizeDelta: {x: 35.84, y: 171.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &483868050
@@ -1974,6 +1974,7 @@ GameObject:
   - component: {fileID: 1220517705}
   - component: {fileID: 1220517704}
   - component: {fileID: 1220517703}
+  - component: {fileID: 1220517706}
   m_Layer: 5
   m_Name: HintButton
   m_TagString: Untagged
@@ -2045,9 +2046,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: HelpMenuButton, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 1220517706}
+        m_TargetAssemblyTypeName: Qupcakery.HintButton, Assembly-CSharp
+        m_MethodName: GiveHint
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2095,6 +2096,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1220517701}
   m_CullTransparentMesh: 1
+--- !u!114 &1220517706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220517701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a33132e0a85ae314ca5bb9d47f9ca0d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1258505760 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5298928328509288443, guid: 1c3852c520c584803bfc9ebd41f55821, type: 3}
