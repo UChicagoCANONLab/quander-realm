@@ -6,73 +6,86 @@ namespace Labyrinth
 {
     public class Tutorial : MonoBehaviour
     {
-        public TM tutMap1;
-        public TM tutMap2;
-
         public Player p1;
-        public Player p2;
 
-        public bool instruction1 = true;
-        public bool instruction2 = true;
-        public bool instruction3 = true;
+        public GameObject upButton;
+        public GameObject switchButton;
 
-        public GameObject instructionPanel;
-        public GameObject help1;
-        public GameObject help2;
-        public GameObject help3;
+        public bool[] completed = {false, false, false, false};
 
-        private Maze maze;
-        private PlayerMovement pm;
-        private ButtonBehavior btn;
+        [Header("Sequenced GameObjects")]
+        // LEFT
+        public GameObject instruction1;
+        // public string tutorial1 = "Use the keyboard or arrows to move Fran"; // at (0,0)/start
+            // when disable --> highlight arrow button (with "hint" infrastructure)
+        
+        // RIGHT
+        public GameObject instruction2;
+        public GameObject text1;
+        public GameObject text2;
+        // public string tutorial2 = "When you move me, Ken moves too! Even through walls!"; // at (0,1)
+        // public string tutorial3 = "Press the Switch button to control Ken";
+            // when disable --> highlight switch button
 
-        public void StartTutorial() {
-            maze = GameObject.Find("MazeGen").GetComponent<Maze>();
-            pm = GameObject.Find("Players").GetComponent<PlayerMovement>();
-            btn = GameObject.Find("GameManagerLocal").GetComponent<ButtonBehavior>();
-        }
+        // LEFT
+        public GameObject instruction3;
+        // public string tutorial4 = "Get us to the exit ladder in as few moves as you can"; // at (1,1)
+            // when disable --> 
+        
+
+
 
         void Update() {
-            if ((p1.getPloc == new Vector3(0,1,0)) & (instruction1 == true)) {
-                // Debug.Log("Here's some help!");
-                help1.SetActive(true);
-                instruction1 = false;
-                Invoke("highlightSwitchButton", 1f);
-                Invoke("endHelp1", 3f);
+            if (p1.getPloc == new Vector3(0,1,0) && !completed[2]) {
+                instruction2.SetActive(true);
             }
-            if ((p1.getPloc == new Vector3(1,0,0)) & (instruction3 == true)) {
-                Debug.Log("Here's some helP!!!!");
-                help3.SetActive(true);
-                instruction3 = false;
-                Invoke("endHelp3", 3f);
-            }
-            if ((p2.getPloc == new Vector3(2,2,0)) & (instruction2 == true)) {
-                // Debug.Log("Here's some help! 2");
-                help2.SetActive(true);
-                instruction2 = false;
-                Invoke("highlightSwitchButton", 1f);
-                Invoke("endHelp2", 3f);
+            if (p1.getPloc == new Vector3(1,1,0) && !completed[3]){
+                instruction3.SetActive(true);
             }
         }
 
-        public void endHelp1() {
-            help1.SetActive(false);
+        public void nextButton(int type) {
+            switch(type){
+                case 0:
+                    completed[type] = true;
+                    doExitAnimation(instruction1);
+                    Invoke("closePopups", 1f);
+                    upButton.GetComponent<Animation>().Play();
+                    break;
+
+                case 1:
+                    completed[type] = true;
+                    text1.SetActive(false);
+                    text2.SetActive(true);
+                    break;
+
+                case 2:
+                    completed[type] = true;
+                    doExitAnimation(instruction2);
+                    Invoke("closePopups", 1f);
+                    switchButton.GetComponent<Animation>().Play();
+                    break;
+
+                case 3:
+                    completed[type] = true;
+                    doExitAnimation(instruction3);
+                    Invoke("closePopups", 1f);
+                    break;
+
+                default:
+                    break;
+            }
+
         }
 
-        public void endHelp2() {
-            help2.SetActive(false);
+        public void doExitAnimation(GameObject popup) {
+            popup.GetComponent<Animation>().Play("Popup-Exit");
         }
 
-        public void endHelp3() {
-            help3.SetActive(false);
-        }
-
-        public void highlightSwitchButton() {
-            GameObject.Find("Canvases/CanvasOver/GameplayButtons/SwitchPlayers").GetComponent<ParticleSystem>().Play();
-        }
-
-        public void exitPanel() {
-            instructionPanel.SetActive(false);
-            GameObject.Find("Canvases/CanvasOver/GameplayButtons").SetActive(true);
+        public void closePopups() {
+            instruction1.SetActive(false);
+            instruction2.SetActive(false);
+            instruction3.SetActive(false);
         }
 
     }
