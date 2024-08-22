@@ -8,7 +8,9 @@ namespace Labyrinth
 { 
     public class ButtonBehavior : MonoBehaviour
     {
-        public UIManager UI;
+        public GameBehavior GB;
+        public PlayerMovement PM;
+
         public GameObject litePanel;
         public Button[] levelButtons;
 
@@ -44,6 +46,8 @@ namespace Labyrinth
 #endif
         }
 
+        
+        // ~~~~~~~~~~~~~~~ Scene Loading Functions ~~~~~~~~~~~~~~~
 
         public void LoadLevelSelectMenu() {
             /* if (DialogueAndRewards.Instance.levelDialogue[0] == false) {
@@ -64,24 +68,10 @@ namespace Labyrinth
             Application.Quit();
         }
 
-        // public void Win(int starsWon) {      
-        //     UI.LevelComplete(starsWon);
-
-        //     /* if ((SaveData.Instance.CurrentLevel % 5 == 0) 
-        //     && (SaveData.Instance.CurrentLevel != 0)) {
-        //         DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
-        //     } */
-        //     if (SaveData.Instance.CurrentLevel == 15) {
-        //         DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
-        //     }
-        //     DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
-        //     // DialogueAndRewards.Instance.updateDialogueDict();
-        // }
-
-        /* public void UndoWin() {
-            SaveData.Instance.winner = false;
-            UI.Reset();
-        } */
+        public void NextLevel() {
+            SaveData.Instance.CurrentLevel += 1;
+            LevelSelect(SaveData.Instance.CurrentLevel);
+        }
 
         public void LevelSelect(int sel) {
             string currScene;
@@ -146,7 +136,23 @@ namespace Labyrinth
             SceneManager.LoadScene(currScene);
         }
 
+        // ~~~~~~~~~~~~~~~ Calling Button Functions from GameBehavior/PlayerMovement ~~~~~~~~~~~~~~~
 
+        public void HintButton() {
+            GB.GiveHint();
+        }
+
+        public void RestartLevel() {
+            GB.Restart();
+        }
+
+        public void MoveButton(string move) {
+            Vector3 press = PM.getButtonPress(move);
+        }
+
+        public void SwitchButton() {
+            PM.SwitchPlayer();
+        }
 
         // ~~~~~~~~~~~~~~~ Enabled in Filament Environment ~~~~~~~~~~~~~~~
 

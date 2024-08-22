@@ -20,6 +20,7 @@ namespace Labyrinth
 
 
         public void SetLevelNumber(string num) {
+            if (num == "0") { return; }
             levelNumber.text = num;
         }
 
@@ -44,7 +45,11 @@ namespace Labyrinth
         }
 
         public void LevelComplete(int starsWon) {
-            if (starsWon == 0) {
+            if (SaveData.Instance.CurrentLevel == 0) {
+                winScreen.SetActive(true);
+                starDisplay.showStars(starsWon);
+            }
+            else if (starsWon == 0) {
                 loseScreen.SetActive(true);
             }
             else {

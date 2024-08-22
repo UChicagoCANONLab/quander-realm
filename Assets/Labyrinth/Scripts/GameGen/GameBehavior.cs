@@ -34,7 +34,7 @@ namespace Labyrinth
         [Header("GameObjects")]
         public Maze MAZE;
         public PlayerMovement PM;
-        public ButtonBehavior BTN;
+        // public ButtonBehavior BTN;
         // public ProgressBar PB;
         public UIManager UI;
 
@@ -193,13 +193,5 @@ namespace Labyrinth
             UI.SetProgressBar(pathLength);
         }
 
-        public void MoveButton(string mov) {
-            Vector3 press = PM.getButtonPress(mov);
-        }
-
-        public void NextLevel() {
-            SaveData.Instance.CurrentLevel += 1;
-            BTN.LevelSelect(SaveData.Instance.CurrentLevel);
-        }
     }
 }
