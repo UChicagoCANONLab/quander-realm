@@ -238,6 +238,10 @@ PrefabInstance:
       value: GameManagerLocal
       objectReference: {fileID: 0}
     - target: {fileID: 9060131805156952618, guid: 272649d3c468f42699579c184ed99c10, type: 3}
+      propertyPath: UI
+      value: 
+      objectReference: {fileID: 1102880493}
+    - target: {fileID: 9060131805156952618, guid: 272649d3c468f42699579c184ed99c10, type: 3}
       propertyPath: pb
       value: 
       objectReference: {fileID: 1175016974}
@@ -1220,6 +1224,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8387037654131480422, guid: ed73f24cc1f35494a91bb7db06ef3d69, type: 3}
   m_PrefabInstance: {fileID: 1040027399}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1040027402 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 233106474076290523, guid: ed73f24cc1f35494a91bb7db06ef3d69, type: 3}
+  m_PrefabInstance: {fileID: 1040027399}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1040027400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1102880491
 GameObject:
   m_ObjectHideFlags: 0
@@ -1266,6 +1281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65942477e8a6f4eea99aa9fd4b44b1cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelNumber: {fileID: 1040027402}
   winScreen: {fileID: 1534940923}
   starDisplay: {fileID: 1534940922}
   loseScreen: {fileID: 761582947}

@@ -47,6 +47,8 @@ namespace Labyrinth
                 return;
             }
             else  */
+            if (CurrentLevel == 0) { return; }
+
             if (GB.numStars > starsPerLevel[CurrentLevel - 1]) {
                 totalStars += (GB.numStars - starsPerLevel[CurrentLevel-1]);
                 starsPerLevel[CurrentLevel - 1] = GB.numStars;

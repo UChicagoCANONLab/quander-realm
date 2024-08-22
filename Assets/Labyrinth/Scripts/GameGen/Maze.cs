@@ -42,6 +42,10 @@ namespace Labyrinth
             deg = SaveData.Instance.Degree;
             size = GB.size;
 
+            if (size == 3) {
+                return;
+            }
+
             generateMazes(); //(size, size);
             renderMazes();
 
