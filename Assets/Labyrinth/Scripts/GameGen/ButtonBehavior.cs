@@ -10,6 +10,7 @@ namespace Labyrinth
     {
         public GameBehavior GB;
         public PlayerMovement PM;
+        public InfoPopup IP;
 
         public GameObject litePanel;
         public Button[] levelButtons;
@@ -136,7 +137,7 @@ namespace Labyrinth
             SceneManager.LoadScene(currScene);
         }
 
-        // ~~~~~~~~~~~~~~~ Calling Button Functions from GameBehavior/PlayerMovement ~~~~~~~~~~~~~~~
+        // ~~~~~~~~~~~~~~~ Calling Button Functions from Other Scripts ~~~~~~~~~~~~~~~
 
         public void HintButton() {
             GB.GiveHint();
@@ -153,6 +154,12 @@ namespace Labyrinth
         public void SwitchButton() {
             PM.SwitchPlayer();
         }
+
+        public void InfoButton() {
+            IP.gameObject.SetActive(true);
+            IP.showInfoMessage();
+        }
+
 
         // ~~~~~~~~~~~~~~~ Enabled in Filament Environment ~~~~~~~~~~~~~~~
 
