@@ -12,10 +12,12 @@ namespace Labyrinth
         private int deg;
         private string mov = "none";
                 
-        public TM maze1;
-        public TM maze2;
+        // public TM map1;
+        // public TM map2;
+        // public TM[] tutorialMaps;
 
         public GameBehavior GB;
+        public Maze MAZE;
 
         public Player player1;
         public Player player2;
@@ -172,10 +174,10 @@ namespace Labyrinth
 
             sign *= -1;
 
-            maze1.toggleRenderer(maze1.overlay);
-            maze1.toggleCollider(maze1.walls);
-            maze2.toggleRenderer(maze2.overlay);
-            maze2.toggleCollider(maze2.walls);
+            MAZE.map1.toggleRenderer(MAZE.map1.overlay);
+            MAZE.map1.toggleCollider(MAZE.map1.walls);
+            MAZE.map2.toggleRenderer(MAZE.map2.overlay);
+            MAZE.map2.toggleCollider(MAZE.map2.walls);
 
         }
 

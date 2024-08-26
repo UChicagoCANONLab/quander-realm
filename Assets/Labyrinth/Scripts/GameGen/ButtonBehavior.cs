@@ -82,7 +82,7 @@ namespace Labyrinth
                 case 0:
                     // DialogueAndRewards.Instance.doDialogue(sel);
                     // DialogueAndRewards.Instance.levelDialogue[0] = true;
-                    SaveData.Instance.Degree = 0;
+                    // SaveData.Instance.Degree = 0;
                     currScene = "LA_Tutorial";
                     break;
                 case < 3:

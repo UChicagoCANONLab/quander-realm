@@ -17,6 +17,7 @@ namespace Labyrinth
         public TM map1;
         public TM map2;
         // public TM map3;
+        public TM[] tutorialMaps;
 
         [Header("Tile Textures")]
         public Tile goalTile;
@@ -43,6 +44,14 @@ namespace Labyrinth
             size = GB.size;
 
             if (size == 3) {
+                if (deg == 0) {
+                    map1 = tutorialMaps[0]; 
+                } else if (deg == 180) {
+                    map1 = tutorialMaps[1];
+                } else {
+                    map1 = tutorialMaps[2];
+                }
+                map1.gameObject.SetActive(true);
                 return;
             }
 
@@ -57,7 +66,7 @@ namespace Labyrinth
             MazeCell[,] maze = new MazeCell[size, size];
             for (int j = 0; j < size; j++) {
                 for (int i = 0; i < size; i++) {
-                    maze[i, j] = new MazeCell(i, j);
+                    maze[i, j] = new MazeCell(i,j);
                 }
             }
             return maze;

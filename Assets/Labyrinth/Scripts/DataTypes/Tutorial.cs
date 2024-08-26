@@ -8,7 +8,7 @@ namespace Labyrinth
 {
     public class Tutorial : MonoBehaviour
     {
-        public int degree = 0;
+        public int degree; //= 0;
         private int seq = 0;
         
         public Player p1;
@@ -26,33 +26,40 @@ namespace Labyrinth
         public TMP_Text twin1Text;
         public Image twin1Image;
 
-        // [Header("Tutorial 0 Degrees")]
-        private bool[] completed0 = {false, false, false, false};
-        private string[] tutorial0 = {
+        [Header("Tutorial 0 Degrees")]
+        public string[] tutorial0 = {
             "Use the keyboard or arrows to move Fran",
             "When you move me,\n Ken moves too! Even through walls!",
             "Press the Switch button to control Ken",
             "Get us to the exit ladder in as few moves as you can"
         };
         public Sprite[] images0;
+        private bool[] completed0 = {false, false, false, false};
 
-        // [Header("Tutorial 180 Degrees")]
-        private bool[] completed180 = {false, false, false, false};
+        [Header("Tutorial 180 Degrees")]
         public string[] tutorial180 = {
+            "See how I’m at the opposite corner as I was last time? Now every move I make...",
+            "I do the opposite!",
+            "Typical of my annoying sister…",
             ""
         };
         public Sprite[] images180;
+        private bool[] completed180 = {false, false, false, false};
 
-        // [Header("Tutorial 90 Degrees")]
-        private bool[] completed90 = {false, false, false, false};
+        [Header("Tutorial 90 Degrees")]
         public string[] tutorial90 = {
+            "Now my brother goes sideways when I go up and down!",
+            "Things are starting to get suuuper funky.",
+            "",
             ""
         };
         public Sprite[] images90;
+        private bool[] completed90 = {false, false, false, false};
 
         
 
         void Start() {
+            degree = SaveData.Instance.Degree;
             twinNext(0);
         }
 

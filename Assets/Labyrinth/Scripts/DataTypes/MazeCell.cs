@@ -20,8 +20,8 @@ namespace Labyrinth
         public bool start;
         public bool visited;
 
-        private GameBehavior gb = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>(); 
-        // private GameBehavior gb = GameBehavior.Instance;
+        private GameBehavior GB = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>(); 
+        // private GameBehavior GB = GameBehavior.Instance;
 
         public MazeCell(int x, int y) {
             cx = x;
@@ -33,14 +33,14 @@ namespace Labyrinth
             goal = false;
             deg = 0;
 
-            // px = (int)(-x + (gb.size - 1)/2); // player coordinates
-            // py = (int)(-y + (gb.size - 1)/2);
+            // px = (int)(-x + (GB.size - 1)/2); // player coordinates
+            // py = (int)(-y + (GB.size - 1)/2);
 
-            tx = (int)(-x + (gb.size-gb.size/4)/2 + (gb.size-1)/2);
-            ty = (int)(-y + (gb.size-gb.size/4)/2 + (gb.size-1)/2);
+            tx = (int)(-x + (GB.size-GB.size/4)/2 + (GB.size-1)/2);
+            ty = (int)(-y + (GB.size-GB.size/4)/2 + (GB.size-1)/2);
         }
 
-        public MazeCell initMazeCell(int x, int y) {
+        public void init(int x, int y) {
             cx = x;
             cy = y;
             type = 0;
@@ -50,13 +50,13 @@ namespace Labyrinth
             goal = false;
             deg = 0;
 
-            // px = (int)(-x + (gb.size - 1)/2); // player coordinates
-            // py = (int)(-y + (gb.size - 1)/2);
+            // px = (int)(-x + (GB.size - 1)/2); // player coordinates
+            // py = (int)(-y + (GB.size - 1)/2);
 
-            tx = (int)(-x + (gb.size-gb.size/4)/2 + (gb.size-1)/2);
-            ty = (int)(-y + (gb.size-gb.size/4)/2 + (gb.size-1)/2);
+            tx = (int)(-x + (GB.size-GB.size/4)/2 + (GB.size-1)/2);
+            ty = (int)(-y + (GB.size-GB.size/4)/2 + (GB.size-1)/2);
 
-            return this;
+            // return this;
         }
 
         public int getX {
@@ -120,79 +120,80 @@ namespace Labyrinth
 
         // now with 4 wall types instead of 16
         public void setType(int degree) {
-            if (this.getWalls() == "N: True, S: True, E: True, W: True") {
+            string stringType = this.getWalls();
+            if (stringType == "N: True, S: True, E: True, W: True") {
                 type = 0; }     //NSEW
-            else if (this.getWalls() == "N: True, S: True, E: True, W: False") {
+            else if (stringType == "N: True, S: True, E: True, W: False") {
                 if (degree == 0) { type = 1; }   //NSE
                 else if (degree == 90) { type = 0; }
                 else if (degree == 180) { type = 0; }
             }
-            else if (this.getWalls() == "N: True, S: True, E: False, W: True") {
+            else if (stringType == "N: True, S: True, E: False, W: True") {
                 if (degree == 0) { type = 0; }     //NSW
                 else if (degree == 90) { type = 2; }
                 else if (degree == 180) { type = 1; }
             }   
-            else if (this.getWalls() == "N: True, S: True, E: False, W: False") {
+            else if (stringType == "N: True, S: True, E: False, W: False") {
                 if (degree == 0) { type = 1; }     //NS
                 else if (degree == 90) { type = 2; }
                 else if (degree == 180) { type = 1; }
             }
-            else if (this.getWalls() == "N: True, S: False, E: True, W: True") {
+            else if (stringType == "N: True, S: False, E: True, W: True") {
                 if (degree == 0) { type = 0; }     //NEW
                 else if (degree == 90) { type = 0; }
                 else if (degree == 180) { type = 2; } //DOUBLE CHECK
             }
-            else if (this.getWalls() == "N: True, S: False, E: True, W: False") {
+            else if (stringType == "N: True, S: False, E: True, W: False") {
                 if (degree == 0) { type = 1; }     //NE
                 else if (degree == 90) { type = 0; }
                 else if (degree == 180) { type = 2; }
             }
-            else if (this.getWalls() == "N: True, S: False, E: False, W: True") {
+            else if (stringType == "N: True, S: False, E: False, W: True") {
                 if (degree == 0) { type = 0; }     //NW
                 else if (degree == 90) { type = 2; }
                 else if (degree == 180) { type = 3; }
             }
-            else if (this.getWalls() == "N: True, S: False, E: False, W: False") {
+            else if (stringType == "N: True, S: False, E: False, W: False") {
                 if (degree == 0) { type = 1; }     //N
                 else if (degree == 90) { type = 2; }
                 else if (degree == 180) { type = 3; }
             }
-            else if (this.getWalls() == "N: False, S: True, E: True, W: True") {
+            else if (stringType == "N: False, S: True, E: True, W: True") {
                 if (degree == 0) { type = 2; }     //SEW
                 else if (degree == 90) { type = 1; }
                 else if (degree == 180) { type = 0; }
             }
-            else if (this.getWalls() == "N: False, S: True, E: True, W: False") {
+            else if (stringType == "N: False, S: True, E: True, W: False") {
                 if (degree == 0) { type = 3; }     //SE
                 else if (degree == 90) { type = 1; }
                 else if (degree == 180) { type = 0; }
             }
-            else if (this.getWalls() == "N: False, S: True, E: False, W: True") {
+            else if (stringType == "N: False, S: True, E: False, W: True") {
                 if (degree == 0) { type = 2; }    //SW
                 else if (degree == 90) { type = 3; }
                 else if (degree == 180) { type = 1; }
             }
-            else if (this.getWalls() == "N: False, S: True, E: False, W: False") {
+            else if (stringType == "N: False, S: True, E: False, W: False") {
                 if (degree == 0) { type = 3; }    //S
                 else if (degree == 90) { type = 3; }
                 else if (degree == 180) { type = 1; }
             }
-            else if (this.getWalls() == "N: False, S: False, E: True, W: True") {
+            else if (stringType == "N: False, S: False, E: True, W: True") {
                 if (degree == 0) { type = 2; }    //EW
                 else if (degree == 90) { type = 1; }
                 else if (degree == 180) { type = 2; }
             }
-            else if (this.getWalls() == "N: False, S: False, E: True, W: False") {
+            else if (stringType == "N: False, S: False, E: True, W: False") {
                 if (degree == 0) { type = 3; }    //E
                 else if (degree == 90) { type = 1; }
                 else if (degree == 180) { type = 2; }
             }
-            else if (this.getWalls() == "N: False, S: False, E: False, W: True") {
+            else if (stringType == "N: False, S: False, E: False, W: True") {
                 if (degree == 0) { type = 2; }    //W
                 else if (degree == 90) { type = 3; }
                 else if (degree == 180) { type = 3; }
             }
-            else if (this.getWalls() == "N: False, S: False, E: False, W: False") {
+            else if (stringType == "N: False, S: False, E: False, W: False") {
                 type = 3; }    //none
             else {
                 type = 0; }
