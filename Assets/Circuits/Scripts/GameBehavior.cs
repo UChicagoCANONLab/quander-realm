@@ -64,6 +64,10 @@ namespace Circuits
 
         public TutorialManager tutorialManager;
 
+        public GameObject book;
+        public GameObject gates;
+        public GameObject grid;
+
 
         protected void renderCircuit(List<List<String>> newCircuit)
         {
@@ -587,6 +591,19 @@ namespace Circuits
             SceneManager.LoadScene("Circuits_Menu");
         }
 
+        public void showInfo(){
+            book.SetActive(true);
+            gates.SetActive(false);
+            grid.SetActive(false);
+        }
+
+        public void hideInfo(){
+            Debug.Log("Hide");
+            book.SetActive(false);
+            gates.SetActive(true);
+            grid.SetActive(true);
+        }
+
         public void toTitle()
         {
             SceneManager.LoadScene("Circuits_Title");
@@ -595,6 +612,14 @@ namespace Circuits
         public void loadNextLevel()
         {
             GameData.levelPassed();
+            SceneManager.LoadScene(GameData.getNextScene());
+
+            StarDisplay.SD.ResetStars();
+        }        
+
+        public void restartLevel()
+        {
+            // GameData.levelPassed();
             SceneManager.LoadScene(GameData.getNextScene());
 
             StarDisplay.SD.ResetStars();
