@@ -79,6 +79,7 @@ namespace Labyrinth
             SaveData.Instance.CurrentLevel = sel;
 
             switch(sel) {
+                // 0 Degree Levels
                 case 0:
                     // DialogueAndRewards.Instance.doDialogue(sel);
                     // DialogueAndRewards.Instance.levelDialogue[0] = true;
@@ -86,8 +87,13 @@ namespace Labyrinth
                     currScene = "LA_Tutorial";
                     break;
                 case < 3:
-                    DialogueAndRewards.Instance.doDialogue(sel);
+                    // DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 0;
+                    if (!DialogueAndRewards.Instance.tutorialSeen[0]) {
+                        SaveData.Instance.CurrentLevel = 0;
+                        currScene = "LA_Tutorial";
+                        break;
+                    }
                     currScene = "LA_4x4";
                     break;
                 case < 5:
@@ -99,10 +105,15 @@ namespace Labyrinth
                     currScene = "LA_6x6";
                     break;
 
-
+                // 180 Degree Levels
                 case < 8:
-                    DialogueAndRewards.Instance.doDialogue(sel);
+                    // DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 180;
+                    if (!DialogueAndRewards.Instance.tutorialSeen[1]) {
+                        SaveData.Instance.CurrentLevel = 0;
+                        currScene = "LA_Tutorial";
+                        break;
+                    }
                     currScene = "LA_4x4";
                     break;
                 case < 10:
@@ -114,10 +125,15 @@ namespace Labyrinth
                     currScene = "LA_6x6";
                     break;
 
-
+                // 90 Degree Levels
                 case < 13:
-                    DialogueAndRewards.Instance.doDialogue(sel);
+                    // DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 90;
+                    if (!DialogueAndRewards.Instance.tutorialSeen[2]) {
+                        SaveData.Instance.CurrentLevel = 0;
+                        currScene = "LA_Tutorial";
+                        break;
+                    }
                     currScene = "LA_4x4";
                     break;
                 case < 15:
@@ -128,7 +144,6 @@ namespace Labyrinth
                     SaveData.Instance.Degree = 90;
                     currScene = "LA_6x6";
                     break;
-                
 
                 default:
                     currScene = "LA_LevelSelect";

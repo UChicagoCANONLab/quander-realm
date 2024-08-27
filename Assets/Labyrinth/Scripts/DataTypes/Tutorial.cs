@@ -12,9 +12,11 @@ namespace Labyrinth
         private int seq = 0;
         
         public Player p1;
+        public ButtonBehavior BB;
 
-        public GameObject upButton;
-        public GameObject switchButton;
+        // public GameObject upButton;
+        // public GameObject switchButton;
+        public GameObject pointer;
 
         [Header("Twin0 Objects")]
         public GameObject twin0Popup;
@@ -30,11 +32,11 @@ namespace Labyrinth
         public string[] tutorial0 = {
             "Use the keyboard or arrows to move Fran",
             "When you move me,\n Ken moves too! Even through walls!",
-            "Press the Switch button to control Ken",
+            "Press the Switch button to control Fran",
             "Get us to the exit ladder in as few moves as you can"
         };
         public Sprite[] images0;
-        private bool[] completed0 = {false, false, false, false};
+        private bool[] completed = {false, false, false, false};
 
         [Header("Tutorial 180 Degrees")]
         public string[] tutorial180 = {
@@ -44,7 +46,6 @@ namespace Labyrinth
             ""
         };
         public Sprite[] images180;
-        private bool[] completed180 = {false, false, false, false};
 
         [Header("Tutorial 90 Degrees")]
         public string[] tutorial90 = {
@@ -54,7 +55,6 @@ namespace Labyrinth
             ""
         };
         public Sprite[] images90;
-        private bool[] completed90 = {false, false, false, false};
 
         
 
@@ -65,12 +65,12 @@ namespace Labyrinth
 
 
         void Update() {
-            if (p1.getPloc == new Vector3(0,1,0) && !completed0[2]) {
+            if (p1.getPloc == new Vector3(0,1,0) && !completed[1]) {
                 twinNext(1);
             }
 
-            if (p1.getPloc == new Vector3(1,1,0) && !completed0[3]){
-                twinNext(0);
+            if (p1.getPloc == new Vector3(1,1,0) && !completed[3] ){
+                twinNext(1);
             }
         }
 
@@ -95,6 +95,8 @@ namespace Labyrinth
                     break;
             }
         
+            if (textTemp == "") { return; }
+            
             if (type == 0) {
                 twin0Text.text = textTemp;
                 if (imageTemp == null) {
@@ -122,36 +124,55 @@ namespace Labyrinth
         public void nextButton() {
             switch(seq) {
                 case 0:
-                    completed0[seq] = true;
+                    completed[seq] = true;
                     doExitAnimation(twin0Popup);
                     Invoke("closePopups", 1f);
-                    upButton.GetComponent<Animation>().Play();
+                    pointer.SetActive(true);
+                    // upButton.GetComponent<Animation>().Play();
                     seq++;
                     break;
 
                 case 1:
-                    completed0[seq] = true;
+                    completed[seq] = true;
+                    doExitAnimation(twin1Popup);
+                    // Invoke("closePopups", 1f);
+                    
                     seq++;
-                    twinNext(1);
+                    twinNext(0);
                     break;
 
                 case 2:
-                    completed0[seq] = true;
-                    doExitAnimation(twin1Popup);
+                    completed[seq] = true;
+                    doExitAnimation(twin0Popup);
                     Invoke("closePopups", 1f);
-                    switchButton.GetComponent<Animation>().Play();
+                    pointer.GetComponent<Animation>().Play("Pointer-Switch");
+                    // switchButton.GetComponent<Animation>().Play();
                     seq++;
                     break;
 
                 case 3:
-                    completed0[seq] = true;
-                    doExitAnimation(twin0Popup);
+                    completed[seq] = true;
+                    doExitAnimation(twin1Popup);
                     Invoke("closePopups", 1f);
+                    seq++;
                     break;
 
                 default:
                     return;
             }
+        }
+
+        public void tutorialNextLevel() {
+            if (degree == 0) {
+                DialogueAndRewards.Instance.tutorialSeen[0] = true;
+                BB.LevelSelect(1);
+            } else if (degree == 180) {
+                DialogueAndRewards.Instance.tutorialSeen[1] = true;
+                BB.LevelSelect(6);
+            } else if (degree == 90) {
+                DialogueAndRewards.Instance.tutorialSeen[2] = true;
+                BB.LevelSelect(11);
+            } else { return; }
         }
 
         public void doExitAnimation(GameObject popup) {
