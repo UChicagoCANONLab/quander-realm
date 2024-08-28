@@ -8,8 +8,9 @@ namespace Labyrinth
 {
     public class Tutorial : MonoBehaviour
     {
-        public int degree; //= 0;
+        private int degree;
         private int seq = 0;
+        private bool[] completed = {false, false, false, false};
         
         public Player p1;
         public ButtonBehavior BB;
@@ -28,7 +29,7 @@ namespace Labyrinth
         public TMP_Text twin1Text;
         public Image twin1Image;
 
-        [Header("Tutorial 0 Degrees")]
+        [Header("Tutorial Dialogue and Images")]
         public string[] tutorial0 = {
             "Use the keyboard or arrows to move Fran",
             "When you move me,\n Ken moves too! Even through walls!",
@@ -36,25 +37,22 @@ namespace Labyrinth
             "Get us to the exit ladder in as few moves as you can"
         };
         public Sprite[] images0;
-        private bool[] completed = {false, false, false, false};
 
-        [Header("Tutorial 180 Degrees")]
         public string[] tutorial180 = {
             "See how I’m at the opposite corner as I was last time? Now every move I make...",
             "I do the opposite!",
             "Typical of my annoying sister…",
             ""
         };
-        public Sprite[] images180;
+        // public Sprite[] images180;
 
-        [Header("Tutorial 90 Degrees")]
         public string[] tutorial90 = {
             "Now my brother goes sideways when I go up and down!",
             "Things are starting to get suuuper funky.",
             "",
             ""
         };
-        public Sprite[] images90;
+        // public Sprite[] images90;
 
         
 
@@ -63,19 +61,19 @@ namespace Labyrinth
             twinNext(0);
         }
 
-
         void Update() {
             if (p1.getPloc == new Vector3(0,1,0) && !completed[1]) {
                 twinNext(1);
             }
-
             if (p1.getPloc == new Vector3(1,1,0) && !completed[3] ){
                 twinNext(1);
             }
         }
 
+        // ~~~~~~~~~~~~~~~ Sequenced Dialogue Function ~~~~~~~~~~~~~~~
+
         public void twinNext(int type) {
-            string textTemp; Sprite imageTemp;
+            string textTemp; Sprite imageTemp = null;
 
             switch(degree) {
                 case 0:
@@ -84,11 +82,11 @@ namespace Labyrinth
                     break;
                 case 180:
                     textTemp = tutorial180[seq];
-                    imageTemp = images180[seq];
+                    // imageTemp = images180[seq];
                     break;
                 case 90:
                     textTemp = tutorial90[seq];
-                    imageTemp = images90[seq];
+                    // imageTemp = images90[seq];
                     break;
                 default:
                     textTemp = ""; imageTemp = null;
@@ -116,10 +114,10 @@ namespace Labyrinth
                     twin1Image.gameObject.SetActive(true);
                 }
                 twin1Popup.SetActive(true);
-            }
-            
+            }     
         }
 
+        // ~~~~~~~~~~~~~~~ Button Functions ~~~~~~~~~~~~~~~
 
         public void nextButton() {
             switch(seq) {
@@ -136,7 +134,6 @@ namespace Labyrinth
                     completed[seq] = true;
                     doExitAnimation(twin1Popup);
                     // Invoke("closePopups", 1f);
-                    
                     seq++;
                     twinNext(0);
                     break;
@@ -174,6 +171,9 @@ namespace Labyrinth
                 BB.LevelSelect(11);
             } else { return; }
         }
+
+
+        // ~~~~~~~~~~~~~~~ Helper Functions ~~~~~~~~~~~~~~~
 
         public void doExitAnimation(GameObject popup) {
             popup.GetComponent<Animation>().Play("Popup-Exit");

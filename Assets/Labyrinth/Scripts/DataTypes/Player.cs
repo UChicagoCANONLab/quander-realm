@@ -89,22 +89,18 @@ namespace Labyrinth
                     if (degree == 180) { return (start += new Vector3(2,2,0)); }
                     else if (degree == 90) { return (start += new Vector3(4,2,0)); }
                     else { return (start += new Vector3(4,0,0)); }
-                    break;
                 case 4:
                     if (degree == 180) { return (start += new Vector3(3,3,0)); }
                     else if (degree == 90) { return (start += new Vector3(6,3,0)); }
                     else { return (start += new Vector3(6,0,0)); }
-                    break;
                 case 5:
                     if (degree == 180) { return (start += new Vector3(2,4,0)); }
                     else if (degree == 90) { return (start += new Vector3(6,4,0)); }
                     else { return (start += new Vector3(6,0,0)); }
-                    break;
                 case 6:
                     if (degree == 180) { return (start += new Vector3(3,5,0)); }
                     else if (degree == 90) { return (start += new Vector3(8,5,0)); }
                     else { return (start += new Vector3(8,0,0)); }
-                    break;
                 default:
                     return start;
             }

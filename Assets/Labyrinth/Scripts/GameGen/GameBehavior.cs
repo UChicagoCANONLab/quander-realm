@@ -146,7 +146,7 @@ namespace Labyrinth
             // Button button = GameObject.Find(hintDir); //.GetComponent<SpriteRenderer>();
             // button.IsHighlighted = true;
 
-            hintsUsed++;
+            hintsUsed++; steps++;
         }
 
 
