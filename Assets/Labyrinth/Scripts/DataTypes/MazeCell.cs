@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Labyrinth 
 { 
-    public class MazeCell : MonoBehaviour
+    public class MazeCell //: MonoBehaviour
     {
         private int cx;
         private int cy;
@@ -20,43 +20,20 @@ namespace Labyrinth
         public bool start;
         public bool visited;
 
-        private GameBehavior GB = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>(); 
-        // private GameBehavior GB = GameBehavior.Instance;
 
-        public MazeCell(int x, int y) {
+        public MazeCell(int x, int y, int size) {
             cx = x;
             cy = y;
             type = 0;
             visited = false;
-            // walls = new Dictionary<string, bool>() 
-            //     { {"N", true}, {"S", true}, {"W", true}, {"E", true} };
             goal = false;
             deg = 0;
 
-            // px = (int)(-x + (GB.size - 1)/2); // player coordinates
-            // py = (int)(-y + (GB.size - 1)/2);
+            // px = (int)(-x + (size - 1)/2); // player coordinates
+            // py = (int)(-y + (size - 1)/2);
 
-            tx = (int)(-x + (GB.size-GB.size/4)/2 + (GB.size-1)/2);
-            ty = (int)(-y + (GB.size-GB.size/4)/2 + (GB.size-1)/2);
-        }
-
-        public void init(int x, int y) {
-            cx = x;
-            cy = y;
-            type = 0;
-            visited = false;
-            // walls = new Dictionary<string, bool>() 
-            //     { {"N", true}, {"S", true}, {"W", true}, {"E", true} };
-            goal = false;
-            deg = 0;
-
-            // px = (int)(-x + (GB.size - 1)/2); // player coordinates
-            // py = (int)(-y + (GB.size - 1)/2);
-
-            tx = (int)(-x + (GB.size-GB.size/4)/2 + (GB.size-1)/2);
-            ty = (int)(-y + (GB.size-GB.size/4)/2 + (GB.size-1)/2);
-
-            // return this;
+            tx = (int)(-x + (size-size/4)/2 + (size-1)/2);
+            ty = (int)(-y + (size-size/4)/2 + (size-1)/2);
         }
 
         public int getX {
@@ -67,33 +44,12 @@ namespace Labyrinth
             get { return cy; }
         }
 
-        public int getTx {
-            get { return tx; }
-        }
-
-        public int getTy {
-            get { return ty; }
-        }
-
-        // public Vector3 getTloc {
-        //     get { return ( new Vector3(tx, ty, 0)); }
-        // }
-
         public int getType {
             get { return type; }
         }
 
         public bool getGoal {
             get { return goal; }
-        }
-        
-        public void setDeg(int degree) {
-            deg = degree;
-            return;
-        }
-
-        public string toString() {
-            return $"Tile {cx}, {cy}";
         }
 
         public string getWalls() {

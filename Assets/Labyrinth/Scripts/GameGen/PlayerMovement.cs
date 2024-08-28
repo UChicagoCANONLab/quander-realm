@@ -11,10 +11,6 @@ namespace Labyrinth
         private float sign = 1f; //1 for 90deg, -1 for -90deg
         private int deg;
         private string mov = "none";
-                
-        // public TM map1;
-        // public TM map2;
-        // public TM[] tutorialMaps;
 
         public GameBehavior GB;
         public Maze MAZE;
@@ -24,14 +20,10 @@ namespace Labyrinth
 
         public void StartPM()
         {
-            // GB = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>();
             deg = SaveData.Instance.Degree;
 
-            // player1 = GameObject.Find("PlayerMain").GetComponent<Player>();
-            // player2 = GameObject.Find("PlayerMirror").GetComponent<Player>();
-
-            player1.initPlayer(-1,0);
-            player2.initPlayer(1,deg);
+            player1.initPlayer(-1,0, GB.size);
+            player2.initPlayer(1,deg, GB.size);
         }
 
         // Update is called once per frame
@@ -40,14 +32,12 @@ namespace Labyrinth
             Player main; Player mirror;
             
             if (player1.getType == "main") {
-                // main = GameObject.Find("PlayerMain").GetComponent<Player>();
-                // mirror = GameObject.Find("PlayerMirror").GetComponent<Player>();
-                main = player1; mirror = player2;
+                main = player1;
+                mirror = player2;
             }   
             else { // if (player1.getType == "mirror") {
-                // main = GameObject.Find("PlayerMirror").GetComponent<Player>();
-                // mirror = GameObject.Find("PlayerMain").GetComponent<Player>();
-                main = player2; mirror = player1;
+                main = player2;
+                mirror = player1;
             }
 
             main.player.transform.position = Vector3.MoveTowards(main.player.transform.position, main.movepoint.position, speed*Time.deltaTime);
@@ -77,7 +67,6 @@ namespace Labyrinth
                         GB.steps++;
                         
                         movementx = new Vector3(0,0,0);
-                        // Invoke("stopAnim", 0.75f);
             
                         if ((main.getPloc == new Vector3(GB.size-1, 0, 0)) || 
                         mirror.getPloc == new Vector3(GB.size-1, 0, 0)) {
@@ -108,7 +97,6 @@ namespace Labyrinth
                         GB.steps++;
 
                         movementy = new Vector3(0,0,0);
-                        // Invoke("stopAnim", 0.75f);
             
                         if ((main.getPloc == new Vector3(GB.size-1, 0, 0)) || 
                         mirror.getPloc == new Vector3(GB.size-1, 0, 0)) {
@@ -126,11 +114,6 @@ namespace Labyrinth
         public void goalTime() {
             GB.collectGoal();
         }
-
-        /* public void stopAnim() {
-            player1.animator.SetFloat("Speed", 0.0f);
-            player2.animator.SetFloat("Speed", 0.0f);
-        } */
 
         public Vector3 getButtonPress(string dir) {
             mov = dir;

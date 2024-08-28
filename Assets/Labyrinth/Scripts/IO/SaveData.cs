@@ -39,14 +39,6 @@ namespace Labyrinth
         }
 
         public void updateSave(GameBehavior GB) {
-            /* if (CurrentLevel == levelUnlocked) {
-                levelUnlocked = CurrentLevel + 1;
-            } */
-            /* if (CurrentLevel == 0) {
-                // DialogueAndRewards.Instance.updateDialogueDict();
-                return;
-            }
-            else  */
             if (CurrentLevel == 0) { return; }
 
             if (GB.numStars > starsPerLevel[CurrentLevel - 1]) {

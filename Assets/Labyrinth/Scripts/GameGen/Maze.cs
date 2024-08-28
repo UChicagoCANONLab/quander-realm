@@ -22,7 +22,6 @@ namespace Labyrinth
         [Header("Tile Textures")]
         public Tile goalTile;
         public Tile startTile;
-        // public Tile bottomTile;
         public Tile[] bottomTiles;
         public Tile[] wallTiles;
         public Tile overlayTile;
@@ -55,7 +54,7 @@ namespace Labyrinth
                 return;
             }
 
-            generateMazes(); //(size, size);
+            generateMazes(); 
             renderMazes();
 
             int[] goalcoors = GetGoalPosition();
@@ -66,7 +65,7 @@ namespace Labyrinth
             MazeCell[,] maze = new MazeCell[size, size];
             for (int j = 0; j < size; j++) {
                 for (int i = 0; i < size; i++) {
-                    maze[i, j] = new MazeCell(i,j);
+                    maze[i, j] = new MazeCell(i,j, size);
                 }
             }
             return maze;
@@ -76,8 +75,8 @@ namespace Labyrinth
             MazeCell[,] newMaze = new MazeCell[size, size];
             for (int x=0; x < size; x++) {
                 for (int y=0; y < size; y++) {
-                    newMaze[x,y] = new MazeCell(x,y);
-                    // newMaze[x,y](x,y);
+                    newMaze[x,y] = new MazeCell(x,y, size);
+
                     newMaze[x,y].walls["N"] = maze[x,y].walls["N"];
                     newMaze[x,y].walls["S"] = maze[x,y].walls["S"];
                     newMaze[x,y].walls["E"] = maze[x,y].walls["E"];
@@ -88,9 +87,15 @@ namespace Labyrinth
         }
 
 
-
-
     // ~~~~~~~~~~~~~~~ GENERATING ~~~~~~~~~~~~~~~
+
+        public void generateMazes() {
+            maze = MazeObj(size);
+            makeBaseMaze(maze);
+            maze1 = CloneMaze(maze);
+            maze2 = CloneMaze(maze);
+            genMirrorMazes(maze1, maze2);
+        }
 
         public void makeBaseMaze(MazeCell[,] maze)
         {
@@ -131,14 +136,6 @@ namespace Labyrinth
                 }
                 wallList.RemoveAt(randIndex);
             }
-        }
-
-        public void generateMazes() {
-            maze = MazeObj(size);
-            makeBaseMaze(maze);
-            maze1 = CloneMaze(maze);
-            maze2 = CloneMaze(maze);
-            genMirrorMazes(maze1, maze2);
         }
 
         public void genMirrorMazes(MazeCell[,] maze1, MazeCell[,] maze2) {
@@ -202,7 +199,6 @@ namespace Labyrinth
             map1.goal.ClearAllTiles();
             map2.goal.ClearAllTiles();
         }
-
 
 
 
@@ -322,8 +318,6 @@ namespace Labyrinth
             }
             return (new int[] {-1,-1});
         }
-
-
 
 
 

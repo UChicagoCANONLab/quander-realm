@@ -51,22 +51,12 @@ namespace Labyrinth
         // ~~~~~~~~~~~~~~~ Scene Loading Functions ~~~~~~~~~~~~~~~
 
         public void LoadLevelSelectMenu() {
-            /* if (DialogueAndRewards.Instance.levelDialogue[0] == false) {
-                LevelSelect(0);
-            }
-            else {
-                SceneManager.LoadScene("LA_LevelSelect");
-            } */
             SceneManager.LoadScene("LA_LevelSelect");
         }
 
         public void LoadMainMenu() {
             Load.LoadGame();
             SceneManager.LoadScene("LA_MainMenu");
-        }
-
-        public void Exit() {
-            Application.Quit();
         }
 
         public void NextLevel() {
@@ -82,7 +72,6 @@ namespace Labyrinth
                 // 0 Degree Levels
                 case 0:
                     // DialogueAndRewards.Instance.doDialogue(sel);
-                    // DialogueAndRewards.Instance.levelDialogue[0] = true;
                     // SaveData.Instance.Degree = 0;
                     currScene = "LA_Tutorial";
                     break;

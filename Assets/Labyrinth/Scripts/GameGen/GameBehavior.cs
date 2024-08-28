@@ -15,15 +15,11 @@ namespace Labyrinth
 
         [Header("Maze Info")]
         public int size;
-        public double wallProb = 0.5;
+        public double wallProb = 0.95;
         
         [Header("Path Info")]
         public int steps = 0;
         public int pathLength;
-
-        // [Header("Feedback Objects")]
-        // public Star[] stars;
-        // public GameObject levelNumber;
 
         [Header("Time Info (for research)")]
         // Time in seconds for research data
@@ -34,8 +30,6 @@ namespace Labyrinth
         [Header("GameObjects")]
         public Maze MAZE;
         public PlayerMovement PM;
-        // public ButtonBehavior BTN;
-        // public ProgressBar PB;
         public UIManager UI;
 
         public static GameBehavior Instance;
@@ -65,11 +59,8 @@ namespace Labyrinth
                 pathLength = 8;
             }
             else {
-                // levelNumber.GetComponent<TextMeshProUGUI>().text = $"{SaveData.Instance.CurrentLevel}";
                 pathLength = MAZE.pathfinder(0, size-1, size-1, 0).Length;
             }
-            // PB.resetBar();
-            // PB.initializeBar(pathLength);
             UI.SetProgressBar(pathLength);
         }
 
@@ -101,18 +92,15 @@ namespace Labyrinth
         }
 
         public void checkNumStars() {
-            // PB.detractBar(steps);
             UI.UpdateProgressBar(steps);
+            
             if (steps > (int)(pathLength + 2)) { // 1 mistake
                 numStars = 2;
-            }
-            if (steps > (int)(pathLength + 4)) { // 2 mistakes
+            } if (steps > (int)(pathLength + 4)) { // 2 mistakes
                 numStars = 1;
-            }
-            if (steps > (int)(pathLength + 8)) { // 4 mistakes
+            } if (steps > (int)(pathLength + 8)) { // 4 mistakes
                 numStars = 0;
-            }
-            return;
+            } return;
         }
 
         
@@ -129,22 +117,15 @@ namespace Labyrinth
 
             if (hintDeg == 90) {
                 hintDir = goalTextNormal[rot90[hintPath[0].ToString()]];
-                // hintText = $"Hint: Try going {goalTextNormal[rot90[hintPath[0].ToString()]]}!";
-            }
-            else if (hintDeg == 180) {
+            } else if (hintDeg == 180) {
                 hintDir = goalTextNormal[rot180[hintPath[0].ToString()]];
-                // hintText = $"Hint: Try going {goalTextNormal[rot180[hintPath[0].ToString()]]}!";
-            }
-            else { //if (hintDeg == 0) {
+            } else { 
                 hintDir = goalTextNormal[hintPath[0].ToString()];
-                // hintText = $"Hint: Try going {goalTextNormal[hintPath[0].ToString()]}!";
             }
             
             string buttonPath = $"Canvases/CanvasOver/GameplayButtons/MovementButtons/{hintDir}";
             // GameObject.Find(buttonPath).GetComponent<ParticleSystem>().Play();
             GameObject.Find(buttonPath).GetComponent<Animation>().Play("ButtonHighlight");
-            // Button button = GameObject.Find(hintDir); //.GetComponent<SpriteRenderer>();
-            // button.IsHighlighted = true;
 
             hintsUsed++; steps++;
         }
@@ -157,7 +138,6 @@ namespace Labyrinth
             timePlayed = endTime - initTime;
             SaveData.Instance.updateSave(this);
             if (SaveData.Instance.CurrentLevel > 0) {
-                // Save.SaveTTSaveData();
                 Save.Instance.SaveGame();
             }
 
@@ -180,18 +160,10 @@ namespace Labyrinth
             steps = 0;
             numStars = 3;
 
-            /* for (int i=0; i<3; i++) {
-                stars[i].resetStar();
-            } */
-
             if (PM.player1.current == false) {
                 PM.SwitchPlayer();
             }
-
-            // PB.resetBar();
-            // PB.initializeBar(pathLength);
             UI.SetProgressBar(pathLength);
         }
-
     }
 }

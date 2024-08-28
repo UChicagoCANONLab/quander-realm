@@ -17,24 +17,20 @@ namespace Labyrinth
         
         private int deg;
         private float speed = 5f;
+        private int size;
 
         public Animator animator;
 
-        private GameBehavior GB;
 
-        public Player() { 
-        }
+        public void initPlayer(int sign, int degree, int GBsize) {
+            size = GBsize;
 
-        public void initPlayer(int sign, int degree) {
-            GB = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>();
-            // int px = (int)((GB.size-(GB.size/4))/2);
-            // int py = px;
             int px = 0;
-            int py = GB.size-1;
-            
+            int py = size-1;
             ploc = new Vector3(px, py, 0);
+            
             // mx = genMx(sign, degree, new Vector3(sign*(px+1),(int)(-py)/2,0));
-            mx = startPosition(sign, degree, GB.size);
+            mx = startPosition(sign, degree, size);
 
             player.transform.position += mx;
             movepoint.transform.position += mx;
@@ -44,32 +40,32 @@ namespace Labyrinth
 
         /* public Vector3 genMx(int sign, int degree, Vector3 mx) {
             Vector3 middle = mx + new Vector3(2,1,0);
-            if (GB.size%2 != 0) {
+            if (size%2 != 0) {
                 if (sign < 0) { 
                     return mx; 
                 }
                 if (degree == 180) {
-                    return (middle + new Vector3((-GB.size+(GB.size/3))/2,(GB.size+(GB.size/2))/2,0)); //Vector3(-GB.size/2,(GB.size+1)/2,0));
+                    return (middle + new Vector3((-size+(size/3))/2,(size+(size/2))/2,0)); //Vector3(-size/2,(size+1)/2,0));
                 }
                 else if (degree == 90) {
-                    return (middle + new Vector3((GB.size+(GB.size/6))/2,(GB.size+(GB.size/2))/2,0)); //Vector3(GB.size/2,(GB.size+1)/2,0));
+                    return (middle + new Vector3((size+(size/6))/2,(size+(size/2))/2,0)); //Vector3(size/2,(size+1)/2,0));
                 }
                 else {
-                    return (mx + new Vector3(GB.size-1,0,0));
+                    return (mx + new Vector3(size-1,0,0));
                 }
             }
-            else if (GB.size%2 == 0) {
+            else if (size%2 == 0) {
                 if (sign < 0) {
                     return (mx); //+ new Vector3(0,1,0));
                 }
                 if (degree == 180) {
-                    return (middle + new Vector3((-GB.size+(GB.size/2))/2,(GB.size-1+(GB.size/2))/2,0));
+                    return (middle + new Vector3((-size+(size/2))/2,(size-1+(size/2))/2,0));
                 }
                 else if (degree == 90) {
-                    return (middle + new Vector3((GB.size+(GB.size/3))/2,(GB.size-1+(GB.size/2))/2,0));
+                    return (middle + new Vector3((size+(size/3))/2,(size-1+(size/2))/2,0));
                 }
                 else {
-                    return (middle + new Vector3(GB.size-2,-1,0));
+                    return (middle + new Vector3(size-2,-1,0));
                 }
             }
             return mx;
@@ -113,7 +109,7 @@ namespace Labyrinth
             player.transform.position += moveBack;
             
             // ploc += moveBack;
-            ploc = new Vector3(0, GB.size-1, 0);
+            ploc = new Vector3(0, size-1, 0);
         }
 
         public string getType { //either "main" or "mirror"
@@ -132,17 +128,14 @@ namespace Labyrinth
             get { return ploc; }
         }
 
-        public string getTilePosition {
+        /* public string getTilePosition {
             get { return $"{ploc.x}, {ploc.y}"; }
-        }
+        } */
 
         public Vector3 getActualPosition {
             get { return movepoint.position; }
         }
 
-        /* public void setDeg(int degree) {
-            deg = degree;
-        } */
 
         public void toggleType() {
             if (type == "main") {
