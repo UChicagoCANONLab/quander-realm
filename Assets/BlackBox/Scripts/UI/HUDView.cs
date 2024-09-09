@@ -22,22 +22,24 @@ namespace BlackBox
 
         private void OnEnable()
         {
-            BBEvents.ClearMarkers += InitEnergyBar; // Debug
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers += InitEnergyBar; // Debug
             BBEvents.InitEnergyBar += InitEnergyBar;
             BBEvents.DecrementEnergy += DecrementEnergy;
             BBEvents.IndicateEmptyMeter += IndicateEmpty;
             BBEvents.ToggleWolfieButton += ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives += UpdateWolfieLives;
+            BBEvents.CloseLevel += CloseLevel;
         }
 
         private void OnDisable()
         {
-            BBEvents.ClearMarkers -= InitEnergyBar; // Debug
+            if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers -= InitEnergyBar; // Debug
             BBEvents.InitEnergyBar -= InitEnergyBar;
             BBEvents.IndicateEmptyMeter -= IndicateEmpty;
             BBEvents.DecrementEnergy -= DecrementEnergy;
             BBEvents.ToggleWolfieButton -= ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives -= UpdateWolfieLives;
+            BBEvents.CloseLevel -= CloseLevel;
         }
 
         private void UpdateWolfieLives(int livesRemaining)
@@ -83,6 +85,18 @@ namespace BlackBox
                     break;
                 }
             }
+        }
+
+        void CloseLevel()
+        {
+            HUDAnimator.SetBool("On", false);
+            BeauRoutine.Routine.Start(DelayClose());
+        }
+
+        System.Collections.IEnumerator DelayClose()
+        {
+            yield return 0.6F;
+            BBEvents.OpenLevelSelect?.Invoke(true);
         }
 
         #endregion

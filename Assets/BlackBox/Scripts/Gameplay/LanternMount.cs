@@ -47,6 +47,7 @@ namespace BlackBox
         {
             mountedLantern = lanternGO;
             mountedLantern.GetComponent<Lantern>().SetCanvas(canvas);
+            EvaluateEmpty();
         }
 
         public void SetColliderActive(GridSize gridSize)

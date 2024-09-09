@@ -16,6 +16,13 @@ namespace BlackBox
         [SerializeField] private string firstLevelID = "L01"; // todo: refactor
         [SerializeField] private float rewardPopupDelay = 0.5f;
 
+        [Header("Level Select")]
+        [SerializeField] GameObject gameBoard;
+        [SerializeField] GameObject gameUI;
+        [SerializeField] GameObject levelSelect;
+        [SerializeField] LevelButton[] levelButtons;
+        [SerializeField] QButton gameBackButton;
+
         [Header("Grid Containers")]
         [SerializeField] private GameObject mainGridGO;
         [SerializeField] private GameObject leftGridGO;
@@ -60,16 +67,18 @@ namespace BlackBox
 
         void Start()
         {
+            Events.PlayMusic?.Invoke("BB_Music");
+
             InitSaveData();
             InitLevel();
-            StartLevel();
+            //StartLevel();     moved into InitLevel with level select 
         }
 
         // Debug
 #if UNITY_EDITOR || UNITY_WEBGL
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Events.IsDebugEnabled.Invoke() && Input.GetKeyDown(KeyCode.D))
                 BBEvents.ToggleDebug?.Invoke();
         }
 #endif
@@ -77,9 +86,12 @@ namespace BlackBox
         private void OnEnable()
         {
             BBEvents.QuitBlackBox += Quit;
-            BBEvents.GotoLevel += NextLevel; // Debug
-            BBEvents.IsDebug += GetDebugBool; // Debug
-            BBEvents.ToggleDebug += ToggleDebug; // Debug
+            if (Events.IsDebugEnabled.Invoke())
+            {
+                BBEvents.GotoLevel += NextLevel; // Debug
+                BBEvents.IsDebug += GetDebugBool; // Debug
+                BBEvents.ToggleDebug += ToggleDebug; // Debug
+            }
             BBEvents.RestartLevel += StartLevel;
             BBEvents.StartNextLevel += NextLevel;
             BBEvents.CheckWinState += CheckWinState;
@@ -87,14 +99,21 @@ namespace BlackBox
             BBEvents.GetFrontMount += GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits += GetNumEnergyUnits;
             BBEvents.ReturnLanternHome += ReturnLanternHome;
+            BBEvents.CompleteBlackBox += PlayEndDialog;
+            BBEvents.PlayLevel += SetAndPlayLevel;
+            gameBackButton.onClick.AddListener(() => BBEvents.CloseLevel?.Invoke());
+            BBEvents.OpenLevelSelect += ShowLevelSelect;
         }
 
         private void OnDisable()
         {
             BBEvents.QuitBlackBox -= Quit;
-            BBEvents.GotoLevel -= NextLevel; // Debug
-            BBEvents.IsDebug -= GetDebugBool; // Debug
-            BBEvents.ToggleDebug -= ToggleDebug; // Debug
+            if (Wrapper.Events.IsDebugEnabled.Invoke())
+            {
+                BBEvents.GotoLevel -= NextLevel; // Debug
+                BBEvents.IsDebug -= GetDebugBool; // Debug
+                BBEvents.ToggleDebug -= ToggleDebug; // Debug
+            }
             BBEvents.RestartLevel -= StartLevel;
             BBEvents.StartNextLevel -= NextLevel;
             BBEvents.CheckWinState -= CheckWinState;
@@ -102,6 +121,10 @@ namespace BlackBox
             BBEvents.GetFrontMount -= GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits -= GetNumEnergyUnits;
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
+            BBEvents.CompleteBlackBox -= PlayEndDialog;
+            BBEvents.PlayLevel -= SetAndPlayLevel;
+            gameBackButton.onClick.RemoveListener(() => BBEvents.CloseLevel?.Invoke());
+            BBEvents.OpenLevelSelect -= ShowLevelSelect;
         }
 
         #endregion
@@ -112,7 +135,7 @@ namespace BlackBox
         {
             try
             {
-                string saveString = Events.GetMinigameSaveData?.Invoke(Game.BlackBox);
+                string saveString = Events.GetMinigameSaveData?.Invoke(Wrapper.Game.BlackBox);
                 saveData = JsonUtility.FromJson<BBSaveData>(saveString);
             }
             catch (Exception e)
@@ -120,18 +143,29 @@ namespace BlackBox
                 Debug.LogError(e.Message);
             }
 
-            if (saveData == null)
+            if (saveData == null) {
                 saveData = new BBSaveData();
+            }
+            int temp = 0;
+            foreach (int i in saveData.livesPerLevel) { temp += i; }
+            saveData.totalStars = temp;
         }
 
         private void InitLevel()
         {
             string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
+
+            // decide if we show level select or first level
+            if (levelID == firstLevelID) StartLevel();
+            else ShowLevelSelect(true);
         }
 
         private void StartLevel()
         {
+            ShowLevelSelect(false);
+            Events.ToggleBackButton?.Invoke(false);
+
             BBEvents.ShowTutorial?.Invoke(saveData, level);
             CreateAllGrids(level.gridSize);
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
@@ -181,6 +215,7 @@ namespace BlackBox
         private void Quit()
         {
             SceneManager.LoadScene(0);
+            Events.ToggleBackButton?.Invoke(true);
             Events.MinigameClosed?.Invoke();
         }
 
@@ -192,8 +227,12 @@ namespace BlackBox
             if (levelWon)
             {
                 Wrapper.Events.PlaySound?.Invoke("BB_WolfieSuccess");
-                saveData.currentLevelID = level.nextLevelID;
-                Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+                if (saveData.livesPerLevel[level.number-1] < livesRemaining) {
+                    saveData.totalStars += (livesRemaining - saveData.livesPerLevel[level.number-1]);
+                    saveData.livesPerLevel[level.number-1] = livesRemaining;
+                }
+                // PLAY END OF LEVEL DIALOGUE IF APPLICABLE
+                TrySetNewLevelSave();
             }
             else
             {
@@ -202,8 +241,21 @@ namespace BlackBox
                 BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
             }
 
-            WinState winState = new(totalNodes, numCorrect, levelWon, level.number, livesRemaining);
+            WinState winState = new(totalNodes, numCorrect, levelWon, level.number, livesRemaining, ParseLevelID(level.nextLevelID) == -1);
             Routine.Start(DisplayPlayerFeedBack(winState));
+        }
+
+        void TrySetNewLevelSave()
+        {
+            if (saveData.currentLevelID == string.Empty || ParseLevelID(saveData.currentLevelID) < ParseLevelID(level.nextLevelID))
+            {
+                saveData.currentLevelID = level.nextLevelID;
+                // Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
+            }
+            // else Debug.Log("Player has completed a higher level; save data not updated.");
+            
+            Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
+            // Debug.Log(string.Join(",", saveData.livesPerLevel));
         }
 
         private IEnumerator DisplayPlayerFeedBack(WinState winState)
@@ -215,6 +267,93 @@ namespace BlackBox
                 yield return rewardPopupDelay;
                 Events.CollectAndDisplayReward?.Invoke(Game.BlackBox, level.number);
             }
+        }
+
+        void PlayEndDialog()
+        {
+            try
+            {
+                bool complete = saveData.completed;
+            }
+            catch (Exception)
+            {
+                BBSaveData data = new BBSaveData
+                {
+                    gameID = saveData.gameID,
+                    currentLevelID = saveData.currentLevelID,
+                    tutorialsSeen = saveData.tutorialsSeen,
+                    completed = false
+                };
+
+                saveData = data;
+                Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+            }
+            finally
+            {
+                bool complete = saveData.completed;
+                if (!complete)
+                {
+                    Events.StartDialogueSequence?.Invoke("BB_End");
+                    saveData.completed = true;
+                    Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Level Select
+
+        void ShowLevelSelect(bool show)
+        {
+            levelSelect.SetActive(show);
+            gameBoard.SetActive(!show);
+            gameUI.SetActive(!show);
+
+            if (show) InitLevelSelect();
+        }
+
+        void InitLevelSelect()
+        {
+            Events.ToggleBackButton(true);
+
+            if (level.levelID != saveData.currentLevelID)
+            {
+                string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
+                level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
+            }
+
+            try
+            {
+                bool complete = saveData.completed;
+            }
+            catch (Exception)
+            {
+                BBSaveData data = new BBSaveData
+                {
+                    gameID = saveData.gameID,
+                    currentLevelID = saveData.currentLevelID,
+                    tutorialsSeen = saveData.tutorialsSeen,
+                    completed = false
+                };
+
+                saveData = data;
+                Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
+            }
+            finally
+            {
+                int levelNum = ParseLevelID(level.levelID) + (saveData.completed ? 1 : 0);
+                if (levelNum > 0)
+                {
+                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+                }
+            }
+        }
+
+        void SetAndPlayLevel(string levelID)
+        {
+            level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
+            StartLevel();
         }
 
         #endregion
@@ -318,19 +457,7 @@ namespace BlackBox
 
         private void CheckWolfieReady()
         {
-            bool isWolfieReady = true;
-
-            foreach (GameObject mountGO in lanternMounts)
-            {
-                LanternMount mount = mountGO.GetComponent<LanternMount>();
-                if (mountGO.activeInHierarchy && !(mount.isEmpty))
-                {
-                    isWolfieReady = false;
-                    break;
-                }
-            }
-
-            BBEvents.ToggleWolfieButton?.Invoke(isWolfieReady);
+            BBEvents.ToggleWolfieButton?.Invoke(level.nodePositions.Length == BBEvents.LanternPlacedCount.Invoke());
         }
 
         private Transform GetLanternFrontMount()
@@ -345,6 +472,11 @@ namespace BlackBox
             return level.numEnergyUnits;
         }
 
+        private int GetLivesRemaining() 
+        {
+            return livesRemaining;
+        }
+
         private bool GetDebugBool()
         {
             return debug;
@@ -353,6 +485,29 @@ namespace BlackBox
         private void ToggleDebug()
         {
             debug = !debug;
+        }
+
+        public static int ParseLevelID(string levelID)
+        {
+            int levelNum;
+            if (int.TryParse(levelID.Trim('L'), out levelNum)) return levelNum;
+            else
+            {
+                Debug.LogWarning("Unable to parse current level ID: " + levelID);
+                return -1;
+            }
+        }
+
+        public static string ParseLevelID(int level)
+        {
+            string levelText = "L";
+            if (level < 10) levelText += ("0" + level.ToString());
+            else levelText += level.ToString();
+            return levelText;
+        }
+
+        public int GetLevelStars(int level) {
+            return saveData.livesPerLevel[level];
         }
     }
 }

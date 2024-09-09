@@ -1,0 +1,26 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using System.Linq;
+
+namespace Qupcakery
+{
+    public class HelpNotButton : MonoBehaviour
+    {
+        public GameObject recipePanel;
+        public GameObject startPanel;
+        public Image recipeImage;
+        public Sprite graphic;
+
+        public void ShowNotRecipe()
+        {
+            startPanel.SetActive(false);
+            recipePanel.SetActive(true);
+            recipePanel.GetComponentInChildren<Text>().text = "NOT Device (NOT Gate)";
+
+            // recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "NOT-new").SingleOrDefault();
+            recipeImage.sprite = graphic;
+        }
+    }
+}

@@ -29,14 +29,15 @@ namespace Wrapper
 
         private float networkRequestTimeout = 5f;
         private bool isDatabaseReady = false;
-        private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"}; // AWS
+        // private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"}; // AWS
+        private string[] gameSaveURLs = new string[6] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery", "rewards"}; // AWS
         public readonly string awsURL = "https://backend-quantime.link/"; // AWS
+        private bool isConnectedToInternet = false;
 
 #if !UNITY_WEBGL
         private FirebaseApp app;
         private DatabaseReference dbReference;
         private DataSnapshot databaseSnapshot;
-        private bool isConnectedToInternet = false;
         private bool uploadSuccess = false;
 #else
         private string researchCodeExists = "";
@@ -44,13 +45,13 @@ namespace Wrapper
         private bool webGLUploadSuccess = false;
 #endif
 
-#if PRODUCTION_FB
+// #if PRODUCTION_FB
         public static readonly string firebaseURL = "https://quander-production-default-rtdb.firebaseio.com/";
         public readonly string testConnectionURL = "https://console.firebase.google.com/project/quander-production/database/quander-production-default-rtdb/data";
-#else
-        public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
-        public readonly string testConnectionURL = "https://console.firebase.google.com/project/filament-zombies/database/filament-zombies-default-rtdb/data";
-#endif
+// #else
+//         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
+//         public readonly string testConnectionURL = "https://console.firebase.google.com/project/filament-zombies/database/filament-zombies-default-rtdb/data";
+// #endif
 
         private void Awake()
         {
@@ -68,6 +69,9 @@ namespace Wrapper
             Events.GetMinigameSaveData += GetMinigameSaveData;
             Events.UpdateMinigameSaveData += UpdateMinigameSaveData;
             Events.SaveMinigameResearchData += SaveMinigameResearchData; // AWS
+            Events.GetRewardDialogStats += GetRewardStatsForDialog;
+            Events.SetRewardTextSeen += ToggleRewardDialogueSeen;
+            Events.GetFirstRewardBool += GetHasFirstReward;
         }
 
         private void OnDisable()
@@ -81,6 +85,9 @@ namespace Wrapper
             Events.GetMinigameSaveData -= GetMinigameSaveData;
             Events.UpdateMinigameSaveData -= UpdateMinigameSaveData;
             Events.SaveMinigameResearchData -= SaveMinigameResearchData; // AWS
+            Events.GetRewardDialogStats -= GetRewardStatsForDialog;
+            Events.SetRewardTextSeen -= ToggleRewardDialogueSeen;
+            Events.GetFirstRewardBool -= GetHasFirstReward;
         }
 
 #if !UNITY_WEBGL
@@ -117,6 +124,12 @@ namespace Wrapper
 
         #region Login
 
+        public void Logout()
+        {
+            currentUserSave = null;
+            isUserLoggedIn = false;
+        }
+
         private void Login(string researchCode)
         {
             isUserLoggedIn = false;
@@ -124,7 +137,17 @@ namespace Wrapper
             Routine.Start(LoginRoutine(researchCode));
         }
 
-#if !UNITY_WEBGL
+#if LITE_VERSION
+        private IEnumerator LoginRoutine(string researchCode)
+        {
+            currentUserSave.id = "GUEST"; 
+	        Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            isUserLoggedIn = true;
+            StarTracker.ST.Invoke("InitStarTracker_Lite", 0.2f);
+            return null;
+	    }
+
+#elif !UNITY_WEBGL
         private IEnumerator LoginRoutine(string researchCode)
         {
             // Test internet connection
@@ -164,7 +187,7 @@ namespace Wrapper
             }
 
             // Check if user's save data exists, create new save file if not
-            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);
+            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);  
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;
@@ -187,11 +210,44 @@ namespace Wrapper
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
 
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
+
+            // Checking if age is set in database
+            string usernameJson = JsonUtility.ToJson(new UserCode(researchCode));
+            byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(usernameJson);
+
+            string url = awsURL + "/check_research_code";
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            {
+                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
+                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log("Could not retrieve age verification from aws: " + www.error);
+                } else {
+                    if (!bool.Parse(www.downloadHandler.text)) {
+                        Events.DisplayAgeSelector();
+                    }
+                }
+            }
+
+            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
 #else
         private IEnumerator LoginRoutine(string researchCode)
         {
+            yield return TestInternetConnection();
+            if (!(isConnectedToInternet))
+            {
+                Debug.LogError("Error: Internet connection issue");
+                Events.UpdateLoginStatus?.Invoke(LoginStatus.ConnectionError);
+                yield break;
+            }
+
             // Get Database Snapshot
             yield return GetDatabaseSnapshot();
             if (!(isDatabaseReady))
@@ -249,12 +305,37 @@ namespace Wrapper
 
             currentUserSave = JsonUtility.FromJson<UserSave>(loadDataJson);
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
+            Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
+
+            // Checking if age is set in database
+            string usernameJson = JsonUtility.ToJson(new UserCode(researchCode));
+            byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(usernameJson);
+
+            string url = awsURL + "/check_research_code";
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            {
+                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
+                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log("Could not retrieve age verification from aws: " + www.error);
+                } else {
+                    if (!bool.Parse(www.downloadHandler.text)) {
+                        Events.DisplayAgeSelector();
+                    }
+                }
+            }
+
+            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
 #endif
 
 #if !UNITY_WEBGL
-        private IEnumerator GetDatabaseSnapshot()
+            private IEnumerator GetDatabaseSnapshot()
         {
             if (dbReference == null)
                 yield break;
@@ -295,11 +376,24 @@ namespace Wrapper
             if (request.error == null && request.result != UnityWebRequest.Result.ConnectionError)
                 isConnectedToInternet = true;
         }
+
+#else
+        private IEnumerator TestInternetConnection()
+        {
+            isConnectedToInternet = false;
+
+            UnityWebRequest request = new UnityWebRequest(Application.absoluteURL);
+            request.timeout = (int)networkRequestTimeout;
+            yield return request.SendWebRequest();
+
+            if (request.error == null && request.result != UnityWebRequest.Result.ConnectionError)
+                isConnectedToInternet = true;
+        }
 #endif
 
-        #endregion
+#endregion
 
-        #region UserSave
+#region UserSave
 
         private bool AddReward(string rewardID)
         {
@@ -330,7 +424,12 @@ namespace Wrapper
             Routine.Start(UpdateRemoteSaveRoutine());
         }
 
-#if !UNITY_WEBGL
+#if LITE_VERSION
+        private IEnumerator UpdateRemoteSaveRoutine()
+        {
+            return null;
+        }
+#elif !UNITY_WEBGL
         private IEnumerator UpdateRemoteSaveRoutine()
         {
             uploadSuccess = false;
@@ -395,10 +494,12 @@ namespace Wrapper
         }
 #endif
 
-        // AWS
-        private void SaveMinigameResearchData(Game game, object minigameSave)
+            // AWS
+            private void SaveMinigameResearchData(Game game, object minigameSave)
         {
+#if !LITE_VERSION
             StartCoroutine(SendResearchDataToRemote(game, minigameSave));
+#endif
         }
 
         // AWS
@@ -445,6 +546,22 @@ namespace Wrapper
         private string GetResearchCode()
         {
             return currentUserSave.id;
+        }
+
+        public void ToggleRewardDialogueSeen(bool hasSeen)
+        {
+            currentUserSave.rewardDialogueSeen = hasSeen;
+            UpdateRemoteSave();
+        }
+
+        (bool, bool) GetRewardStatsForDialog()
+        {
+            return (currentUserSave.rewardDialogueSeen, currentUserSave.HasAnyRewards());
+        }
+
+        bool GetHasFirstReward(string gamePrefix)
+        {
+            return currentUserSave.FirstRewardFromGame(gamePrefix);
         }
 
 #endregion
