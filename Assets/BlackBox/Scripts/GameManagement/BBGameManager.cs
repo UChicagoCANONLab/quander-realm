@@ -166,6 +166,7 @@ namespace BlackBox
             ShowLevelSelect(false);
             Events.ToggleBackButton?.Invoke(false);
 
+            BBEvents.UpdateHUDLevelNumber?.Invoke(level.number);
             BBEvents.ShowTutorial?.Invoke(saveData, level);
             CreateAllGrids(level.gridSize);
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
