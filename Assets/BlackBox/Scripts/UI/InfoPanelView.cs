@@ -14,20 +14,19 @@ namespace BlackBox
         
         [SerializeField] private Sprite[] iconImages = null;
         [SerializeField] private string[] subHeaderTexts = null;
+        /* {    "Click on a path icon to review the meaning",
+                "A tombstone is diagonal from the point where Batty turned",
+                "There is not a tombstone in this path (or the path next to it!)",
+                "Batty bumbed into a tombstome! There must be one on this path",
+                "If there's two tombstones diagonally, Batty will turn around"
+        }; */
 
         [Header("Image GameObjects")]
-        [SerializeField] private GameObject winImage = null;
-        [SerializeField] private GameObject notYetImage = null;
-        [SerializeField] private GameObject loseImage = null;
         [SerializeField] private GameObject imageContainer = null;
         [SerializeField] private Sprite[] contextImages = null;
 
         [Header("Button GameObjects")]
         [SerializeField] private GameObject buttonContainer = null;
-        [SerializeField] private GameObject restartLevelGO = null;
-        [SerializeField] private GameObject quitGO = null;
-        [SerializeField] private GameObject keepPlayingGO = null;
-        [SerializeField] private GameObject nextLevelGO = null;
 
         private Animator animator = null;
         private int level;
@@ -36,8 +35,6 @@ namespace BlackBox
         {
             animator = GetComponent<Animator>();
         }
-
-
 
 
         public void SelectIcon(string markerString) {
@@ -62,7 +59,6 @@ namespace BlackBox
             headerIcon.GetComponent<Image>().sprite = iconImages[0];
             subHeader.text = subHeaderTexts[0];
         }
-
 
 
 

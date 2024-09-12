@@ -39,6 +39,8 @@ namespace BlackBox
         }
         public override void Interact()
         {
+            Debug.Log($"clicked on {gridPosition.ToString()}");
+            
             if (cellType == CellType.EdgeNode)
                 return;
 
@@ -49,6 +51,7 @@ namespace BlackBox
                 nodeObj.SetActive(hasNode);
             }
         }
+
 
         public void SetNode()
         {

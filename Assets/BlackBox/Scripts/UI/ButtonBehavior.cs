@@ -7,10 +7,6 @@ namespace BlackBox
 {
     public class ButtonBehavior : MonoBehaviour
     {
-        // [SerializeField] private GameObject restartLevelGO = null;
-        // [SerializeField] private GameObject quitGO = null;
-        // [SerializeField] private GameObject keepPlayingGO = null;
-        // [SerializeField] private GameObject nextLevelGO = null;
         [SerializeField] private GameObject infoPanel = null;
 
         private Animator animator = null;
@@ -39,7 +35,7 @@ namespace BlackBox
         }
 
         public void ShowInfoPanel() {
-            infoPanel.SetActive(true);
+            infoPanel.GetComponent<Animator>().SetBool("On", true);
         }
 
     }

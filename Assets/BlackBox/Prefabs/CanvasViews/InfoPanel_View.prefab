@@ -112,7 +112,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 720}
-  m_SizeDelta: {x: -200, y: 150}
+  m_SizeDelta: {x: -150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4784805111919544457
 CanvasRenderer:
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Click on a path icon to review its meaning
+  m_text: "Click on a path icon to \nreview the meaning"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e51232ab63b234e46be042cae1c5ec51, type: 2}
   m_sharedMaterial: {fileID: -3319313598973243095, guid: e51232ab63b234e46be042cae1c5ec51, type: 2}
@@ -169,8 +169,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
-  m_fontSizeBase: 60
+  m_fontSize: 55
+  m_fontSizeBase: 55
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -524,14 +524,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 8a1d1d4662988f244b463cacd95f44d1, type: 3}
   - {fileID: 21300000, guid: 722f560f64021c445ac580e13e405943, type: 3}
   subHeaderTexts:
-  - Click on a path icon to review its meaning
-  - Detour
-  - Miss
-  - Hit
-  - Reflect
-  winImage: {fileID: 0}
-  notYetImage: {fileID: 0}
-  loseImage: {fileID: 0}
+  - Click on a path icon to review the meaning
+  - A tombstone is diagonal from the point where Batty turned
+  - There is not a tombstone in this path (or the path next to it!)
+  - Batty bumbed into a tombstome! There must be one on this path
+  - If there's two tombstones diagonally, Batty will turn around
   imageContainer: {fileID: 8232270444831074136}
   contextImages:
   - {fileID: 0}
@@ -540,10 +537,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9fc2e2b215092ff4a8703742718119c0, type: 3}
   - {fileID: 21300000, guid: 2e8509b85f25dbf4d9327615e3cb3eb6, type: 3}
   buttonContainer: {fileID: 6068011589564195905}
-  restartLevelGO: {fileID: 0}
-  quitGO: {fileID: 0}
-  keepPlayingGO: {fileID: 0}
-  nextLevelGO: {fileID: 0}
 --- !u!1 &3984531772243417356
 GameObject:
   m_ObjectHideFlags: 0
