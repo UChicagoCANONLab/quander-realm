@@ -7,7 +7,7 @@ namespace BlackBox
 {
     public class NodeCell : Cell
     {
-        private bool hasNode = false;
+        private bool hasNode = false; // IF TOMBSTONE THERE
         private bool hasFlag = false;
         private bool debug = false; // Debug
 
@@ -38,11 +38,14 @@ namespace BlackBox
             if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ToggleDebug -= ToggleDebug;
         }
         public override void Interact()
-        {
-            Debug.Log($"clicked on {gridPosition.ToString()}");
-            
+        {            
             if (cellType == CellType.EdgeNode)
                 return;
+
+            // HINT SETUP
+            if (hasNode) {
+                animator.SetBool("NodeCell/Lantern", true);
+            }
 
             // Debug
             if (debug)
