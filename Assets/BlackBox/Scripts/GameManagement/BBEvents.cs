@@ -14,6 +14,7 @@ namespace BlackBox
 
         /// Tutorial
         public static Action<BBSaveData, Level> ShowTutorial;
+        public static Action ShowHint;
 
         /// Level Select
         public static Action<string> PlayLevel;

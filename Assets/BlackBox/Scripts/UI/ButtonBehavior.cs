@@ -38,5 +38,9 @@ namespace BlackBox
             infoPanel.GetComponent<Animator>().SetBool("On", true);
         }
 
+        public void AskForHint() {
+            BBEvents.ShowHint?.Invoke();
+        }
+
     }
 }
