@@ -11,6 +11,7 @@ namespace Labyrinth
         private int degree;
         private int seq = 0;
         
+        public Animator animator;
         public Player p1;
         public ButtonBehavior BB;
 
@@ -19,6 +20,8 @@ namespace Labyrinth
         public TMP_Text twin1Text;
 
         [Header("Tutorial Dialogue and Images")]
+        public GameObject[] tutorialImages;
+
         public string[] tutorial0 = {
             "Use the keyboard or arrows to move Fran",
             "When you move me,\n Ken moves too! Even through walls!",
@@ -38,36 +41,33 @@ namespace Labyrinth
             ""
         };
 
-        private Animator animator = null;
-
-
-        private void Awake() {
-            animator = GetComponent<Animator>();
-        }
-
 
         void Start() {
-            animator.Play("NEWTutorial_Twin0_toOn");
             degree = SaveData.Instance.Degree;
-            twinNext(0);
-            animator.SetTrigger($"Deg{degree}Seq0");
+            twinSetup(0);
+            twinOn(0, true);
         }
 
 
         void Update() {
-            if (p1.getPloc == new Vector3(0,1,0)) {
-                animator.SetTrigger($"Deg{degree}Seq1");
+            if (p1.getPloc == new Vector3(0,1,0) && seq == 1) {
+                twinOn(1, true);
             }
-            if (p1.getPloc == new Vector3(1,1,0) && degree == 0){
-                animator.SetTrigger("Deg0Seq3");
+            if (p1.getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
+                twinOn(1, true);
             }
         }
 
 
         // ~~~~~~~~~~~~~~~ Sequenced Dialogue Function ~~~~~~~~~~~~~~~
 
-        public void twinNext(int type) {
+        public void twinOn(int type, bool isOn) {
+            animator.SetBool($"Twin{type}", isOn);
+        }
+
+        public void twinSetup(int type) {
             string textTemp;
+            Invoke("setImages", 0.5f);
 
             switch(degree) {
                 case 0:
@@ -96,31 +96,39 @@ namespace Labyrinth
         // ~~~~~~~~~~~~~~~ Button Functions ~~~~~~~~~~~~~~~
 
         public void nextButtonAGAIN() {
-            seq++;
-            animator.SetInteger("DegSeqClose", seq);
-
             switch(seq){
-                case 1:
+                case 0:
+                    seq++;
+                    twinOn(0, false);
+                    twinSetup(1);
                     Invoke("delayPointerUp", 1f);
-                    twinNext(1);
                     break;
+             
+                case 1:
+                    seq++;
+                    twinOn(1, false);
+                    twinSetup(0);
+        
+                    if (degree == 90) { Invoke("delayPointerSwitch", 1f); }
+                    else { twinOn(0, true); }
+                    break;
+                
                 case 2:
-                    twinNext(0);
-                    if (degree != 90) {
-                        animator.SetTrigger($"Deg{degree}Seq2");
-                        seq++;
-                        break;
-                    } Invoke("delayPointerSwitch", 1f);
-                    break;
-                case 3:
-                    twinNext(1);
+                    seq++;
+                    twinOn(0, false);
+                    twinSetup(1);
                     Invoke("delayPointerSwitch", 1f);
                     break;
-                case 4:
+              
+                case 3:
+                    seq++;
+                    twinOn(1, false);
                     break;
+             
                 default:
                     break;
             }
+            
         }
 
 
@@ -144,8 +152,32 @@ namespace Labyrinth
             animator.SetTrigger("PointerUp");
         }
         public void delayPointerSwitch() {
-            animator.SetTrigger("PointerUp");
+            animator.SetTrigger("PointerSwitch");
         }
+        
+        public void setImages() {
+            if (degree == 0) {
+                foreach(GameObject i in tutorialImages) {
+                    if (i!=null) {  i.SetActive(false); }
+                }
+                if (seq != 1) {
+                    tutorialImages[seq].SetActive(true);
+                }
+            }
+        }
+
+        /* public void imagesOff() {
+            if (degree == 0) {
+                foreach (GameObject i in tutorialImages) {
+                    if (i!=null)    {   i.SetActive(false); }
+                }
+            }
+        }
+        public void imagesOn() {
+            if (degree == 0 && seq != 1) {
+                tutorialImages[seq].SetActive(true);
+            }
+        } */
 
     }
 }
