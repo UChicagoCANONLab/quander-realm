@@ -17,7 +17,7 @@ namespace BlackBox
         /* {    "Click on a path icon to review the meaning",
                 "A tombstone is diagonal from the point where Batty turned",
                 "There is not a tombstone on this path (or the path next to it!)",
-                "Batty bumbed into a tombstome! There must be one on this path",
+                "Batty bumped into a tombstone! There must be one on this path",
                 "If there's two tombstones diagonally, Batty will turn around"
         }; */
 
