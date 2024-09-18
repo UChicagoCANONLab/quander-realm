@@ -15,6 +15,7 @@ namespace BlackBox
         /// Tutorial
         public static Action<BBSaveData, Level> ShowTutorial;
         public static Action ShowHint;
+        public static Action ShowInfo;
 
         /// Level Select
         public static Action<string> PlayLevel;
@@ -59,5 +60,6 @@ namespace BlackBox
         public static Action QuitBlackBox;
         public static Action CompleteBlackBox;
         public static Func<int> LanternPlacedCount;
+        public static Func<Level> GetLevel;
     }
 }

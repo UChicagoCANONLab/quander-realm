@@ -724,39 +724,187 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   header: {fileID: 4983277035712163}
-  headerIcon: {fileID: 2267143754095204263}
   subHeader: {fileID: 8849020799103406724}
-  iconImages:
-  - {fileID: 21300000, guid: 1baea55b838bd43d49a06ae44d46ed79, type: 3}
-  - {fileID: 21300000, guid: 70d5114037cf7344fb8de460d43a943b, type: 3}
-  - {fileID: 21300000, guid: 7ca61a2a4163f854b9fde81228bb8c4a, type: 3}
-  - {fileID: 21300000, guid: 8a1d1d4662988f244b463cacd95f44d1, type: 3}
-  - {fileID: 21300000, guid: 722f560f64021c445ac580e13e405943, type: 3}
   subHeaderTexts:
   - Click on a path icon to review the meaning
   - A tombstone is diagonal from the point where Batty turned
   - There are no tombstones on this path or the one next to it!
   - Batty bumped into a tombstone! There must be one on this path (not sure where)
   - If there's two tombstones diagonally, Batty will turn around (not sure where)
+  subHeaderTexts2:
+  - 
+  - Batty can turn multiple times if there's multiple headstones on the path!
+  - 
+  - Be aware - Batty might run into multiple headstones on the same path!
+  - 
   tutorialTexts:
   - Wolfie needs to find the tombstones, and Molly is helping in bat form
   - Molly can't talk when she's a bat, so she uses these symbols to give us hints
   - When you think you know where a tombstone is, mark it with a lantern
   - Find all the tombstones before you run out of energy or stars!
-  imageContainer: {fileID: 8232270444831074136}
-  tutorialContainer: {fileID: 8994821361935831883}
+  iconImages:
+  - {fileID: 21300000, guid: 1baea55b838bd43d49a06ae44d46ed79, type: 3}
+  - {fileID: 21300000, guid: 70d5114037cf7344fb8de460d43a943b, type: 3}
+  - {fileID: 21300000, guid: 7ca61a2a4163f854b9fde81228bb8c4a, type: 3}
+  - {fileID: 21300000, guid: 8a1d1d4662988f244b463cacd95f44d1, type: 3}
+  - {fileID: 21300000, guid: 722f560f64021c445ac580e13e405943, type: 3}
   contextImages:
   - {fileID: 0}
   - {fileID: 21300000, guid: c2ca5dec3cedd734bbcd08f9ab09b52e, type: 3}
   - {fileID: 21300000, guid: 831582a5f526962479d89536c0e5783e, type: 3}
   - {fileID: 21300000, guid: 9fc2e2b215092ff4a8703742718119c0, type: 3}
   - {fileID: 21300000, guid: 2e8509b85f25dbf4d9327615e3cb3eb6, type: 3}
+  contextImages2:
+  - {fileID: 0}
+  - {fileID: 21300000, guid: af481d3c7855adc4b8809245ebb8a263, type: 3}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 4f59d274017ff7643aa88a5140c2a8a2, type: 3}
+  - {fileID: 0}
   tutorialImages:
   - {fileID: 21300000, guid: bb7e883c4ad914e3f9eba601dcc0c248, type: 3}
   - {fileID: 21300000, guid: 83f4dccfcc93740c69881a544bee12ac, type: 3}
   - {fileID: 21300000, guid: 613b29ce6bc2a4c2486e44783d37fc8d, type: 3}
   - {fileID: 21300000, guid: b8a51405e07c04cc0b7df8e12e073e0f, type: 3}
+  headerIcon: {fileID: 2267143754095204263}
+  imageContainer: {fileID: 8232270444831074136}
+  tutorialContainer: {fileID: 8994821361935831883}
   buttonContainer: {fileID: 2762390781381364881}
+  forwardButtonObj: {fileID: 3821045935029958607}
+  missButton: {fileID: 7868123606173670821}
+  reflectButton: {fileID: 4408002660725358887}
+--- !u!1 &3821045935029958607
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6317063473091092806}
+  - component: {fileID: 8976330729109013039}
+  - component: {fileID: 5539982334271380191}
+  - component: {fileID: 6267545421580082576}
+  m_Layer: 5
+  m_Name: Forward
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &6317063473091092806
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3821045935029958607}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4186095886999544490}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 65, y: 15}
+  m_SizeDelta: {x: 85, y: 85}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &8976330729109013039
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3821045935029958607}
+  m_CullTransparentMesh: 1
+--- !u!114 &5539982334271380191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3821045935029958607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 4cc85a1609980426eaeb65da905a934d, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6267545421580082576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3821045935029958607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 5539982334271380191}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2683191977916266437}
+        m_TargetAssemblyTypeName: BlackBox.InfoPanelView, Assembly-CSharp
+        m_MethodName: forwardButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3984531772243417356
 GameObject:
   m_ObjectHideFlags: 0
@@ -2467,6 +2615,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 309835597408500672}
+  - {fileID: 6317063473091092806}
   m_Father: {fileID: 1987150402608102197}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

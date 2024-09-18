@@ -103,6 +103,7 @@ namespace BlackBox
             BBEvents.PlayLevel += SetAndPlayLevel;
             gameBackButton.onClick.AddListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect += ShowLevelSelect;
+            BBEvents.GetLevel += GetLevelObject;
         }
 
         private void OnDisable()
@@ -125,6 +126,7 @@ namespace BlackBox
             BBEvents.PlayLevel -= SetAndPlayLevel;
             gameBackButton.onClick.RemoveListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect -= ShowLevelSelect;
+            BBEvents.GetLevel -= GetLevelObject;
         }
 
         #endregion
@@ -299,6 +301,10 @@ namespace BlackBox
                     Events.UpdateMinigameSaveData?.Invoke(Game.BlackBox, saveData);
                 }
             }
+        }
+
+        public Level GetLevelObject() {
+            return level;
         }
 
         #endregion
