@@ -8,7 +8,7 @@ namespace BlackBox
     public class NodeCell : Cell
     {
         private bool hasNode = false; // IF TOMBSTONE THERE
-        private bool hasFlag = false;
+        private bool hasFlag = false; // IF LANTERN PLACED THERE
         private bool debug = false; // Debug
 
         [SerializeField] private LanternMount lanternMount = null;

@@ -53,7 +53,6 @@ namespace BlackBox
 
         private Animator animator = null;
         private int tutorialNumber = 0;
-        // private int level;
         private int tutorialSeq = 0;
         private int iconSeq = 0;
         private Marker marker;
@@ -76,7 +75,6 @@ namespace BlackBox
         public void InitInfo() {
             animator.SetBool("On", true);
             tutorialNumber = BBEvents.GetLevel.Invoke().tutorialNumber;
-            Debug.Log(tutorialNumber);
 
             if (tutorialNumber == 0) {
                 missButton.SetActive(false);
@@ -90,27 +88,8 @@ namespace BlackBox
             }
         }
 
-        /* public void checkShowing() {
-            Level levelCurrent = BBEvents.GetLevel.Invoke();
-            tutorialNumber = levelCurrent.tutorialNumber;
-            tutorialsSeen
-                0 - hit, detour
-                    if --> miss, reflect, hit2, detour2
-                1 - miss
-                    if --> reflect, hit2, detour2
-                2 - reflect
-                    if --> hit2, detour2
-                3 - hit2
-                    if --> detour2
-                4 - detour2
-           
-        } */
-
-
-
 
         public void SelectIcon(string markerString) {
-            // Marker markerEnum = (Marker)marker;
             iconSeq = 0;
             marker = (Marker)Enum.Parse(typeof(Marker), markerString);
 
