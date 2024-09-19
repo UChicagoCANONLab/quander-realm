@@ -15,6 +15,9 @@ namespace BlackBox
             "Be careful! You lose a star each time you use a hint."
         };
 
+        [SerializeField] private LineRenderer hintLine;
+        [SerializeField] private Vector3[] positions; // start, turn-point, end
+
         // [SerializeField] private GameObject yellowGlow;
         // [SerializeField] private GameObject purpleGlow;
 
