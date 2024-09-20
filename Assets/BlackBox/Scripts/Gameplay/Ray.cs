@@ -64,8 +64,10 @@ namespace BlackBox
             else // diff entry/exit direction
             {
                 if (rayDetoured)
+                {
                     BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination, GetDetourPairNumber());
-                else // straight through
+                    BBEvents.AppendHint?.Invoke(origin, originDirection, destination, destDirection);
+                } else // straight through
                 {
                     BBEvents.MarkUnits?.Invoke(Marker.Miss, originDirection, origin, false);
                     BBEvents.MarkUnits?.Invoke(Marker.Miss, destDirection, destination, true);
