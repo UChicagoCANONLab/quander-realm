@@ -42,10 +42,10 @@ namespace BlackBox
             if (cellType == CellType.EdgeNode)
                 return;
 
-            // HINT SETUP
+            /* // OLD HINT SETUP
             if (hasNode) {
                 animator.SetBool("NodeCell/Lantern", true);
-            }
+            } */
 
             // Debug
             if (debug)

@@ -7,41 +7,33 @@ namespace BlackBox
 {
     public class HintPopup : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI hintTextObj;
+        // OLD HINT CODE
+        /* [SerializeField] private TextMeshProUGUI hintTextObj;
         [SerializeField] private string[] hintTexts = {
             "You want a hint? Okay, fine...",
             "Click on a space. If it glows yellow, a lantern goes there!",
             "If it stays purple, too bad! Keep looking.",
             "Be careful! You lose a star each time you use a hint."
-        };
+        }; 
+        private Animator HintAnimator = null;
+        private int seqCounter = 0; */
 
-        // [SerializeField] private LineRenderer hintLine;
         [SerializeField] private GameObject linePrefab;
         [SerializeField] private GameObject lineContainer;
-        // [SerializeField] private Vector3[] positions; // start, turn-point, end
-
-        // Hint data
-        // [SerializeField] private string[] possibleHints = new string[] {};
-        // [SerializeField] private List<string> possibleHints;
+    
         [SerializeField] private List<Vector3Int[]> hintPairs = new List<Vector3Int[]>();
         
         private GridSize size;
-        private int maxSize;
-
         private int[] gridSizeValues = new int[3] { 5, 6, 7 };  // Copied from BBGameManager
-        private float[] nodeCellSizeValues = new float[3] { 200f, 166.66f, 142.86f }; // Copied from BBGameManager
 
-        // if small -->     max=900;min=0; normal= coor*(900/size = 180) + (900/(size*2) = 90)
-        // if medium -->    max=900;min=0; normal= coor*(900/size = 150) + (900/(size*2) = 75)
-
-        private Animator HintAnimator = null;
-        private int seqCounter = 0;
+        private int maxSize;
         private int hintCounter = 0;
+        
 
         private void Awake() 
         {
-            HintAnimator = GetComponent<Animator>();
-            hintTextObj.text = hintTexts[0];
+            // HintAnimator = GetComponent<Animator>();
+            // hintTextObj.text = hintTexts[0];
         }
 
         private void OnEnable() 
@@ -60,14 +52,7 @@ namespace BlackBox
 
         public void GiveHint() 
         {
-            /* seqCounter = 0;
-            HintAnimator.SetBool("IsOn", true);
-
-            hintTextObj.text = hintTexts[0];
-            HintAnimator.SetInteger("TextSeq", 0);
-            // make the thing click turn on */
-
-            if (hintPairs.Count <= hintCounter) { return; }
+            if (hintPairs.Count <= hintCounter) { return; } // Make Wolfie tell them they have to play more to get hints
 
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
             Vector3 end = (Vector3)hintPairs[hintCounter][1];
@@ -89,10 +74,13 @@ namespace BlackBox
                     default:        positions[i].y= pos.y*(900/maxSize)+(900/(maxSize*2)); break;
                 }
             }
-
             GameObject currLine = Instantiate(linePrefab, lineContainer.transform);
             currLine.GetComponent<LineRenderer>().SetPositions(positions);
+            GameObject corner = currLine.transform.GetChild(0).gameObject;
+            corner.transform.localPosition += positions[1];
+
             currLine.GetComponent<Animator>().SetBool("IsOn", true);
+            // corner.SetActive(true);
             
             hintCounter++;
         }
@@ -101,41 +89,8 @@ namespace BlackBox
             foreach (Transform transform in lineContainer.transform) {
                 UnityEngine.Object.Destroy(transform.gameObject);
             }
-        }
-
-        public void NextSeqButton()
-        {
-            seqCounter++;
-            
-            if (seqCounter > 3) {
-                EndHint();
-                return;
-            }
-
-            HintAnimator.SetInteger("TextSeq", seqCounter);
-            hintTextObj.text = hintTexts[seqCounter];
-        }
-
-        public void PrevSeqButton()
-        {
-            seqCounter--;
-
-            HintAnimator.SetInteger("TextSeq", seqCounter);
-            hintTextObj.text = hintTexts[seqCounter];
-        }
-
-        public void EndHint() 
-        {
-            HintAnimator.SetBool("IsOn", false);
-            // make the click thing turn off
-        }
-
-
-        public void calculateLine() {
-            // if direction == Top -->  y = size+1
-            // if direction == Bot -->  y = -1
-            // if direction == Left --> x = -1
-            // if direction == Right -> x = size+1
+            hintCounter = 0;
+            hintPairs.Clear();
         }
 
         public void AppendHintCoor(Vector3Int orig, Dir origDir, Vector3Int dest, Dir destDir) {
@@ -153,9 +108,43 @@ namespace BlackBox
                     case Dir.Right: pair[i].x = maxSize;    break;
                 }
             }
-            Debug.Log(string.Join("; ", pair));
+            // Debug.Log(string.Join("; ", pair));
             hintPairs.Add(pair);
         }
+
+        /* public void GiveHint() {
+            seqCounter = 0;
+            HintAnimator.SetBool("IsOn", true);
+
+            hintTextObj.text = hintTexts[0];
+            HintAnimator.SetInteger("TextSeq", 0);
+            // make the thing click turn on
+        }
+        
+        public void NextSeqButton() {
+            seqCounter++;
+            
+            if (seqCounter > 3) {
+                EndHint();
+                return;
+            }
+            HintAnimator.SetInteger("TextSeq", seqCounter);
+            hintTextObj.text = hintTexts[seqCounter];
+        }
+
+        public void PrevSeqButton() {
+            seqCounter--;
+
+            HintAnimator.SetInteger("TextSeq", seqCounter);
+            hintTextObj.text = hintTexts[seqCounter];
+        }
+
+        public void EndHint() 
+        {
+            HintAnimator.SetBool("IsOn", false);
+            // make the click thing turn off
+        } */
+
 
     }
 }

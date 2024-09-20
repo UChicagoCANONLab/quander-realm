@@ -60,6 +60,7 @@ namespace BlackBox
                 }
                 else // different cell
                     BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination, GetDetourPairNumber());
+                    // MAYBE ADD THIS TO HINTS??
             }
             else // diff entry/exit direction
             {
