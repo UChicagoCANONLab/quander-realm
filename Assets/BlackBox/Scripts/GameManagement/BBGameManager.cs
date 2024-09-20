@@ -170,6 +170,7 @@ namespace BlackBox
 
             BBEvents.UpdateHUDLevelNumber?.Invoke(level.number);
             BBEvents.ShowTutorial?.Invoke(saveData, level);
+            BBEvents.ClearHints?.Invoke();
             CreateAllGrids(level.gridSize);
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
 

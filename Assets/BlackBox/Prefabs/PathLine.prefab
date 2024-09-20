@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5426018942631997862}
+  - component: {fileID: 3205341101266261605}
   - component: {fileID: 611558536315481380}
   m_Layer: 5
   m_Name: PathLine
@@ -38,6 +39,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &3205341101266261605
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852185270043799742}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c71db7f65194444978773f1e556d4ce0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!120 &611558536315481380
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -45,7 +66,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852185270043799742}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -58,7 +79,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e56d054c043a94b80a2e8d9de35bca31, type: 2}
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -78,7 +99,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 15
+  m_SortingOrder: 2
   m_Positions:
   - {x: 75, y: 900, z: 0}
   - {x: 75, y: 825, z: 0}
@@ -104,17 +125,17 @@ LineRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 0.94117653, g: 0.6156863, b: 0.2392157, a: 1}
-      key1: {r: 0.9970935, g: 0.9970935, b: 0.73550177, a: 1}
-      key2: {r: 0.94117653, g: 0.6156863, b: 0.2392157, a: 0}
-      key3: {r: 0, g: 0, b: 0, a: 0}
+      key1: {r: 0.9921569, g: 0.9960785, b: 0.7372549, a: 1}
+      key2: {r: 0.9970935, g: 0.9970935, b: 0.73550177, a: 0}
+      key3: {r: 0.94117653, g: 0.6156863, b: 0.2392157, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
       ctime0: 0
-      ctime1: 32768
-      ctime2: 65535
-      ctime3: 0
+      ctime1: 16384
+      ctime2: 49151
+      ctime3: 65535
       ctime4: 0
       ctime5: 0
       ctime6: 0
@@ -128,7 +149,7 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_NumColorKeys: 3
+      m_NumColorKeys: 4
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0

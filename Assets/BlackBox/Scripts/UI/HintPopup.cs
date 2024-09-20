@@ -48,12 +48,14 @@ namespace BlackBox
         {
             BBEvents.ShowHint += GiveHint;
             BBEvents.AppendHint += AppendHintCoor;
+            BBEvents.ClearHints += ClearHintLines;
         }
 
         private void OnDisable() 
         {
             BBEvents.ShowHint -= GiveHint;
             BBEvents.AppendHint -= AppendHintCoor;
+            BBEvents.ClearHints -= ClearHintLines;
         }
 
         public void GiveHint() 
@@ -70,6 +72,9 @@ namespace BlackBox
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
             Vector3 end = (Vector3)hintPairs[hintCounter][1];
             Vector3 turn = new Vector3(start.x, end.y, 0);
+            if (start.x==-1 || start.x==maxSize) {
+                turn.x = end.x; turn.y = start.y;
+            }
             Vector3[] positions = new Vector3[] {start, turn, end};
             
             for (int i=0; i<3; i++) {
@@ -85,10 +90,17 @@ namespace BlackBox
                 }
             }
 
-            LineRenderer currLine = Instantiate(linePrefab, lineContainer.transform).GetComponent<LineRenderer>();
-            currLine.SetPositions(positions);
+            GameObject currLine = Instantiate(linePrefab, lineContainer.transform);
+            currLine.GetComponent<LineRenderer>().SetPositions(positions);
+            currLine.GetComponent<Animator>().SetBool("IsOn", true);
             
             hintCounter++;
+        }
+
+        public void ClearHintLines() {
+            foreach (Transform transform in lineContainer.transform) {
+                UnityEngine.Object.Destroy(transform.gameObject);
+            }
         }
 
         public void NextSeqButton()
