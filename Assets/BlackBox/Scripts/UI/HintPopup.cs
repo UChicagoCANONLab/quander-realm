@@ -15,8 +15,10 @@ namespace BlackBox
             "Be careful! You lose a star each time you use a hint."
         };
 
-        [SerializeField] private LineRenderer hintLine;
-        [SerializeField] private Vector3[] positions; // start, turn-point, end
+        // [SerializeField] private LineRenderer hintLine;
+        [SerializeField] private GameObject linePrefab;
+        [SerializeField] private GameObject lineContainer;
+        // [SerializeField] private Vector3[] positions; // start, turn-point, end
 
         // Hint data
         // [SerializeField] private string[] possibleHints = new string[] {};
@@ -24,13 +26,17 @@ namespace BlackBox
         [SerializeField] private List<Vector3Int[]> hintPairs = new List<Vector3Int[]>();
         
         private GridSize size;
+        private int maxSize;
+
         private int[] gridSizeValues = new int[3] { 5, 6, 7 };  // Copied from BBGameManager
         private float[] nodeCellSizeValues = new float[3] { 200f, 166.66f, 142.86f }; // Copied from BBGameManager
 
-        // if small --> max=900;min=0; normal= coor*(900/size = 180) + 90
+        // if small -->     max=900;min=0; normal= coor*(900/size = 180) + (900/(size*2) = 90)
+        // if medium -->    max=900;min=0; normal= coor*(900/size = 150) + (900/(size*2) = 75)
 
         private Animator HintAnimator = null;
         private int seqCounter = 0;
+        private int hintCounter = 0;
 
         private void Awake() 
         {
@@ -52,12 +58,37 @@ namespace BlackBox
 
         public void GiveHint() 
         {
-            seqCounter = 0;
+            /* seqCounter = 0;
             HintAnimator.SetBool("IsOn", true);
 
             hintTextObj.text = hintTexts[0];
             HintAnimator.SetInteger("TextSeq", 0);
-            // make the thing click turn on
+            // make the thing click turn on */
+
+            if (hintPairs.Count <= hintCounter) { return; }
+
+            Vector3 start = (Vector3)hintPairs[hintCounter][0];
+            Vector3 end = (Vector3)hintPairs[hintCounter][1];
+            Vector3 turn = new Vector3(start.x, end.y, 0);
+            Vector3[] positions = new Vector3[] {start, turn, end};
+            
+            for (int i=0; i<3; i++) {
+                Vector3 pos = positions[i];
+                switch (pos.x) {
+                    case -1:        positions[i].x=0; break;
+                    case var value when value == maxSize:   positions[i].x=900; break;
+                    default:        positions[i].x= pos.x*(900/maxSize)+(900/(maxSize*2)); break;
+                } switch (pos.y) {
+                    case -1:        positions[i].y=0; break;
+                    case var value when value == maxSize:   positions[i].y=900; break;
+                    default:        positions[i].y= pos.y*(900/maxSize)+(900/(maxSize*2)); break;
+                }
+            }
+
+            LineRenderer currLine = Instantiate(linePrefab, lineContainer.transform).GetComponent<LineRenderer>();
+            currLine.SetPositions(positions);
+            
+            hintCounter++;
         }
 
         public void NextSeqButton()
@@ -100,7 +131,7 @@ namespace BlackBox
             Dir[] dirPair = new Dir[] {origDir, destDir};
 
             size = BBEvents.GetLevel.Invoke().gridSize;
-            int maxSize = gridSizeValues[(int)size];
+            maxSize = gridSizeValues[(int)size];
 
             for (int i=0; i<2; i++) {
                 switch(dirPair[i]) {
