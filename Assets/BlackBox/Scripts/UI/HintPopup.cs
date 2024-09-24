@@ -7,16 +7,11 @@ namespace BlackBox
 {
     public class HintPopup : MonoBehaviour
     {
-        // OLD HINT CODE
-        /* [SerializeField] private TextMeshProUGUI hintTextObj;
-        [SerializeField] private string[] hintTexts = {
-            "You want a hint? Okay, fine...",
-            "Click on a space. If it glows yellow, a lantern goes there!",
-            "If it stays purple, too bad! Keep looking.",
-            "Be careful! You lose a star each time you use a hint."
-        }; 
-        private Animator HintAnimator = null;
-        private int seqCounter = 0; */
+        [SerializeField] private Animator WolfieAnimator;
+        /* [SerializeField] private string[] hintTexts = {
+            "You need to play more before I can give you a hint!",
+            "Remember, if you use too many hints, you'll lose a star..."
+        }; */
 
         [SerializeField] private GameObject linePrefab;
         [SerializeField] private GameObject lineContainer;
@@ -28,13 +23,7 @@ namespace BlackBox
 
         private int maxSize;
         private int hintCounter = 0;
-        
-
-        private void Awake() 
-        {
-            // HintAnimator = GetComponent<Animator>();
-            // hintTextObj.text = hintTexts[0];
-        }
+    
 
         private void OnEnable() 
         {
@@ -52,7 +41,10 @@ namespace BlackBox
 
         public void GiveHint() 
         {
-            if (hintPairs.Count <= hintCounter) { return; } // Make Wolfie tell them they have to play more to get hints
+            if (hintPairs.Count <= hintCounter) { 
+                WolfieAnimator.SetBool("IsOn", true);
+                return;    
+            }
 
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
             Vector3 end = (Vector3)hintPairs[hintCounter][1];
@@ -79,9 +71,7 @@ namespace BlackBox
             GameObject corner = currLine.transform.GetChild(0).gameObject;
             corner.transform.localPosition += positions[1];
 
-            currLine.GetComponent<Animator>().SetBool("IsOn", true);
-            // corner.SetActive(true);
-            
+            currLine.GetComponent<Animator>().SetBool("IsOn", true);            
             hintCounter++;
         }
 
@@ -112,39 +102,9 @@ namespace BlackBox
             hintPairs.Add(pair);
         }
 
-        /* public void GiveHint() {
-            seqCounter = 0;
-            HintAnimator.SetBool("IsOn", true);
-
-            hintTextObj.text = hintTexts[0];
-            HintAnimator.SetInteger("TextSeq", 0);
-            // make the thing click turn on
+        public void ExitWolfiePopup() {
+            WolfieAnimator.SetBool("IsOn", false);
         }
-        
-        public void NextSeqButton() {
-            seqCounter++;
-            
-            if (seqCounter > 3) {
-                EndHint();
-                return;
-            }
-            HintAnimator.SetInteger("TextSeq", seqCounter);
-            hintTextObj.text = hintTexts[seqCounter];
-        }
-
-        public void PrevSeqButton() {
-            seqCounter--;
-
-            HintAnimator.SetInteger("TextSeq", seqCounter);
-            hintTextObj.text = hintTexts[seqCounter];
-        }
-
-        public void EndHint() 
-        {
-            HintAnimator.SetBool("IsOn", false);
-            // make the click thing turn off
-        } */
-
 
     }
 }
