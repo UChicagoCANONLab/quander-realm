@@ -19,7 +19,7 @@ namespace BlackBox
         [SerializeField] private List<Vector3Int[]> hintPairs = new List<Vector3Int[]>();
         
         private GridSize size;
-        private int[] gridSizeValues = new int[3] { 5, 6, 7 };  // Copied from BBGameManager
+        private int[] gridSizeValues = new int[4] { 5, 6, 7, 4 };  // Copied from BBGameManager
 
         private int maxSize;
         private int hintCounter = 0;

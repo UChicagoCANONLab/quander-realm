@@ -18,6 +18,7 @@ namespace BlackBox
         public static Action<Vector3Int, Dir, Vector3Int, Dir> AppendHint;
         public static Action ClearHints;
         public static Action ShowInfo;
+        public static Action InitiateTutorialLevel;
 
         /// Level Select
         public static Action<string> PlayLevel;

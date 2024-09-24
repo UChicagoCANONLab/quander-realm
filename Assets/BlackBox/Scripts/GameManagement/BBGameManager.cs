@@ -43,15 +43,18 @@ namespace BlackBox
 
         [Tooltip("Set width/height of the grid that corresponds to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         [SerializeField] 
-        private int[] gridSizeValues = new int[3] { 5, 6, 7 }; //todo: name these using an editor script to make it easier to understand
+        // private int[] gridSizeValues = new int[3] { 5, 6, 7 }; //todo: name these using an editor script to make it easier to understand
+        private int[] gridSizeValues = new int[4] { 5, 6, 7, 4 };
 
         [Tooltip("Set cell size of the main grid that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         [SerializeField] 
-        private float[] nodeCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        // private float[] nodeCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        private float[] nodeCellSizeValues = new float[4] { 200f, 166.66f, 142.86f, 250f };
 
         [Tooltip("Set cell size of the external grids that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         [SerializeField] 
-        private float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        // private float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        private float[] navCellSizeValues = new float[4] { 200f, 166.66f, 142.86f, 250f };
 
         #endregion
 
@@ -173,6 +176,10 @@ namespace BlackBox
             BBEvents.ClearHints?.Invoke();
             CreateAllGrids(level.gridSize);
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
+
+            if (level.gridSize == GridSize.Tutorial) {
+                BBEvents.InitiateTutorialLevel?.Invoke(); 
+            }
 
             totalNodes = level.nodePositions.Length;
             livesRemaining = totalLives;
