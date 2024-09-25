@@ -8,7 +8,7 @@ namespace BlackBox
     {
         [SerializeField] private TextMeshProUGUI markerText = null;
 
-        bool isMollyAt = false;
+        public bool isMollyAt = false;
         private bool isMarked = false;
         private bool isLinked = false;
         private Dir linkedCellDirection = Dir.None;
