@@ -17,10 +17,8 @@ namespace BlackBox
 
         [Header("Sequenced Tutorial Objects")]
         [SerializeField] private Animator TutorialAnimator;
-        [SerializeField] private GameObject pointerObj;
         [SerializeField] private GameObject nextButton;
         [SerializeField] private TextMeshProUGUI tutorialText;
-        private int tutorialSeq = 0;
 
         private Vector3 goalCoordinate = new Vector3(2, 2, 0);
         private Vector3[] coordinateSeq = new Vector3[] {
@@ -39,14 +37,15 @@ namespace BlackBox
             "She passed right through! No treasure on this path or the one next to it", //(MISS)
             "Click here to move Batty, and then click Batty again", //(-1,2)
             "Oh! She bumped into something! There must be treasure in this row", //(HIT)
-            "Let's try here. Click the spot and then click Batty", //(1,-1)
-            "Hm... Batty turned, there must be a treasure here", //(DETOUR) (2,2)
+            "Let's try here. Click the spot and then click Batty again", //(1,-1)
+            "Hm... Batty turned, there must be treasure diagonal from where she turned", //(DETOUR) (2,2)
             "Just to be sure... Let's try here", //(4,3)
             "Great, we found it! Click and drag a lantern to the correct spot", //(2,2)
-            "Now let's send Wolfie to see! Congrats, you found the treasure!"
+            "Now let's send Wolfie to check! Congrats, you found the treasure!"
         };
         private GameObject currCell = null;
         private GameObject goalCell = null;
+        private int tutorialSeq = 0;
 
 
 
@@ -74,13 +73,16 @@ namespace BlackBox
             goalCell = mainGridGO.transform.GetChild(10).gameObject;
         }
 
+        void FixedUpdate() {
+            if ((goalCell != null) && (goalCell.GetComponent<NodeCell>().HasFlag())) {
+                tutorialSeq = 7;
+                tutorialNext();
+            }
+        }
+
         public void tutorialNext() {
             tutorialSeq++;
 
-            nextButton.SetActive(false);
-            TutorialAnimator.SetBool("InfoOn", false);
-            TutorialAnimator.SetInteger("TutorialSeq", tutorialSeq);
-            
             if (tutorialSeq >= dialogueSeq.Length-1) {
                 // TutorialAnimator.SetBool("WolfieOn", false);
                 Invoke("endDialogue", 2f);
@@ -92,7 +94,7 @@ namespace BlackBox
         public void navCellNext() {
             if ((!currCell.GetComponent<NavCell>().isMollyAt && currCell.GetComponent<Animator>().GetBool("BatTravelOut"))
             || (tutorialSeq == 0)) {
-                Invoke("tutorialNext", 0.5f);
+                Invoke("tutorialNext", 1f);
             }
         }
 
@@ -104,13 +106,15 @@ namespace BlackBox
         }
 
         public void enableNavCell(Vector3 coor) {
+            nextButton.SetActive(false);
+            TutorialAnimator.SetBool("InfoOn", false);
+            TutorialAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
             if (coor.z != 0) { 
                 nextButton.SetActive(true);
                 TutorialAnimator.SetBool("InfoOn", true);
-                TutorialAnimator.SetInteger("TutorialSeq", tutorialSeq);
-                // popup with help picture show up
                 return; 
-            } else if (tutorialSeq == 5 || tutorialSeq == 7) { 
+            } else if (tutorialSeq == 7) { 
                 nextButton.SetActive(true);
                 goalCell.GetComponent<Animator>().SetBool("NodeCell/Flagged", true);
                 return;
@@ -135,15 +139,7 @@ namespace BlackBox
             currCell = parent.transform.GetChild(i).gameObject;
             currCell.GetComponent<Button>().interactable = true;
             currCell.GetComponent<Button>().onClick.AddListener(navCellNext);
-            highlightCell(currCell);
-            // currCell.GetComponent<Animator>().Play("Highlighted");
-            // currCell.GetComponent<Animator>().SetTrigger("Highlighted");
-        }
-
-        public void highlightCell(GameObject cell) {
-            for (int i=0; i<3; i++) {
-                cell.GetComponent<Animator>().SetTrigger("Highlighted");
-            } 
+            currCell.GetComponent<Animator>().SetTrigger("Highlighted");
         }
 
         // Helper functions
@@ -151,6 +147,6 @@ namespace BlackBox
             TutorialAnimator.SetBool("WolfieOn", false);
         }
 
-        
+
     }
 }
