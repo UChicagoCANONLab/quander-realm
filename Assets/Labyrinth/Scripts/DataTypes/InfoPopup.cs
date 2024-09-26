@@ -6,6 +6,7 @@ namespace Labyrinth {
     public class InfoPopup : MonoBehaviour
     {
         public GameObject[] infoPopups;
+        public Animator animator;
 
 
         private void OnEnable() 
@@ -19,6 +20,7 @@ namespace Labyrinth {
         
 
         public void showInfoMessage() {
+            animator.SetBool("IsOn", true);
             int deg = SaveData.Instance.Degree;
             switch(deg) {
                 case 0:
@@ -32,17 +34,15 @@ namespace Labyrinth {
                     break;
                 default:
                     break;
-            this.gameObject.SetActive(true);
             }
         }
 
         public void closeInfoMessage() {
-            this.gameObject.GetComponent<Animation>().Play("Popup-Exit");
+            animator.SetBool("IsOn", false);
             Invoke("helperExit", 2f);
         }
 
         public void helperExit() {
-            this.gameObject.SetActive(false);
             foreach (GameObject obj in infoPopups) {
                 obj.SetActive(false);
             }

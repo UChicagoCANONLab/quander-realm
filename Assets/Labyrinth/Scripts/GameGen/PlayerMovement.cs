@@ -25,6 +25,7 @@ namespace Labyrinth
             TTEvents.StartPlayerMovement += StartPM;
             TTEvents.SwitchPlayer += SwitchPlayer;
             TTEvents.GetButtonPress += getButtonPress;
+            TTEvents.GetPlayer += getPlayer;
             TTEvents.ReturnPlayers += returnPlayers;
         }
         private void OnDisable() 
@@ -32,6 +33,7 @@ namespace Labyrinth
             TTEvents.StartPlayerMovement -= StartPM;
             TTEvents.SwitchPlayer -= SwitchPlayer;
             TTEvents.GetButtonPress -= getButtonPress;
+            TTEvents.GetPlayer -= getPlayer;
             TTEvents.ReturnPlayers -= returnPlayers;
         }
 
@@ -210,8 +212,8 @@ namespace Labyrinth
         } */
 
         public Player getPlayer(int i) {
-            if (i == 1) { return player1; }
-            else        { return player2; }
+            if (i == 1) { return this.player1; }
+            else        { return this.player2; }
         }
 
     }

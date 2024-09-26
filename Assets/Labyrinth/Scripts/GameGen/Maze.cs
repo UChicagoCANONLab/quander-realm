@@ -213,7 +213,7 @@ namespace Labyrinth
             }
         }
 
-        public void distributeGoal(MazeCell[,] maze, Player player) {
+        public void distributeGoal(MazeCell[,] maze) {
             maze[0, size-1].toggleStart(true);
             maze[size-1, 0].toggleGoal(true);
             currGoal = new Vector3(size-1, 0, 0);
@@ -424,8 +424,8 @@ namespace Labyrinth
             }
             // distributeGoal(maze1, PM.player1);
             // distributeGoal(maze2, PM.player2); 
-            distributeGoal(maze1, TTEvents.GetPlayer.Invoke(1));
-            distributeGoal(maze2, TTEvents.GetPlayer.Invoke(2)); 
+            distributeGoal(maze1);
+            distributeGoal(maze2); 
             
             // RenderMap(maze, map3, 0);
             RenderMap(maze1, map1, 0);

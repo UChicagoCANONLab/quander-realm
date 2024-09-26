@@ -12,7 +12,7 @@ namespace Labyrinth
         private int seq = 0;
         
         public Animator animator;
-        private Player p1;
+        public Player p1;
         // public ButtonBehavior BB;
 
         [Header("Twin Objects")]
@@ -44,7 +44,7 @@ namespace Labyrinth
 
         void Start() {
             degree = SaveData.Instance.Degree;
-            p1 = TTEvents.GetPlayer.Invoke(1);
+            // p1 = TTEvents.GetPlayer.Invoke(1);
 
             twinSetup(0);
             twinOn(0, true);
@@ -52,12 +52,12 @@ namespace Labyrinth
 
 
         void Update() {
-            // if (p1.getPloc == new Vector3(0,1,0) && seq == 1) {
-            if (TTEvents.GetPlayer.Invoke(1).getPloc == new Vector3(0,1,0) && seq == 1) {
+            if (p1.getPloc == new Vector3(0,1,0) && seq == 1) {
+            // if (TTEvents.GetPlayer.Invoke(1).getPloc == new Vector3(0,1,0) && seq == 1) {
                 twinOn(1, true);
             }
-            // if (p1.getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
-            if (TTEvents.GetPlayer.Invoke(1).getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
+            if (p1.getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
+            // if (TTEvents.GetPlayer.Invoke(1).getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
                 twinOn(1, true);
             }
         }
