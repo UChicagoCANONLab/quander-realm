@@ -6,7 +6,18 @@ namespace Labyrinth {
     public class InfoPopup : MonoBehaviour
     {
         public GameObject[] infoPopups;
+
+
+        private void OnEnable() 
+        {
+            TTEvents.ShowInfoMessage += showInfoMessage;
+        }
+        private void OnDisable() 
+        {
+            TTEvents.ShowInfoMessage -= showInfoMessage;
+        }
         
+
         public void showInfoMessage() {
             int deg = SaveData.Instance.Degree;
             switch(deg) {
@@ -21,7 +32,7 @@ namespace Labyrinth {
                     break;
                 default:
                     break;
-            // this.gameObject.SetActive(true);
+            this.gameObject.SetActive(true);
             }
         }
 

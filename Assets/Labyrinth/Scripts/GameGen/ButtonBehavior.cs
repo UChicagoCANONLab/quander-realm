@@ -8,12 +8,30 @@ namespace Labyrinth
 { 
     public class ButtonBehavior : MonoBehaviour
     {
-        public GameBehavior GB;
-        public PlayerMovement PM;
-        public InfoPopup IP;
+        // public GameBehavior GB;
+        // public PlayerMovement PM;
+        // public InfoPopup IP;
 
         public GameObject litePanel;
         public Button[] levelButtons;
+
+
+        private void OnEnable() 
+        {
+            Wrapper.Events.MinigameClosed += DestroyDataObject;
+            TTEvents.SelectLevel += LevelSelect;
+        }
+        private void OnDisable()
+        {
+            Wrapper.Events.MinigameClosed -= DestroyDataObject;
+            TTEvents.SelectLevel += LevelSelect;
+        }
+        
+        private void DestroyDataObject() 
+        {
+            Destroy(GameObject.Find("ProfileData"));
+        }
+
 
         void Start() {
             if (SceneManager.GetActiveScene().name == "LA_MainMenu") {
@@ -144,38 +162,28 @@ namespace Labyrinth
         // ~~~~~~~~~~~~~~~ Calling Button Functions from Other Scripts ~~~~~~~~~~~~~~~
 
         public void HintButton() {
-            GB.GiveHint();
+            // GB.GiveHint();
+            TTEvents.GiveHint?.Invoke();
         }
 
         public void RestartLevel() {
-            GB.Restart();
+            // GB.Restart();
+            TTEvents.RestartLevel?.Invoke();
         }
 
         public void MoveButton(string move) {
-            Vector3 press = PM.getButtonPress(move);
+            // Vector3 press = PM.getButtonPress(move);
+            Vector3 press = TTEvents.GetButtonPress.Invoke(move);
         }
 
         public void SwitchButton() {
-            PM.SwitchPlayer();
+            // PM.SwitchPlayer();
+            TTEvents.SwitchPlayer?.Invoke();
         }
 
         public void InfoButton() {
-            IP.gameObject.SetActive(true);
-            IP.showInfoMessage();
-        }
-
-
-        // ~~~~~~~~~~~~~~~ Enabled in Filament Environment ~~~~~~~~~~~~~~~
-
-        private void OnEnable() {
-            Wrapper.Events.MinigameClosed += DestroyDataObject;
-        }
-        private void OnDisable(){
-            Wrapper.Events.MinigameClosed -= DestroyDataObject;
-        }
-        private void DestroyDataObject() {
-            // Time.timeScale = 1f;
-            Destroy(GameObject.Find("ProfileData"));
+            // IP.showInfoMessage();
+            TTEvents.ShowInfoMessage?.Invoke();
         }
 
     }

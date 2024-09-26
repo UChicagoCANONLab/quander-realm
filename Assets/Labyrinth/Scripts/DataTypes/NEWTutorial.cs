@@ -12,8 +12,8 @@ namespace Labyrinth
         private int seq = 0;
         
         public Animator animator;
-        public Player p1;
-        public ButtonBehavior BB;
+        private Player p1;
+        // public ButtonBehavior BB;
 
         [Header("Twin Objects")]
         public TMP_Text twin0Text;
@@ -44,16 +44,20 @@ namespace Labyrinth
 
         void Start() {
             degree = SaveData.Instance.Degree;
+            p1 = TTEvents.GetPlayer.Invoke(1);
+
             twinSetup(0);
             twinOn(0, true);
         }
 
 
         void Update() {
-            if (p1.getPloc == new Vector3(0,1,0) && seq == 1) {
+            // if (p1.getPloc == new Vector3(0,1,0) && seq == 1) {
+            if (TTEvents.GetPlayer.Invoke(1).getPloc == new Vector3(0,1,0) && seq == 1) {
                 twinOn(1, true);
             }
-            if (p1.getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
+            // if (p1.getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
+            if (TTEvents.GetPlayer.Invoke(1).getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
                 twinOn(1, true);
             }
         }
@@ -135,13 +139,16 @@ namespace Labyrinth
         public void tutorialNextLevel() {
             if (degree == 0) {
                 DialogueAndRewards.Instance.tutorialSeen[0] = true;
-                BB.LevelSelect(1);
+                // BB.LevelSelect(1);
+                TTEvents.SelectLevel?.Invoke(1);
             } else if (degree == 180) {
                 DialogueAndRewards.Instance.tutorialSeen[1] = true;
-                BB.LevelSelect(6);
+                // BB.LevelSelect(6);
+                TTEvents.SelectLevel?.Invoke(6);
             } else if (degree == 90) {
                 DialogueAndRewards.Instance.tutorialSeen[2] = true;
-                BB.LevelSelect(11);
+                // BB.LevelSelect(11);
+                TTEvents.SelectLevel?.Invoke(11);
             } else { return; }
         }
 

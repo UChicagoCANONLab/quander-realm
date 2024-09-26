@@ -9,6 +9,7 @@ namespace Labyrinth
     {
         private int size;
         private int deg; 
+        private double wallProb;
 
         private MazeCell[,] maze;
         private MazeCell[,] maze1;
@@ -29,8 +30,8 @@ namespace Labyrinth
         private Vector3 currGoal;
 
         [Header("GameObjects")]
-        public GameBehavior GB;
-        public PlayerMovement PM;
+        // public GameBehavior GB;
+        // public PlayerMovement PM;
 
         private Dictionary<string, string> opposites = new Dictionary<string, string>()
         { {"N", "S"}, {"W", "E"}, {"E", "W"}, {"S", "N"} };
@@ -38,9 +39,32 @@ namespace Labyrinth
 
     // ~~~~~~~~~~~~~~~ INITIALIZING ~~~~~~~~~~~~~~~
 
+        private void OnEnable() 
+        {
+            TTEvents.StartMaze += StartMaze;
+            TTEvents.GenerateMazes += generateMazes;
+            TTEvents.RenderMazes += renderMazes;
+            TTEvents.ClearGoal += clearGoal;
+            TTEvents.PathFinder += pathfinder;
+            TTEvents.CalculatePathToGoal += calcPathToGoal;
+            TTEvents.GetMap += getMap;
+        }
+        private void OnDisable() 
+        {
+            TTEvents.StartMaze -= StartMaze;
+            TTEvents.GenerateMazes -= generateMazes;
+            TTEvents.RenderMazes -= renderMazes;
+            TTEvents.ClearGoal -= clearGoal;
+            TTEvents.PathFinder -= pathfinder;
+            TTEvents.CalculatePathToGoal -= calcPathToGoal;
+            TTEvents.GetMap -= getMap;
+        }
+
         public void StartMaze() {
             deg = SaveData.Instance.Degree;
-            size = GB.size;
+            // size = GB.size;
+            size = TTEvents.Size.Invoke();
+            wallProb = TTEvents.WallProb.Invoke();
 
             if (size == 3) {
                 if (deg == 0) {
@@ -169,7 +193,7 @@ namespace Labyrinth
                 float randFloat = (float)Random.Range(0f,1f);
                 if (randFloat < 0.5) {
                     float randFloat2 = (float)Random.Range(0f,1f);
-                    if (randFloat2 < GB.wallProb) {
+                    if (randFloat2 < wallProb) {
                         if (oldTile1.isCave()==false && newTile1.isCave()==false && 
                         oldTile2.walls[dir] == false && newTile2.walls[opposites[dir]]==false) {
                             oldTile1.walls[dir] = true;
@@ -190,9 +214,9 @@ namespace Labyrinth
         }
 
         public void distributeGoal(MazeCell[,] maze, Player player) {
-            maze[0, GB.size-1].toggleStart(true);
-            maze[GB.size-1, 0].toggleGoal(true);
-            currGoal = new Vector3(GB.size-1, 0, 0);
+            maze[0, size-1].toggleStart(true);
+            maze[size-1, 0].toggleGoal(true);
+            currGoal = new Vector3(size-1, 0, 0);
         }
 
         public void clearGoal() {
@@ -280,19 +304,23 @@ namespace Labyrinth
             Vector3 start; Vector3 end;
             int degree;
         
-            if (PM.player1.current == true) {
+            // if (PM.player1.current == true) {
+            if (TTEvents.GetPlayer.Invoke(1).current) {
             //if (currGoal.z == 1) {
-                start = PM.player1.getPloc;
+                // start = PM.player1.getPloc;
+                start = TTEvents.GetPlayer.Invoke(1).getPloc;
                 degree = 0;
             }
-            else if (PM.player2.current == true) {
+            // else if (PM.player2.current == true) {
+            else if (TTEvents.GetPlayer.Invoke(2).current) {
             //else if (currGoal.z == 2) {
-                start = PM.player2.getPloc;
+                // start = PM.player2.getPloc;
+                start = TTEvents.GetPlayer.Invoke(2).getPloc;
                 degree = deg;
             }
             else { return new object[] {"X", 0}; }
 
-            end = new Vector3(GB.size-1, 0, 0);
+            end = new Vector3(size-1, 0, 0);
 
             // int startx = size-1-(int)start.x;
             // int starty = size-1-(int)start.y;
@@ -394,12 +422,19 @@ namespace Labyrinth
                     maze2[x,y].toggleGoal(false);
                 }
             }
-            distributeGoal(maze1, PM.player1);
-            distributeGoal(maze2, PM.player2); 
+            // distributeGoal(maze1, PM.player1);
+            // distributeGoal(maze2, PM.player2); 
+            distributeGoal(maze1, TTEvents.GetPlayer.Invoke(1));
+            distributeGoal(maze2, TTEvents.GetPlayer.Invoke(2)); 
             
             // RenderMap(maze, map3, 0);
             RenderMap(maze1, map1, 0);
             RenderMap(maze2, map2, deg);
+        }
+
+        public TM getMap(int i) {
+            if (i==1)   { return map1; }
+            else        { return map2; }
         }
     }
 }

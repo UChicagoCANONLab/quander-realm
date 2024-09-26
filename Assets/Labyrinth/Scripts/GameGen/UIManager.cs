@@ -19,6 +19,24 @@ namespace Labyrinth
         public GameObject progressBar;
 
 
+        private void OnEnable() 
+        {
+            TTEvents.SetLevelNumber += SetLevelNumber;
+            TTEvents.SetProgressBar += SetProgressBar;
+            TTEvents.UpdateProgressBar += UpdateProgressBar;
+            TTEvents.ResetUI += Reset;
+            TTEvents.LevelComplete += LevelComplete;
+        }
+        private void OnDisable() 
+        {
+            TTEvents.SetLevelNumber -= SetLevelNumber;
+            TTEvents.SetProgressBar -= SetProgressBar;
+            TTEvents.UpdateProgressBar -= UpdateProgressBar;
+            TTEvents.ResetUI -= Reset;
+            TTEvents.LevelComplete -= LevelComplete;
+        }
+
+
         public void SetLevelNumber(string num) {
             if (num == "0") { return; }
             levelNumber.text = num;

@@ -10,20 +10,39 @@ namespace Labyrinth
         private float speed = 5f;
         private float sign = 1f; //1 for 90deg, -1 for -90deg
         private int deg;
+        private int size;
         private string mov = "none";
 
-        public GameBehavior GB;
-        public Maze MAZE;
+        // public GameBehavior GB;
+        // public Maze MAZE;
 
         public Player player1;
         public Player player2;
 
+
+        private void OnEnable() 
+        {
+            TTEvents.StartPlayerMovement += StartPM;
+            TTEvents.SwitchPlayer += SwitchPlayer;
+            TTEvents.GetButtonPress += getButtonPress;
+            TTEvents.ReturnPlayers += returnPlayers;
+        }
+        private void OnDisable() 
+        {
+            TTEvents.StartPlayerMovement -= StartPM;
+            TTEvents.SwitchPlayer -= SwitchPlayer;
+            TTEvents.GetButtonPress -= getButtonPress;
+            TTEvents.ReturnPlayers -= returnPlayers;
+        }
+
+
         public void StartPM()
         {
             deg = SaveData.Instance.Degree;
+            size = TTEvents.Size.Invoke();
 
-            player1.initPlayer(-1,0, GB.size);
-            player2.initPlayer(1,deg, GB.size);
+            player1.initPlayer(-1,0, size);
+            player2.initPlayer(1,deg, size);
         }
 
         // Update is called once per frame
@@ -64,12 +83,13 @@ namespace Labyrinth
 
                         main.move(movementx);
                         mirror.move(mirrorMovementx);
-                        GB.steps++;
+                        // GB.steps++;
+                        TTEvents.IncrementSteps?.Invoke();
                         
                         movementx = new Vector3(0,0,0);
             
-                        if ((main.getPloc == new Vector3(GB.size-1, 0, 0)) || 
-                        mirror.getPloc == new Vector3(GB.size-1, 0, 0)) {
+                        if ((main.getPloc == new Vector3(size-1, 0, 0)) || 
+                        mirror.getPloc == new Vector3(size-1, 0, 0)) {
                             Invoke("goalTime", 0.3f);
                         }
                     }
@@ -94,12 +114,13 @@ namespace Labyrinth
                         
                         main.move(movementy);
                         mirror.move(mirrorMovementy);
-                        GB.steps++;
+                        // GB.steps++;
+                        TTEvents.IncrementSteps?.Invoke();
 
                         movementy = new Vector3(0,0,0);
             
-                        if ((main.getPloc == new Vector3(GB.size-1, 0, 0)) || 
-                        mirror.getPloc == new Vector3(GB.size-1, 0, 0)) {
+                        if ((main.getPloc == new Vector3(size-1, 0, 0)) || 
+                        mirror.getPloc == new Vector3(size-1, 0, 0)) {
                             Invoke("goalTime", 0.3f);
                         }
                     }
@@ -112,7 +133,8 @@ namespace Labyrinth
         }
 
         public void goalTime() {
-            GB.collectGoal();
+            // GB.collectGoal();
+            TTEvents.CollectGoal?.Invoke();
         }
 
         public Vector3 getButtonPress(string dir) {
@@ -155,13 +177,41 @@ namespace Labyrinth
             player1.toggleType();
             player2.toggleType();
 
+            TTEvents.GetMap.Invoke(1).switchMaps();
+            TTEvents.GetMap.Invoke(2).switchMaps();
+
             sign *= -1;
 
-            MAZE.map1.toggleRenderer(MAZE.map1.overlay);
-            MAZE.map1.toggleCollider(MAZE.map1.walls);
-            MAZE.map2.toggleRenderer(MAZE.map2.overlay);
-            MAZE.map2.toggleCollider(MAZE.map2.walls);
+            // MAZE.map1.toggleRenderer(MAZE.map1.overlay);
+            // MAZE.map1.toggleCollider(MAZE.map1.walls);
+            // MAZE.map2.toggleRenderer(MAZE.map2.overlay);
+            // MAZE.map2.toggleCollider(MAZE.map2.walls);
+        }
 
+        public void returnPlayers() {
+            player1.returnPlayer();
+            player2.returnPlayer();
+        }
+
+        /* public bool getPlayerCurrent(int i) {
+            switch(i) {
+                case 1: return player1.current;
+                case 2: return player2.current;
+                default: return player1.current;
+            }
+        } */
+
+        /* public Vector3 getPlayerLoc(int i) {
+            switch(i) {
+                case 1: return player1.getPloc;
+                case 2: return player2.getPloc;
+                default: return player1.getPloc;
+            }
+        } */
+
+        public Player getPlayer(int i) {
+            if (i == 1) { return player1; }
+            else        { return player2; }
         }
 
     }
