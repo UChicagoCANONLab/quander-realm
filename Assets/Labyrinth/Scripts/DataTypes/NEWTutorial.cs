@@ -12,8 +12,7 @@ namespace Labyrinth
         private int seq = 0;
         
         public Animator animator;
-        public Player p1;
-        // public ButtonBehavior BB;
+        private Player p1;
 
         [Header("Twin Objects")]
         public TMP_Text twin0Text;
@@ -29,9 +28,9 @@ namespace Labyrinth
             "Get us to the exit ladder in as few moves as you can"
         };
         public string[] tutorial180 = {
-            "See how I’m at the opposite corner as I was last time? Now every move I make...",
+            "See how I'm at the opposite corner as I was last time? Now every move I make...",
             "I do the opposite!",
-            "Typical of my annoying sister…",
+            "Typical of my annoying sister...",
             ""
         };
         public string[] tutorial90 = {
@@ -44,7 +43,7 @@ namespace Labyrinth
 
         void Start() {
             degree = SaveData.Instance.Degree;
-            // p1 = TTEvents.GetPlayer.Invoke(1);
+            p1 = TTEvents.GetPlayer.Invoke(1);
 
             twinSetup(0);
             twinOn(0, true);
@@ -132,24 +131,23 @@ namespace Labyrinth
                 default:
                     break;
             }
-            
         }
 
 
         public void tutorialNextLevel() {
             if (degree == 0) {
                 DialogueAndRewards.Instance.tutorialSeen[0] = true;
-                // BB.LevelSelect(1);
                 TTEvents.SelectLevel?.Invoke(1);
-            } else if (degree == 180) {
+            } 
+            else if (degree == 180) {
                 DialogueAndRewards.Instance.tutorialSeen[1] = true;
-                // BB.LevelSelect(6);
                 TTEvents.SelectLevel?.Invoke(6);
-            } else if (degree == 90) {
+            } 
+            else if (degree == 90) {
                 DialogueAndRewards.Instance.tutorialSeen[2] = true;
-                // BB.LevelSelect(11);
                 TTEvents.SelectLevel?.Invoke(11);
-            } else { return; }
+            } 
+            else { return; }
         }
 
 
@@ -172,19 +170,6 @@ namespace Labyrinth
                 }
             }
         }
-
-        /* public void imagesOff() {
-            if (degree == 0) {
-                foreach (GameObject i in tutorialImages) {
-                    if (i!=null)    {   i.SetActive(false); }
-                }
-            }
-        }
-        public void imagesOn() {
-            if (degree == 0 && seq != 1) {
-                tutorialImages[seq].SetActive(true);
-            }
-        } */
 
     }
 }
