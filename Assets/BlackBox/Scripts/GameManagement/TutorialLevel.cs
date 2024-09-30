@@ -109,13 +109,15 @@ namespace BlackBox
             nextButton.SetActive(false);
             TutorialAnimator.SetBool("InfoOn", false);
             TutorialAnimator.SetInteger("TutorialSeq", tutorialSeq);
+            highlightCurrentCell(false);
 
             if (coor.z != 0) { 
                 nextButton.SetActive(true);
                 TutorialAnimator.SetBool("InfoOn", true);
-                return; 
+                BBEvents.ShowHint?.Invoke();
+                // return; 
             } else if (tutorialSeq == 7) { 
-                nextButton.SetActive(true);
+                // nextButton.SetActive(true);
                 goalCell.GetComponent<Animator>().SetBool("NodeCell/Flagged", true);
                 return;
             } else if (tutorialSeq == 8) { return; }
@@ -140,11 +142,27 @@ namespace BlackBox
             currCell.GetComponent<Button>().interactable = true;
             currCell.GetComponent<Button>().onClick.AddListener(navCellNext);
             currCell.GetComponent<Animator>().SetTrigger("Highlighted");
+
+            if (coor.z!=0) { highlightCurrentCell(true); }
         }
 
         // Helper functions
         public void endDialogue() {
             TutorialAnimator.SetBool("WolfieOn", false);
+        }
+
+
+        public void highlightCurrentCell(bool isOn) {
+            if (currCell == null) { return; }
+
+            if (isOn && currCell.GetComponent<NavCell>().isMollyAt) {
+            // if (isOn && currCell.GetComponent<Animator>().GetBool("BatTravelIn")) {
+                currCell.GetComponent<Animator>().SetTrigger("BatPoofOut");
+            } 
+            else if (!isOn && currCell.GetComponent<NavCell>().isMollyAt) {
+                currCell.GetComponent<Animator>().SetTrigger("BatPoofIn");
+            }
+            currCell.GetComponent<Animator>().SetBool("Tutorial", isOn);
         }
 
 

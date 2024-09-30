@@ -48,12 +48,39 @@ namespace BlackBox
 
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
             Vector3 end = (Vector3)hintPairs[hintCounter][1];
-            Vector3 turn = new Vector3(start.x, end.y, 0);
-            if (start.x==-1 || start.x==maxSize) {
-                turn.x = end.x; turn.y = start.y;
-            }
-            Vector3[] positions = new Vector3[] {start, turn, end};
+            Vector3 turn = new Vector3(start.x, end.y, 0); 
             
+            // Change line shape by type of hit
+            bool cornerOn = true;
+            if (start.x==end.x && start.y==end.y) { // Direct Hit
+                switch(start.z) {
+                    case 1:     turn.x = 0;         break;  // Left
+                    case 2:     turn.y = 0;         break;  // Bottom
+                    case 3:     turn.x = maxSize-1; break;  // Right
+                    case 4:     turn.y = maxSize-1; break;  // Top
+                }
+            } else if (start.x==end.x || start.y==end.y) { // Miss
+                turn.x = (start.x+end.x)/2;
+                turn.y = (start.y+end.y)/2;
+                cornerOn = false;
+            } else { // Detour
+                if (start.x==-1 || start.x==maxSize) { // Invert line shape
+                    turn.x = end.x; turn.y = start.y; 
+                }
+                // Change turn location by type of turn
+                /* if ((start.z==1 && end.z==2) || (start.z==2 && end.z==1)) {
+                    turn.x += 0.05f; turn.y += 0.05f;
+                } else if ((start.z==2 && end.z==3) || (start.z==3 && end.z==2)) {
+                    turn.x -= 0.05f; turn.y += 0.05f;
+                } else if ((start.z==3 && end.z==4) || (start.z==4 && end.z==3)) {
+                    turn.x -= 0.05f; turn.y -= 0.05f;
+                } else if ((start.z==4 && end.z==1) || (start.z==1 && end.z==4)) {
+                    turn.x += 0.05f; turn.y -= 0.05f;
+                } */
+            }
+
+            Vector3[] positions = new Vector3[] {start, turn, end};
+
             for (int i=0; i<3; i++) {
                 Vector3 pos = positions[i];
                 switch (pos.x) {
@@ -71,8 +98,11 @@ namespace BlackBox
             GameObject corner = currLine.transform.GetChild(0).gameObject;
             corner.transform.localPosition += positions[1];
 
+            currLine.GetComponent<Animator>().SetBool("Corner", cornerOn);
             currLine.GetComponent<Animator>().SetBool("IsOn", true);            
             hintCounter++;
+
+            // Debug.Log($"HintLine: {string.Join("; ", positions)}");
         }
 
         public void ClearHintLines() {
@@ -83,7 +113,7 @@ namespace BlackBox
             hintPairs.Clear();
         }
 
-        public void AppendHintCoor(Vector3Int orig, Dir origDir, Vector3Int dest, Dir destDir) {
+        public void AppendHintCoor(Vector3Int orig, Dir origDir, Vector3Int dest, Dir destDir) {    
             Vector3Int[] pair = new Vector3Int[] {orig, dest};
             Dir[] dirPair = new Dir[] {origDir, destDir};
 
@@ -91,6 +121,7 @@ namespace BlackBox
             maxSize = gridSizeValues[(int)size];
 
             for (int i=0; i<2; i++) {
+                pair[i].z = (int)dirPair[i];
                 switch(dirPair[i]) {
                     case Dir.Top:   pair[i].y = maxSize;    break;
                     case Dir.Bot:   pair[i].y = -1;         break;
@@ -105,6 +136,7 @@ namespace BlackBox
         public void ExitWolfiePopup() {
             WolfieAnimator.SetBool("IsOn", false);
         }
+
 
     }
 }
