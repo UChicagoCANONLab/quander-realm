@@ -11,9 +11,10 @@ namespace BlackBox
         public bool isMollyAt = false;
         private bool isMarked = false;
         private bool isLinked = false;
-        private Dir linkedCellDirection = Dir.None;
-        private Vector3Int linkedCellPosition = Vector3Int.back;
-        // public Vector3Int linkedCellPosition = Vector3Int.back;
+        // private Dir linkedCellDirection = Dir.None;
+        public Dir linkedCellDirection = Dir.None;
+        // private Vector3Int linkedCellPosition = Vector3Int.back;
+        public Vector3Int linkedCellPosition = Vector3Int.back;
 
         const float highlightDelayTime = 0.2F;
         BeauRoutine.Routine highlightDelay;

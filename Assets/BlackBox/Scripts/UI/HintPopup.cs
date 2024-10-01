@@ -54,10 +54,10 @@ namespace BlackBox
             bool cornerOn = true;
             if (start.x==end.x && start.y==end.y) { // Direct Hit
                 switch(start.z) {
-                    case 1:     turn.x = 0;         break;  // Left
-                    case 2:     turn.y = 0;         break;  // Bottom
-                    case 3:     turn.x = maxSize-1; break;  // Right
-                    case 4:     turn.y = maxSize-1; break;  // Top
+                    case 1:     turn.x = 0.5f;         break;  // Left
+                    case 2:     turn.y = 0.5f;         break;  // Bottom
+                    case 3:     turn.x = maxSize-1.5f; break;  // Right
+                    case 4:     turn.y = maxSize-1.5f; break;  // Top
                 }
             } else if (start.x==end.x || start.y==end.y) { // Miss
                 turn.x = (start.x+end.x)/2;
