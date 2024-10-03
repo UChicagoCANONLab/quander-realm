@@ -131,8 +131,6 @@ namespace Qupcakery
         {
             if (gateState == GateState.OnBelt)
             {
-                // Debug.Log("Gate " + GetComponent<GateOperationController>().gate.Type + "received on batch done notification");
-
                 GateSlots.Instance.RemoveGateFromSlot(gameObject, transform.position);
 
                 // Put gate back to bank

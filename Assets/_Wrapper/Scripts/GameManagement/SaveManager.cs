@@ -45,13 +45,13 @@ namespace Wrapper
         private bool webGLUploadSuccess = false;
 #endif
 
-#if PRODUCTION_FB
+// #if PRODUCTION_FB
         public static readonly string firebaseURL = "https://quander-production-default-rtdb.firebaseio.com/";
         public readonly string testConnectionURL = "https://console.firebase.google.com/project/quander-production/database/quander-production-default-rtdb/data";
-#else
-        public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
-        public readonly string testConnectionURL = "https://console.firebase.google.com/project/filament-zombies/database/filament-zombies-default-rtdb/data";
-#endif
+// #else
+//         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
+//         public readonly string testConnectionURL = "https://console.firebase.google.com/project/filament-zombies/database/filament-zombies-default-rtdb/data";
+// #endif
 
         private void Awake()
         {
@@ -213,6 +213,28 @@ namespace Wrapper
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
 
+            // Checking if age is set in database
+            string usernameJson = JsonUtility.ToJson(new UserCode(researchCode));
+            byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(usernameJson);
+
+            string url = awsURL + "/check_research_code";
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            {
+                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
+                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log("Could not retrieve age verification from aws: " + www.error);
+                } else {
+                    if (!bool.Parse(www.downloadHandler.text)) {
+                        Events.DisplayAgeSelector();
+                    }
+                }
+            }
+
             StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
 #else
@@ -285,6 +307,28 @@ namespace Wrapper
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
+
+            // Checking if age is set in database
+            string usernameJson = JsonUtility.ToJson(new UserCode(researchCode));
+            byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(usernameJson);
+
+            string url = awsURL + "/check_research_code";
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            {
+                www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
+                www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log("Could not retrieve age verification from aws: " + www.error);
+                } else {
+                    if (!bool.Parse(www.downloadHandler.text)) {
+                        Events.DisplayAgeSelector();
+                    }
+                }
+            }
 
             StarTracker.ST.Invoke("InitStarTracker", 0.2f);
         }
