@@ -45,7 +45,6 @@ namespace Labyrinth
             degree = SaveData.Instance.Degree;
             p1 = TTEvents.GetPlayer.Invoke(1);
             
-            animator.SetInteger("Degree", degree);
             twinSetup(0);
             twinOn(0, true);
         }
@@ -67,13 +66,11 @@ namespace Labyrinth
 
         public void twinOn(int type, bool isOn) {
             animator.SetBool($"Twin{type}", isOn);
-            // setImages();
         }
 
         public void twinSetup(int type) {
             string textTemp;
-            // animator.SetInteger("Seq", seq);
-            // Invoke("setImages", 0.5f);
+            setImages();
 
             switch(degree) {
                 case 0:
@@ -97,8 +94,6 @@ namespace Labyrinth
             } else {
                 twin1Text.text = textTemp;
             }
-            
-            animator.SetInteger("Seq", seq);
         }
 
         // ~~~~~~~~~~~~~~~ Button Functions ~~~~~~~~~~~~~~~
@@ -165,7 +160,7 @@ namespace Labyrinth
             animator.SetTrigger("PointerSwitch");
         }
         
-        /* public void setImages() {
+        public void setImages() {
             if (degree == 0) {
                 foreach(GameObject i in tutorialImages) {
                     if (i!=null) {  i.SetActive(false); }
@@ -174,7 +169,7 @@ namespace Labyrinth
                     tutorialImages[seq].SetActive(true);
                 }
             }
-        } */
+        }
 
     }
 }
