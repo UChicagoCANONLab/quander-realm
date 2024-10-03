@@ -67,7 +67,6 @@ namespace Labyrinth
 
         public void twinOn(int type, bool isOn) {
             animator.SetBool($"Twin{type}", isOn);
-            animator.SetInteger("Seq", seq);
             // setImages();
         }
 
@@ -97,7 +96,9 @@ namespace Labyrinth
                 twin0Text.text = textTemp;
             } else {
                 twin1Text.text = textTemp;
-            }     
+            }
+            
+            animator.SetInteger("Seq", seq);
         }
 
         // ~~~~~~~~~~~~~~~ Button Functions ~~~~~~~~~~~~~~~
