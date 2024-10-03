@@ -191,8 +191,8 @@ namespace Labyrinth
         }
 
         public void returnPlayers() {
-            player1.returnPlayer();
-            player2.returnPlayer();
+            this.player1.returnPlayer();
+            this.player2.returnPlayer();
         }
 
         /* public bool getPlayerCurrent(int i) {

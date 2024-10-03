@@ -70,7 +70,7 @@ namespace Labyrinth
 
         public void twinSetup(int type) {
             string textTemp;
-            setImages();
+            if (degree == 0) { setImages(); }
 
             switch(degree) {
                 case 0:
@@ -161,13 +161,11 @@ namespace Labyrinth
         }
         
         public void setImages() {
-            if (degree == 0) {
-                foreach(GameObject i in tutorialImages) {
-                    if (i!=null) {  i.SetActive(false); }
-                }
-                if (seq != 1) {
-                    tutorialImages[seq].SetActive(true);
-                }
+            foreach(GameObject i in tutorialImages) {
+                if (i!=null) {  i.SetActive(false); }
+            }
+            if (seq != 1) {
+                tutorialImages[seq].SetActive(true);
             }
         }
 

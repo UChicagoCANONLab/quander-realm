@@ -174,6 +174,12 @@ namespace Labyrinth
             // Resetting level
             initTime = Time.time;
 
+            if (winner == true) {
+                winner = false;
+                // UI.Reset();
+                TTEvents.ResetUI?.Invoke();
+            }
+
             // PM.player1.returnPlayer();
             // PM.player2.returnPlayer();
             TTEvents.ReturnPlayers?.Invoke();
@@ -182,12 +188,6 @@ namespace Labyrinth
             // MAZE.renderMazes();
             TTEvents.GenerateMazes?.Invoke();
             TTEvents.RenderMazes?.Invoke();
-
-            if (winner == true) {
-                winner = false;
-                // UI.Reset();
-                TTEvents.ResetUI?.Invoke();
-            }
 
             // pathLength = MAZE.pathfinder(0, size-1, size-1, 0).Length;
             pathLength = TTEvents.PathFinder.Invoke(0, size-1, size-1, 0).Length;
