@@ -38,6 +38,8 @@ public class TutorialManager : MonoBehaviour
 				    animation.Play("TutorialHH");
                     image.sprite = subImages[0];
                     hand.active = true;
+
+                    animation.Play("TutorialHH");
                     break;
                 case 3:
                     textbox.text = "We’re adding new substitutions now! The box with an X on it is called a Not-Gate.";
