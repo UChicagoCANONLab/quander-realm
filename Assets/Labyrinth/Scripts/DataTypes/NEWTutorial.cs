@@ -67,12 +67,13 @@ namespace Labyrinth
 
         public void twinOn(int type, bool isOn) {
             animator.SetBool($"Twin{type}", isOn);
+            animator.SetInteger("Seq", seq);
             // setImages();
         }
 
         public void twinSetup(int type) {
             string textTemp;
-            animator.SetInteger("Seq", seq);
+            // animator.SetInteger("Seq", seq);
             // Invoke("setImages", 0.5f);
 
             switch(degree) {
