@@ -52,6 +52,8 @@ namespace BlackBox
             
             // Change line shape by type of hit
             bool cornerOn = true;
+            Vector3 cornerOffset = new Vector3(0,0,0);
+
             if (start.x==end.x && start.y==end.y) { // Direct Hit
                 switch(start.z) {
                     case 1:     turn.x = 0.5f;         break;  // Left
@@ -59,24 +61,29 @@ namespace BlackBox
                     case 3:     turn.x = maxSize-1.5f; break;  // Right
                     case 4:     turn.y = maxSize-1.5f; break;  // Top
                 }
-            } else if (start.x==end.x || start.y==end.y) { // Miss
+            }
+            else if (start.x==end.x || start.y==end.y) { // Miss
                 turn.x = (start.x+end.x)/2;
                 turn.y = (start.y+end.y)/2;
                 cornerOn = false;
-            } else { // Detour
+            } 
+            else { // Detour
+                cornerOffset = new Vector3(30, 30, 0);
+
                 if (start.x==-1 || start.x==maxSize) { // Invert line shape
                     turn.x = end.x; turn.y = start.y; 
                 }
-                // Change turn location by type of turn
-                /* if ((start.z==1 && end.z==2) || (start.z==2 && end.z==1)) {
-                    turn.x += 0.05f; turn.y += 0.05f;
+                // Change turn icon location by type of turn
+                if ((start.z==1 && end.z==2) || (start.z==2 && end.z==1)) {
+                    // No need to change direction of icon offset
                 } else if ((start.z==2 && end.z==3) || (start.z==3 && end.z==2)) {
-                    turn.x -= 0.05f; turn.y += 0.05f;
+                    cornerOffset.x *= -1;
                 } else if ((start.z==3 && end.z==4) || (start.z==4 && end.z==3)) {
-                    turn.x -= 0.05f; turn.y -= 0.05f;
+                    cornerOffset.x *= -1;
+                    cornerOffset.y *= -1;
                 } else if ((start.z==4 && end.z==1) || (start.z==1 && end.z==4)) {
-                    turn.x += 0.05f; turn.y -= 0.05f;
-                } */
+                    cornerOffset.y *= -1;
+                }
             }
 
             Vector3[] positions = new Vector3[] {start, turn, end};
@@ -96,7 +103,7 @@ namespace BlackBox
             GameObject currLine = Instantiate(linePrefab, lineContainer.transform);
             currLine.GetComponent<LineRenderer>().SetPositions(positions);
             GameObject corner = currLine.transform.GetChild(0).gameObject;
-            corner.transform.localPosition += positions[1];
+            corner.transform.localPosition += (positions[1] + cornerOffset);
 
             currLine.GetComponent<Animator>().SetBool("Corner", cornerOn);
             currLine.GetComponent<Animator>().SetBool("IsOn", true);            
