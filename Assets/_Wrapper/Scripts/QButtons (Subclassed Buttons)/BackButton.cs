@@ -16,17 +16,10 @@ namespace Wrapper
             }
 
             if (SceneManager.GetActiveScene().buildIndex == 0)
-            {
-                Events.ToggleTitleScreen?.Invoke(true);
-            }
-            else
-            {
-                Events.ScreenFadeMidAction?.Invoke(() =>
-                {
-                    SceneManager.LoadScene(0);
-                    Events.MinigameClosed?.Invoke();
-                }, 0.1F);
-            }
+                return;
+
+            SceneManager.LoadScene(0);
+            Events.MinigameClosed?.Invoke();
         }
     }
 }
