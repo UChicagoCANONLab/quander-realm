@@ -8,10 +8,6 @@ namespace Labyrinth
 { 
     public class ButtonBehavior : MonoBehaviour
     {
-        // public GameBehavior GB;
-        // public PlayerMovement PM;
-        // public InfoPopup IP;
-
         public GameObject litePanel;
         public Button[] levelButtons;
 
@@ -162,27 +158,22 @@ namespace Labyrinth
         // ~~~~~~~~~~~~~~~ Calling Button Functions from Other Scripts ~~~~~~~~~~~~~~~
 
         public void HintButton() {
-            // GB.GiveHint();
             TTEvents.GiveHint?.Invoke();
         }
 
         public void RestartLevel() {
-            // GB.Restart();
             TTEvents.RestartLevel?.Invoke();
         }
 
         public void MoveButton(string move) {
-            // Vector3 press = PM.getButtonPress(move);
             Vector3 press = TTEvents.GetButtonPress.Invoke(move);
         }
 
         public void SwitchButton() {
-            // PM.SwitchPlayer();
             TTEvents.SwitchPlayer?.Invoke();
         }
 
         public void InfoButton() {
-            // IP.showInfoMessage();
             TTEvents.ShowInfoMessage?.Invoke();
         }
 

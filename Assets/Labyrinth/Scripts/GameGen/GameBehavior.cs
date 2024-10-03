@@ -27,11 +27,6 @@ namespace Labyrinth
         private float endTime;
         public float timePlayed;
 
-        [Header("GameObjects")]
-        // public Maze MAZE;
-        // public PlayerMovement PM;
-        // public UIManager UI;
-
         public static GameBehavior Instance;
 
         private Dictionary<string, string> rot180 = new Dictionary<string, string>() 
@@ -74,26 +69,20 @@ namespace Labyrinth
             TTEvents.StartPlayerMovement?.Invoke();
             TTEvents.StartMaze?.Invoke();
             TTEvents.SetLevelNumber?.Invoke($"{SaveData.Instance.CurrentLevel}");
-            // PM.StartPM();
-            // MAZE.StartMaze();
-            // UI.SetLevelNumber($"{SaveData.Instance.CurrentLevel}");
 
             if (SaveData.Instance.CurrentLevel == 0) {
                 pathLength = 8;
             }
             else {
-                // pathLength = MAZE.pathfinder(0, size-1, size-1, 0).Length;
                 pathLength = TTEvents.PathFinder.Invoke(0, size-1, size-1, 0).Length;
             }
             TTEvents.SetProgressBar?.Invoke(pathLength);
-            // UI.SetProgressBar(pathLength);
         }
 
         void Update() {
             checkNumStars();
 
             if (Input.GetKeyDown(KeyCode.Space)) {
-                // PM.SwitchPlayer();
                 TTEvents.SwitchPlayer?.Invoke();
             }
         }
@@ -101,7 +90,6 @@ namespace Labyrinth
         public void collectGoal() {
             checkNumStars();
 
-            // MAZE.clearGoal();
             TTEvents.ClearGoal?.Invoke();
             winner = true;
 
@@ -110,7 +98,6 @@ namespace Labyrinth
             SaveData.Instance.updateSave(this);
 
             TTEvents.LevelComplete?.Invoke(numStars);
-            // UI.LevelComplete(numStars);
             if (SaveData.Instance.CurrentLevel == 15) {
                 DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
             }
@@ -121,7 +108,6 @@ namespace Labyrinth
 
         public void checkNumStars() {
             TTEvents.UpdateProgressBar?.Invoke(steps);
-            // UI.UpdateProgressBar(steps);
             
             if (steps > (int)(pathLength + 2)) { // 1 mistake
                 numStars = 2;
@@ -139,7 +125,6 @@ namespace Labyrinth
         public void GiveHint() {
             string hintDir;
 
-            // object[] hint = MAZE.calcPathToGoal();
             object[] hint = TTEvents.CalculatePathToGoal.Invoke();
             string hintPath = hint[0].ToString();
             int hintDeg = (int)hint[1];
@@ -176,31 +161,22 @@ namespace Labyrinth
 
             if (winner == true) {
                 winner = false;
-                // UI.Reset();
                 TTEvents.ResetUI?.Invoke();
             }
 
-            // PM.player1.returnPlayer();
-            // PM.player2.returnPlayer();
             TTEvents.ReturnPlayers?.Invoke();
 
-            // MAZE.generateMazes();
-            // MAZE.renderMazes();
             TTEvents.GenerateMazes?.Invoke();
             TTEvents.RenderMazes?.Invoke();
 
-            // pathLength = MAZE.pathfinder(0, size-1, size-1, 0).Length;
             pathLength = TTEvents.PathFinder.Invoke(0, size-1, size-1, 0).Length;
             hintsUsed = 0;
             steps = 0;
             numStars = 3;
 
-            // if (PM.player1.current == false) {
             if (!TTEvents.GetPlayer.Invoke(1).current) {
-                // PM.SwitchPlayer();
                 TTEvents.SwitchPlayer?.Invoke();
             }
-            // UI.SetProgressBar(pathLength);
             TTEvents.SetProgressBar?.Invoke(pathLength);
         }
 

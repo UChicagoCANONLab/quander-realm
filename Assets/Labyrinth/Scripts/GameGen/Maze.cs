@@ -29,10 +29,6 @@ namespace Labyrinth
 
         private Vector3 currGoal;
 
-        [Header("GameObjects")]
-        // public GameBehavior GB;
-        // public PlayerMovement PM;
-
         private Dictionary<string, string> opposites = new Dictionary<string, string>()
         { {"N", "S"}, {"W", "E"}, {"E", "W"}, {"S", "N"} };
 
@@ -62,7 +58,6 @@ namespace Labyrinth
 
         public void StartMaze() {
             deg = SaveData.Instance.Degree;
-            // size = GB.size;
             size = TTEvents.Size.Invoke();
             wallProb = TTEvents.WallProb.Invoke();
 
@@ -304,17 +299,11 @@ namespace Labyrinth
             Vector3 start; Vector3 end;
             int degree;
         
-            // if (PM.player1.current == true) {
             if (TTEvents.GetPlayer.Invoke(1).current) {
-            //if (currGoal.z == 1) {
-                // start = PM.player1.getPloc;
                 start = TTEvents.GetPlayer.Invoke(1).getPloc;
                 degree = 0;
             }
-            // else if (PM.player2.current == true) {
             else if (TTEvents.GetPlayer.Invoke(2).current) {
-            //else if (currGoal.z == 2) {
-                // start = PM.player2.getPloc;
                 start = TTEvents.GetPlayer.Invoke(2).getPloc;
                 degree = deg;
             }
@@ -421,9 +410,7 @@ namespace Labyrinth
                     maze1[x,y].toggleGoal(false);
                     maze2[x,y].toggleGoal(false);
                 }
-            }
-            // distributeGoal(maze1, PM.player1);
-            // distributeGoal(maze2, PM.player2); 
+            } 
             distributeGoal(maze1);
             distributeGoal(maze2); 
             

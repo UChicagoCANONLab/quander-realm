@@ -13,9 +13,6 @@ namespace Labyrinth
         private int size;
         private string mov = "none";
 
-        // public GameBehavior GB;
-        // public Maze MAZE;
-
         public Player player1;
         public Player player2;
 
@@ -135,7 +132,6 @@ namespace Labyrinth
         }
 
         public void goalTime() {
-            // GB.collectGoal();
             TTEvents.CollectGoal?.Invoke();
         }
 
@@ -183,33 +179,12 @@ namespace Labyrinth
             TTEvents.GetMap.Invoke(2).switchMaps();
 
             sign *= -1;
-
-            // MAZE.map1.toggleRenderer(MAZE.map1.overlay);
-            // MAZE.map1.toggleCollider(MAZE.map1.walls);
-            // MAZE.map2.toggleRenderer(MAZE.map2.overlay);
-            // MAZE.map2.toggleCollider(MAZE.map2.walls);
         }
 
         public void returnPlayers() {
             this.player1.returnPlayer();
             this.player2.returnPlayer();
         }
-
-        /* public bool getPlayerCurrent(int i) {
-            switch(i) {
-                case 1: return player1.current;
-                case 2: return player2.current;
-                default: return player1.current;
-            }
-        } */
-
-        /* public Vector3 getPlayerLoc(int i) {
-            switch(i) {
-                case 1: return player1.getPloc;
-                case 2: return player2.getPloc;
-                default: return player1.getPloc;
-            }
-        } */
 
         public Player getPlayer(int i) {
             if (i == 1) { return this.player1; }
