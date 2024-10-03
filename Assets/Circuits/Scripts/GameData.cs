@@ -149,13 +149,13 @@ namespace Circuits
                     return "Circuits_Dialogue";
                 case 3:
                     return "Circuits_Dialogue";
-                case 6:
+                case 5:
                     return "Circuits_Dialogue";
                 case 7: // case 9:
                     return "Circuits_Dialogue";
                 case 14:
                     return "Circuits_Dialogue";
-                case 18:
+                case 15:
                     return "Circuits_Dialogue";
                 case 22:
                     return "Circuits_Dialogue";

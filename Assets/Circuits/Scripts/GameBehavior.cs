@@ -135,6 +135,14 @@ namespace Circuits
             int nLines = 1;
             int nGates;
             int nExpansions;
+
+            HashSet<int> tutorialLevels = new HashSet<int>();
+            tutorialLevels.Add(14);
+            tutorialLevels.Add(15);
+            tutorialLevels.Add(22);
+
+
+
             List<List<String>> tempCircuit = null;
             if(tutorialManager){
                 tutorialManager.load(GameData.getCurrLevel());
@@ -158,7 +166,7 @@ namespace Circuits
                 SceneManager.LoadScene("Circuits_Menu");
                 return; // sorry david :/
             }
-            else if (GameData.getCurrLevel() <= 9)
+            else if (GameData.getCurrLevel() <= 9 || tutorialLevels.Contains(GameData.getCurrLevel()))
             {
                 String[] empty = new String[0];
                 int startingSize = 9;
@@ -168,6 +176,10 @@ namespace Circuits
                 const string H = "H-0";
                 const string X = "X-0";
                 const string Z = "Z-0";
+                const string CX1 = "CX-0";
+                const string CX2 = "CX-1";
+                const string CZ1 = "CZ-0";
+                const string CZ2 = "CZ-1";
                 switch (GameData.getCurrLevel())
                 {
                     case 0:
@@ -190,7 +202,6 @@ namespace Circuits
                         row.Add(H);
                         row.Add(X);
                         row.Add(H);
-                        row.Add(Z);
                         break;
                     case 4:
                         row.Add(Z);
@@ -205,17 +216,7 @@ namespace Circuits
                         break;
                     case 5:
                         row.Add(H);
-                        row.Add(X);
-                        row.Add(H);
-                        row.Add(X);
-                        row.Add(H);
-                        row.Add(X);
-                        row.Add(H);
-                        row = new List<string>();
-                        tempCircuit.Add(row);
                         row.Add(Z);
-                        row.Add(X);
-                        row.Add(H);
                         row.Add(H);
                         break;
                     case 6:
@@ -233,18 +234,8 @@ namespace Circuits
                         row.Add(H);
                         break;
                     case 7:
-                        row.Add(H);
-                        row.Add(Z);
-                        row.Add(H);
                         row.Add(X);
-                        row.Add(Z);
-                        row.Add(H);
                         row.Add(X);
-                        row = new List<string>();
-                        tempCircuit.Add(row);
-                        row.Add(H);
-                        row.Add(X);
-                        row.Add(H);
                         break;
                     case 8:
                         row.Add(H);
@@ -283,6 +274,41 @@ namespace Circuits
                         row.Add(X);
                         break;
 
+                    case 14:
+                        row.Add(null);
+                        row.Add(CX1);
+                        row = new List<string>();
+                        row.Add(H);
+                        row.Add(CX2);
+                        row.Add(H);
+                        tempCircuit.Add(row);
+                        row = new List<string>();
+                        tempCircuit.Add(row);
+                        break;
+                    case 15:
+                        row.Add(null);
+                        row.Add(CZ1);
+                        row = new List<string>();
+                        row.Add(H);
+                        row.Add(CZ2);
+                        row.Add(H);
+                        tempCircuit.Add(row);
+                        row = new List<string>();
+                        tempCircuit.Add(row);
+                        break;
+                    case 22:
+                        row.Add(H);
+                        row.Add(CX1);
+                        row.Add(H);
+                        row = new List<string>();
+                        row.Add(H);
+                        row.Add(CX2);
+                        row.Add(H);
+                        tempCircuit.Add(row);
+                        row = new List<string>();
+                        tempCircuit.Add(row);
+                        break;
+
                     default:
                         break;
                 }
@@ -313,7 +339,7 @@ namespace Circuits
                 nExpansions = 3 + rng.Next(4);
                 tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
             }
-            else if (GameData.getCurrLevel() < 18)
+            else if (GameData.getCurrLevel() < 19)
             {
                 System.Random rng = new System.Random();
                 nLines = rng.Next(4, 5);
@@ -323,7 +349,7 @@ namespace Circuits
                 nExpansions = 4 + rng.Next(4);
                 tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
             }
-            else if (GameData.getCurrLevel() < 22)
+            else if (GameData.getCurrLevel() < 23)
             {
                 System.Random rng = new System.Random();
                 nLines = rng.Next(5, 7);

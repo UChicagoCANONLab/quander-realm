@@ -25,29 +25,26 @@ namespace Circuits
             {
                 case 0:
                     // Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
-                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level1");
+                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
                     break;
                 case 3:
-                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level3");
+                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
                     break;
-                case 6:
-                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level6");
+                case 5:
+                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
                     break;
-                //    return "DialogC-02";
-                // case 9:
                 case 7:
-                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level9");
+                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
                     break;
                 case 14:
-                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level14");
+                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
+                    break;
+                case 15:
+                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
                     break;
                 //    return "DialogC-03B";
-                case 18:
-                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level18");
-                    break;
-                //    return "DialogC-03A";
                 case 22:
-                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Level22");
+                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
                     break;
                 //    return "DialogC-04";
                 case 25:
