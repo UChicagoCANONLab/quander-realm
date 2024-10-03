@@ -1,5 +1,6 @@
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 
 namespace Wrapper
 {
@@ -8,6 +9,11 @@ namespace Wrapper
         public override void OnPointerClick(PointerEventData eventData)
         {
             base.OnPointerClick(eventData);
+
+            if (SceneManager.GetActiveScene().name == "QU_Level")
+            {
+                Time.timeScale = 1;
+            }
 
             if (SceneManager.GetActiveScene().buildIndex == 0)
                 return;
