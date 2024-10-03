@@ -12,13 +12,20 @@ namespace Labyrinth
         public void displayStars() {
             int numStars = SaveData.Instance.starsPerLevel[levelNum-1];
             
-            /* for (int i=0; i < stars.Length; i++) {
-                stars[i].SetActive(false);
-            }
-            stars[numStars].SetActive(true); */
-            
             for (int i=0; i < numStars; i++) {
                 stars[i].SetActive(true);
+            }
+        }
+
+        public void showStars(int numStars) {
+            for (int i=0; i < numStars; i++) {
+                stars[i].SetActive(true);
+            }
+        }
+
+        public void resetStars() {
+            for (int i=0; i < 3; i++) {
+                stars[i].SetActive(false);
             }
         }
     }
