@@ -1,0 +1,26 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using System.Linq;
+
+namespace Qupcakery
+{
+    public class HelpZButton : MonoBehaviour
+    {
+        public GameObject recipePanel;
+        public GameObject startPanel;
+        public Image recipeImage;
+        public Sprite graphic;
+
+        public void ShowZRecipe()
+        {
+            startPanel.SetActive(false);
+            recipePanel.SetActive(true);
+            recipePanel.GetComponentInChildren<Text>().text = "PhaZe Device (Z Gate)";
+
+            // recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "Z-new").SingleOrDefault();
+            recipeImage.sprite = graphic;
+        }
+    }
+}
