@@ -18,7 +18,10 @@ namespace BlackBox
             if (currentLevel >= levelID)
             {
                 interactable = true;
-                if (currentLevel > levelID) buttonAnim.SetBool("LevelCompleted", true);
+                if (currentLevel > levelID) {
+                    buttonAnim.SetBool("LevelCompleted", true);
+                    buttonAnim.SetInteger("StarsWon", numStars);
+                }
             }
             else
             {
@@ -26,10 +29,10 @@ namespace BlackBox
                 buttonAnim.SetBool("LevelLocked", true);
             }
             
-            string prefix = "TrashPile/StarSystem/Star_";
+            /* string prefix = "TrashPile/StarSystem/Star_";
             for (int i=0; i<numStars; i++) {
                 gameObject.transform.Find($"{prefix}{i}/Star{i}").gameObject.SetActive(true);
-            }
+            } */
         }
 
         public override void OnPointerClick(PointerEventData eventData)
@@ -38,7 +41,8 @@ namespace BlackBox
 
             base.OnPointerClick(eventData);
 
-            if (levelID < 1 || levelID > 15)
+            // if (levelID < 1 || levelID > 15)
+            if (levelID < 1 || levelID > 24)
             {
                 Debug.LogError("Invalid level ID: " + levelID);
                 return;

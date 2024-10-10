@@ -143,7 +143,7 @@ namespace BlackBox
         }
 
         public void enableNavCell(Vector3 coor) {
-            Debug.Log($"Sequence: {tutorialSeq}");
+            // Debug.Log($"Sequence: {tutorialSeq}");
 
             if (coor.z != 0) {
                 if (coor.z == 3) { return; }

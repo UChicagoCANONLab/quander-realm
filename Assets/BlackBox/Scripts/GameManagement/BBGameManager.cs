@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.IO;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace BlackBox
     {
         #region Inspector Variables
 
-        [SerializeField] private string firstLevelID = "L01"; // todo: refactor
+        [SerializeField] private string firstLevelID = "4.1"; // todo: refactor
         [SerializeField] private float rewardPopupDelay = 0.5f;
 
         [Header("Level Select")]
@@ -73,7 +74,7 @@ namespace BlackBox
             Events.PlayMusic?.Invoke("BB_Music");
 
             InitSaveData();
-            InitLevel();
+            InitLevel(); 
             //StartLevel();     moved into InitLevel with level select 
         }
 
@@ -158,12 +159,20 @@ namespace BlackBox
 
         private void InitLevel()
         {
-            string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
-            level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
-
+            Debug.Log($"CurrentLevelID: {saveData.currentLevelID}");
+            
+            if (saveData.currentLevelID[0] == 'L') {
+                level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
+            } else {
+                string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
+                level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
+            }
+            
             // decide if we show level select or first level
-            if (levelID == firstLevelID) StartLevel();
-            else ShowLevelSelect(true);
+            // if (levelID == firstLevelID) StartLevel();
+            // else ShowLevelSelect(true);
+
+            ShowLevelSelect(true);
         }
 
         private void StartLevel()
@@ -177,7 +186,7 @@ namespace BlackBox
             CreateAllGrids(level.gridSize);
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
 
-            if (level.gridSize == GridSize.Tutorial) {
+            if (level.levelID == firstLevelID) {
                 BBEvents.InitiateTutorialLevel?.Invoke(); 
             }
 
@@ -334,8 +343,12 @@ namespace BlackBox
 
             if (level.levelID != saveData.currentLevelID)
             {
-                string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
-                level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
+                if (saveData.currentLevelID[0] == 'L') {
+                    level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
+                } else {
+                    string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
+                    level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
+                }
             }
 
             try
@@ -504,24 +517,34 @@ namespace BlackBox
 
         public static int ParseLevelID(string levelID)
         {
-            int levelNum;
-            if (int.TryParse(levelID.Trim('L'), out levelNum)) return levelNum;
-            else
-            {
-                Debug.LogWarning("Unable to parse current level ID: " + levelID);
-                return -1;
-            }
+            if (levelID[0] == 'L') return 1;
+
+            int[] temp = levelID.Split(".").Select(int.Parse).ToArray();
+            int levelNum = ((temp[0]-4) * 6) + temp[1];
+            return levelNum;
+
+            // if (int.TryParse(levelID.Trim('L'), out levelNum)) return levelNum;
+            // else
+            // {
+            //     Debug.LogWarning("Unable to parse current level ID: " + levelID);
+            //     return -1;
+            // }
         }
 
         public static string ParseLevelID(int level)
         {
-            string levelText = "L";
-            if (level < 10) levelText += ("0" + level.ToString());
-            else levelText += level.ToString();
+            int prefix = (level/6) + 4; 
+            int num = level % 6;
+            string levelText = $"{prefix}.{num}";
+
+            // string levelText = "L";
+            // if (level < 10) levelText += ("0" + level.ToString());
+            // else levelText += level.ToString();
             return levelText;
         }
 
         public int GetLevelStars(int level) {
+            if (level >= saveData.livesPerLevel.Length) return 0;
             return saveData.livesPerLevel[level];
         }
     }
