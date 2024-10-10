@@ -149,7 +149,7 @@ namespace BlackBox
                 Debug.LogError(e.Message);
             }
 
-            if (saveData == null) {
+            if ((saveData == null) || saveData.livesPerLevel.Length < 24) {
                 saveData = new BBSaveData();
             }
             int temp = 0;
@@ -160,13 +160,13 @@ namespace BlackBox
         private void InitLevel()
         {
             Debug.Log($"CurrentLevelID: {saveData.currentLevelID}");
-            
-            if (saveData.currentLevelID[0] == 'L') {
-                level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
-            } else {
-                string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
-                level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
-            }
+
+            // if (saveData.currentLevelID[0] == 'L') {
+            //     level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
+            // } else {
+            string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
+            level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
+            // }
             
             // decide if we show level select or first level
             // if (levelID == firstLevelID) StartLevel();
@@ -343,12 +343,12 @@ namespace BlackBox
 
             if (level.levelID != saveData.currentLevelID)
             {
-                if (saveData.currentLevelID[0] == 'L') {
-                    level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
-                } else {
+                // if (saveData.currentLevelID[0] == 'L') {
+                //     level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
+                // } else {
                     string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
                     level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
-                }
+                // }
             }
 
             try
