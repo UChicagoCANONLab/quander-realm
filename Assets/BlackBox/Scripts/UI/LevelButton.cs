@@ -28,11 +28,6 @@ namespace BlackBox
                 interactable = false;
                 buttonAnim.SetBool("LevelLocked", true);
             }
-            
-            /* string prefix = "TrashPile/StarSystem/Star_";
-            for (int i=0; i<numStars; i++) {
-                gameObject.transform.Find($"{prefix}{i}/Star{i}").gameObject.SetActive(true);
-            } */
         }
 
         public override void OnPointerClick(PointerEventData eventData)
@@ -50,5 +45,6 @@ namespace BlackBox
 
             BBEvents.PlayLevel?.Invoke(BBGameManager.ParseLevelID(levelID));
         }
+
     }
 }

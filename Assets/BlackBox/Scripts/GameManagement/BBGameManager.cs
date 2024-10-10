@@ -159,8 +159,6 @@ namespace BlackBox
 
         private void InitLevel()
         {
-            Debug.Log($"CurrentLevelID: {saveData.currentLevelID}");
-
             // if (saveData.currentLevelID[0] == 'L') {
             //     level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
             // } else {
@@ -204,8 +202,9 @@ namespace BlackBox
         {
             if (level.nextLevelID == string.Empty)
             {
-                Debug.LogFormat("Next level not set for the level: {0}", level.levelID);
-                Quit();
+                // Debug.LogFormat("Next level not set for the level: {0}", level.levelID);
+                // Quit();
+                ShowLevelSelect(true);
                 return;
             }   
 
@@ -373,7 +372,9 @@ namespace BlackBox
                 int levelNum = ParseLevelID(level.levelID) + (saveData.completed ? 1 : 0);
                 if (levelNum > 0)
                 {
-                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+                    for (int i = 0; i < levelButtons.Length; i++) {
+                        levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+                    }
                 }
             }
         }
@@ -517,7 +518,7 @@ namespace BlackBox
 
         public static int ParseLevelID(string levelID)
         {
-            if (levelID[0] == 'L') return 1;
+            if (levelID == "") return -1;
 
             int[] temp = levelID.Split(".").Select(int.Parse).ToArray();
             int levelNum = ((temp[0]-4) * 6) + temp[1];
@@ -535,7 +536,9 @@ namespace BlackBox
         {
             int prefix = (level/6) + 4; 
             int num = level % 6;
+
             string levelText = $"{prefix}.{num}";
+            if (num==0) { levelText = $"{prefix-1}.6"; }
 
             // string levelText = "L";
             // if (level < 10) levelText += ("0" + level.ToString());

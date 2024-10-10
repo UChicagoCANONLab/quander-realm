@@ -84,10 +84,12 @@ namespace BlackBox
         void OnEnable() 
         {
             BBEvents.InitiateTutorialLevel += InitiateTutorial;
+            BBEvents.EndTutorialLevel += EndTutorial;
         }
         void OnDisable()
         {
             BBEvents.InitiateTutorialLevel -= InitiateTutorial;
+            BBEvents.EndTutorialLevel -= EndTutorial;
         }
 
 
@@ -103,6 +105,13 @@ namespace BlackBox
             TutorialAnimator.SetBool("WolfieOn", true);
 
             goalCell = mainGridGO.transform.GetChild(10).gameObject;
+
+            // turn off HUD stuff
+        }
+
+        public void EndTutorial() {
+            // turn on HUD stuff
+            // disable animator
         }
 
         void FixedUpdate() {
