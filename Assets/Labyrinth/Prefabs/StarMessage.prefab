@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4963685125571694071}
   - component: {fileID: 2955470641745211146}
   - component: {fileID: 8655112960567413345}
+  - component: {fileID: 5876802441819985558}
   m_Layer: 0
   m_Name: StarMessage
   m_TagString: Untagged
@@ -59,6 +60,7 @@ MonoBehaviour:
   - {fileID: 7592778379842447936}
   - {fileID: 6903763746214475057}
   - {fileID: 4324323057022268864}
+  StarAnimator: {fileID: 5876802441819985558}
 --- !u!222 &2955470641745211146
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -93,6 +95,26 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!95 &5876802441819985558
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 233272839887002438}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f61acbee6d73e418f9a4b7f28c5d72a9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2811462129913477659
 GameObject:
   m_ObjectHideFlags: 0

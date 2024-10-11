@@ -52,11 +52,9 @@ namespace Labyrinth
 
         void Update() {
             if (p1.getPloc == new Vector3(0,1,0) && seq == 1) {
-            // if (TTEvents.GetPlayer.Invoke(1).getPloc == new Vector3(0,1,0) && seq == 1) {
                 twinOn(1, true);
             }
             if (p1.getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
-            // if (TTEvents.GetPlayer.Invoke(1).getPloc == new Vector3(1,1,0) && degree == 0 && seq == 3){
                 twinOn(1, true);
             }
         }
@@ -70,21 +68,18 @@ namespace Labyrinth
 
         public void twinSetup(int type) {
             string textTemp;
-            if (degree == 0) { setImages(); }
+            if (degree == 0) { animator.SetInteger("Seq", seq); }
+                // setImages(); }
 
             switch(degree) {
                 case 0:
-                    textTemp = tutorial0[seq];
-                    break;
+                    textTemp = tutorial0[seq]; break;
                 case 180:
-                    textTemp = tutorial180[seq];
-                    break;
+                    textTemp = tutorial180[seq]; break;
                 case 90:
-                    textTemp = tutorial90[seq];
-                    break;
+                    textTemp = tutorial90[seq]; break;
                 default:
-                    textTemp = "";
-                    break;
+                    textTemp = ""; break;
             }
         
             if (textTemp == "") { return; }
@@ -160,14 +155,14 @@ namespace Labyrinth
             animator.SetTrigger("PointerSwitch");
         }
         
-        public void setImages() {
+        /* public void setImages() {
             foreach(GameObject i in tutorialImages) {
                 if (i!=null) {  i.SetActive(false); }
             }
             if (seq != 1) {
                 tutorialImages[seq].SetActive(true);
             }
-        }
+        } */
 
     }
 }
