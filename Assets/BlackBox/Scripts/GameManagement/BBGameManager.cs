@@ -252,6 +252,10 @@ namespace BlackBox
                 }
                 // PLAY END OF LEVEL DIALOGUE IF APPLICABLE
                 TrySetNewLevelSave();
+
+                if (level.levelID == firstLevelID) {
+                    BBEvents.EndTutorialLevel?.Invoke();
+                }
             }
             else
             {

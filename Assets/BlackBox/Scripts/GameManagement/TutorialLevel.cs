@@ -21,19 +21,8 @@ namespace BlackBox
         [SerializeField] private TextMeshProUGUI tutorialText;
 
         private Vector3 goalCoordinate = new Vector3(2, 2, 0);
-        /* private Vector3[] coordinateSeq = new Vector3[] {
-            new Vector3(0,4,0),
-            new Vector3(0,-1,100),
-            new Vector3(-1,2,0),
-            new Vector3(-1,2,100),
-            new Vector3(1,-1,0),
-            new Vector3(4,3,100),
-            new Vector3(3,4,0),
-            new Vector3(0,0,0), 
-            new Vector3(0,0,0) //null, when lantern at 2,2
-        }; */
 
-        private Vector3[] coordinateSeq2 = new Vector3[] {
+        private Vector3[] coordinateSeq = new Vector3[] {
             new Vector3(0,4,0),
             new Vector3(0,-1, 1),
             new Vector3(-1,2,0),
@@ -48,19 +37,7 @@ namespace BlackBox
             new Vector3(0,0, 3)
         };
 
-        /* private string[] dialogueSeq = new string[] {
-            "Let's get started! Click Batty to send her into the graveyard", //(0,4)
-            "She passed right through! No treasure on this path or the one next to it", //(MISS)
-            "Click here to move Batty, and then click Batty again", //(-1,2)
-            "Oh! She bumped into something! There must be treasure in this row", //(HIT)
-            "Let's try here. Click the spot and then click Batty again", //(1,-1)
-            "Hm... Batty turned, there must be treasure diagonal from where she turned", //(DETOUR) (2,2)
-            "Just to be sure... Let's try here", //(4,3)
-            "Great, we found it! Click and drag a lantern to the correct spot", //(2,2)
-            "Now let's send Wolfie to check! Congrats, you found the treasure!"
-        }; */
-
-        private string[] dialogueSeq2 = new string[] {
+        private string[] dialogueSeq = new string[] {
             "Let's get started! Click Batty to send her into the graveyard", //(0,4)
             "She passed right through! No treasure on this path or the one next to it", //(MISS) (highlight (0,4),(0,-1))
             "Click here to move Batty", //(-1,2)
@@ -94,27 +71,38 @@ namespace BlackBox
 
 
         public void InitiateTutorial() {
+            TutorialAnimator.SetBool("TutorialActive", true);
+
             tutorialSeq = 0;
             disableNavCells(leftGridGO);
             disableNavCells(rightGridGO);
             disableNavCells(topGridGO);
             disableNavCells(botGridGO);
 
-            enableNavCell(coordinateSeq2[tutorialSeq]);
-            tutorialText.text = dialogueSeq2[tutorialSeq];
+            enableNavCell(coordinateSeq[tutorialSeq]);
+            tutorialText.text = dialogueSeq[tutorialSeq];
             TutorialAnimator.SetBool("WolfieOn", true);
+            TutorialAnimator.SetInteger("TutorialSeq", tutorialSeq);
 
             goalCell = mainGridGO.transform.GetChild(10).gameObject;
-
             // turn off HUD stuff
         }
 
         public void EndTutorial() {
+            TutorialAnimator.SetBool("TutorialActive", false);
             // turn on HUD stuff
             // disable animator
+            // reset navcells
         }
 
         void FixedUpdate() {
+            // If starting tutorial didn't work, try again
+            if ((rightGridGO.transform.GetChild(0).gameObject.GetComponent<Button>().interactable) 
+            && TutorialAnimator.GetBool("TutorialActive") == true) {
+                EndTutorial();
+                Invoke("InitiateTutorial", 0.1f);
+            }
+            // If lantern placed correctly, end tutorial 
             if ((goalCell != null) && (goalCell.GetComponent<NodeCell>().HasFlag()) && (tutorialSeq < 11)) {
                 tutorialSeq = 10;
                 tutorialNext();
@@ -124,7 +112,7 @@ namespace BlackBox
         public void tutorialNext() {
             tutorialSeq++;
 
-            if (tutorialSeq >= dialogueSeq2.Length-1) {
+            if (tutorialSeq >= dialogueSeq.Length-1) {
                 // TutorialAnimator.SetBool("WolfieOn", false);
                 Invoke("endDialogue", 2f);
             }
@@ -133,8 +121,8 @@ namespace BlackBox
             nextButton.SetActive(false);
             TutorialAnimator.SetBool("InfoOn", false);
 
-            enableNavCell(coordinateSeq2[tutorialSeq]);
-            tutorialText.text = dialogueSeq2[tutorialSeq];
+            enableNavCell(coordinateSeq[tutorialSeq]);
+            tutorialText.text = dialogueSeq[tutorialSeq];
         }
 
         public void navCellNext() {
