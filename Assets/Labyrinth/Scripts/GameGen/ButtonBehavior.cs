@@ -9,7 +9,7 @@ namespace Labyrinth
     public class ButtonBehavior : MonoBehaviour
     {
         public GameObject litePanel;
-        public Button[] levelButtons;
+        public GameObject[] levelButtons;
 
 
         private void OnEnable() 
@@ -44,15 +44,13 @@ namespace Labyrinth
                 return;
             }
             else if (levelButtons.Length > 0) {
-                string prefix = "Canvas/LevelButtons-New/Container";
+                for (int i=0; i<15; i++) 
+                {
+                    int numStars = SaveData.Instance.starsPerLevel[i];
+                    levelButtons[i].GetComponent<Animator>().SetInteger("NumStars", numStars);
 
-                for (int i=1; i<=15; i++) {
-                    int numStars = SaveData.Instance.starsPerLevel[i-1];
-                    GameObject.Find($"{prefix}/{i}/StarMessage{i}").GetComponent<StarMessage>().showStars(numStars);
-                    // GameObject.Find($"{prefix}/{i}/StarMessage{i}").GetComponent<StarMessage>().displayStars();
-                    if (i > SaveData.Instance.MaxLevelUnlocked) {
-                        levelButtons[i-1].enabled = false;
-                        GameObject.Find($"{prefix}/{i}/Locked{i}").SetActive(true);
+                    if (i > SaveData.Instance.MaxLevelUnlocked-1) {
+                        levelButtons[i].GetComponent<Animator>().SetBool("IsLocked", true);
                     }
                 }
             }

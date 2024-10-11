@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Labyrinth {
     public class InfoPopup : MonoBehaviour
     {
-        public GameObject[] infoPopups;
-        public Animator animator;
+        // public GameObject[] infoPopups;
+        public Animator InfoAnimator;
 
 
         private void OnEnable() 
@@ -20,8 +20,9 @@ namespace Labyrinth {
         
 
         public void showInfoMessage() {
-            animator.SetBool("IsOn", true);
-            int deg = SaveData.Instance.Degree;
+            InfoAnimator.SetBool("IsOn", true);
+            InfoAnimator.SetInteger("Degree", SaveData.Instance.Degree);
+            /* int deg = SaveData.Instance.Degree;
             switch(deg) {
                 case 0:
                     infoPopups[0].SetActive(true);
@@ -34,18 +35,19 @@ namespace Labyrinth {
                     break;
                 default:
                     break;
-            }
+            } */
         }
 
         public void closeInfoMessage() {
-            animator.SetBool("IsOn", false);
-            Invoke("helperExit", 2f);
+            InfoAnimator.SetBool("IsOn", false);
+            InfoAnimator.SetInteger("Degree", -1);
+            // Invoke("helperExit", 2f);
         }
 
-        public void helperExit() {
+        /* public void helperExit() {
             foreach (GameObject obj in infoPopups) {
                 obj.SetActive(false);
             }
-        }
+        } */
     }
 }

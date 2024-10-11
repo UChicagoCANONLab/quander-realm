@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2646183716814978996}
   - component: {fileID: 1729469142995622052}
   - component: {fileID: 1832459898572043703}
+  - component: {fileID: 3614955049670127568}
   m_Layer: 5
   m_Name: NumButton
   m_TagString: Untagged
@@ -136,6 +137,26 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!95 &3614955049670127568
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2567652988394954622}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e08fe2b9255194bfe93e7f830f661491, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4508598325679760606
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,6 +455,10 @@ PrefabInstance:
     - target: {fileID: 233272839887002438, guid: 11fa5eabafa00447296b2b043851a1eb, type: 3}
       propertyPath: m_Name
       value: StarMessage
+      objectReference: {fileID: 0}
+    - target: {fileID: 233272839887002438, guid: 11fa5eabafa00447296b2b043851a1eb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 829983177724356101, guid: 11fa5eabafa00447296b2b043851a1eb, type: 3}
       propertyPath: m_RootOrder

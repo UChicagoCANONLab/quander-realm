@@ -10,9 +10,8 @@ namespace Labyrinth
     {
         public TMP_Text levelNumber;
 
-        public GameObject winScreen;
-        public StarMessage starDisplay;
-        public GameObject loseScreen;
+        public Animator winScreen;
+        public Animator loseScreen;
 
         public GameObject gameplayButtons;
         public GameObject gameplayObjects;
@@ -52,27 +51,24 @@ namespace Labyrinth
         }
 
         public void Reset() {
-            winScreen.SetActive(false);
-            loseScreen.SetActive(false);
+            winScreen.SetBool("IsOn", false);
+            winScreen.SetInteger("NumStars", 0);
+            loseScreen.SetBool("IsOn", false);
 
             gameplayButtons.SetActive(true);
             gameplayObjects.SetActive(true);
             progressBar.SetActive(true);
-
-            starDisplay.resetStars();
         }
 
         public void LevelComplete(int starsWon) {
-            if (SaveData.Instance.CurrentLevel == 0) {
-                winScreen.SetActive(true);
-                starDisplay.showStars(starsWon);
-            }
-            else if (starsWon == 0) {
-                loseScreen.SetActive(true);
+            if (starsWon == 0) {
+                loseScreen.SetBool("IsOn", true);
             }
             else {
-                winScreen.SetActive(true);
-                starDisplay.showStars(starsWon);
+                winScreen.SetBool("IsOn", true);
+                winScreen.SetInteger("NumStars", starsWon);
+
+                if (SaveData.Instance.CurrentLevel == 0) { return; }
 
                 if (SaveData.Instance.CurrentLevel == SaveData.Instance.MaxLevelUnlocked) {
                     SaveData.Instance.MaxLevelUnlocked += 1;
@@ -84,5 +80,6 @@ namespace Labyrinth
             gameplayObjects.SetActive(false);
             progressBar.SetActive(false);
         }
+
     }
 }
