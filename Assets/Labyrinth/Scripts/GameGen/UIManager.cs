@@ -42,12 +42,12 @@ namespace Labyrinth
         }
 
         public void SetProgressBar(int pathLength) {
-            progressBar.GetComponent<ProgressBar>().resetBar();
-            progressBar.GetComponent<ProgressBar>().initializeBar(pathLength);
+            progressBar.GetComponent<NEWProgressBar>().resetBar();
+            progressBar.GetComponent<NEWProgressBar>().initializeBar(pathLength);
         }
 
         public void UpdateProgressBar(int numSteps) {
-            progressBar.GetComponent<ProgressBar>().detractBar(numSteps);
+            progressBar.GetComponent<NEWProgressBar>().detractBar(numSteps);
         }
 
         public void Reset() {
