@@ -6,20 +6,14 @@ namespace Labyrinth
 { 
     public class StarMessage : MonoBehaviour
     {
-        public int levelNum;
-        public GameObject[] stars;
+        public Animator StarAnimator;
 
-        public void displayStars() {
-            int numStars = SaveData.Instance.starsPerLevel[levelNum-1];
-            
-            /* for (int i=0; i < stars.Length; i++) {
-                stars[i].SetActive(false);
-            }
-            stars[numStars].SetActive(true); */
-            
-            for (int i=0; i < numStars; i++) {
-                stars[i].SetActive(true);
-            }
+        public void showStars(int numStars) {
+            StarAnimator.SetInteger("NumStars", numStars);
+        }
+
+        public void resetStars() {
+            StarAnimator.SetInteger("NumStars", 0);
         }
     }
 }
