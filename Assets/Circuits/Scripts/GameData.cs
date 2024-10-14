@@ -51,7 +51,7 @@ namespace Circuits
         // Helper function to save formatted timestamps
         private static void LogAtTime(string type) 
         {
-            log.Add(string.Format("{0}-",type,"-{1}", saveData.currLevel, DateTime.UtcNow.ToString(datePatt)));
+            log.Add(string.Format("{0}-{1}-{2}", saveData.currLevel, type, DateTime.UtcNow.ToString(datePatt)));
         }
         public static void hintRequested()  { LogAtTime("hint"); }
 
@@ -66,6 +66,11 @@ namespace Circuits
         public static void checkingSub(string sub)
         {
             log.Add(string.Format("{0}-checkSub-{1}", saveData.currLevel, sub));
+        }
+
+        public static int getMaxLevelUnlocked() 
+        {
+            return saveData.maxLevel;
         }
 
         public static int getCurrLevel() 
@@ -99,6 +104,11 @@ namespace Circuits
             try
             {
                 saveData.completedLevels[saveData.currLevel] = true;
+
+                if (saveData.currLevel >= saveData.maxLevel) {
+                    saveData.maxLevel = saveData.currLevel + 1;
+                }
+
                 if (saveData.starsPerLevel[saveData.currLevel] < StarDisplay.SD.numStars) {
                     saveData.starsPerLevel[saveData.currLevel] = StarDisplay.SD.numStars;
                 }
@@ -139,13 +149,13 @@ namespace Circuits
                     return "Circuits_Dialogue";
                 case 3:
                     return "Circuits_Dialogue";
-                case 6:
+                case 5:
                     return "Circuits_Dialogue";
                 case 7: // case 9:
                     return "Circuits_Dialogue";
                 case 14:
                     return "Circuits_Dialogue";
-                case 18:
+                case 15:
                     return "Circuits_Dialogue";
                 case 22:
                     return "Circuits_Dialogue";

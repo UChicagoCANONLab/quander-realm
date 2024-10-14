@@ -7,34 +7,41 @@ namespace Labyrinth
 { 
     public class PlayerMovement : MonoBehaviour
     {
-        public float speed = 5f;
+        private float speed = 5f;
         private float sign = 1f; //1 for 90deg, -1 for -90deg
         private int deg;
+        private int size;
         private string mov = "none";
-        
-        public LayerMask goalLayer;
-        public TilemapCollider2D goalCollider;
-        
-        public TM maze1;
-        public TM maze2;
-
-        private GameBehavior gb;
-        public Camera cam;
 
         public Player player1;
         public Player player2;
 
+
+        private void OnEnable() 
+        {
+            TTEvents.StartPlayerMovement += StartPM;
+            TTEvents.SwitchPlayer += SwitchPlayer;
+            TTEvents.GetButtonPress += getButtonPress;
+            TTEvents.GetPlayer += getPlayer;
+            TTEvents.ReturnPlayers += returnPlayers;
+        }
+        private void OnDisable() 
+        {
+            TTEvents.StartPlayerMovement -= StartPM;
+            TTEvents.SwitchPlayer -= SwitchPlayer;
+            TTEvents.GetButtonPress -= getButtonPress;
+            TTEvents.GetPlayer -= getPlayer;
+            TTEvents.ReturnPlayers -= returnPlayers;
+        }
+
+
         public void StartPM()
         {
-            cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-            gb = GameObject.Find("GameManagerLocal").GetComponent<GameBehavior>();
-            deg = gb.degree;
+            deg = SaveData.Instance.Degree;
+            size = TTEvents.Size.Invoke();
 
-            player1 = GameObject.Find("PlayerMain").GetComponent<Player>();
-            player2 = GameObject.Find("PlayerMirror").GetComponent<Player>();
-
-            player1.initPlayer(-1,0);
-            player2.initPlayer(1,deg);
+            player1.initPlayer(-1,0, size);
+            player2.initPlayer(1,deg, size);
         }
 
         // Update is called once per frame
@@ -43,12 +50,12 @@ namespace Labyrinth
             Player main; Player mirror;
             
             if (player1.getType == "main") {
-                main = GameObject.Find("PlayerMain").GetComponent<Player>();
-                mirror = GameObject.Find("PlayerMirror").GetComponent<Player>();
+                main = player1;
+                mirror = player2;
             }   
             else { // if (player1.getType == "mirror") {
-                main = GameObject.Find("PlayerMirror").GetComponent<Player>();
-                mirror = GameObject.Find("PlayerMain").GetComponent<Player>();
+                main = player2;
+                mirror = player1;
             }
 
             main.player.transform.position = Vector3.MoveTowards(main.player.transform.position, main.movepoint.position, speed*Time.deltaTime);
@@ -75,19 +82,19 @@ namespace Labyrinth
 
                         main.move(movementx);
                         mirror.move(mirrorMovementx);
-                        gb.steps++;
+                        // GB.steps++;
+                        TTEvents.IncrementSteps?.Invoke();
                         
                         movementx = new Vector3(0,0,0);
-                        // Invoke("stopAnim", 0.75f);
             
-                        if ((main.getPloc == new Vector3(gb.size-1, 0, 0)) || 
-                        mirror.getPloc == new Vector3(gb.size-1, 0, 0)) {
+                        if ((main.getPloc == new Vector3(size-1, 0, 0)) || 
+                        mirror.getPloc == new Vector3(size-1, 0, 0)) {
                             Invoke("goalTime", 0.3f);
                         }
                     }
-                    else {
+                    /* else {
                         //Debug.Log("Can't go there!");
-                    }
+                    } */
                 }
                 if ((Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || (
                 buttonMov == new Vector3(0,-1,0)) || 
@@ -106,32 +113,27 @@ namespace Labyrinth
                         
                         main.move(movementy);
                         mirror.move(mirrorMovementy);
-                        gb.steps++;
+                        // GB.steps++;
+                        TTEvents.IncrementSteps?.Invoke();
 
                         movementy = new Vector3(0,0,0);
-                        // Invoke("stopAnim", 0.75f);
             
-                        if ((main.getPloc == new Vector3(gb.size-1, 0, 0)) || 
-                        mirror.getPloc == new Vector3(gb.size-1, 0, 0)) {
+                        if ((main.getPloc == new Vector3(size-1, 0, 0)) || 
+                        mirror.getPloc == new Vector3(size-1, 0, 0)) {
                             Invoke("goalTime", 0.3f);
                         }
                     }
-                    else {
+                    /* else {
                         //Debug.Log("Can't go there!");
-                    }
+                    } */
                 }
             }
             mov = "none";
         }
 
         public void goalTime() {
-            gb.collectGoal();
+            TTEvents.CollectGoal?.Invoke();
         }
-
-        /* public void stopAnim() {
-            player1.animator.SetFloat("Speed", 0.0f);
-            player2.animator.SetFloat("Speed", 0.0f);
-        } */
 
         public Vector3 getButtonPress(string dir) {
             mov = dir;
@@ -173,13 +175,20 @@ namespace Labyrinth
             player1.toggleType();
             player2.toggleType();
 
+            TTEvents.GetMap.Invoke(1).switchMaps();
+            TTEvents.GetMap.Invoke(2).switchMaps();
+
             sign *= -1;
+        }
 
-            maze1.toggleRenderer(maze1.overlay);
-            maze1.toggleCollider(maze1.walls);
-            maze2.toggleRenderer(maze2.overlay);
-            maze2.toggleCollider(maze2.walls);
+        public void returnPlayers() {
+            this.player1.returnPlayer();
+            this.player2.returnPlayer();
+        }
 
+        public Player getPlayer(int i) {
+            if (i == 1) { return this.player1; }
+            else        { return this.player2; }
         }
 
     }

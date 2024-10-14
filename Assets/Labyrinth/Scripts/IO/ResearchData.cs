@@ -13,7 +13,7 @@ namespace Labyrinth {
 
         public void UpdateResearchData(SaveData data) {
             SaveData = data.SDtoString();
-            Debug.Log("Research: " + SaveData);
+            // Debug.Log("Research: " + SaveData);
         }
 
     }
