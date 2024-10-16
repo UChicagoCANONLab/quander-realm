@@ -34,6 +34,8 @@ namespace BlackBox
         public static Action<Dir, Vector3Int> TestLinkHovered;
         public static Action DisableMolly;
         public static Action SendMollyIn;
+        public static Action<Vector3Int, Dir, Vector3Int, Dir> AppendFlyingCoordinates;
+        public static Action StartFlyingAnimation;
 
         /// Interaction Delays
         public static Func<bool> IsInteractionDelayed;

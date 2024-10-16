@@ -86,6 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3249184436071391296}
   - component: {fileID: 6638896290702055342}
+  - component: {fileID: 4268632996229225648}
   m_Layer: 0
   m_Name: BattieMovement
   m_TagString: Untagged
@@ -113,7 +114,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 8, y: -55}
-  m_SizeDelta: {x: 900, y: 900}
+  m_SizeDelta: {x: 1250, y: 1250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &6638896290702055342
 Animator:
@@ -135,6 +136,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4268632996229225648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2737791834709997640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af31987746769429490ccbb1da7dc08b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BattieAnimator: {fileID: 6638896290702055342}
+  BattieContainer: {fileID: 5421727441329357521}
 --- !u!1 &3308304634940818020
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,7 +196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5068011915795546948}
-  - component: {fileID: 1302958304974631806}
+  - component: {fileID: 1105310527393837896}
   m_Layer: 0
   m_Name: MovementContainer
   m_TagString: Untagged
@@ -206,12 +221,12 @@ RectTransform:
   m_Father: {fileID: 3249184436071391296}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 188, y: 132}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &1302958304974631806
+--- !u!225 &1105310527393837896
 CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -219,7 +234,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5421727441329357521}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0.5
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

@@ -14,28 +14,65 @@ namespace BlackBox
         private Vector3 end;
         private Vector3 turn; // if turning
 
-        private int maxSize;
         private Vector3[] flyingCoors; // actual coordinates of flying locations
+        private float speed = 175f;
+        private int phase = 0;
 
         private int[] gridSizeValues = new int[4] { 5, 6, 7, 4 };  // Copied from BBGameManager
+        private int panelSize = 1250;
 
 
-        void FixedUpdate() {
+        private void OnEnable() 
+        {
+            BBEvents.AppendFlyingCoordinates += AppendFlyingCoors;
+            BBEvents.StartFlyingAnimation += InitFlyingAnimation;
+        }
+        private void OnDisable() 
+        {
+            BBEvents.AppendFlyingCoordinates -= AppendFlyingCoors;
+            BBEvents.StartFlyingAnimation -= InitFlyingAnimation;
+        }
+
+        void Update() {
             if (active) {
-                // fly from start (set in Init) to turn
-                // switch by start.z (Dir)
-                    // case (int)Dir.Top --> move -y
-                    // case (int)Dir.Bot --> move +y
-                    // case (int)Dir.Left --> move +x
-                    // case (int)Dir.Right --> move -x
-                // if at turn --> BattieAnimator.SetInteger("MoveType", (int)turn.z);
-                // switch by turn.z (Dir)
-                    // case (int)Dir.Top --> move -y
-                    // case (int)Dir.Bot --> move +y
-                    // case (int)Dir.Left --> move +x
-                    // case (int)Dir.Right --> move -x
-                // if at end --> EndFlyingAnimation();
+                if (phase != 0) {
+                    BattieContainer.transform.localPosition = Vector3.MoveTowards(BattieContainer.transform.localPosition,
+                        flyingCoors[phase], speed * Time.deltaTime);
+
+                    // If at turn, change animation and direction
+                    if (BattieContainer.transform.localPosition == flyingCoors[1]) {
+                        BattieAnimator.SetInteger("MoveType", (int)turn.z);
+                        phase = 2;
+                    } // If at end, end flying animation and return to start
+                    else if (BattieContainer.transform.localPosition == flyingCoors[2]) {
+                        EndFlyingAnimation();
+                    }
+                }
             }
+        }
+
+
+        public void InitFlyingAnimation() {
+            if (flyingCoors == null) { return; }
+            ReturnBattieHelper(); // Return before start
+
+            // Debug.Log($"Coordinates: {string.Join("; ", flyingCoors)}");
+
+            BattieContainer.transform.localPosition += flyingCoors[0];
+            BattieAnimator.SetInteger("MoveType", (int)start.z);
+            active = true; phase = 1;
+        }
+
+        public void EndFlyingAnimation() {
+            active = false; phase = 0;
+            BattieAnimator.SetInteger("MoveType", 0);
+            Invoke("ReturnBattieHelper", 1f);
+
+            flyingCoors = null; // Clear array
+        }
+
+        public void ReturnBattieHelper() {
+            BattieContainer.transform.localPosition = new Vector3(0,0,0); //return Battie to (0,0)            
         }
 
 
@@ -43,23 +80,21 @@ namespace BlackBox
             Vector3Int[] pair = new Vector3Int[] {orig, dest};
             Dir[] dirPair = new Dir[] {origDir, destDir};
 
-            size = BBEvents.GetLevel.Invoke().gridSize;
-            maxSize = gridSizeValues[(int)size];
+            int size = (int)BBEvents.GetLevel.Invoke().gridSize;
+            int gridSize = gridSizeValues[(int)size];
 
             for (int i=0; i<2; i++) {
                 pair[i].z = (int)dirPair[i];
                 switch(dirPair[i]) {
-                    case Dir.Top:   pair[i].y = maxSize;    break;
+                    case Dir.Top:   pair[i].y = gridSize;    break;
                     case Dir.Bot:   pair[i].y = -1;         break;
                     case Dir.Left:  pair[i].x = -1;         break;
-                    case Dir.Right: pair[i].x = maxSize;    break;
+                    case Dir.Right: pair[i].x = gridSize;    break;
                 }
             }
-            // Debug.Log(string.Join("; ", pair));
             start = (Vector3)pair[0];
             end = (Vector3)pair[1];
             turn = new Vector3(start.x, end.y, 0); 
-            
 
             // Change coordinates by type of hit
             if (start.x==end.x && start.y==end.y) { // Direct Hit
@@ -71,10 +106,10 @@ namespace BlackBox
                         turn.y = 0.5f; turn.z = 4;     
                         break;  
                     case 3: // Right
-                        turn.x = maxSize-1.5f; turn.z = 1;
+                        turn.x = gridSize-1.5f; turn.z = 1;
                         break;
                     case 4: // Top
-                        turn.y = maxSize-1.5f; turn.z = 2;
+                        turn.y = gridSize-1.5f; turn.z = 2;
                         break;  
                 }
             }
@@ -90,7 +125,7 @@ namespace BlackBox
                     case 3:     turn.z = 1;     break;  // Right
                     case 4:     turn.z = 2;     break;  // Top
                 }
-                if (start.x==-1 || start.x==maxSize) { // Invert line shape
+                if (start.x==-1 || start.x==gridSize) { // Invert line shape
                     turn.x = end.x; turn.y = start.y; 
                 }
             }
@@ -100,31 +135,33 @@ namespace BlackBox
             for (int i=0; i<3; i++) {
                 Vector3 pos = positions[i];
                 switch (pos.x) {
-                    case -1:        positions[i].x=0; break;
-                    case var value when value == maxSize:   positions[i].x=900; break;
-                    default:        positions[i].x= pos.x*(900/maxSize)+(900/(maxSize*2)); break;
-                } switch (pos.y) {
-                    case -1:        positions[i].y=0; break;
-                    case var value when value == maxSize:   positions[i].y=900; break;
-                    default:        positions[i].y= pos.y*(900/maxSize)+(900/(maxSize*2)); break;
-                }
+                    case -1:        
+                        positions[i].x = -(panelSize/2); 
+                        break;
+                    case var value when value == gridSize:   
+                        positions[i].x = (panelSize/2); 
+                        break;
+                    default:        
+                        // positions[i].x = pos.x*(panelSize/gridSize)+(panelSize/(gridSize*2))-(panelSize/2); 
+                        positions[i].x = pos.x*(panelSize/(gridSize+1)) + (panelSize/(gridSize+1)) - (panelSize/2);
+                        break;
+                } 
+                switch (pos.y) {
+                    case -1:        
+                        positions[i].y = -(panelSize/2); 
+                        break;
+                    case var value when value == gridSize:   
+                        positions[i].y = (panelSize/2); 
+                        break;
+                    default:        
+                        // positions[i].y= pos.y*(panelSize/gridSize)+(panelSize/(gridSize*2))-(panelSize/2); 
+                        positions[i].y = pos.y*(panelSize/(gridSize+1)) + (panelSize/(gridSize+1)) - (panelSize/2);
+                        break;
+                } 
+                positions[i].z=0;
             }
 
             flyingCoors = positions;
-        }
-
-
-        public void InitFlyingAnimation() {
-            BattieContainer.transform.localPosition += flyingCoors[0];
-            BattieAnimator.SetInteger("MoveType", (int)start.z);
-            active = true;
-        }
-
-        public void EndFlyingAnimation() {
-            active = false;
-            BattieAnimator.SetInteger("MoveType", 0);
-            BattieContainer.transform.localPosition -= BattieContainer.transform.localPosition; //return Battie to (0,0)
-            
         }
 
 
