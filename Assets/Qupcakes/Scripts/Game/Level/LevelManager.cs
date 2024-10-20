@@ -18,6 +18,7 @@ namespace Qupcakery
 
         public Level level;
         public int currentBatchNum { get; private set; } = -1;
+        public Solution solution { get; private set; } = new Solution();
 
         private Timer timer;
         private bool levelEnded = false;
