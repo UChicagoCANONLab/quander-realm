@@ -160,16 +160,8 @@ namespace BlackBox
 
         private void InitLevel()
         {
-            // if (saveData.currentLevelID[0] == 'L') {
-            //     level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
-            // } else {
             string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
-            // }
-            
-            // decide if we show level select or first level
-            // if (levelID == firstLevelID) StartLevel();
-            // else ShowLevelSelect(true);
 
             ShowLevelSelect(true);
         }
@@ -190,9 +182,7 @@ namespace BlackBox
             }
             if (level.number <= 6) {
                 backgroundAnimator.SetBool("FogActive", false);
-            } else {
-                backgroundAnimator.SetBool("FogActive", true);
-            }
+            } else { backgroundAnimator.SetBool("FogActive", true); }
 
             totalNodes = level.nodePositions.Length;
             livesRemaining = totalLives;
@@ -532,14 +522,8 @@ namespace BlackBox
 
             int[] temp = levelID.Split(".").Select(int.Parse).ToArray();
             int levelNum = ((temp[0]-4) * 6) + temp[1];
+            
             return levelNum;
-
-            // if (int.TryParse(levelID.Trim('L'), out levelNum)) return levelNum;
-            // else
-            // {
-            //     Debug.LogWarning("Unable to parse current level ID: " + levelID);
-            //     return -1;
-            // }
         }
 
         public static string ParseLevelID(int level)
@@ -550,9 +534,6 @@ namespace BlackBox
             string levelText = $"{prefix}.{num}";
             if (num==0) { levelText = $"{prefix-1}.6"; }
 
-            // string levelText = "L";
-            // if (level < 10) levelText += ("0" + level.ToString());
-            // else levelText += level.ToString();
             return levelText;
         }
 
