@@ -8,7 +8,8 @@ namespace QueueBits
 {
     public class TokenCounter : MonoBehaviour
     {
-        public TMP_Text[] counterText;
+        // public TMP_Text[] counterText;
+        public int[] counts = new int[]{0,0,0};
         public GameObject[] counterObjects;
 
         // Boolean for if this display is for the player or the CPU
@@ -51,10 +52,13 @@ namespace QueueBits
         // Initialize counter display, set texts and disable inactive tokens
         public void initCounter(int level) {
             for (int i=0; i<3; i++) {
-                counterText[i].text = tokenCountsPerLevel[level][i].ToString();
+                // counterText[i].text = tokenCountsPerLevel[level][i].ToString();
+                // counts[i] = tokenCountsPerLevel[level][i];
                 if (tokenCountsPerLevel[level][i] == 0) {
                     disableCounter(indexToProb[i]);
                     if (isPlayer) { TS.updateSelectorDisplay(indexToProb[i], 0); }
+                }else{
+                    setCounter(indexToProb[i], tokenCountsPerLevel[level][i]);
                 }
             }
         }
@@ -73,7 +77,7 @@ namespace QueueBits
         // Get the number of tokens available by probability
         public int getCounter(int prob) {
             if (probToIndex.ContainsKey(prob)) {
-                return int.Parse(counterText[probToIndex[prob]].text);
+                return counts[probToIndex[prob]];
             }
             return 0;
         }
@@ -81,7 +85,25 @@ namespace QueueBits
         // Set the counter of a certian probability to a value
         public void setCounter(int prob, int value) {
             if (probToIndex.ContainsKey(prob)) {
-                counterText[probToIndex[prob]].text = value.ToString();
+                // Debug.Log(prob, value)
+                counts[probToIndex[prob]] = value;
+                if (value < 5)
+                {
+                    int nToDisable = 5 - value;
+                    foreach (Transform child in counterObjects[probToIndex[prob]].transform)
+                    {
+                        nToDisable -= 1;
+                        child.gameObject.SetActive(false);
+                        if(nToDisable == 0){
+                            break;
+                        }
+                    }
+                    
+                }
+                Debug.Log(prob);
+                Debug.Log(value);
+                Debug.Log("-----");
+                                // counterText[probToIndex[prob]].text = value.ToString();
             }
             if (isPlayer) { TS.updateSelectorDisplay(prob, value); }
         }

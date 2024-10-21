@@ -32,6 +32,10 @@ namespace QueueBits
 		public GameObject piecePlayer75;
 		public GameObject piecePlayer50;
 
+
+		[Header("Meter")]
+		public QBMeter meter;
+
 		// Dictionaries for token counts
 		private Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
 		private Dictionary<int, int> playerProbs = new Dictionary<int, int>();
@@ -273,9 +277,17 @@ namespace QueueBits
 
 					int p = Random.Range(0, 100);
 					if ((p < probability && isPlayersTurn) || (p >= probability && !isPlayersTurn)) {
+						if (isPlayersTurn && probability < 90)
+						{
+							meter.Update(true);
+						};
 						pieceColorObject = piecePlayer100;
 						numOutcome = (int)Piece.Player;
 					} else if ((p >= probability && isPlayersTurn) || (p < probability && !isPlayersTurn)){
+						if (isPlayersTurn)
+						{
+							meter.Update(false);
+						}
 						pieceColorObject = pieceCPU100;
 						numOutcome = (int)Piece.CPU;
 					}

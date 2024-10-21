@@ -27,11 +27,11 @@ namespace QueueBits {
 
         // Updates display to exclude unavailable tokens
         public void updateSelectorDisplay(int prob, int value) {
-            if (value == 0) {
-                if (prob == 100) { select100.SetActive(false); }
-                else if (prob == 75) { select75.SetActive(false); }
-                else if (prob == 50) { select50.SetActive(false); }
-            }
+            // if (value == 0) {
+            //     if (prob == 100) { select100.SetActive(false); }
+            //     else if (prob == 75) { select75.SetActive(false); }
+            //     else if (prob == 50) { select50.SetActive(false); }
+            // }
         }
 
         // Toggles display between Player and CPU
@@ -43,15 +43,15 @@ namespace QueueBits {
         // Function called by token buttons to select token
         // TokenSelector -> GameController -> GameMode#
         public void SelectToken(int prob) {
-            if (prob == 100 && TC.counterText[0].text != "0") {
+            if (prob == 100 && TC.counts[0] != 0) {
                 GC.tokenSelectedByButton(100);
                 pieceContainer.SetActive(false);
             }
-            if (prob == 75 && TC.counterText[1].text != "0") {
+            if (prob == 75 && TC.counts[1] != 0) {
                 GC.tokenSelectedByButton(75);
                 pieceContainer.SetActive(false);
             }
-            if (prob == 50 && TC.counterText[2].text != "0") {
+            if (prob == 50 && TC.counts[2] != 0) {
                 GC.tokenSelectedByButton(50);
                 pieceContainer.SetActive(false);
             }

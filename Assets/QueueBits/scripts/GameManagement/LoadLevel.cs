@@ -18,6 +18,7 @@ namespace QueueBits
         public void loadLevel(int level) {
             GameManager.LEVEL = level;
             GameManager.Save();
+            Debug.Log(level);
 
             SceneManager.LoadScene("QB_Level");
         }
