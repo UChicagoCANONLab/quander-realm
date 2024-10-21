@@ -199,6 +199,16 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(0, 1, 1, 1);
             Puzzles[5].UpdatePuzzle(0, 1, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] { 1, 0 }, false),
+                new Tuple<int[], bool>(new int[] { 1, 1 }, false),
+                new Tuple<int[], bool>(new int[] { 0, 1 }, false),
+                new Tuple<int[], bool>(new int[] { 1, 1 }, false),
+                new Tuple<int[], bool>(new int[] { 0, 1 }, false),
+                new Tuple<int[], bool>(new int[] { 1, 1 }, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -215,6 +225,15 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(1, 0, 1, 0);
             Puzzles[5].UpdatePuzzle(0, 1, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {1, 1}, false),
+                new Tuple<int[], bool>(new int[] {1, 1}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {1, 1}, false),
+                new Tuple<int[], bool>(new int[] {1, 1}, false)
+            };
             TotalPuzzleCnt = 6;
         }
 
@@ -230,7 +249,17 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(0, 1, 1, 0, 1, 0);
 
             Puzzles[4].UpdatePuzzle(1, 0, 1, 0, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false)
+            };
+
             TotalPuzzleCnt = 5;
+
         }
 
         private void SetLevel5()
@@ -245,6 +274,15 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 0, 0, 1, 1, 0);
 
             Puzzles[4].UpdatePuzzle(0, 1, 0, 1, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 0, 1}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 0}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
@@ -261,6 +299,16 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(0, 1, 1, 0, 1, 1);
             Puzzles[5].UpdatePuzzle(1, 1, 0, 1, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false),
+                new Tuple<int[], bool>(new int[] {11, 0}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {0, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 0}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -275,6 +323,15 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 0, 1, 1, 0, 1);
 
             Puzzles[4].UpdatePuzzle(1, 0, 0, 0, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {101}, true),
+                new Tuple<int[], bool>(new int[] {101}, false),
+                new Tuple<int[], bool>(new int[] {0, 11}, false),
+                new Tuple<int[], bool>(new int[] {101}, false),
+                new Tuple<int[], bool>(new int[] {101}, true)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
@@ -287,6 +344,13 @@ namespace Qupcakery
             Puzzles[1].UpdatePuzzle(1, 0, 1, 1);
             Puzzles[2].UpdatePuzzle(0, 1, 1, 1);
             Puzzles[3].UpdatePuzzle(1, 0, 1, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, false)
+            };
 
             TotalPuzzleCnt = 4;
         }
@@ -305,6 +369,16 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(1, 0, 1, 1);
             Puzzles[5].UpdatePuzzle(1, 1, 0, 1);
 
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {12}, true),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, true),
+                new Tuple<int[], bool>(new int[] {12}, true),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, true)
+            };
+
+
             TotalPuzzleCnt = 6;
         }
 
@@ -322,6 +396,17 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(1, 0, 0, 1);
             Puzzles[5].UpdatePuzzle(1, 0, 1, 1);
             Puzzles[6].UpdatePuzzle(0, 1, 1, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {12}, true),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, false)
+            };
+
             TotalPuzzleCnt = 7;
         }
 
@@ -338,6 +423,15 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 1, 1, 0, 1, 0);
 
             Puzzles[4].UpdatePuzzle(1, 0, 0, 1, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {0, 1, 0}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false),
+                new Tuple<int[], bool>(new int[] {12, 0}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
@@ -353,6 +447,15 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(0, 1, 0, 1, 1, 0);
 
             Puzzles[4].UpdatePuzzle(1, 1, 1, 0, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {12, 0}, false),
+                new Tuple<int[], bool>(new int[] {102}, true),
+                new Tuple<int[], bool>(new int[] {103}, true),
+                new Tuple<int[], bool>(new int[] {103}, true),
+                new Tuple<int[], bool>(new int[] {104}, true)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
@@ -366,6 +469,13 @@ namespace Qupcakery
             Puzzles[2].UpdatePuzzle(1, 2);
             Puzzles[3].UpdatePuzzle(0, 3);
 
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {2}, false)
+            };
+
             TotalPuzzleCnt = 4;
         }
 
@@ -377,15 +487,17 @@ namespace Qupcakery
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
 
-            Puzzles[0].UpdatePuzzle(2, 0);
-            Puzzles[1].UpdatePuzzle(3, 1);
-            Puzzles[2].UpdatePuzzle(2, 1);
-            Puzzles[3].UpdatePuzzle(3, 0);
-
             Puzzles[0].UpdatePuzzle(3, 1);
             Puzzles[1].UpdatePuzzle(3, 0);
             Puzzles[2].UpdatePuzzle(2, 1);
             Puzzles[3].UpdatePuzzle(2, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {4}, false),
+                new Tuple<int[], bool>(new int[] {4}, false),
+                new Tuple<int[], bool>(new int[] {2}, false)
+            };
 
             TotalPuzzleCnt = 4;
         }
@@ -405,6 +517,19 @@ namespace Qupcakery
             Puzzles[5].UpdatePuzzle(1, 3, 3, 1);
             Puzzles[6].UpdatePuzzle(2, 0, 1, 3);
             Puzzles[7].UpdatePuzzle(2, 1, 3, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {0, 2}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {14}, false),
+
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {14}, false)
+            };
+
             TotalPuzzleCnt = 8;
         }
 
@@ -424,6 +549,19 @@ namespace Qupcakery
             Puzzles[5].UpdatePuzzle(0, 3);
             Puzzles[6].UpdatePuzzle(3, 0);
             Puzzles[7].UpdatePuzzle(2, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {5}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {5}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {5}, false),
+                new Tuple<int[], bool>(new int[] {2}, false)
+            };
+
             TotalPuzzleCnt = 8;
         }
 
@@ -443,6 +581,19 @@ namespace Qupcakery
             Puzzles[5].UpdatePuzzle(0, 1, 2, 0);
             Puzzles[6].UpdatePuzzle(2, 1, 3, 0);
             Puzzles[7].UpdatePuzzle(0, 3, 1, 2);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 5}, false),
+                new Tuple<int[], bool>(new int[] {5, 2}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {5, 5}, false),
+
+                new Tuple<int[], bool>(new int[] {1, 6}, false),
+                new Tuple<int[], bool>(new int[] {2, 1}, false),
+                new Tuple<int[], bool>(new int[] {5, 5}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false)
+            };
+
             TotalPuzzleCnt = 8;
         }
 
@@ -459,6 +610,15 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 2, 0, 3, 2, 1);
 
             Puzzles[4].UpdatePuzzle(0, 3, 0, 2, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2, 11}, false),
+                new Tuple<int[], bool>(new int[] {0, 11}, false),
+                new Tuple<int[], bool>(new int[] {5, 0, 2}, false),
+                new Tuple<int[], bool>(new int[] {5, 2, 2}, false),
+                new Tuple<int[], bool>(new int[] {16, 2}, false)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
@@ -477,6 +637,18 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(1, 2, 0, 3);
             Puzzles[5].UpdatePuzzle(0, 3, 0, 2);
             Puzzles[6].UpdatePuzzle(3, 0, 2, 3);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2, 0}, false),
+                new Tuple<int[], bool>(new int[] {2, 5}, false),
+                new Tuple<int[], bool>(new int[] {16}, false),
+                new Tuple<int[], bool>(new int[] {0, 2}, false),
+
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {0, 5}, false)
+            };
+
             TotalPuzzleCnt = 7;
         }
        
@@ -495,6 +667,18 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(3, 1, 1, 0);
             Puzzles[5].UpdatePuzzle(0, 3, 0, 2);
             Puzzles[6].UpdatePuzzle(0, 1, 3, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2, 5}, false),
+                new Tuple<int[], bool>(new int[] {2, 6}, false),
+                new Tuple<int[], bool>(new int[] {6, 2}, false),
+                new Tuple<int[], bool>(new int[] {0, 2}, false),
+
+                new Tuple<int[], bool>(new int[] {6, 2}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {5, 6}, false)
+            };
+
             TotalPuzzleCnt = 7;
         }
 
@@ -512,6 +696,17 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(1, 2, 0, 3, 2, 1);
             Puzzles[5].UpdatePuzzle(0, 3, 0, 2, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 1, 6}, false),
+                new Tuple<int[], bool>(new int[] {1, 5, 1}, false),
+                new Tuple<int[], bool>(new int[] {2, 2, 5}, false),
+                new Tuple<int[], bool>(new int[] {1, 1, 6}, false),
+
+                new Tuple<int[], bool>(new int[] {5, 2, 2}, false),
+                new Tuple<int[], bool>(new int[] {1, 2, 2}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -529,6 +724,17 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(0, 1, 1, 0, 0, 1);
             Puzzles[5].UpdatePuzzle(0, 3, 2, 2, 2, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {6, 11}, false),
+                new Tuple<int[], bool>(new int[] {6, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 5}, false),
+                new Tuple<int[], bool>(new int[] {5, 0, 2}, false),
+
+                new Tuple<int[], bool>(new int[] {6, 11}, false),
+                new Tuple<int[], bool>(new int[] {5, 0, 2}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -548,6 +754,18 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(0, 4, 0, 5);
             Puzzles[5].UpdatePuzzle(1, 4, 0, 5);
             Puzzles[6].UpdatePuzzle(1, 4, 1, 5);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {1, 2}, false),
+                new Tuple<int[], bool>(new int[] {17}, true),
+
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {17}, true),
+                new Tuple<int[], bool>(new int[] {18}, true)
+            };
+
             TotalPuzzleCnt = 7;
         }
 
@@ -566,6 +784,17 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(1, 6, 0, 7);
             Puzzles[5].UpdatePuzzle(0, 6, 1, 7);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {17}, true),
+                new Tuple<int[], bool>(new int[] {1, 2}, false),
+                new Tuple<int[], bool>(new int[] {17}, false),
+
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {17}, true)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -585,6 +814,18 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(0, 4, 0, 5);
             Puzzles[5].UpdatePuzzle(1, 6, 1, 7);
             Puzzles[6].UpdatePuzzle(0, 1, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {17}, true),
+                new Tuple<int[], bool>(new int[] {17}, true),
+                new Tuple<int[], bool>(new int[] {19}, false),
+                new Tuple<int[], bool>(new int[] {17}, false),
+
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {20}, false)
+            };
+
             TotalPuzzleCnt = 7;
         }
 
@@ -603,6 +844,17 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(1, 6, 1, 0, 0, 7);
             Puzzles[5].UpdatePuzzle(0, 4, 1, 5, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {105}, true),
+                new Tuple<int[], bool>(new int[] {17, 1}, false),
+                new Tuple<int[], bool>(new int[] {1, 17}, true),
+                new Tuple<int[], bool>(new int[] {1, 17}, true),
+
+                new Tuple<int[], bool>(new int[] {107}, true),
+                new Tuple<int[], bool>(new int[] {1, 17}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -622,6 +874,17 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(1, 6, 0, 1, 0, 7);
             Puzzles[5].UpdatePuzzle(0, 1, 1, 1, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {108}, false),
+                new Tuple<int[], bool>(new int[] {2, 11}, false),
+                new Tuple<int[], bool>(new int[] {20, 0}, false),
+                new Tuple<int[], bool>(new int[] {109}, true),
+
+                new Tuple<int[], bool>(new int[] {110}, false),
+                new Tuple<int[], bool>(new int[] {1, 12}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
     }

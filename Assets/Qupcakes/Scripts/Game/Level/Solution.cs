@@ -70,7 +70,7 @@ namespace Qupcakery
         }
 
         /* A dictionary containing all possible solutions to levels in the game.
-         * Note that row 0 is the bottom row in the grid.
+         * Note that row 0 is the top row in the grid.
          * In all CNOT gates, CNOT is on top.
          */
         private static readonly Dictionary<int, int[][]> SolutionManual = new Dictionary<int, int[][]>
