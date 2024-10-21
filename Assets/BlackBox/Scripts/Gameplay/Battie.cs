@@ -142,7 +142,6 @@ namespace BlackBox
                         positions[i].x = (panelSize/2); 
                         break;
                     default:        
-                        // positions[i].x = pos.x*(panelSize/gridSize)+(panelSize/(gridSize*2))-(panelSize/2); 
                         positions[i].x = pos.x*(panelSize/(gridSize+1)) + (panelSize/(gridSize+1)) - (panelSize/2);
                         break;
                 } 
@@ -154,7 +153,6 @@ namespace BlackBox
                         positions[i].y = (panelSize/2); 
                         break;
                     default:        
-                        // positions[i].y= pos.y*(panelSize/gridSize)+(panelSize/(gridSize*2))-(panelSize/2); 
                         positions[i].y = pos.y*(panelSize/(gridSize+1)) + (panelSize/(gridSize+1)) - (panelSize/2);
                         break;
                 } 

@@ -80,7 +80,7 @@ namespace BlackBox
                     BBEvents.MarkUnits?.Invoke(Marker.Miss, destDirection, destination, true);
 
                     BBEvents.AppendHint?.Invoke(origin, originDirection, destination, destDirection);
-                    // BBEvents.AppendFlyingCoordinates?.Invoke(origin, originDirection, destination, destDirection);
+                    BBEvents.AppendFlyingCoordinates?.Invoke(origin, originDirection, destination, destDirection);
                 }
             }
         }

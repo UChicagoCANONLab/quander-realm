@@ -23,6 +23,7 @@ namespace BlackBox
         [SerializeField] GameObject levelSelect;
         [SerializeField] LevelButton[] levelButtons;
         [SerializeField] QButton gameBackButton;
+        [SerializeField] Animator backgroundAnimator;
 
         [Header("Grid Containers")]
         [SerializeField] private GameObject mainGridGO;
@@ -186,6 +187,11 @@ namespace BlackBox
 
             if (level.levelID == firstLevelID) {
                 BBEvents.InitiateTutorialLevel?.Invoke(); 
+            }
+            if (level.number <= 6) {
+                backgroundAnimator.SetBool("FogActive", false);
+            } else {
+                backgroundAnimator.SetBool("FogActive", true);
             }
 
             totalNodes = level.nodePositions.Length;

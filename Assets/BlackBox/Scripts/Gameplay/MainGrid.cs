@@ -117,7 +117,9 @@ namespace BlackBox
             BBEvents.SendMollyIn?.Invoke();
             BBEvents.DelayInteraction?.Invoke(true);
             ray.AddMarkers();
-            BBEvents.StartFlyingAnimation?.Invoke();
+            if ((int)BBEvents.GetLevel?.Invoke().number <= 6) {
+                BBEvents.StartFlyingAnimation?.Invoke();
+            }
         }
 
         private void UpdateRayPosition()
