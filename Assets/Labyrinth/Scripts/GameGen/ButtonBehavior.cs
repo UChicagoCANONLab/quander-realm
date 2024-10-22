@@ -30,11 +30,13 @@ namespace Labyrinth
 
 
         void Start() {
-            if (SceneManager.GetActiveScene().name == "LA_MainMenu") {
+            // if (SceneManager.GetActiveScene().name == "LA_MainMenu") {
+            if (SceneManager.GetActiveScene().name == "LA_LevelSelect") {
                 Load.LoadGame();
                 DialogueAndRewards.Instance.updateDialogueDict();
             }
-            if ((SceneManager.GetActiveScene().name == "LA_MainMenu") 
+            // if ((SceneManager.GetActiveScene().name == "LA_MainMenu") 
+            if ((SceneManager.GetActiveScene().name == "LA_LevelSelect") 
             && (DialogueAndRewards.Instance.levelDialogue[-1] == false)) {
                 Wrapper.Events.StartDialogueSequence?.Invoke("LA_Intro");
                 DialogueAndRewards.Instance.levelDialogue[-1] = true;
