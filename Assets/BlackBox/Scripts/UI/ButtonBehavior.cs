@@ -35,7 +35,6 @@ namespace BlackBox
         }
 
         public void ShowInfoPanel() {
-            // infoPanel.GetComponent<Animator>().SetBool("On", true);
             BBEvents.ShowInfo?.Invoke();
         }
 
