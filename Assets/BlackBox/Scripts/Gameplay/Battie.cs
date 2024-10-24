@@ -55,7 +55,6 @@ namespace BlackBox
         public void InitFlyingAnimation() {
             if (flyingCoors == null) { return; }
             ReturnBattieHelper(); // Return before start
-
             // Debug.Log($"Coordinates: {string.Join("; ", flyingCoors)}");
 
             BattieContainer.transform.localPosition += flyingCoors[0];
@@ -66,7 +65,7 @@ namespace BlackBox
         public void EndFlyingAnimation() {
             active = false; phase = 0;
             BattieAnimator.SetInteger("MoveType", 0);
-            Invoke("ReturnBattieHelper", 1f);
+            Invoke("ReturnBattieHelper", 0.5f);
 
             flyingCoors = null; // Clear array
         }
