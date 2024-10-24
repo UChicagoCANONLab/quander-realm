@@ -54,21 +54,33 @@ namespace BlackBox
                 if (origin == destination)
                 {
                     if (directHit)
+                    {
                         BBEvents.MarkUnits?.Invoke(Marker.Hit, originDirection, origin, true);
+                        BBEvents.AppendHint?.Invoke(origin, originDirection, destination, destDirection);
+                        // BBEvents.AppendFlyingCoordinates?.Invoke(origin, originDirection, destination, destDirection);
+                    }
                     else // only other case for returning to the same cell is a reflection
                         BBEvents.MarkUnits?.Invoke(Marker.Reflect, originDirection, origin, true);
                 }
                 else // different cell
                     BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination, GetDetourPairNumber());
+                    // MAYBE ADD THIS TO HINTS??
             }
             else // diff entry/exit direction
             {
                 if (rayDetoured)
+                {
                     BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination, GetDetourPairNumber());
+                    BBEvents.AppendHint?.Invoke(origin, originDirection, destination, destDirection);
+                    BBEvents.AppendFlyingCoordinates?.Invoke(origin, originDirection, destination, destDirection);
+                } 
                 else // straight through
                 {
                     BBEvents.MarkUnits?.Invoke(Marker.Miss, originDirection, origin, false);
                     BBEvents.MarkUnits?.Invoke(Marker.Miss, destDirection, destination, true);
+
+                    BBEvents.AppendHint?.Invoke(origin, originDirection, destination, destDirection);
+                    BBEvents.AppendFlyingCoordinates?.Invoke(origin, originDirection, destination, destDirection);
                 }
             }
         }

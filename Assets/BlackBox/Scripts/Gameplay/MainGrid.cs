@@ -14,6 +14,7 @@ namespace BlackBox
         private Dir direction = Dir.None;
         private Ray ray = null;
         private NodeCell[,] cellArray = null;
+        private int[] rotations = {0, 90, 180, 270};
 
         [SerializeField]
         float swapDelayTime = 0.8F;
@@ -82,8 +83,40 @@ namespace BlackBox
 
         public void SetNodes(Vector2Int[] nodePositions)
         {
-            foreach (Vector2Int position in nodePositions)
+            int orientation = rotations[UnityEngine.Random.Range(0, rotations.Length)];
+            if ((int)BBEvents.GetLevel?.Invoke().number == 1) {
+                orientation = 0;
+            }
+            float transl = ((float)width-1)/2;
+            
+            for (int i=0; i<nodePositions.Length; i++) 
+            {
+                float tempx = (float)nodePositions[i].x - transl; // normalize origin
+                float tempy = (float)nodePositions[i].y - transl;
+
+                switch (orientation) {
+                    case 0: // no rotation needed
+                        break;
+                    case 90:
+                        nodePositions[i].x = (int)(tempy + transl);
+                        nodePositions[i].y = (int)(-1*tempx + transl);
+                        break;
+                    case 180:
+                        nodePositions[i].x = (int)(-1*tempx + transl);
+                        nodePositions[i].y = (int)(-1*tempy + transl);
+                        break;
+                    case 270:
+                        nodePositions[i].x = (int)(-1*tempy + transl);
+                        nodePositions[i].y = (int)(tempx + transl);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            // Debug.Log($"Node Positions: {string.Join("; ", nodePositions)}");
+            foreach (Vector2Int position in nodePositions) {
                 cellArray[position.x, position.y].SetNode();
+            }
         }
 
         public int GetNumCorrect(Vector2Int[] nodePositions)
@@ -117,6 +150,9 @@ namespace BlackBox
             BBEvents.SendMollyIn?.Invoke();
             BBEvents.DelayInteraction?.Invoke(true);
             ray.AddMarkers();
+            if ((int)BBEvents.GetLevel?.Invoke().number <= 6) {
+                BBEvents.StartFlyingAnimation?.Invoke();
+            }
         }
 
         private void UpdateRayPosition()
