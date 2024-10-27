@@ -13,25 +13,48 @@ namespace Qupcakery
         LevelManager manager;
         Level level;
         Solution solution;
+        int[] solutionGates = new int[5];
 
         private void Start()
         {
             manager = FindObjectOfType<LevelManager>();
             level = manager.level;
             solution = manager.solution;
+            // Determine gates in correct solution
+            foreach(int[] row in solution.Gates)
+            {
+                foreach(int gate in row)
+                {
+                    if (gate >= 0)
+                    {
+                        solutionGates[gate]++;
+                    }
+                }
+            }
         }
 
         public void GiveHint()
         {
-            // Get gates
-            // int[] gates = level.AvailableGates;
-
             print(solution);
 
-            // var available = from i in Enumerable.Range(0, 4) where gates[i] > 0 select i;
+            // Get current set of gates that are on conveyors
+            int[] gates = level.AvailableGates; // Original gates available
+            Dictionary<GateType, int> tracker = GateBank.Instance.GateBankTracker; // Unplaced gates
+
 
             // GameObject[] gateObjects = GameObject.FindGameObjectsWithTag("Gate");
+
+            // Find first gate that needs to be on conveyor but isn't
+            // var available = from i in Enumerable.Range(0, 4) where gates[i] > 0 select i;
+
+
+            // If it doesn't exist, find first gate that is on conveyor but shouldn't be.
+
+            // Wiggle gate
             // gateObjects[0].GetComponent<Animation>().Play("GateMotion");
+
+
+
 
             // Find first incorrect conveyor
             // Determine correct solution

@@ -33,7 +33,6 @@ namespace Qupcakery
         public void UpdateSolution(int h, Tuple<int[], bool> solutionTuple)
         {
 
-
             int[] solutionCode = solutionTuple.Item1;
             bool flip = solutionTuple.Item2;
 
@@ -107,9 +106,9 @@ namespace Qupcakery
                                 new int[] {(int)GateType.NOT, (int)GateType.CNOT} } },
 
             // Three rows
-            {101, new int[][] { new int[] { (int)GateType.None, (int)GateType.SWAP},
+            {101, new int[][] { new int[] { (int)GateType.SWAP, (int)GateType.None},
                                 new int[] { (int)GateType.SWAP, (int)GateType.SWAP},
-                                new int[] { (int)GateType.SWAP, (int)GateType.None } } },
+                                new int[] { (int)GateType.None, (int)GateType.SWAP } } },
             {102, new int[][] { new int[] { (int)GateType.CNOT},
                                 new int[] { (int)GateType.CNOT, (int)GateType.SWAP},
                                 new int[] { (int)GateType.None, (int)GateType.SWAP} } },
