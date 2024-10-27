@@ -17,6 +17,7 @@ namespace Qupcakery
     {
         public int[][] Gates { get; private set; }
         public int Height;
+        public int[] GateCount;
 
         // Constructor
         public Solution()
@@ -37,6 +38,7 @@ namespace Qupcakery
             bool flip = solutionTuple.Item2;
 
             Gates = new int[h][];
+            GateCount = new int[5];
             Height = h;
 
             int currRow = 0;
@@ -66,6 +68,21 @@ namespace Qupcakery
                     currRow++;
                 }
             }
+
+            // Determine count of gates in correct solution
+            foreach (int[] row in Gates)
+            {
+                foreach (int gate in row)
+                {
+                    if (gate >= 0)
+                    {
+                        GateCount[gate]++;
+                    }
+                }
+            }
+            // Correct for double-counting of big gates
+            GateCount[(int)GateType.SWAP] /= 2;
+            GateCount[(int)GateType.CNOT] /= 2;
         }
 
         /* A dictionary containing all possible solutions to levels in the game.

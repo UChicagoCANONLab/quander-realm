@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.U2D.Animation;
 
 
 namespace Qupcakery
@@ -12,54 +9,82 @@ namespace Qupcakery
     {
         LevelManager manager;
         Level level;
-        Solution solution;
-        int[] solutionGates = new int[5];
+        Solution solution; 
 
         private void Start()
         {
             manager = FindObjectOfType<LevelManager>();
             level = manager.level;
             solution = manager.solution;
-            // Determine gates in correct solution
-            foreach(int[] row in solution.Gates)
-            {
-                foreach(int gate in row)
-                {
-                    if (gate >= 0)
-                    {
-                        solutionGates[gate]++;
-                    }
-                }
-            }
+            
         }
 
         public void GiveHint()
         {
-            print(solution);
 
-            // Get current set of gates that are on conveyors
+            int[] gatesInUse = new int[5];
+            
+            GateType hintGateType = GateType.None;
+            bool tooManyGates = false;
+
             int[] gates = level.AvailableGates; // Original gates available
             Dictionary<GateType, int> tracker = GateBank.Instance.GateBankTracker; // Unplaced gates
 
+            // Get current set of gates that are on conveyors
+            for (int i = 0; i < 5; i++)
+            {
+                if (gates[i] > 0)
+                {
+                    gatesInUse[i] = gates[i] - tracker[(GateType)i];
+                }
+            }
 
-            // GameObject[] gateObjects = GameObject.FindGameObjectsWithTag("Gate");
+            // Find first gate where solution and current are different
+            for (int i = 0; i < gates.Length; i++)
+            {
+                // Prioritize gates that aren't on conveyor but should be
+                if (gatesInUse[i] < solution.GateCount[i])
+                {
+                    hintGateType = (GateType)i;
+                    tooManyGates = false;
+                    break;
+                }
 
-            // Find first gate that needs to be on conveyor but isn't
-            // var available = from i in Enumerable.Range(0, 4) where gates[i] > 0 select i;
+                // Give a hint for a gate that is on the conveyor ONLY if too
+                // many gates
+                if (gatesInUse[i] > solution.GateCount[i])
+                {
+                    hintGateType = (GateType)i;
+                    tooManyGates = true;
+                }
+            }
 
-
-            // If it doesn't exist, find first gate that is on conveyor but shouldn't be.
-
-            // Wiggle gate
-            // gateObjects[0].GetComponent<Animation>().Play("GateMotion");
-
-
-
-
-            // Find first incorrect conveyor
-            // Determine correct solution
-            // Wiggle first block in solution
-            // print(level.LevelInd);
+            // Find a gate to hint
+            GameObject[] gateObjects = GameObject.FindGameObjectsWithTag("Gate");
+            foreach(GameObject gate in gateObjects)
+            {
+                SpriteResolver resolver = gate.GetComponent<SpriteResolver>();
+                
+                if (resolver.GetLabel() == hintGateType.ToString())
+                {
+                    // If the gate is used too often, find a gate on the conveyor
+                    if (tooManyGates)
+                    {
+                        if (resolver.GetCategory() == "OnBelt")
+                        {
+                            gate.GetComponent<Animation>().Play("GateMotion");
+                            break;
+                        }
+                    } else { // Otherwise, find a gate on the bench
+                        if (resolver.GetCategory() == "Basic")
+                        {
+                            gate.GetComponent<Animation>().Play("GateMotion");
+                            break;
+                        }
+                    }
+                    
+                }
+            }
 
         }
 
