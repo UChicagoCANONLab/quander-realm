@@ -22,6 +22,8 @@ namespace Qupcakery
         public void GiveHint()
         {
 
+            print(solution);
+
             int[] gatesInUse = new int[5];
             
             GateType hintGateType = GateType.None;

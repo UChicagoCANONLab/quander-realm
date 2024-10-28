@@ -616,7 +616,7 @@ namespace Qupcakery
                 new Tuple<int[], bool>(new int[] {0, 11}, false),
                 new Tuple<int[], bool>(new int[] {5, 0, 2}, false),
                 new Tuple<int[], bool>(new int[] {5, 2, 2}, false),
-                new Tuple<int[], bool>(new int[] {16, 2}, false)
+                new Tuple<int[], bool>(new int[] {16, 2}, true)
             };
 
             TotalPuzzleCnt = 5;
@@ -641,7 +641,7 @@ namespace Qupcakery
             Solutions = new Tuple<int[], bool>[] {
                 new Tuple<int[], bool>(new int[] {2, 0}, false),
                 new Tuple<int[], bool>(new int[] {2, 5}, false),
-                new Tuple<int[], bool>(new int[] {16}, false),
+                new Tuple<int[], bool>(new int[] {16}, true),
                 new Tuple<int[], bool>(new int[] {0, 2}, false),
 
                 new Tuple<int[], bool>(new int[] {2, 2}, false),
@@ -757,7 +757,7 @@ namespace Qupcakery
 
             Solutions = new Tuple<int[], bool>[] {
                 new Tuple<int[], bool>(new int[] {17}, false),
-                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {18}, false),
                 new Tuple<int[], bool>(new int[] {1, 2}, false),
                 new Tuple<int[], bool>(new int[] {17}, true),
 
