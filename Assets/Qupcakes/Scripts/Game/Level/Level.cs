@@ -759,10 +759,10 @@ namespace Qupcakery
                 new Tuple<int[], bool>(new int[] {17}, false),
                 new Tuple<int[], bool>(new int[] {18}, false),
                 new Tuple<int[], bool>(new int[] {1, 2}, false),
-                new Tuple<int[], bool>(new int[] {17}, true),
+                new Tuple<int[], bool>(new int[] {18}, true),
 
                 new Tuple<int[], bool>(new int[] {17}, false),
-                new Tuple<int[], bool>(new int[] {17}, true),
+                new Tuple<int[], bool>(new int[] {18}, true),
                 new Tuple<int[], bool>(new int[] {18}, true)
             };
 
