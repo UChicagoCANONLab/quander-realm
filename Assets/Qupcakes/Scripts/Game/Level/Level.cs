@@ -145,6 +145,9 @@ namespace Qupcakery
                 case 27:
                     SetLevel27();
                     break;
+                case 28:
+                    SetLevelDaily();
+                    break;
                 default:
                     throw new ArgumentException("Invalid level index: " + LevelInd);
             }
@@ -886,6 +889,20 @@ namespace Qupcakery
             };
 
             TotalPuzzleCnt = 6;
+        }
+
+        private void SetLevelDaily()
+        {
+            UpdateLevelSpec(levelGoal: 1, levelTimeLimit: 10, levelTotalBeltCnt: 1);
+            AvailableGates[(int)GateType.NOT] = 1;
+
+            Puzzles[0].UpdatePuzzle(0, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] { 0 }, false)
+            };
+
+            TotalPuzzleCnt = 1;
         }
     }
 }

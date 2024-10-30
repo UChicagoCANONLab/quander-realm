@@ -78,7 +78,11 @@ namespace Qupcakery
         public void OnCoinsCollected(int amount)
         {
             currentProgress += amount;
-            SetValue((float)currentProgress / (float)goal);
+            if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
+            {
+                SetValue((float)currentProgress / (float)goal);
+            }
+            
             UILevelCoinTracker.instance.UpdateCoinAmount(currentProgress);
         }
     }

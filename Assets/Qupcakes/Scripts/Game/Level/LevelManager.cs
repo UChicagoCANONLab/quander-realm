@@ -28,20 +28,32 @@ namespace Qupcakery
 
         private bool hasTutorial = false;
 
-        private void Awake()
+        private void Start()
         {
-            GameManagement.Instance.SetGameMode(GameManagement.GameMode.Regular);
-            level = GameManagement.Instance.GetCurrentLevel();
-
-            // If tutorial available, start tutorial sequence
-            int levelInd = level.LevelInd;
-
-            if (TutorialManager.tutorialAvailable[levelInd])
+            GameManagement gameManager = GameManagement.Instance;
+            switch(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
             {
-                hasTutorial = true; 
-                Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level" + levelInd.ToString());
-                TutorialManager.UpdateAvailability(levelInd);
-                Wrapper.Events.DialogueSequenceEnded += StartLevel;
+                case "QU_DailyLevel":
+                    Debug.Log("DailyLevel");
+                    gameManager.SetGameMode(GameManagement.GameMode.Daily);
+                    gameManager.SetCurrentLevel(28);
+                    level = gameManager.GetCurrentLevel();
+                    break;
+                default:
+                    gameManager.SetGameMode(GameManagement.GameMode.Regular);
+                    level = gameManager.GetCurrentLevel();
+
+                    // If tutorial available, start tutorial sequence
+                    int levelInd = level.LevelInd;
+
+                    if (TutorialManager.tutorialAvailable[levelInd])
+                    {
+                        hasTutorial = true;
+                        Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level" + levelInd.ToString());
+                        TutorialManager.UpdateAvailability(levelInd);
+                        Wrapper.Events.DialogueSequenceEnded += StartLevel;
+                    }
+                    break;
             }
 
             /* Create timer */
@@ -56,7 +68,22 @@ namespace Qupcakery
             PuzzleCorrectionChecker.UpdateOnNewLevel();
 
             /* Update game state */
-            GameManagement.Instance.game.gameStat.SetLevelJustAttempted(level.LevelInd);
+            gameManager.game.gameStat.SetLevelJustAttempted(level.LevelInd);
+
+            if (hasTutorial)
+                return;
+
+            /* Subscribe to events that trigger level to end */
+            timer.TimerEnded += OnLevelEnded;
+            Dispatcher.AllBatchDonePublisher += OnLevelEnded;
+            Dispatcher.NewBatchDispatchedPublisher += OnNewBatchDispatched;
+
+            /* Set up UI */
+            timer.TimerClicked += UIClockController.Instance.OnTimerClicked;
+            UIProgressBar.Instance.SetGoal(level.Goal);
+
+            /* Dispatch first batch */
+            Dispatcher.DispatchNewBatch();
         }
 
         private void StartLevel()
@@ -78,24 +105,6 @@ namespace Qupcakery
             hasTutorial = false;
         }
 
-        private void Start()
-        {
-            if (hasTutorial)
-                return;
-
-            /* Subscribe to events that trigger level to end */
-            timer.TimerEnded += OnLevelEnded;
-            Dispatcher.AllBatchDonePublisher += OnLevelEnded;
-            Dispatcher.NewBatchDispatchedPublisher += OnNewBatchDispatched;
-
-            /* Set up UI */
-            timer.TimerClicked += UIClockController.Instance.OnTimerClicked;
-            UIProgressBar.Instance.SetGoal(level.Goal);
-
-            /* Dispatch first batch */
-            Dispatcher.DispatchNewBatch();
-        }
-
         // Update is called once per frame
         void Update()
         {
@@ -105,7 +114,10 @@ namespace Qupcakery
             if (levelEnded)
                 return;
 
-            timer.Tick(Time.deltaTime);
+            if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
+            {
+                timer.Tick(Time.deltaTime);
+            }
         }
 
         public void OnLevelEnded()
