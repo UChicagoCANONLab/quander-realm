@@ -87,14 +87,6 @@ namespace Qupcakery
         // Once a cake enters
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (GameManagement.Instance.gameMode
-                == GameManagement.GameMode.Experiment)
-            {
-                if (ExperimentButtonController.Instance.buttonState
-                    != ExperimentButtonController.ButtonState.Pressed)
-                    return;
-            }
-
             if ((!(positionController.gateState == GateState.OnBelt))
                 || executionCompleted)
                 return;
@@ -109,14 +101,9 @@ namespace Qupcakery
             if (GameUtilities.gameIsPaused)
                 return;
 
-            if (GameManagement.Instance.gameMode
-                == GameManagement.GameMode.Regular)
-            {
-                if (GameObjectsManagement.Button.GetComponent<ButtonController>()
+            if (GameObjectsManagement.Button.GetComponent<ButtonController>()
                     .buttonState == ButtonController.ButtonState.Pressed)
                     return;
-            }
-
 
             if (positionController.gateState == GateState.OnBelt)
             {
@@ -135,14 +122,7 @@ namespace Qupcakery
 
         private CakeBoxController GetCakeBoxControllerFromCake(GameObject cakeObject)
         {
-            switch (GameManagement.Instance.gameMode)
-            {
-                case GameManagement.GameMode.Regular:
-                    return cakeObject.GetComponent<CakeBoxController>();
-                case GameManagement.GameMode.Experiment:
-                    return cakeObject.GetComponent<ExperimentCakeBoxController>();
-            }
-            return null;
+            return cakeObject.GetComponent<CakeBoxController>();
         }
 
         // Execute gate

@@ -15,7 +15,7 @@ namespace Qupcakery
 
         public enum GameMode
         {
-            Regular, Experiment
+            Regular, Daily
         }
 
         public GameObject customerPrefab, cakePrefab, buttonPrefab, panelPrefab;

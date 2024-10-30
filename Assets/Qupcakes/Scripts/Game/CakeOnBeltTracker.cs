@@ -35,28 +35,6 @@ namespace Qupcakery
         {
             totalBeltCnt = beltCnt;
 
-            if (GameManagement.Instance.gameMode
-                == GameManagement.GameMode.Experiment)
-            {
-                if (CakesReadyToBeDelivered != null)
-                {
-                    foreach (CakesReadyToBeDeliveredHandler d
-                        in CakesReadyToBeDelivered.GetInvocationList())
-                    {
-                        CakesReadyToBeDelivered -= d;
-                    }
-                }
-
-                if (CakesRemovedFromBelt != null)
-                {
-                    foreach (CakesRemovedFromBeltHandler d
-                    in CakesRemovedFromBelt.GetInvocationList())
-                    {
-                        CakesRemovedFromBelt -= d;
-                    }
-                }
-            }
-
             for (int i = 0; i < beltCnt; i++)
             {
                 cakeTracker[i] = null;
@@ -68,18 +46,6 @@ namespace Qupcakery
             SysDebug.Assert(cakeTracker[beltInd] == null);
 
             cakeTracker[beltInd] = cake;
-
-            /* In experiment mode, notify button that it can be pressed
-            if every belt has a cake */
-            if (GameManagement.Instance.gameMode == GameManagement.GameMode.Experiment)
-            {
-                for (int i = 0; i < totalBeltCnt; i++)
-                {
-                    if (cakeTracker[i] == null)
-                        return;
-                }
-                OnCakesReadyToBeDelivered();
-            }
         }
 
         public GameObject GetCakeFromBelt(int beltInd)
@@ -91,10 +57,6 @@ namespace Qupcakery
         public void RemoveCakeFromBelt(int beltInd)
         {
             cakeTracker[beltInd] = null;
-            if (GameManagement.Instance.gameMode == GameManagement.GameMode.Experiment)
-            {
-                OnCakesRemovedFromBelt();
-            }
         }
 
         public void RemoveCakesFromBelt()

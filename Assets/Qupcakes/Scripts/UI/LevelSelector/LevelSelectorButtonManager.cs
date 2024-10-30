@@ -65,17 +65,11 @@ namespace Qupcakery
         public void SetMode(GameManagement.GameMode mode)
         {
             GameObject regIcon = gameObject.transform.Find("RegularIcon").gameObject;
-            GameObject expIcon = gameObject.transform.Find("ExperimentIcon").gameObject;
 
             switch (mode)
             {
                 case GameManagement.GameMode.Regular:
                     regIcon.SetActive(true);
-                    expIcon.SetActive(false);
-                    break;
-                case GameManagement.GameMode.Experiment:
-                    regIcon.SetActive(false);
-                    expIcon.SetActive(true);
                     break;
                 default:
                     throw new System.ArgumentException("Unrecognized mode: " + mode);

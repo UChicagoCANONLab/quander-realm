@@ -85,9 +85,10 @@ namespace Qupcakery
                 icon.transform.SetParent(thisCanvas.transform, false);
                 icon.transform.SetParent(parentObject.transform);
                 icon.name = "Level" + currentLevelCount;
+
                 LevelSelectorButtonManager m =
                     icon.GetComponent<LevelSelectorButtonManager>();
-                m.SetMode(GameManagement.Instance.gameMode);
+                m.SetMode(GameManagement.GameMode.Regular);
 
                 // If player has completed this level
                 if (currentLevelCount <= GameManagement.Instance.game.gameStat.MaxLevelCompleted)
