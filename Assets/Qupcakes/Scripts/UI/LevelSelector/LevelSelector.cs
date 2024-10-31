@@ -61,6 +61,10 @@ namespace Qupcakery
                 panel.GetComponent<RectTransform>().localPosition = new Vector2(panelDimensions.width * (i - 1), 0);
                 SetupGrid(panel);
                 int numberOfIcons = (i == numberOfPanels) ? numberOfLevels - currentLevelCount : amountPerPage;
+                if (numberOfIcons == 28) // remove the daily puzzle
+                {
+                    numberOfIcons = 27;
+                }
                 LoadIcons(numberOfIcons, panel);
             }
 
