@@ -49,6 +49,8 @@ namespace Qupcakery
 
         public void SetBeltInd(int ind) { BeltInd = ind; }
 
+        GameManagement.GameMode mode;
+
         // Use this for initialization
         void Awake()
         {
@@ -56,6 +58,8 @@ namespace Qupcakery
 
             Patience = new Patience(customerData.MaxPatience,
                 customerData.PatienceFreezeTime);
+
+            
         }
 
         private void Start()
@@ -72,6 +76,8 @@ namespace Qupcakery
             // Subscribe to button event
             GameObjectsManagement.Button.GetComponent<ButtonController>().
                 ButtonPressed += OnCakeInDelivery;
+
+            mode = GameManagement.Instance.gameMode;
         }
 
         private void FixedUpdate()
@@ -88,7 +94,10 @@ namespace Qupcakery
                     }
                     break;
                 case CustomerStatus.Waiting:
-                    Patience.DecreasePatience(Time.fixedDeltaTime);
+                    if (mode == GameManagement.GameMode.Regular)
+                    {
+                        Patience.DecreasePatience(Time.fixedDeltaTime);
+                    }
                     break;
                 case CustomerStatus.ReactionInProgress:
                 case CustomerStatus.WaitingDeliveryToArrive:
