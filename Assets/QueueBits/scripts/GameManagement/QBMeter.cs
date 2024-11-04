@@ -11,7 +11,7 @@ public class QBMeter : MonoBehaviour
     // Start is called before the first frame update
     private float lucky, unlucky = 0;
 
-    public void Update(bool isLucky){
+    public void UpdateMeter(bool isLucky){
         if (isLucky)
         {
             lucky++;

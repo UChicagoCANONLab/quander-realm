@@ -25,12 +25,14 @@ namespace QueueBits
 		public GameObject pieceCPU100;
 		public GameObject pieceCPU75; 
 		public GameObject pieceCPU50; 
+		public GameObject pieceCPU00; 
 
 		[Header("Player Pieces")]
 		public TokenCounter tokenCounterPlayer;
 		public GameObject piecePlayer100;
 		public GameObject piecePlayer75;
 		public GameObject piecePlayer50;
+		public GameObject piecePlayer00;
 
 
 		[Header("Meter")]
@@ -277,18 +279,28 @@ namespace QueueBits
 
 					int p = Random.Range(0, 100);
 					if ((p < probability && isPlayersTurn) || (p >= probability && !isPlayersTurn)) {
-						if (isPlayersTurn && probability < 90)
+						if (isPlayersTurn)
 						{
-							meter.Update(true);
-						};
-						pieceColorObject = piecePlayer100;
+							if (probability < 90)
+							{
+								meter.UpdateMeter(true);
+							}
+							pieceColorObject = piecePlayer100;
+							
+						} else{
+							pieceColorObject = pieceCPU00;
+						}
+						// pieceColorObject = piecePlayer100;
 						numOutcome = (int)Piece.Player;
 					} else if ((p >= probability && isPlayersTurn) || (p < probability && !isPlayersTurn)){
 						if (isPlayersTurn)
 						{
-							meter.Update(false);
+							meter.UpdateMeter(false);
+							pieceColorObject = piecePlayer00;
+						} else{
+							pieceColorObject = pieceCPU100;
 						}
-						pieceColorObject = pieceCPU100;
+
 						numOutcome = (int)Piece.CPU;
 					}
 
@@ -326,13 +338,17 @@ namespace QueueBits
 				finalColor.GetComponent<Renderer>().enabled = false;
 
 				float distance = Vector3.Distance(startPosition, endPosition);
+				Debug.Log("Dropping " + isPlayersTurn);
 
 				float t = 0;
-				while (t < 1)
+				Debug.Log("t: " + isPlayersTurn);
+				float dropTime = 2.5f;
+				while (t < dropTime)
 				{
+					Debug.Log(t);
 					t += Time.deltaTime * GC.dropTime * ((GC.numRows - distance) + 1);
 
-					g.transform.position = Vector3.Lerp(startPosition, endPosition, t);
+					g.transform.position = Vector3.Lerp(startPosition, endPosition, t/dropTime);
 					yield return null;
 				}
 

@@ -19,7 +19,7 @@ namespace QueueBits
 		public int numRows = 6;
 		public int numColumns = 7;
 		public int numPiecesToWin = 4;
-		public float dropTime = 4f;
+		public float dropTime = 1f;
 
 		// Create new Data object when loaded
 		public Data myData = new Data();
