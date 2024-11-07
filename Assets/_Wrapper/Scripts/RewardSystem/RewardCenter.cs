@@ -15,5 +15,16 @@ namespace Wrapper
         [Header("Numerical Counters")]
         [SerializeField] private GameObject StarTracker;
         [SerializeField] private GameObject CoinTracker;
+
+
+        [Header("Animators")]
+        [SerializeField] private Animator RewardCenterAnimator;
+        [SerializeField] private Animator RewardJournalAnimator;
+
+
+        public void openRewardJournal() {
+            RewardCenterAnimator.SetBool("On", false);
+            RewardJournalAnimator.SetBool("On", true);
+        }
     }
 }

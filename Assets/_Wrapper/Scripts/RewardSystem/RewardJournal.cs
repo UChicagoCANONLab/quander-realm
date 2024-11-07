@@ -54,7 +54,7 @@ namespace Wrapper
         {
             PopulateJournal();
             //Events.ToggleLoadingScreen?.Invoke();
-            animator.SetBool("On", true);
+            // animator.SetBool("On", true);
             InitFirstPage();
         }
 
