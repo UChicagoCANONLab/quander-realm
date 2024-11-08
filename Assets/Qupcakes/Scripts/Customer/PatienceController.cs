@@ -11,6 +11,11 @@ namespace Qupcakery
 
         private void Start()
         {
+            if (GameManagement.Instance.gameMode == GameManagement.GameMode.Daily)
+            {
+                gameObject.GetComponent<Renderer>().enabled = false;
+                patienceBarFull.GetComponent<Renderer>().enabled = false;
+            }
             patienceBarFull.transform.localScale = new Vector2(1f, 1f);
         }
 
