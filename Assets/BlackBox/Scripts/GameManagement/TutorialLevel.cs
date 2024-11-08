@@ -38,17 +38,17 @@ namespace BlackBox
         };
 
         private string[] dialogueSeq = new string[] {
-            "Let's get started! Click Batty to send her into the graveyard", //(0,4)
-            "She passed right through! No treasure on this path or the one next to it", //(MISS) (highlight (0,4),(0,-1))
-            "Click here to move Batty", //(-1,2)
-            "Click Batty again to send her into the graveyard", //(-1,2)
-            "Oh! She bumped into something! There must be treasure in this row", //(HIT) (highlight (-1,2))
-            "Let's try here. Click this spot", //(-1,1)
-            "Now click Batty again", //(-1,1)
-            "Hm... Batty turned, there must be treasure diagonal from where she turned", //(DETOUR) (highlight (-1,1),(1,-1))
-            "Just to be sure... Let's try here", //(4,3)
-            "Click Batty one more time", //(4,3)
-            "Great, we found it! Click and drag a lantern to the correct spot", //(highlight (4,3),(3,4)) (2,2)
+            "Let's get started! Click Batty to send her into the graveyard.", //(0,4)
+            "She passed right through! No treasure on this path or the one next to it.", //(MISS) (highlight (0,4),(0,-1))
+            "Click here to move Batty.", //(-1,2)
+            "Click Batty again to send her into the graveyard.", //(-1,2)
+            "Oh! She bumped into something! There must be treasure in this row.", //(HIT) (highlight (-1,2))
+            "Let's try here. Click this spot.", //(-1,1)
+            "Now click Batty again.", //(-1,1)
+            "Hm... Batty turned, there must be treasure diagonal from where she turned.", //(DETOUR) (highlight (-1,1),(1,-1))
+            "Just to be sure... Let's try here.", //(4,3)
+            "Click Batty one more time.", //(4,3)
+            "Great, we found it! Click and drag a lantern to the correct spot.", //(highlight (4,3),(3,4)) (2,2)
             "Now let's send Wolfie to check! Congrats, you found the treasure!"
         };
 
@@ -169,6 +169,11 @@ namespace BlackBox
             if (currCell == parent.transform.GetChild(i).gameObject) { 
                 return; 
             } else {
+                // Disable original currCell if not null
+                if (currCell != null) { 
+                    currCell.GetComponent<Button>().interactable = false;
+                } 
+                // Set new currCell
                 currCell = parent.transform.GetChild(i).gameObject;
                 currCell.GetComponent<Button>().interactable = true;
                 currCell.GetComponent<Button>().onClick.AddListener(navCellNext);

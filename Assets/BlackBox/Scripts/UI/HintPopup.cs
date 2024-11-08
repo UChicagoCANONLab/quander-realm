@@ -40,10 +40,16 @@ namespace BlackBox
         }
 
         public void GiveHint() 
-        {
+        {   
+            // Don't give hints if not hints to give
             if (hintPairs.Count <= hintCounter) { 
                 WolfieAnimator.SetBool("IsOn", true);
                 return;    
+            }
+
+            // If not tutorial, penalize hints
+            if (BBEvents.GetLevel.Invoke().number != 1) {
+                BBEvents.DecrementEnergy.Invoke();
             }
 
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
