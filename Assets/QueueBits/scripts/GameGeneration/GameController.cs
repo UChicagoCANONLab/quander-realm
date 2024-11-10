@@ -43,6 +43,8 @@ namespace QueueBits
 		public GameMode2 GM2;
 		public GameMode3 GM3;
 
+		[Header("Meter")]
+		public GameObject meter;
 
 		// Initializes game based on level from static GameManager
 		void Start() {
@@ -57,6 +59,7 @@ namespace QueueBits
 			// Choose GameMode based on level number
 			if (LEVEL_NUMBER < 6) {
 				GM1.gameObject.SetActive(true);
+				meter.SetActive(false);
 			} else if (LEVEL_NUMBER < 11) {
 				GM2.gameObject.SetActive(true);
 			} else {
@@ -85,6 +88,10 @@ namespace QueueBits
 
 				myData.prefilledBoard = boardName;
 			}
+		}
+
+		public void GetHint(){
+			Debug.Log("Hint provided!");
 		}
 
 		// Ends game, sets display and saves relevant data
