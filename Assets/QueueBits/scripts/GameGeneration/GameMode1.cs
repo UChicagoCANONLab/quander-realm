@@ -20,6 +20,8 @@ namespace QueueBits
 		// public StarDisplay starDisplay;
 		public GameController GC;
 
+		private GameController tutorialController;
+
 		[Header("CPU Pieces")]
 		public TokenCounter tokenCounterCPU;
 		public GameObject pieceCPU100;
@@ -58,9 +60,27 @@ namespace QueueBits
 		private bool gameOver = false;
 		private int turnCounter = 0;
 
+		private bool started = false;
+
+
+
 
 		// Use this for initialization
-		public void Start()
+
+		public void Start(){
+
+		}
+
+		public void StartGame(GameController controller){
+			tutorialController = controller;
+			StartGame();
+
+		}
+
+		public void disconnectTutorial(){
+			tutorialController = null;
+		}
+		public void StartGame()
 		{
 			GC.StartGame();
 			
@@ -90,6 +110,7 @@ namespace QueueBits
 			CreateField();
 
 			isPlayersTurn = false;
+			started = true;
 		}
 
 
@@ -124,6 +145,9 @@ namespace QueueBits
 		// Update is called once per frame
 		public void Update()
 		{
+			if(!started){
+				return;
+			}
 			if (isCheckingForWinner || gameOver)
 				return;
 
@@ -180,6 +204,10 @@ namespace QueueBits
 
 				// delete probability from player's list
 				playerProbs[prob] -= 1;
+
+				if(tutorialController != null){
+					tutorialController.updateTutorial();
+				}
 
 				if (prob == 100) {
 					pieceTemp = piecePlayer100;
@@ -338,14 +366,14 @@ namespace QueueBits
 				finalColor.GetComponent<Renderer>().enabled = false;
 
 				float distance = Vector3.Distance(startPosition, endPosition);
-				Debug.Log("Dropping " + isPlayersTurn);
+				// Debug.Log("Dropping " + isPlayersTurn);
 
 				float t = 0;
-				Debug.Log("t: " + isPlayersTurn);
+				// Debug.Log("t: " + isPlayersTurn);
 				float dropTime = 2.5f;
 				while (t < dropTime)
 				{
-					Debug.Log(t);
+					// Debug.Log(t);
 					t += Time.deltaTime * GC.dropTime * ((GC.numRows - distance) + 1);
 
 					g.transform.position = Vector3.Lerp(startPosition, endPosition, t/dropTime);
@@ -366,6 +394,11 @@ namespace QueueBits
 					yield return null;
 
 				isPlayersTurn = !isPlayersTurn;
+				// Debug.Log("Dropped");
+				// Debug.Log(tutorialController);
+				if(tutorialController != null){
+					tutorialController.updateTutorial();
+				}
 				GC.DM.SwitchPlayer(isPlayersTurn);
 			}
 			isDropping = false;
