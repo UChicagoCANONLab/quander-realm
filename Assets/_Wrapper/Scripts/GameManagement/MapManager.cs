@@ -26,16 +26,15 @@ namespace Wrapper
             TryUnlockGames();
         }
         public void TryUnlockGames() {
-            if (StarTracker.ST.CheckUnlocked(Game.Circuits)) {
+            if (Events.GetGameUnlocked.Invoke(Game.Circuits)) {
                 Unlock(TL); // Unlock Tangle's Lair (Circuits)
             }
-            if (StarTracker.ST.CheckUnlocked(Game.QueueBits)) {
+            if (Events.GetGameUnlocked.Invoke(Game.QueueBits)) {
                 Unlock(QB); // Unlock QueueBits
             }
-            if (StarTracker.ST.CheckUnlocked(Game.BlackBox)) {
+            if (Events.GetGameUnlocked.Invoke(Game.BlackBox)) {
                 Unlock(BT); // Unlock Buried Treasure
             }
-            // StarTracker.ST.PrintDict();
         }
 
         /* 

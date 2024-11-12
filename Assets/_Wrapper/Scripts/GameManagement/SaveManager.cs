@@ -143,7 +143,7 @@ namespace Wrapper
             currentUserSave.id = "GUEST"; 
 	        Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             isUserLoggedIn = true;
-            StarTracker.ST.Invoke("InitStarTracker_Lite", 0.2f);
+            Events.InitializeStarTracker?.Invoke();
             return null;
 	    }
 
@@ -234,8 +234,7 @@ namespace Wrapper
                     }
                 }
             }
-
-            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
+            Events.InitializeStarTracker?.Invoke();
         }
 #else
         private IEnumerator LoginRoutine(string researchCode)
@@ -329,8 +328,7 @@ namespace Wrapper
                     }
                 }
             }
-
-            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
+            Events.InitializeStarTracker?.Invoke();
         }
 #endif
 

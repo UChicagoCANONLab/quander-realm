@@ -20,6 +20,9 @@ namespace Wrapper
         public static Func<Game, string> GetMinigameTitle;
         public static Action<Game> UnlockAndDisplayGame;
         public static Action DisplayAgeSelector;
+        public static Func<Game, bool> GetGameUnlocked;
+        public static Action InitializeStarTracker;
+        public static Action ResetStarCounts;
 
         /// Screen Fading ///
         public static Action<Action, float> ScreenFadeMidAction;

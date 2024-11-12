@@ -115,7 +115,6 @@ namespace Wrapper
         {
             SceneManager.LoadScene(minigame.StartScene);
             currentGame = minigame.gameValue;
-            StarTracker.ST.gameObject.SetActive(false);
         }
 
         void BackToMain()
@@ -125,11 +124,10 @@ namespace Wrapper
             {
                 Events.CloseLoginScreen?.Invoke();
                 Events.ToggleTitleScreen?.Invoke(false);
-                StarTracker.ST.Invoke("InitStarTracker", 0.2f);
+                Events.InitializeStarTracker?.Invoke();
             }
             Events.PlayMusic?.Invoke("W_Music");
             currentGame = Game.None;
-            StarTracker.ST.gameObject.SetActive(true);
         }
 
         private void ToggleLoadingScreen()
