@@ -23,6 +23,7 @@ namespace Wrapper
         public static Func<Game, bool> GetGameUnlocked;
         public static Action InitializeStarTracker;
         public static Action ResetStarCounts;
+        public static Action InitializeMap;
 
         /// Screen Fading ///
         public static Action<Action, float> ScreenFadeMidAction;

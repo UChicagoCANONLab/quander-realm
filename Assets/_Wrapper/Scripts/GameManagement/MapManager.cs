@@ -14,6 +14,16 @@ namespace Wrapper
 
         private string prefix = "MapCanvas/MapPanel";
 
+
+        private void OnEnable()
+        {
+            Events.InitializeMap += InitMap;
+        }
+        private void OnDisable() 
+        {
+            Events.InitializeMap -= InitMap;
+        }
+
         /* 
         Functions to initialize map and unlock games
 

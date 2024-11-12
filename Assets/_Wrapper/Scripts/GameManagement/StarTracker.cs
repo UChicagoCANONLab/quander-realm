@@ -28,14 +28,16 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.GetGameUnlocked += CheckUnlocked;
-            Events.InitializeStarTracker += InitStarTracker;
+            // Events.InitializeStarTracker += InitStarTracker;
+            Events.InitializeStarTracker += DelayInitTrackers;
             Events.ResetStarCounts += ResetStarCounts;
         }
 
         private void OnDisable()
         {
             Events.GetGameUnlocked -= CheckUnlocked;
-            Events.InitializeStarTracker -= InitStarTracker;
+            // Events.InitializeStarTracker -= InitStarTracker;
+            Events.InitializeStarTracker -= DelayInitTrackers;
             Events.ResetStarCounts -= ResetStarCounts;
         }
 
@@ -160,15 +162,21 @@ namespace Wrapper
 
         // Function to Initialize the StarTracker, called during LoginRoutine in SaveManager
 
-        public void InitStarTracker_Lite() {
+       /*  public void InitStarTracker_Lite() {
             ResetStarCounts();
             GameObject.Find("MapCanvas/MapPanel").GetComponent<MapManager>().InitMap();
+        } */
+
+        public void DelayInitTrackers() {
+            Invoke("InitStarTracker", 0.5f);
         }
 
+
         public void InitStarTracker() {
+            // DelayInitialization();
 #if LITE_VERSION
             ResetStarCounts();
-            GameObject.Find("MapCanvas/MapPanel").GetComponent<MapManager>().InitMap();
+            // GameObject.Find("MapCanvas/MapPanel").GetComponent<MapManager>().InitMap();
 #else
             // InitTTStars();
             // InitQCStars();
@@ -179,12 +187,13 @@ namespace Wrapper
             foreach (Game minigame in games) {
                 initMinigameStars(minigame);
             }
-            ResetTotalStars();
+            ResetTotal();
 
             // ResetStarDisplay();
-            GameObject.Find("MapCanvas/MapPanel").GetComponent<MapManager>().InitMap();
+            // GameObject.Find("MapCanvas/MapPanel").GetComponent<MapManager>().InitMap();
             // PrintDict();
 #endif
+            Events.InitializeMap?.Invoke();
         }
 
 
@@ -192,15 +201,15 @@ namespace Wrapper
         Updating star display and dictionary 
         */
 
-        public void ResetTotalStars() {
+        public void ResetTotal() {
             int i = 0;
             i += starQupcakery.starsWon;
             i += starTwinTanglement.starsWon;
             i += starTanglesLair.starsWon;
             i += starQueueBits.starsWon;
             i += starBuriedTreasure.starsWon;
+            
             starTotal.SetStarDisplay(i);
-
             TotalStars = i;
             scoreNumber.text = $"{i}";
         }
@@ -245,6 +254,11 @@ namespace Wrapper
         /* 
         Loading TotalStars from each game 
         */
+
+        private IEnumerator DelayInitialization() {
+            Debug.Log("DELAY");
+            yield return new WaitForSeconds(0.1f);
+        }
 
 
         private void initMinigameStars(Game game) {
