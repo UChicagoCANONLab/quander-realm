@@ -33,9 +33,9 @@ RectTransform:
   m_Father: {fileID: 8560836167869573886}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 75, y: -25}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1329995108000208791
@@ -168,9 +168,9 @@ RectTransform:
   m_Father: {fileID: 8560836167869573886}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 25, y: -25}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1236501927897925412
@@ -220,8 +220,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8560836167869573886}
-  - component: {fileID: 8939456327449306321}
   - component: {fileID: 5376448892051248729}
+  - component: {fileID: 8939456327449306321}
   m_Layer: 5
   m_Name: StarTracker
   m_TagString: Untagged
@@ -251,6 +251,29 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5376448892051248729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5589919996332164183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b79b4c4d0647e4649be530387c2d0170, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  starTotal: {fileID: 0}
+  starTotalMain: {fileID: 0}
+  starQupcakery: {fileID: 0}
+  starTwinTanglement: {fileID: 0}
+  starTanglesLair: {fileID: 0}
+  starQueueBits: {fileID: 0}
+  starBuriedTreasure: {fileID: 0}
+  starChallenge: {fileID: 0}
+  starTrackerPanelAnim: {fileID: 0}
+  TotalStars: 0
+  scoreNumber: {fileID: 7903200778590645054}
 --- !u!114 &8939456327449306321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,17 +300,3 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &5376448892051248729
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5589919996332164183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b79b4c4d0647e4649be530387c2d0170, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TotalStars: 0
-  scoreNumber: {fileID: 7903200778590645054}

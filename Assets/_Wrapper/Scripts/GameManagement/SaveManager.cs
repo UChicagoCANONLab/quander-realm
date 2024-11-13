@@ -143,6 +143,8 @@ namespace Wrapper
             currentUserSave.id = "GUEST"; 
 	        Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             isUserLoggedIn = true;
+
+            Events.ResetStarCounts?.Invoke();
             Events.InitializeStarTracker?.Invoke();
             return null;
 	    }
@@ -234,6 +236,7 @@ namespace Wrapper
                     }
                 }
             }
+            Events.ResetStarCounts?.Invoke();
             Events.InitializeStarTracker?.Invoke();
         }
 #else
@@ -328,6 +331,7 @@ namespace Wrapper
                     }
                 }
             }
+            Events.ResetStarCounts?.Invoke();
             Events.InitializeStarTracker?.Invoke();
         }
 #endif
