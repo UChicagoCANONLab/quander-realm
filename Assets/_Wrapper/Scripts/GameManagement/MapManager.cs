@@ -12,8 +12,6 @@ namespace Wrapper
         public GameObject QB;
         public GameObject BT;
 
-        private string prefix = "MapCanvas/MapPanel";
-
 
         private void OnEnable()
         {
@@ -26,39 +24,31 @@ namespace Wrapper
 
         /* 
         Functions to initialize map and unlock games
-
         */
+        
         public void InitMap() {
-            // StarTracker.ST.PrintDict();
-            Lock(BT);
-            Lock(QB);
-            Lock(TL);
-            TryUnlockGames();
+            // Lock(BT);
+            // Lock(QB);
+            // Lock(TL);
+            // TryUnlockGames();
+
+            TL.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.Circuits);
+            QB.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.QueueBits);
+            BT.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.BlackBox);
         }
-        public void TryUnlockGames() {
+
+
+        /* public void TryUnlockGames() {
             if (Events.GetGameUnlocked.Invoke(Game.Circuits)) {
-                Unlock(TL); // Unlock Tangle's Lair (Circuits)
+                TL.GetComponent<MinigameButton>().interactable = true;
             }
             if (Events.GetGameUnlocked.Invoke(Game.QueueBits)) {
-                Unlock(QB); // Unlock QueueBits
+                QB.GetComponent<MinigameButton>().interactable = true;
             }
             if (Events.GetGameUnlocked.Invoke(Game.BlackBox)) {
-                Unlock(BT); // Unlock Buried Treasure
+                BT.GetComponent<MinigameButton>().interactable = true;
             }
-        }
+        } */
 
-        /* 
-        Functions to lock and unlock games 
-        */
-
-        public void Unlock(GameObject game) {
-            game.GetComponent<MinigameButton>().enabled = true;
-            GameObject.Find($"{prefix}/{game.name}/Locked").SetActive(false);
-        }
-
-        public void Lock(GameObject game) {
-            game.GetComponent<MinigameButton>().enabled = false;
-            GameObject.Find($"{prefix}/{game.name}/Locked").SetActive(true);
-        }
     }
 }

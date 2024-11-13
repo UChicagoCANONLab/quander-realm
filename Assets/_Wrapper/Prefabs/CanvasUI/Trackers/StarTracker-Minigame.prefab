@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 5816681241598780409}
   - component: {fileID: 5616482299238148478}
   - component: {fileID: 4254830071675865473}
+  - component: {fileID: 7945399282159313107}
   m_Layer: 5
   m_Name: StarTracker-Minigame
   m_TagString: Untagged
@@ -156,9 +157,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starDisplay: {fileID: 4945409816974039284}
+  starsWon: 0
+  gameUnlocked: 1
   totalStars: 0
   minigame: 6
-  gameUnlocked: 1
+  animator: {fileID: 7945399282159313107}
+--- !u!95 &7945399282159313107
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841093802564948710}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 59e4e43fbdd454e03b721d2cb6ffc43e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1960690545275953661
 GameObject:
   m_ObjectHideFlags: 0
