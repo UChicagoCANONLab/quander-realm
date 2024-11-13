@@ -9,37 +9,34 @@ namespace Wrapper
     public class Trackers : MonoBehaviour 
     {
 
-        [SerializeField] private StarTracker starTotal;
-        [SerializeField] private StarTracker starTotalMain;
+        [Header("StarTrackers on Panel")]
+        [SerializeField] private StarTracker starTotal;        
         
         [SerializeField] private StarTracker starQupcakery;
         [SerializeField] private StarTracker starTwinTanglement;
         [SerializeField] private StarTracker starTanglesLair;
         [SerializeField] private StarTracker starQueueBits;
         [SerializeField] private StarTracker starBuriedTreasure;
-
-        // [SerializeField] private StarTracker[] starMinigames;
-        // ORDER: 0-Qupcakery, 1-TwinTanglement, 2-Tangle's Lair, 3-QueueBits, 4-Buried Treasure
         
         [SerializeField] private StarTracker starChallenge;
 
+        
+        [Header("General Trackers at top of screen")]
+        [SerializeField] private TMP_Text totalStarsTMP; 
+        private int totalStars; 
+        [SerializeField] private TMP_Text totalCoinsTMP;
+        private int totalCoins;
+        [SerializeField] private TMP_Text streakLengthTMP;
+        private int streakLength;
+
+        
+        [Header("Animator")]
         [SerializeField] private Animator trackerAnimator;
+        
         private bool panelVisible = false;
-
-
-        public int TotalStars; 
-        public TMP_Text scoreNumber; 
-
         private Game[] games = new Game[] {
             Game.Qupcakes, Game.Labyrinth, Game.Circuits, Game.QueueBits, Game.BlackBox
         };
-        /* public Dictionary<Game, bool> gameUnlocked = new Dictionary<Game, bool>() {
-            {Game.BlackBox, false},
-            {Game.Circuits, false},
-            {Game.Labyrinth, true},
-            {Game.QueueBits, false},
-            {Game.Qupcakes, true}
-        }; */
 
 
 
@@ -60,19 +57,8 @@ namespace Wrapper
         }
 
 
-
-        public void ToggleStarPanel() {
-            panelVisible = !panelVisible;
-            trackerAnimator.SetBool("ShowPanel", panelVisible);
-        }
-
-
-
-
-
-
+        // Checks if game is unlocked, and if it is, changes display on panel
         public bool CheckUnlocked(Game game) {
-            // if (gameUnlocked[game]) return true;
 #if LITE_VERSION
             switch(game) {
                 case Game.Qupcakes: return true;
@@ -80,27 +66,24 @@ namespace Wrapper
                 case Game.Circuits:
                     if (starQupcakery.starsWon >= 12) {
                         Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
-                        // gameUnlocked[Game.Circuits] = true;
-                        // starTanglesLair.gameUnlocked = true;
                         starTanglesLair.SetGameUnlocked(true);
                         return true;
                     } break;
+
                 case Game.QueueBits:
                     // No pop-up
-                    // gameUnlocked[Game.QueueBits] = true;
-                    // starQueueBits.gameUnlocked = true;
                     starQueueBits.SetGameUnlocked(true);
                     return true;
                     break;
+
                 case Game.BlackBox:
                     RecountTotal();
                     if (starTotal.starsWon >= 50) {
                         Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
-                        // gameUnlocked[Game.BlackBox] = true;
-                        // starBuriedTreasure.gameUnlocked = true;
                         starBuriedTreasure.SetGameUnlocked(true);
                         return true;
                     } break;
+
                 default:
                     return false;
             }
@@ -111,29 +94,26 @@ namespace Wrapper
                 case Game.Circuits:
                     if (starQupcakery.starsWon >= 27) {
                         Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
-                        // gameUnlocked[Game.Circuits] = true;
-                        // starTanglesLair.gameUnlocked = true;
                         starTanglesLair.SetGameUnlocked(true);
                         return true;
                     } break;
+
                 case Game.QueueBits:
                     if (starQupcakery.starsWon >= 10 
                     && starTwinTanglement.starsWon >= 10) {
                         Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.QueueBits);
-                        // gameUnlocked[Game.QueueBits] = true;
-                        // starQueueBits.gameUnlocked = true;
                         starQueueBits.SetGameUnlocked(true);
                         return true;
                     } break;
+
                 case Game.BlackBox:
                     RecountTotal();
                     if (starTotal.starsWon >= 120) {
                         Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
-                        // gameUnlocked[Game.BlackBox] = true;
-                        // starBuriedTreasure.gameUnlocked = true;
                         starBuriedTreasure.SetGameUnlocked(true);
                         return true;
                     } break;
+
                 default:
                     return false;
             }
@@ -142,6 +122,9 @@ namespace Wrapper
         }
 
 
+
+        // Initializes or updates trackers to reflect number of stars in data
+        // Needs a slight delay to allow the user save to load when logging in
         public void DelayInitTrackers() {
             Invoke("InitStarTracker", 0.1f);
         }
@@ -159,38 +142,8 @@ namespace Wrapper
         }
 
 
-        public void RecountTotal() {
-            int i = 0;
-            i += starQupcakery.starsWon;
-            i += starTwinTanglement.starsWon;
-            i += starTanglesLair.starsWon;
-            i += starQueueBits.starsWon;
-            i += starBuriedTreasure.starsWon;
-            
-            starTotal.SetStarDisplay(i);
-            TotalStars = i;
-            scoreNumber.text = $"{i}";
-        }
-
-
-        // Resets all the counts to be zero for when NewGame button pressed
-        public void ResetStarCounts() {
-            starQupcakery.ResetStarDisplay();
-            starTwinTanglement.ResetStarDisplay();
-            starTanglesLair.ResetStarDisplay();
-            starQueueBits.ResetStarDisplay();
-            starBuriedTreasure.ResetStarDisplay();
-            
-            starTotal.ResetStarDisplay();
-            TotalStars = 0;
-            scoreNumber.text = "0";
-
-            // gameUnlocked[Game.BlackBox] = false;
-            // gameUnlocked[Game.Circuits] = false;
-            // gameUnlocked[Game.QueueBits] = false;
-        }
-
-
+        // Loads user save to retrieve total stars from each game
+        // Each game has slightly different notation for their saves
         private void initMinigameStars(Game game) {
             switch(game) {
                 case Game.Qupcakes:
@@ -211,35 +164,65 @@ namespace Wrapper
                     string data_TL = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Circuits);
                     Circuits.Circuits_SaveData data2_TL = JsonUtility.FromJson<Circuits.Circuits_SaveData>(data_TL);
                     if (data2_TL != null) {
-                        // starTanglesLair.gameUnlocked = CheckUnlocked(Game.Circuits);
                         CheckUnlocked(Game.Circuits);
                         starTanglesLair.SetStarDisplay(data2_TL.totalStars);
-                        // gameUnlocked[Game.Circuits] = CheckUnlocked(Game.Circuits);
                     } return;
                 
                 case Game.QueueBits:
                     string data_QB = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.QueueBits);
                     QueueBits.QBSaveData data2_QB = JsonUtility.FromJson<QueueBits.QBSaveData>(data_QB);
                     if (data2_QB != null) {
-                        // starQueueBits.gameUnlocked = CheckUnlocked(Game.QueueBits);
                         CheckUnlocked(Game.QueueBits);
                         starQueueBits.SetStarDisplay(data2_QB.totalStars);
-                        // gameUnlocked[Game.QueueBits] = CheckUnlocked(Game.QueueBits);
                     } return;
 
                 case Game.BlackBox:
                     string data_BT = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.BlackBox);
                     BlackBox.BBSaveData data2_BT = JsonUtility.FromJson<BlackBox.BBSaveData>(data_BT);
                     if (data2_BT != null) {
-                        // starBuriedTreasure.gameUnlocked = CheckUnlocked(Game.BlackBox);
                         CheckUnlocked(Game.BlackBox);
                         starBuriedTreasure.SetStarDisplay(data2_BT.totalStars);
-                        // gameUnlocked[Game.BlackBox] = CheckUnlocked(Game.BlackBox);
                     } return;
 
                 default: return;
-                }
             }
         }
-        
+
+
+        // Resets all the counts to be zero for when NewGame button pressed
+        public void ResetStarCounts() {
+            starQupcakery.ResetStarDisplay();
+            starTwinTanglement.ResetStarDisplay();
+            starTanglesLair.ResetStarDisplay();
+            starQueueBits.ResetStarDisplay();
+            starBuriedTreasure.ResetStarDisplay();
+            
+            starTotal.ResetStarDisplay();
+            totalStars = 0;
+            totalStarsTMP.text = "0";
+        }
+
+
+        // Updates the total star count on panel and main screen
+        public void RecountTotal() {
+            int i = 0;
+            i += starQupcakery.starsWon;
+            i += starTwinTanglement.starsWon;
+            i += starTanglesLair.starsWon;
+            i += starQueueBits.starsWon;
+            i += starBuriedTreasure.starsWon;
+            
+            starTotal.SetStarDisplay(i);
+            totalStars = i;
+            totalStarsTMP.text = $"{i}";
+        }
+
+
+        // Toggles the panel with star counts
+        public void ToggleStarPanel() {
+            panelVisible = !panelVisible;
+            trackerAnimator.SetBool("ShowPanel", panelVisible);
+        }
+
+    }    
 }

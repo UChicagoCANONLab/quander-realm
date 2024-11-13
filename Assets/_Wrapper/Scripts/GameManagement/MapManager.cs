@@ -22,33 +22,11 @@ namespace Wrapper
             Events.InitializeMap -= InitMap;
         }
 
-        /* 
-        Functions to initialize map and unlock games
-        */
-        
-        public void InitMap() {
-            // Lock(BT);
-            // Lock(QB);
-            // Lock(TL);
-            // TryUnlockGames();
-
+        public void InitMap() {            
             TL.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.Circuits);
             QB.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.QueueBits);
             BT.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.BlackBox);
         }
-
-
-        /* public void TryUnlockGames() {
-            if (Events.GetGameUnlocked.Invoke(Game.Circuits)) {
-                TL.GetComponent<MinigameButton>().interactable = true;
-            }
-            if (Events.GetGameUnlocked.Invoke(Game.QueueBits)) {
-                QB.GetComponent<MinigameButton>().interactable = true;
-            }
-            if (Events.GetGameUnlocked.Invoke(Game.BlackBox)) {
-                BT.GetComponent<MinigameButton>().interactable = true;
-            }
-        } */
-
+        
     }
 }

@@ -8,8 +8,10 @@ namespace Wrapper
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            if (interactable) {
+            if (interactable) 
+            {
                 base.OnPointerClick(eventData);
+
                 Events.ScreenFadeMidAction?.Invoke(() => Events.OpenMinigame?.Invoke(minigame), 0.2F);
             }
         }
