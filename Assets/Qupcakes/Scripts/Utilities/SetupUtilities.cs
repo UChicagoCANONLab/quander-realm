@@ -18,7 +18,6 @@ namespace Qupcakery
             GameObject gatePrefab, GameObject beltPrefab)
         {
             button.SetActive(true);
-            //panel.SetActive(true);
 
             CreateTable(tablePrefab, level.TotalBeltCnt);
             CreateBelts(beltPrefab, level.TotalBeltCnt);
@@ -93,80 +92,6 @@ namespace Qupcakery
 
             Vector2 position = new Vector2(-1.2f, displacement + beltIndex * distanceBetweenBelt);
             return position;
-        }
-
-        // Given Level object, set up the scene for the experiment level
-        public static void SetupExperimentScene(Level level, GameObject button,
-            GameObject tablePrefab, GameObject panel, GameObject panelPrefab,
-            GameObject gatePrefab, GameObject beltPrefab, GameObject cakePrefab)
-        {
-            button.SetActive(true);
-            panel.SetActive(true);
-            CreateTable(tablePrefab, level.TotalBeltCnt);
-            CreateBelts(beltPrefab, level.TotalBeltCnt);
-            GameObject cakePanel = CreateCakePanel(panelPrefab);
-
-            SetupCakePanel(level, cakePanel, cakePrefab);
-            SetupGatePanel(level, gatePrefab);
-            // Set up gate slots
-            GateSlots.Instance.InitializeSlots(level.TotalBeltCnt, maxGatePerBelt);
-            // Set up cake tracker
-            CakeOnBeltTracker.Instance.InitializeTracker(level.TotalBeltCnt);
-        }
-
-
-        // Instantiate cake-bank panel (selection panel) at the left side of the player screen 
-        private static GameObject CreateCakePanel(GameObject panelPrefab)
-        {
-            GameObject panel = Object.Instantiate(panelPrefab, new Vector3(-7.6f, -0.05f, 0f), Quaternion.identity);
-            panel.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
-            panel.transform.localScale = new Vector3(0.6f, 1f, 1f);
-            return panel;
-        }
-
-        // Set up cake panel 
-        static void SetupCakePanel(Level level, GameObject cakePanel, GameObject cakePrefab)
-        {
-            //int levelInd = level.LevelInd;
-
-            //Vector3 panelPosition = cakePanel.transform.position;
-
-            //GameObject vanillaCake =
-            //    Object.Instantiate(cakePrefab,
-            //    panelPosition + new Vector3(0f, 2.5f, 0f), Quaternion.identity);
-            //AssetCostumeUtilities.SetCakeBoxCostume(vanillaCake,
-            //    new Cake(GameCakeType.Vanilla));
-            //    vanillaCake.GetComponent<ExperimentCakeBoxController>()
-            //        .SetCakeBoxState(new Cake(GameCakeType.Vanilla));
-
-            //GameObject chocolateCake =
-            //    Object.Instantiate(cakePrefab,
-            //    panelPosition + new Vector3(0f, 0.8f, 0f), Quaternion.identity);
-            //AssetCostumeUtilities.SetCakeBoxCostume(chocolateCake,
-            //    new Cake(GameCakeType.Chocolate));
-            //chocolateCake.GetComponent<ExperimentCakeBoxController>()
-            //        .SetCakeBoxState(new Cake(GameCakeType.Chocolate));
-
-            //if (levelInd >= 11)
-            //{
-            //    GameObject vanillaChocolate =
-            //    Object.Instantiate(cakePrefab,
-            //    panelPosition + new Vector3(0f, -0.9f, 0f), Quaternion.identity);
-            //    AssetCostumeUtilities.SetCakeBoxCostume(vanillaChocolate,
-            //        new Cake(GameCakeType.Vanilla50_Chocolate50));
-            //    vanillaChocolate.GetComponent<ExperimentCakeBoxController>()
-            //        .SetCakeBoxState(new Cake(GameCakeType.Vanilla50_Chocolate50));
-
-
-            //    GameObject chocolateVanilla =
-            //        Object.Instantiate(cakePrefab,
-            //        panelPosition + new Vector3(0f, -2.5f, 0f), Quaternion.identity);
-            //    AssetCostumeUtilities.SetCakeBoxCostume(chocolateVanilla,
-            //        new Cake(GameCakeType.Vanilla50_Chocolate50_Neg));
-            //    chocolateVanilla.GetComponent<ExperimentCakeBoxController>()
-            //        .SetCakeBoxState(new Cake(GameCakeType.Vanilla50_Chocolate50_Neg));
-
-            //}
         }
 
     }

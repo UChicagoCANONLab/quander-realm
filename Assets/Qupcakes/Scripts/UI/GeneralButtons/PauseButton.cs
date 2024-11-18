@@ -15,11 +15,7 @@ namespace Qupcakery
         private void Awake()
         {
             image = GetComponent<Image>();
-
-            if (GameUtilities.gameIsPaused)
-            {
-                SetUnpauseSprite();
-            }
+            SetUnpauseSprite();
         }
 
         public void PauseGame()

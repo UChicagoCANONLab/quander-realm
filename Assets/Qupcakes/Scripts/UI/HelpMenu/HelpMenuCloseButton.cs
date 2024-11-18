@@ -18,8 +18,11 @@ namespace Qupcakery
                 helpPanel.SetActive(false);
 
                 // Unpause game
-                GameUtilities.UnpauseGame();
-                pauseButton.GetComponent<PauseButton>().SetPauseSprite();
+                if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
+                {
+                    GameUtilities.UnpauseGame();
+                    pauseButton.GetComponent<PauseButton>().SetPauseSprite();
+                }
 
                 // Reactivate top bar
                 if (topBar != null)

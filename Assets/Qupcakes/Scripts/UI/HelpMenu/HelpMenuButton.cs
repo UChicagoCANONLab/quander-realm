@@ -22,8 +22,19 @@ namespace Qupcakery
                 helpPanel.SetActive(true);
                 startPanel.SetActive(true);
 
-                // pause game
-                GameUtilities.PauseGame();
+                int[] level_gates = GameManagement.Instance.GetCurrentLevel().AvailableGates;
+
+                GameObject.Find("NOT").SetActive(level_gates[(int)GateType.NOT] > 0);
+                GameObject.Find("CNOT").SetActive(level_gates[(int)GateType.CNOT] > 0);
+                GameObject.Find("SWAP").SetActive(level_gates[(int)GateType.SWAP] > 0);
+                GameObject.Find("H").SetActive(level_gates[(int)GateType.H] > 0);
+                GameObject.Find("Z").SetActive(level_gates[(int)GateType.Z] > 0);
+
+                if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
+                {
+                    // pause game
+                    GameUtilities.PauseGame();
+                }
 
                 // Deactivate top bar
                 topBar.SetActive(false);
