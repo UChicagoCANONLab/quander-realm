@@ -10,6 +10,7 @@ namespace Labyrinth
     {
         public GameObject litePanel;
         public GameObject[] levelButtons;
+        // public GameObject[] movementButtons;
 
 
         private void OnEnable() 
