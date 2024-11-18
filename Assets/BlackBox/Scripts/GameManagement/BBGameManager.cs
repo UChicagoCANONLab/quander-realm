@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.IO;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace BlackBox
     {
         #region Inspector Variables
 
-        [SerializeField] private string firstLevelID = "L01"; // todo: refactor
+        [SerializeField] private string firstLevelID = "4.1"; // todo: refactor
         [SerializeField] private float rewardPopupDelay = 0.5f;
 
         [Header("Level Select")]
@@ -22,6 +23,7 @@ namespace BlackBox
         [SerializeField] GameObject levelSelect;
         [SerializeField] LevelButton[] levelButtons;
         [SerializeField] QButton gameBackButton;
+        [SerializeField] Animator backgroundAnimator;
 
         [Header("Grid Containers")]
         [SerializeField] private GameObject mainGridGO;
@@ -43,15 +45,18 @@ namespace BlackBox
 
         [Tooltip("Set width/height of the grid that corresponds to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         [SerializeField] 
-        private int[] gridSizeValues = new int[3] { 5, 6, 7 }; //todo: name these using an editor script to make it easier to understand
+        // private int[] gridSizeValues = new int[3] { 5, 6, 7 }; //todo: name these using an editor script to make it easier to understand
+        private int[] gridSizeValues = new int[4] { 5, 6, 7, 4 };
 
         [Tooltip("Set cell size of the main grid that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         [SerializeField] 
-        private float[] nodeCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        // private float[] nodeCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        private float[] nodeCellSizeValues = new float[4] { 200f, 166.66f, 142.86f, 250f };
 
         [Tooltip("Set cell size of the external grids that correspond to the above \"Grid Size\".\n\n0 = Small, \n1 = Medium. \n2 = Large")]
         [SerializeField] 
-        private float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        // private float[] navCellSizeValues = new float[3] { 200f, 166.66f, 142.86f };
+        private float[] navCellSizeValues = new float[4] { 200f, 166.66f, 142.86f, 250f };
 
         #endregion
 
@@ -70,7 +75,7 @@ namespace BlackBox
             Events.PlayMusic?.Invoke("BB_Music");
 
             InitSaveData();
-            InitLevel();
+            InitLevel(); 
             //StartLevel();     moved into InitLevel with level select 
         }
 
@@ -103,6 +108,7 @@ namespace BlackBox
             BBEvents.PlayLevel += SetAndPlayLevel;
             gameBackButton.onClick.AddListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect += ShowLevelSelect;
+            BBEvents.GetLevel += GetLevelObject;
         }
 
         private void OnDisable()
@@ -125,6 +131,7 @@ namespace BlackBox
             BBEvents.PlayLevel -= SetAndPlayLevel;
             gameBackButton.onClick.RemoveListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect -= ShowLevelSelect;
+            BBEvents.GetLevel -= GetLevelObject;
         }
 
         #endregion
@@ -143,7 +150,7 @@ namespace BlackBox
                 Debug.LogError(e.Message);
             }
 
-            if (saveData == null) {
+            if ((saveData == null) || saveData.livesPerLevel.Length < 24) {
                 saveData = new BBSaveData();
             }
             int temp = 0;
@@ -156,9 +163,7 @@ namespace BlackBox
             string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
 
-            // decide if we show level select or first level
-            if (levelID == firstLevelID) StartLevel();
-            else ShowLevelSelect(true);
+            ShowLevelSelect(true);
         }
 
         private void StartLevel()
@@ -166,9 +171,18 @@ namespace BlackBox
             ShowLevelSelect(false);
             Events.ToggleBackButton?.Invoke(false);
 
+            BBEvents.UpdateHUDLevelNumber?.Invoke(level.number);
             BBEvents.ShowTutorial?.Invoke(saveData, level);
+            BBEvents.ClearHints?.Invoke();
             CreateAllGrids(level.gridSize);
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions);
+
+            if (level.levelID == firstLevelID) {
+                BBEvents.InitiateTutorialLevel?.Invoke(); 
+            }
+            if (level.number <= 6) {
+                backgroundAnimator.SetBool("FogActive", false);
+            } else { backgroundAnimator.SetBool("FogActive", true); }
 
             totalNodes = level.nodePositions.Length;
             livesRemaining = totalLives;
@@ -184,8 +198,9 @@ namespace BlackBox
         {
             if (level.nextLevelID == string.Empty)
             {
-                Debug.LogFormat("Next level not set for the level: {0}", level.levelID);
-                Quit();
+                // Debug.LogFormat("Next level not set for the level: {0}", level.levelID);
+                // Quit();
+                ShowLevelSelect(true);
                 return;
             }   
 
@@ -233,6 +248,10 @@ namespace BlackBox
                 }
                 // PLAY END OF LEVEL DIALOGUE IF APPLICABLE
                 TrySetNewLevelSave();
+
+                if (level.levelID == firstLevelID) {
+                    BBEvents.EndTutorialLevel?.Invoke();
+                }
             }
             else
             {
@@ -300,6 +319,10 @@ namespace BlackBox
             }
         }
 
+        public Level GetLevelObject() {
+            return level;
+        }
+
         #endregion
 
         #region Level Select
@@ -319,8 +342,12 @@ namespace BlackBox
 
             if (level.levelID != saveData.currentLevelID)
             {
-                string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
-                level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
+                // if (saveData.currentLevelID[0] == 'L') {
+                //     level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
+                // } else {
+                    string levelID = saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : saveData.currentLevelID;
+                    level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
+                // }
             }
 
             try
@@ -345,7 +372,9 @@ namespace BlackBox
                 int levelNum = ParseLevelID(level.levelID) + (saveData.completed ? 1 : 0);
                 if (levelNum > 0)
                 {
-                    for (int i = 0; i < levelButtons.Length; i++) levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+                    for (int i = 0; i < levelButtons.Length; i++) {
+                        levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+                    }
                 }
             }
         }
@@ -489,24 +518,27 @@ namespace BlackBox
 
         public static int ParseLevelID(string levelID)
         {
-            int levelNum;
-            if (int.TryParse(levelID.Trim('L'), out levelNum)) return levelNum;
-            else
-            {
-                Debug.LogWarning("Unable to parse current level ID: " + levelID);
-                return -1;
-            }
+            if (levelID == "") return -1;
+
+            int[] temp = levelID.Split(".").Select(int.Parse).ToArray();
+            int levelNum = ((temp[0]-4) * 6) + temp[1];
+            
+            return levelNum;
         }
 
         public static string ParseLevelID(int level)
         {
-            string levelText = "L";
-            if (level < 10) levelText += ("0" + level.ToString());
-            else levelText += level.ToString();
+            int prefix = (level/6) + 4; 
+            int num = level % 6;
+
+            string levelText = $"{prefix}.{num}";
+            if (num==0) { levelText = $"{prefix-1}.6"; }
+
             return levelText;
         }
 
         public int GetLevelStars(int level) {
+            if (level >= saveData.livesPerLevel.Length) return 0;
             return saveData.livesPerLevel[level];
         }
     }

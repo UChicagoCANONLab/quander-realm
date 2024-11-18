@@ -14,6 +14,12 @@ namespace BlackBox
 
         /// Tutorial
         public static Action<BBSaveData, Level> ShowTutorial;
+        public static Action ShowHint;
+        public static Action<Vector3Int, Dir, Vector3Int, Dir> AppendHint;
+        public static Action ClearHints;
+        public static Action ShowInfo;
+        public static Action InitiateTutorialLevel;
+        public static Action EndTutorialLevel;
 
         /// Level Select
         public static Action<string> PlayLevel;
@@ -28,6 +34,8 @@ namespace BlackBox
         public static Action<Dir, Vector3Int> TestLinkHovered;
         public static Action DisableMolly;
         public static Action SendMollyIn;
+        public static Action<Vector3Int, Dir, Vector3Int, Dir> AppendFlyingCoordinates;
+        public static Action StartFlyingAnimation;
 
         /// Interaction Delays
         public static Func<bool> IsInteractionDelayed;
@@ -51,11 +59,13 @@ namespace BlackBox
         public static Action CheckWolfieReady;
         public static Action<bool> ToggleWolfieButton;
         public static Action<int> UpdateHUDWolfieLives;
+        public static Action<int> UpdateHUDLevelNumber;
         public static Action<WinState> UpdateEndPanel;
         public static Action StartNextLevel;
         public static Action RestartLevel;
         public static Action QuitBlackBox;
         public static Action CompleteBlackBox;
         public static Func<int> LanternPlacedCount;
+        public static Func<Level> GetLevel;
     }
 }
