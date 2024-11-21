@@ -25,6 +25,7 @@ namespace BlackBox
         private Vector3[] coordinateSeq = new Vector3[] {
             new Vector3(0,4,0),
             new Vector3(0,-1, 1),
+            new Vector3(0,0, 4),
             new Vector3(-1,2,0),
             new Vector3(-1,2,0),
             new Vector3(-1,2, 1),
@@ -40,7 +41,8 @@ namespace BlackBox
         private string[] dialogueSeq = new string[] {
             "Let's get started! Click Batty to send her into the graveyard.", //(0,4)
             "She passed right through! No treasure on this path or the one next to it.", //(MISS) (highlight (0,4),(0,-1))
-            "Click here to move Batty.", //(-1,2)
+            "Notice that when you send Batty, your energy meter at the top goes down...",
+            "So be careful! Click here to move Batty.", //(-1,2)
             "Click Batty again to send her into the graveyard.", //(-1,2)
             "Oh! She bumped into something! There must be treasure in this row.", //(HIT) (highlight (-1,2))
             "Let's try here. Click this spot.", //(-1,1)
@@ -103,8 +105,8 @@ namespace BlackBox
                 Invoke("InitiateTutorial", 0.1f);
             }
             // If lantern placed correctly, end tutorial 
-            if ((goalCell != null) && (goalCell.GetComponent<NodeCell>().HasFlag()) && (tutorialSeq < 11)) {
-                tutorialSeq = 10;
+            if ((goalCell != null) && (goalCell.GetComponent<NodeCell>().HasFlag()) && (tutorialSeq < 12)) {
+                tutorialSeq = 11;
                 tutorialNext();
             }
         }
@@ -144,6 +146,11 @@ namespace BlackBox
 
             if (coor.z != 0) {
                 if (coor.z == 3) { return; }
+                if (coor.z == 4) {
+                    nextButton.SetActive(true);
+                    BBEvents.IndicateEmptyMeter?.Invoke();
+                    return;
+                }
                 
                 BBEvents.ShowHint?.Invoke();
                 highlightCurrentCell(); // highlight start cell
