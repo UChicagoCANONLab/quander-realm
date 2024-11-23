@@ -23,6 +23,8 @@ namespace BlackBox
 
         private int maxSize;
         private int hintCounter = 0;
+
+        private Level currLevel;
     
 
         private void OnEnable() 
@@ -48,7 +50,7 @@ namespace BlackBox
             }
 
             // If not tutorial, penalize hints
-            if (BBEvents.GetLevel.Invoke().number != 1) {
+            if (currLevel.number != 1) {
                 // BBEvents.DecrementEnergy.Invoke();
                 BBEvents.LoseLife.Invoke();
             }
@@ -63,10 +65,30 @@ namespace BlackBox
 
             if (start.x==end.x && start.y==end.y) { // Direct Hit
                 switch(start.z) {
-                    case 1:     turn.x = 0.5f;         break;  // Left
-                    case 2:     turn.y = 0.5f;         break;  // Bottom
-                    case 3:     turn.x = maxSize-1.5f; break;  // Right
-                    case 4:     turn.y = maxSize-1.5f; break;  // Top
+                    case 1:     // Left
+                        foreach (Vector2Int node in currLevel.nodePositions) {
+                            if (node.y == start.y) {
+                                turn.x = node.x - 0.5f;
+                            }
+                        } break;
+                    case 2:     // Bottom
+                        foreach (Vector2Int node in currLevel.nodePositions) {
+                            if (node.x == start.x) {
+                                turn.y = node.y - 0.5f;
+                            }
+                        } break;
+                    case 3:     // Right
+                        foreach (Vector2Int node in currLevel.nodePositions) {
+                            if (node.y == start.y) {
+                                turn.x = node.x + 0.5f;
+                            }
+                        } break;
+                    case 4:     // Top
+                        foreach (Vector2Int node in currLevel.nodePositions) {
+                            if (node.x == start.x) {
+                                turn.y = node.y + 0.5f;
+                            }
+                        } break;
                 }
             }
             else if (start.x==end.x || start.y==end.y) { // Miss
@@ -131,7 +153,8 @@ namespace BlackBox
             Vector3Int[] pair = new Vector3Int[] {orig, dest};
             Dir[] dirPair = new Dir[] {origDir, destDir};
 
-            size = BBEvents.GetLevel.Invoke().gridSize;
+            currLevel = BBEvents.GetLevel.Invoke();
+            size = currLevel.gridSize;
             maxSize = gridSizeValues[(int)size];
 
             for (int i=0; i<2; i++) {
