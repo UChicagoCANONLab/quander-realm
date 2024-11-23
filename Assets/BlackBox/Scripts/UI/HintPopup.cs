@@ -99,10 +99,15 @@ namespace BlackBox
                         } break;
                 }
             }
-            else if (start.x==end.x || start.y==end.y) { // Miss
-                turn.x = (start.x+end.x)/2;
-                turn.y = (start.y+end.y)/2;
-                cornerOn = false;
+            else if (start.x==end.x || start.y==end.y) { // Miss or Multiple Detours
+                if (start.z != end.z) {
+                    turn.x = (start.x+end.x)/2;
+                    turn.y = (start.y+end.y)/2;
+                    cornerOn = false;    
+                }
+                else {
+                    // Oh god I'm going to have to change everything 
+                }
             } 
             else { // Detour
                 cornerOffset = new Vector3(30, 30, 0);

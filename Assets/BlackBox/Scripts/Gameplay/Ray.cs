@@ -64,9 +64,10 @@ namespace BlackBox
                         BBEvents.AppendHint?.Invoke(origin, originDirection, destination, destDirection);
                     }
                 }
-                else // different cell
+                else { // multiple detours
                     BBEvents.MarkDetourUnits?.Invoke(originDirection, origin, destDirection, destination, GetDetourPairNumber());
-                    // MAYBE ADD THIS TO HINTS??
+                    BBEvents.AppendHint?.Invoke(origin, originDirection, destination, destDirection);
+                }
             }
             else // diff entry/exit direction
             {
