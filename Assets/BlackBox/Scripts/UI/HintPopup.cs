@@ -52,7 +52,7 @@ namespace BlackBox
             // If not tutorial, penalize hints
             if (currLevel.number != 1) {
                 // BBEvents.DecrementEnergy.Invoke();
-                BBEvents.LoseLife.Invoke();
+                // BBEvents.LoseLife.Invoke();
             }
 
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
@@ -63,29 +63,37 @@ namespace BlackBox
             bool cornerOn = true;
             Vector3 cornerOffset = new Vector3(0,0,0);
 
-            if (start.x==end.x && start.y==end.y) { // Direct Hit
+            if (start.x==end.x && start.y==end.y) { // Direct Hit or Reflect        
                 switch(start.z) {
                     case 1:     // Left
+                        turn.x = maxSize;
                         foreach (Vector2Int node in currLevel.nodePositions) {
-                            if (node.y == start.y) {
+                            if ((node.y == start.y || node.y == start.y + 1) // Direct Hit || Reflect
+                            && (node.x < turn.x)) {  // Closest node
                                 turn.x = node.x - 0.5f;
                             }
                         } break;
                     case 2:     // Bottom
+                        turn.y = maxSize;
                         foreach (Vector2Int node in currLevel.nodePositions) {
-                            if (node.x == start.x) {
+                            if ((node.x == start.x || node.x == start.x + 1)
+                            && (node.y < turn.y)) {
                                 turn.y = node.y - 0.5f;
                             }
                         } break;
                     case 3:     // Right
+                        turn.x = 0;
                         foreach (Vector2Int node in currLevel.nodePositions) {
-                            if (node.y == start.y) {
+                            if ((node.y == start.y || node.y == start.y + 1)
+                            && (node.x > turn.x)) {
                                 turn.x = node.x + 0.5f;
                             }
                         } break;
                     case 4:     // Top
+                        turn.y = 0;
                         foreach (Vector2Int node in currLevel.nodePositions) {
-                            if (node.x == start.x) {
+                            if ((node.x == start.x || node.x == start.x + 1)
+                            && (node.y > turn.y)) {
                                 turn.y = node.y + 0.5f;
                             }
                         } break;
