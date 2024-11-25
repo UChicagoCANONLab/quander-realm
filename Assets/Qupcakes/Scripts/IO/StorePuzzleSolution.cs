@@ -9,6 +9,8 @@ namespace Qupcakery
         LevelManager lm;
         ButtonController bc;
 
+        public GameObject button;
+
         // Use this for initialization
         void Start()
         {

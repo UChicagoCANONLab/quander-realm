@@ -22,8 +22,6 @@ namespace Qupcakery
         public void GiveHint()
         {
 
-            print(solution);
-
             int[] gatesInUse = new int[5];
             
             GateType hintGateType = GateType.None;
@@ -63,6 +61,7 @@ namespace Qupcakery
 
             // Find a gate to hint
             GameObject[] gateObjects = GameObject.FindGameObjectsWithTag("Gate");
+            bool gaveHint = false;
             foreach(GameObject gate in gateObjects)
             {
                 SpriteResolver resolver = gate.GetComponent<SpriteResolver>();
@@ -75,17 +74,24 @@ namespace Qupcakery
                         if (resolver.GetCategory() == "OnBelt")
                         {
                             gate.GetComponent<Animation>().Play("GateMotion");
+                            gaveHint = true;
                             break;
                         }
                     } else { // Otherwise, find a gate on the bench
                         if (resolver.GetCategory() == "Basic")
                         {
                             gate.GetComponent<Animation>().Play("GateMotion");
+                            gaveHint = true;
                             break;
                         }
                     }
                     
                 }
+            }
+
+            if (!gaveHint)
+            {
+                GameObject.Find("HintPanel").SetActive(true);
             }
 
         }

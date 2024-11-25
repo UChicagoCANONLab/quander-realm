@@ -34,7 +34,6 @@ namespace Qupcakery
             switch(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
             {
                 case "QU_DailyLevel":
-                    Debug.Log("DailyLevel");
                     gameManager.SetGameMode(GameManagement.GameMode.Daily);
                     gameManager.SetCurrentLevel(28);
                     level = gameManager.GetCurrentLevel();
