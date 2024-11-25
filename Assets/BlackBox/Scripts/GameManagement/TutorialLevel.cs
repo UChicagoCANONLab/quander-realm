@@ -59,7 +59,6 @@ namespace BlackBox
         private int tutorialSeq = 0;
 
 
-
         void OnEnable() 
         {
             BBEvents.InitiateTutorialLevel += InitiateTutorial;
@@ -71,7 +70,7 @@ namespace BlackBox
             BBEvents.EndTutorialLevel -= EndTutorial;
         }
 
-
+        /* Called from BBEvents */
         public void InitiateTutorial() {
             TutorialAnimator.SetBool("TutorialActive", true);
 
@@ -90,13 +89,12 @@ namespace BlackBox
             // turn off HUD stuff
         }
 
+        /* Called from BBEvents */
         public void EndTutorial() {
             TutorialAnimator.SetBool("TutorialActive", false);
-            // turn on HUD stuff
-            // disable animator
-            // reset navcells
         }
 
+        
         void FixedUpdate() {
             // If starting tutorial didn't work, try again
             if ((rightGridGO.transform.GetChild(0).gameObject.GetComponent<Button>().interactable) 
@@ -111,6 +109,7 @@ namespace BlackBox
             }
         }
 
+        /* "Next" called from clicking button on Wolfie popup */
         public void tutorialNext() {
             tutorialSeq++;
 
@@ -127,6 +126,12 @@ namespace BlackBox
             tutorialText.text = dialogueSeq[tutorialSeq];
         }
 
+        /* Helper function */
+        public void endDialogue() {
+            TutorialAnimator.SetBool("WolfieOn", false);
+        }
+
+        /* "Next" called from clicking cell */
         public void navCellNext() {
             if ((tutorialSeq == 0)
             || (currCell.GetComponent<NavCell>().isMollyAt && !currCell.GetComponent<Animator>().GetBool("BatTravelOut"))
@@ -135,34 +140,35 @@ namespace BlackBox
             }
         }
 
+        /* Disables all cells to init grid for sequenced clicking */
         public void disableNavCells(GameObject parent) {
             for (int i=0; i<4; i++) { //size of tutorial grid, 4x4
                 parent.transform.GetChild(i).gameObject.GetComponent<Button>().interactable = false;
             }
         }
 
+        /* Enables cell in sequence, plus does nother actions depending on z-value */
         public void enableNavCell(Vector3 coor) {
-            // Debug.Log($"Sequence: {tutorialSeq}");
-
             if (coor.z != 0) {
-                if (coor.z == 3) { return; }
-                if (coor.z == 4) {
+                if (coor.z == 3) { return; } // end
+                if (coor.z == 4) { // indicate energy meter
                     nextButton.SetActive(true);
                     BBEvents.IndicateEmptyMeter?.Invoke();
                     return;
                 }
+                BBEvents.ShowHint?.Invoke(); // show path line
+                highlightCurrentCell(); // highlight start cell of path
                 
-                BBEvents.ShowHint?.Invoke();
-                highlightCurrentCell(); // highlight start cell
-                if (coor.z == 1) {
+                if (coor.z == 1) { // show helper images
                     nextButton.SetActive(true);
                     TutorialAnimator.SetBool("InfoOn", true);
                 } 
-                else if (coor.z == 2) {
+                else if (coor.z == 2) { // highlight goal cell
                     goalCell.GetComponent<Animator>().SetBool("NodeCell/Flagged", true);
                 } 
             }
 
+            // finding current cell game object
             GameObject parent = null; int i = -1;
             switch(coor.x){
                 case -1:    parent = leftGridGO; i = (int)coor.y;   break;
@@ -173,6 +179,7 @@ namespace BlackBox
                 case 4:     parent = topGridGO; i = (int)coor.x;    break;
             }
 
+            // If already the current cell, do nothing
             if (currCell == parent.transform.GetChild(i).gameObject) { 
                 return; 
             } else {
@@ -185,15 +192,10 @@ namespace BlackBox
                 currCell.GetComponent<Button>().interactable = true;
                 currCell.GetComponent<Button>().onClick.AddListener(navCellNext);
             }
-            if (coor.z!=0) { Invoke("highlightCurrentCell", 0.25f); } // highlight end cell
+            if (coor.z!=0) { Invoke("highlightCurrentCell", 0.25f); } // highlight end cell of path
         }
 
-        // Helper functions
-        public void endDialogue() {
-            TutorialAnimator.SetBool("WolfieOn", false);
-        }
-
-
+        /* Still working on this one */
         public void highlightCurrentCell() {
             if (currCell == null) { return; }
 
