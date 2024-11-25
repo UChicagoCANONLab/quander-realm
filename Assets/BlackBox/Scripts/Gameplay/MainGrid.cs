@@ -142,6 +142,11 @@ namespace BlackBox
 
             energyUnits--;
             BBEvents.DecrementEnergy?.Invoke();
+            if (energyUnits <= ((int)BBEvents.GetNumEnergyUnits?.Invoke() / 3))
+            {
+                BBEvents.IndicateEmptyMeter?.Invoke();
+            }
+
             ray = new Ray(rayOrigin, rayDirection, width, height);
 
             while (RayInPlay())

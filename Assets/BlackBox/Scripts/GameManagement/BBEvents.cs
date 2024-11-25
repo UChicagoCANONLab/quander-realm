@@ -48,17 +48,18 @@ namespace BlackBox
         public static Action<bool> ToggleLanternHeld;
         public static Func<Transform> GetFrontMount;
 
-        /// Energy Bar
+        /// Energy Bar and Lives
         public static Action DecrementEnergy;
         public static Action IndicateEmptyMeter;
         public static Action InitEnergyBar;
         public static Func<int> GetNumEnergyUnits;
+        public static Action<int> UpdateHUDWolfieLives;
+        public static Action LoseLife;
 
         /// Level Submission
         public static Action CheckWinState;
         public static Action CheckWolfieReady;
         public static Action<bool> ToggleWolfieButton;
-        public static Action<int> UpdateHUDWolfieLives;
         public static Action<int> UpdateHUDLevelNumber;
         public static Action<WinState> UpdateEndPanel;
         public static Action StartNextLevel;

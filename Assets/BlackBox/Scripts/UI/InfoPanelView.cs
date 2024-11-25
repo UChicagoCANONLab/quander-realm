@@ -11,26 +11,27 @@ namespace BlackBox
         [SerializeField] private TextMeshProUGUI header = null;
         [SerializeField] private TextMeshProUGUI subHeader = null;
         
-        [SerializeField] private string[] subHeaderTexts = null;
-        /* {    "Click on a path icon to review the meaning",
-                "A tombstone is diagonal from the point where Batty turned",
+        private string[] subHeaderTexts = new string[] {
+                "Click on a path icon to review the meaning",
+                "A tombstone is diagonal from the point where Batty turned.",
                 "There are no tombstones on this path or the one next to it!",
-                "Batty bumped into a tombstone! There must be one on this path (not sure where)",
-                "If there's two tombstones diagonally, Batty will turn around (not sure where)"
-        }; */
-        [SerializeField] private string[] subHeaderTexts2 = null;
-        /* {    "",
+                "Batty bumped into a tombstone! There must be one on this path.", //, but you don't know where.",
+                // "If there's two tombstones diagonally, Batty will turn around." //You don't know exactly where they are."
+                "If Batty flies between two tombstones, she will turn around."
+        };
+        private string[] subHeaderTexts2 = new string[] {
+                "",
                 "Batty can turn multiple times if there's multiple headstones on the path!",
                 "",
                 "Be aware - Batty might run into multiple headstones on the same path!",
                 ""
-        }; */
-        [SerializeField] private string[] tutorialTexts = null;
-        /* {    "Wolfie needs to find the tombstones, and Molly is helping in bat form",
-                "Molly can't talk when she's a bat, so she uses these symbols to give us hints",
-                "When you think you know where a tombstone is, mark it with a lantern"
+        };
+        private string[] tutorialTexts = new string[] {
+                "Wolfie needs to find the tombstones, and Molly is helping in bat form.",
+                "Molly can't talk when she's a bat, so she uses these symbols to give us hints.",
+                "When you think you know where a tombstone is, mark it with a lantern.",
                 "Find all the tombstones before you run out of energy or stars!"
-        }; */
+        };
 
         [Header("Image Sprites")]
         [SerializeField] private Sprite[] iconImages = null;

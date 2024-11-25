@@ -23,6 +23,8 @@ namespace BlackBox
 
         private int maxSize;
         private int hintCounter = 0;
+
+        private Level currLevel;
     
 
         private void OnEnable() 
@@ -40,10 +42,17 @@ namespace BlackBox
         }
 
         public void GiveHint() 
-        {
+        {   
+            // Don't give hints if not hints to give
             if (hintPairs.Count <= hintCounter) { 
                 WolfieAnimator.SetBool("IsOn", true);
                 return;    
+            }
+
+            // If not tutorial, penalize hints
+            if (currLevel.number != 1) {
+                // BBEvents.DecrementEnergy.Invoke();
+                // BBEvents.LoseLife.Invoke();
             }
 
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
@@ -54,18 +63,51 @@ namespace BlackBox
             bool cornerOn = true;
             Vector3 cornerOffset = new Vector3(0,0,0);
 
-            if (start.x==end.x && start.y==end.y) { // Direct Hit
+            if (start.x==end.x && start.y==end.y) { // Direct Hit or Reflect        
                 switch(start.z) {
-                    case 1:     turn.x = 0.5f;         break;  // Left
-                    case 2:     turn.y = 0.5f;         break;  // Bottom
-                    case 3:     turn.x = maxSize-1.5f; break;  // Right
-                    case 4:     turn.y = maxSize-1.5f; break;  // Top
+                    case 1:     // Left
+                        turn.x = maxSize;
+                        foreach (Vector2Int node in currLevel.nodePositions) {
+                            if ((node.y == start.y || node.y == start.y + 1) // Direct Hit || Reflect
+                            && (node.x < turn.x)) {  // Closest node
+                                turn.x = node.x - 0.5f;
+                            }
+                        } break;
+                    case 2:     // Bottom
+                        turn.y = maxSize;
+                        foreach (Vector2Int node in currLevel.nodePositions) {
+                            if ((node.x == start.x || node.x == start.x + 1)
+                            && (node.y < turn.y)) {
+                                turn.y = node.y - 0.5f;
+                            }
+                        } break;
+                    case 3:     // Right
+                        turn.x = 0;
+                        foreach (Vector2Int node in currLevel.nodePositions) {
+                            if ((node.y == start.y || node.y == start.y + 1)
+                            && (node.x > turn.x)) {
+                                turn.x = node.x + 0.5f;
+                            }
+                        } break;
+                    case 4:     // Top
+                        turn.y = 0;
+                        foreach (Vector2Int node in currLevel.nodePositions) {
+                            if ((node.x == start.x || node.x == start.x + 1)
+                            && (node.y > turn.y)) {
+                                turn.y = node.y + 0.5f;
+                            }
+                        } break;
                 }
             }
-            else if (start.x==end.x || start.y==end.y) { // Miss
-                turn.x = (start.x+end.x)/2;
-                turn.y = (start.y+end.y)/2;
-                cornerOn = false;
+            else if (start.x==end.x || start.y==end.y) { // Miss or Multiple Detours
+                if (start.z != end.z) {
+                    turn.x = (start.x+end.x)/2;
+                    turn.y = (start.y+end.y)/2;
+                    cornerOn = false;    
+                }
+                else {
+                    // Oh god I'm going to have to change everything 
+                }
             } 
             else { // Detour
                 cornerOffset = new Vector3(30, 30, 0);
@@ -124,7 +166,8 @@ namespace BlackBox
             Vector3Int[] pair = new Vector3Int[] {orig, dest};
             Dir[] dirPair = new Dir[] {origDir, destDir};
 
-            size = BBEvents.GetLevel.Invoke().gridSize;
+            currLevel = BBEvents.GetLevel.Invoke();
+            size = currLevel.gridSize;
             maxSize = gridSizeValues[(int)size];
 
             for (int i=0; i<2; i++) {
