@@ -12,7 +12,7 @@ namespace Qupcakery
         public GameObject button;
 
         // Use this for initialization
-        void Start()
+        public void Initialize()
         {
             lm = GameObject.Find("LevelManager").GetComponent<LevelManager>();
             bc = GameObject.Find("Button(Clone)").GetComponent<ButtonController>();

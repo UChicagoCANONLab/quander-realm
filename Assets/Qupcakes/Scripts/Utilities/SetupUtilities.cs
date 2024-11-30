@@ -18,6 +18,7 @@ namespace Qupcakery
             GameObject gatePrefab, GameObject beltPrefab)
         {
             button.SetActive(true);
+            GameObject.Find("PuzzleSolutionSaver").GetComponent<StorePuzzleSolution>().Initialize();
 
             CreateTable(tablePrefab, level.TotalBeltCnt);
             CreateBelts(beltPrefab, level.TotalBeltCnt);
