@@ -83,8 +83,10 @@ namespace Qupcakery
 
             /* Dispatch first batch */
             Dispatcher.DispatchNewBatch();
+
         }
 
+        /* Only called after the dialogue-based tutorial ends. */
         private void StartLevel()
         {
             /* Subscribe to events that trigger level to end */

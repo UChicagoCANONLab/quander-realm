@@ -92,8 +92,14 @@ namespace Qupcakery
             if (!gaveHint)
             {
                 GameObject.Find("HintPanel").SetActive(true);
+                Invoke("EndHintPanel", 5);
             }
 
+        }
+
+        private void EndHintPanel()
+        {
+            GameObject.Find("HintPanel").SetActive(false);
         }
 
     }

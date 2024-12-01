@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using CT = Qupcakery.GameCakeType;
+using UnityEngine;
 
 /*
  * Level information : goal, time constraint, puzzle setup, solution
@@ -164,7 +162,7 @@ namespace Qupcakery
         private void SetLevel1()
         {
             UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
-            AvailableGates[(int)GateType.NOT] = 1;
+            AvailableGates[(int)GateType.NOT] = 1;            
 
             Puzzles[0].UpdatePuzzle(0, 0);
             Puzzles[1].UpdatePuzzle(0, 1);
@@ -188,6 +186,7 @@ namespace Qupcakery
             };
 
             TotalPuzzleCnt = 8;
+
         }
 
         private void SetLevel2()
