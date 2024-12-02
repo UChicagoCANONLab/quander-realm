@@ -16,6 +16,7 @@ namespace Qupcakery
         [SerializeField] public GameObject textObject;
         [SerializeField] public GameObject pointer;
         [SerializeField] public Text tutorialText;
+        [SerializeField] private Animator pointerAnimator;
 
         /* Tutorial Events:
          * Puzzle 1:
@@ -49,12 +50,13 @@ namespace Qupcakery
             "Nice work! I'm going to get back to baking now, but you can handle it from here!"
         };
 
-        private int tutorialSeq = 0;
+        private int tutorialSeq;
         GameManagement gm;
         ButtonController bc;
         GameObject notGate;
         GatePositionController gpc;
         CustomerManager cm;
+        
 
         private void Start()
         {
@@ -68,11 +70,11 @@ namespace Qupcakery
         public void InitiateQCTutorial()
         {
             gm.InTutorial = true;
+            tutorialSeq = 0;
             bc = GameObject.Find("Button(Clone)").GetComponent<ButtonController>();
             FindCustomer();
             notGate = GameObject.FindGameObjectWithTag("Gate");
             gpc = notGate.GetComponent<GatePositionController>();
-
             cm.ArrivedAtTable += TutorialNext;
             cm.CakeReceived += HideTutorial;
             if (cm.AtTable())
@@ -82,7 +84,8 @@ namespace Qupcakery
         }
 
         public void TutorialNext()
-        {   
+        {
+            
             switch (tutorialSeq)
             {
                 case 0:
@@ -91,12 +94,12 @@ namespace Qupcakery
                     ActivateButton();
                     DeactivateGate();
                     tutorialText.text = dialogueSeq[tutorialSeq];
-                    // Animation
 
                     tutorialSeq++;
                     break;
                 case 1:
                     ShowTutorial();
+                    pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
                     FindCustomer();
                     ActivateGate();
                     DeactivateButton();
@@ -107,6 +110,7 @@ namespace Qupcakery
                     tutorialSeq++;
                     break;
                 case 2:
+                    pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
                     ActivateButton();
                     DeactivateGate();
                     gpc.GateIsOnBelt -= TutorialNext;
@@ -116,6 +120,7 @@ namespace Qupcakery
                     break;
                 case 3:
                     ShowTutorial();
+                    pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
                     ActivateButton();
                     ActivateGate();
                     gm.InTutorial = false;
@@ -129,6 +134,7 @@ namespace Qupcakery
                 default:
                     break;
             }
+            
         }
 
         private void ShowTutorial()
