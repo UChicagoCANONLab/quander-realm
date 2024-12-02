@@ -23,6 +23,10 @@ namespace Qupcakery
         public GameMode gameMode { get; private set; }
         public bool GameIsPaused { get; private set; } = false;
 
+        public bool InTutorial { get; set; } = false;
+        public bool AllowGateMovement { get; set; } = true;
+
+
         public Game game { get; set; }
 
         private void Awake()

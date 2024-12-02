@@ -58,8 +58,6 @@ namespace Qupcakery
 
             Patience = new Patience(customerData.MaxPatience,
                 customerData.PatienceFreezeTime);
-
-            
         }
 
         private void Start()
@@ -94,7 +92,8 @@ namespace Qupcakery
                     }
                     break;
                 case CustomerStatus.Waiting:
-                    if (mode == GameManagement.GameMode.Regular)
+                    if (mode == GameManagement.GameMode.Regular && 
+                        !GameManagement.Instance.InTutorial)
                     {
                         Patience.DecreasePatience(Time.fixedDeltaTime);
                     }
@@ -222,6 +221,11 @@ namespace Qupcakery
                 animator.enabled = true;
             else
                 animator.enabled = false;
+        }
+
+        public bool AtTable()
+        {
+            return arrivedAtTable;
         }
 
     }
