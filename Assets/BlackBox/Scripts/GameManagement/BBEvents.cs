@@ -15,7 +15,7 @@ namespace BlackBox
         /// Tutorial
         public static Action<BBSaveData, Level> ShowTutorial;
         public static Action ShowHint;
-        public static Action<Vector3Int, Dir, Vector3Int, Dir> AppendHint;
+        public static Action<Vector3Int, Dir, Vector3Int, Dir, Marker> AppendHint;
         public static Action ClearHints;
         public static Action ShowInfo;
         public static Action InitiateTutorialLevel;
