@@ -102,14 +102,14 @@ namespace BlackBox
                     }
                     else { // Two detours, start.z == end.z
                         cornerOn2 = true;
-                        turn.y = start.y;
+                        turn.y = start.y; // so turn1==start and turn2==end
 
                         switch(start.z) {
                             case 1:     // Left
                                 turn.x = maxSize;
                                 foreach (Vector2Int node in currLevel.nodePositions) {
                                     if ((node.y == start.y + 1 || node.y == start.y - 1) // First detour
-                                    && (node.x < turn.x)) {  // Closest node
+                                    && (node.x - 1 < turn.x)) {  // Closest node
                                         turn.x = node.x - 1;
                                         turn2.x = node.x - 1;
                                     }
@@ -123,7 +123,7 @@ namespace BlackBox
                                 turn.y = maxSize;
                                 foreach (Vector2Int node in currLevel.nodePositions) {
                                     if ((node.x == start.x + 1 || node.x == start.x - 1) 
-                                    && (node.y < turn.y)) {  
+                                    && (node.y - 1 < turn.y)) {  
                                         turn.y = node.y - 1;
                                         turn2.y = node.y - 1;
                                     }
@@ -137,7 +137,7 @@ namespace BlackBox
                                 turn.x = 0;
                                 foreach (Vector2Int node in currLevel.nodePositions) {
                                     if ((node.y == start.y + 1 || node.y == start.y - 1) 
-                                    && (node.x > turn.x)) {  
+                                    && (node.x + 1 > turn.x)) {  
                                         turn.x = node.x + 1;
                                         turn2.x = node.x + 1;
                                     }
@@ -153,7 +153,7 @@ namespace BlackBox
                                 turn.y = 0;
                                 foreach (Vector2Int node in currLevel.nodePositions) {
                                     if ((node.x == start.x + 1 || node.x == start.x - 1) 
-                                    && (node.y > turn.y)) {  
+                                    && (node.y + 1 > turn.y)) {  
                                         turn.y = node.y + 1;
                                         turn2.y = node.y + 1;
                                     }
@@ -186,6 +186,9 @@ namespace BlackBox
                                 if ((node.y == start.y) && (node.x < turn.x)) {  // Closest node
                                     turn.x = node.x - 0.5f;
                                 }
+                            } 
+                            if (turn.x == maxSize) { // hint too complicated -- try next
+                                TryNextHint(); return;
                             } break;
                         case 2:     // Bottom
                             turn.y = maxSize;
@@ -193,6 +196,9 @@ namespace BlackBox
                                 if ((node.x == start.x) && (node.y < turn.y)) {
                                     turn.y = node.y - 0.5f;
                                 }
+                            } 
+                            if (turn.y == maxSize) { 
+                                TryNextHint(); return;
                             } break;
                         case 3:     // Right
                             turn.x = 0;
@@ -200,6 +206,9 @@ namespace BlackBox
                                 if ((node.y == start.y) && (node.x > turn.x)) {
                                     turn.x = node.x + 0.5f;
                                 }
+                            } 
+                            if (turn.x == 0) {
+                                TryNextHint(); return;
                             } break;
                         case 4:     // Top
                             turn.y = 0;
@@ -207,6 +216,9 @@ namespace BlackBox
                                 if ((node.x == start.x) && (node.y > turn.y)) {
                                     turn.y = node.y + 0.5f;
                                 }
+                            } 
+                            if (turn.y == 0) {
+                                TryNextHint(); return;
                             } break;
                     }
                     break;
@@ -214,40 +226,79 @@ namespace BlackBox
                 case Marker.Reflect:
                     // (start.x==end.x && start.y==end.y) && (node.y == start.y +1 (or -1))
                     // NEED TO CHECK FOR TURNS
+                    Vector2Int node1 = new Vector2Int(-1,-1);
+                    Vector2Int node2 = new Vector2Int(-1,-1);
+
                     switch(start.z) {
                         case 1:     // Left
                             turn.x = maxSize;
                             foreach (Vector2Int node in currLevel.nodePositions) {
-                                if ((node.y == start.y + 1 || node.y == start.y - 1) 
-                                && (node.x < turn.x)) {  // Closest node
+                                if ((node.y == start.y + 1) && (node.x - 0.5f <= turn.x)) { // closest node
                                     turn.x = node.x - 0.5f;
+                                    node1 = node;
+                                } else if ((node.y == start.y - 1) && (node.x - 0.5f <= turn.x)) {
+                                    turn.x = node.x - 0.5f;
+                                    node2 = node;
                                 }
+                            } if (node1.x != node2.x) {
+                                TryNextHint(); return;
                             } break;
                         case 2:     // Bottom
                             turn.y = maxSize;
                             foreach (Vector2Int node in currLevel.nodePositions) {
-                                if ((node.x == start.x + 1 || node.x == start.x - 1) 
-                                && (node.y < turn.y)) {
+                                // if ((node.x == start.x + 1 || node.x == start.x - 1) 
+                                // && (node.y < turn.y)) {
+                                //     turn.y = node.y - 0.5f;
+                                // }
+                                if ((node.x == start.x + 1) && (node.y - 0.5f <= turn.y)) { // closest node
                                     turn.y = node.y - 0.5f;
+                                    node1 = node;
+                                } else if ((node.x == start.x - 1) && (node.y - 0.5f <= turn.y)) {
+                                    turn.y = node.y - 0.5f;
+                                    node2 = node;
                                 }
+                            } if (node1.y != node2.y) {
+                                TryNextHint(); return;
                             } break;
                         case 3:     // Right
                             turn.x = 0;
                             foreach (Vector2Int node in currLevel.nodePositions) {
-                                if ((node.y == start.y + 1 || node.y == start.y - 1) 
-                                && (node.x > turn.x)) {
+                                // if ((node.y == start.y + 1 || node.y == start.y - 1) 
+                                // && (node.x > turn.x)) {
+                                //     turn.x = node.x + 0.5f;
+                                // }
+                                if ((node.y == start.y + 1) && (node.x + 0.5f >= turn.x)) { // closest node
                                     turn.x = node.x + 0.5f;
+                                    node1 = node;
+                                } else if ((node.y == start.y - 1) && (node.x + 0.5f >= turn.x)) {
+                                    turn.x = node.x + 0.5f;
+                                    node2 = node;
                                 }
+                            } if (node1.x != node2.x) {
+                                TryNextHint(); return;
                             } break;
                         case 4:     // Top
                             turn.y = 0;
                             foreach (Vector2Int node in currLevel.nodePositions) {
-                                if ((node.x == start.x + 1 || node.x == start.x - 1) 
+                                /* if ((node.x == start.x + 1 || node.x == start.x - 1) 
                                 && (node.y > turn.y)) {
                                     turn.y = node.y + 0.5f;
+                                } */
+                                if ((node.x == start.x + 1) && (node.y + 0.5f >= turn.y)) { // closest node
+                                    turn.y = node.y + 0.5f;
+                                    node1 = node;
+                                } else if ((node.x == start.x - 1) && (node.y + 0.5f >= turn.y)) {
+                                    turn.y = node.y + 0.5f;
+                                    node2 = node;
                                 }
+                            } if (node1.y != node2.y) {
+                                TryNextHint(); return;
                             } break;
                     }
+                    // Check if both nodes are present; otherwise, too complicated -- try next hint
+                    if (node1 == new Vector2Int(-1,-1) || node2 == new Vector2Int(-1,-1)) {
+                        TryNextHint(); return;
+                    } 
                     break;
 
                 default:
@@ -466,6 +517,10 @@ namespace BlackBox
             WolfieAnimator.SetBool("IsOn", false);
         }
 
+        public void TryNextHint() {
+            hintCounter++;
+            GiveHint();
+        }
 
     }
 }
