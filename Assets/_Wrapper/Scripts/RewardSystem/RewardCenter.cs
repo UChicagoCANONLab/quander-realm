@@ -20,11 +20,17 @@ namespace Wrapper
         [Header("Animators")]
         [SerializeField] private Animator RewardCenterAnimator;
         [SerializeField] private Animator RewardJournalAnimator;
+        [SerializeField] private Animator BadgeBulletinAnimator;
 
 
         public void openRewardJournal() {
             RewardCenterAnimator.SetBool("On", false);
             RewardJournalAnimator.SetBool("On", true);
+        }
+
+        public void openBadgeBulletin() {
+            RewardCenterAnimator.SetBool("On", false);
+            BadgeBulletinAnimator.SetBool("On", true);
         }
     }
 }

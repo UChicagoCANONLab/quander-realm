@@ -590,16 +590,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starTotal: {fileID: 0}
-  starTotalMain: {fileID: 0}
   starQupcakery: {fileID: 0}
   starTwinTanglement: {fileID: 0}
   starTanglesLair: {fileID: 0}
   starQueueBits: {fileID: 0}
   starBuriedTreasure: {fileID: 0}
   starChallenge: {fileID: 0}
-  starTrackerPanelAnim: {fileID: 0}
-  TotalStars: 0
-  scoreNumber: {fileID: 4211742542043242642}
+  totalStarsTMP: {fileID: 0}
+  totalCoinsTMP: {fileID: 0}
+  streakLengthTMP: {fileID: 0}
+  trackerAnimator: {fileID: 0}
 --- !u!114 &3157452768426651517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -900,6 +900,7 @@ MonoBehaviour:
   CoinTracker: {fileID: 7144607113632780088}
   RewardCenterAnimator: {fileID: 8477788545761185293}
   RewardJournalAnimator: {fileID: 0}
+  BadgeBulletinAnimator: {fileID: 0}
 --- !u!1 &2732212128305439499
 GameObject:
   m_ObjectHideFlags: 0
@@ -3035,16 +3036,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starTotal: {fileID: 0}
-  starTotalMain: {fileID: 0}
   starQupcakery: {fileID: 0}
   starTwinTanglement: {fileID: 0}
   starTanglesLair: {fileID: 0}
   starQueueBits: {fileID: 0}
   starBuriedTreasure: {fileID: 0}
   starChallenge: {fileID: 0}
-  starTrackerPanelAnim: {fileID: 0}
-  TotalStars: 0
-  scoreNumber: {fileID: 4834636131822248017}
+  totalStarsTMP: {fileID: 0}
+  totalCoinsTMP: {fileID: 0}
+  streakLengthTMP: {fileID: 0}
+  trackerAnimator: {fileID: 0}
 --- !u!1 &7866865123270777316
 GameObject:
   m_ObjectHideFlags: 0
@@ -3339,7 +3340,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 18381750294472573}
+        m_TargetAssemblyTypeName: Wrapper.RewardCenter, Assembly-CSharp
+        m_MethodName: openBadgeBulletin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &8812431247104036424
 Animator:
   serializedVersion: 4

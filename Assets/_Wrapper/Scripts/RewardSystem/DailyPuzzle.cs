@@ -34,7 +34,7 @@ namespace Wrapper
         public string[] answers;
 
         [SerializeField, ContentValue("Answers Image Path")]
-        public string[] answersImagePath;
+        public string answersImagePath;
 
         [SerializeField, ContentValue("Correct Answer")]
         public string correctAnswer;
