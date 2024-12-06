@@ -16,11 +16,16 @@ namespace Qupcakery
             manager = FindObjectOfType<LevelManager>();
             level = manager.level;
             solution = manager.solution;
-            
         }
 
         public void GiveHint()
         {
+
+            if (level == null)
+            {
+                level = manager.level;
+                solution = manager.solution;
+            }
 
             int[] gatesInUse = new int[5];
             
