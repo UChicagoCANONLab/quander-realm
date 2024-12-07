@@ -18,6 +18,9 @@ namespace Qupcakery
 
             if (GameUtilities.gameIsPaused) GameUtilities.UnpauseGame();
 
+            if (GameManagement.Instance.InTutorial) GameObject.Find("TutorialItems").
+                    GetComponent<QCTutorialLevel>().EndTutorial();
+
             GameObjectsManagement.ResetAllGameObjects();
             SceneManagementUtilities.LoadGameScene();
         }

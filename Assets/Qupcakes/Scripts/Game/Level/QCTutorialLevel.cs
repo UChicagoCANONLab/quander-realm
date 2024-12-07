@@ -9,10 +9,9 @@ namespace Qupcakery
 {
     public class QCTutorialLevel : MonoBehaviour
     {
-
         [Header("Sequenced Tutorial Objects")]
         [SerializeField] public GameObject chef;
-        [SerializeField] public GameObject textBox;
+        [SerializeField] public GameObject panel;
         [SerializeField] public GameObject textObject;
         [SerializeField] public GameObject pointer;
         [SerializeField] public Text tutorialText;
@@ -50,33 +49,37 @@ namespace Qupcakery
             "Nice work! I'm going to get back to baking now, but you can handle it from here!"
         };
 
-        private int tutorialSeq;
+        private int tutorialSeq = 0;
         GameManagement gm;
         ButtonController bc;
         GameObject notGate;
         GatePositionController gpc;
         CustomerManager cm;
-        
+
 
         private void Start()
         {
             gm = GameManagement.Instance;
             if (gm.GetCurrentLevelInd() == 1)
             {
-                Invoke("InitiateQCTutorial", 0.5f);
+                Invoke("InitiateQCTutorial", 0.2f);
             }
         }
 
         public void InitiateQCTutorial()
         {
             gm.InTutorial = true;
+
             tutorialSeq = 0;
             bc = GameObject.Find("Button(Clone)").GetComponent<ButtonController>();
+
             FindCustomer();
-            notGate = GameObject.FindGameObjectWithTag("Gate");
-            gpc = notGate.GetComponent<GatePositionController>();
             cm.ArrivedAtTable += TutorialNext;
             cm.CakeReceived += HideTutorial;
+
+            notGate = GameObject.FindGameObjectWithTag("Gate");
+            gpc = notGate.GetComponent<GatePositionController>();
+            
             if (cm.AtTable())
             {
                 TutorialNext();
@@ -85,7 +88,6 @@ namespace Qupcakery
 
         public void TutorialNext()
         {
-            
             switch (tutorialSeq)
             {
                 case 0:
@@ -140,7 +142,7 @@ namespace Qupcakery
         private void ShowTutorial()
         {
             chef.SetActive(true);
-            textBox.SetActive(true);
+            panel.SetActive(true);
             textObject.SetActive(true);
             pointer.SetActive(true);
         }
@@ -148,7 +150,7 @@ namespace Qupcakery
         private void HideTutorial()
         {
             chef.SetActive(false);
-            textBox.SetActive(false);
+            panel.SetActive(false);
             textObject.SetActive(false);
             pointer.SetActive(false);
         }
@@ -178,7 +180,7 @@ namespace Qupcakery
             cm = GameObject.Find("Monster(Clone)").GetComponent<CustomerManager>();
         }
 
-        private void EndTutorial()
+        public void EndTutorial()
         {
             cm.ArrivedAtTable -= TutorialNext;
             cm.CakeReceived -= HideTutorial;
