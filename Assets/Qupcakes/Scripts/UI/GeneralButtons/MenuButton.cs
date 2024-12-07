@@ -12,6 +12,9 @@ namespace Qupcakery
             if (GameObject.FindGameObjectsWithTag("InfoPanel").Length > 0)
                 return;
 
+            if (GameManagement.Instance.InTutorial) GameObject.Find("TutorialItems").
+                    GetComponent<QCTutorialLevel>().EndTutorial();
+
             GameObjectsManagement.ResetAllGameObjects();
             GameObjectsManagement.DeactiveAllGameObjects();
 

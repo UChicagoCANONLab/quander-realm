@@ -17,55 +17,30 @@ namespace Qupcakery
         [SerializeField] public Text tutorialText;
         [SerializeField] private Animator pointerAnimator;
 
-        /* Tutorial Events:
-         * Puzzle 1:
-         *      Activate play, deactivate gate
-         *      Dialogue: Looks like the cupcake on the conveyor is the one that the customer wants, so let's press Play to send it over!
-         *      Animation: Mouse towards play button, click on it
-         *      Transition: click on play button
-         *      
-         * Puzzle 2:
-         *      Activate gate, deactivate play
-         *      Dialogue: Oops, looks like I made the wrong cupcake here! Let's use the Flavor Inverter gate to change the cupcake flavor.
-         *      Animation: Click on gate, drag to belt
-         *      Transition: Gate on carousel
-         *      
-         *      Activate play, deactivate gate
-         *      Dialogue: That should work! Let's send our cupcake down the conveyor now.
-         *      Animation: Mouse towards play button, click on it
-         *      Transition: Click on play button
-         *      
-         * Puzzle 3:
-         *      Activate everything
-         *      Dialogue: Nice work! I'm going to get back to baking now, but you can handle it from here!
-         *      Transition: Click on play button
-         */
-
-        private string[] dialogueSeq = new string[]
-        {
-            "It looks like the cupcake on the conveyor is the one that the customer wants, so let's press Play to send it over!",
-            "Oops, looks like I made the wrong cupcake here! Let's use the Flavor Inverter gate to change the cupcake flavor.",
-            "That should work! Let's send our cupcake down the conveyor now.",
-            "Nice work! I'm going to get back to baking now, but you can handle it from here!"
-        };
-
+        private int levelInd;
         private int tutorialSeq = 0;
         GameManagement gm;
         ButtonController bc;
-        GameObject notGate;
+        GameObject tutorialGate;
         GatePositionController gpc;
         CustomerManager cm;
 
-
+        #region Initiation
         private void Start()
         {
             gm = GameManagement.Instance;
-            if (gm.GetCurrentLevelInd() == 1)
+            levelInd = gm.GetCurrentLevelInd();
+
+            if (levelInd == 1)
             {
                 Invoke("InitiateQCTutorial", 0.2f);
             }
         }
 
+        /* Tells the game that the tutorial is ongoing, and finds the relevant
+         * parts of the level: the button, the gate, and the customer controller.
+         * Assumes that the tutorial only has one gate. 
+         */
         public void InitiateQCTutorial()
         {
             gm.InTutorial = true;
@@ -77,16 +52,39 @@ namespace Qupcakery
             cm.ArrivedAtTable += TutorialNext;
             cm.CakeReceived += HideTutorial;
 
-            notGate = GameObject.FindGameObjectWithTag("Gate");
-            gpc = notGate.GetComponent<GatePositionController>();
+            tutorialGate = GameObject.FindGameObjectWithTag("Gate");
+            gpc = tutorialGate.GetComponent<GatePositionController>();
             
             if (cm.AtTable())
             {
                 TutorialNext();
             }
         }
+        #endregion
 
         public void TutorialNext()
+        {
+            switch(levelInd)
+            {
+                case 1:
+                    Tutorial1Next();
+                    break;
+                default:
+                    Debug.Log("Tried to run tutorial on level without one.");
+                    break;
+            }
+        }
+
+        #region Level 1
+        private string[] dialogueSeq1 = new string[]
+        {
+            "It looks like the cupcake on the conveyor is the one that the customer wants, so let's press Play to send it over!",
+            "Oops, looks like I made the wrong cupcake here! Let's use the Flavor Inverter gate to change the cupcake flavor.",
+            "That should work! Let's send our cupcake down the conveyor now.",
+            "Nice work! I'm going to get back to baking now, but you can handle it from here!"
+        };
+
+        public void Tutorial1Next()
         {
             switch (tutorialSeq)
             {
@@ -95,7 +93,7 @@ namespace Qupcakery
                     FindCustomer();
                     ActivateButton();
                     DeactivateGate();
-                    tutorialText.text = dialogueSeq[tutorialSeq];
+                    tutorialText.text = dialogueSeq1[tutorialSeq];
 
                     tutorialSeq++;
                     break;
@@ -105,8 +103,7 @@ namespace Qupcakery
                     FindCustomer();
                     ActivateGate();
                     DeactivateButton();
-                    tutorialText.text = dialogueSeq[tutorialSeq];
-                    // Animation
+                    tutorialText.text = dialogueSeq1[tutorialSeq];
                     gpc.GateIsOnBelt += TutorialNext;
 
                     tutorialSeq++;
@@ -116,7 +113,7 @@ namespace Qupcakery
                     ActivateButton();
                     DeactivateGate();
                     gpc.GateIsOnBelt -= TutorialNext;
-                    tutorialText.text = dialogueSeq[tutorialSeq];
+                    tutorialText.text = dialogueSeq1[tutorialSeq];
 
                     tutorialSeq++;
                     break;
@@ -126,7 +123,7 @@ namespace Qupcakery
                     ActivateButton();
                     ActivateGate();
                     gm.InTutorial = false;
-                    tutorialText.text = dialogueSeq[tutorialSeq];
+                    tutorialText.text = dialogueSeq1[tutorialSeq];
 
                     tutorialSeq++;
                     break;
@@ -138,7 +135,11 @@ namespace Qupcakery
             }
             
         }
+        #endregion
 
+
+
+        #region Utilities 
         private void ShowTutorial()
         {
             chef.SetActive(true);
@@ -182,11 +183,29 @@ namespace Qupcakery
 
         public void EndTutorial()
         {
-            cm.ArrivedAtTable -= TutorialNext;
-            cm.CakeReceived -= HideTutorial;
-            gm.InTutorial = false;
-            HideTutorial();
+            if (gm.InTutorial)
+            {
+                gm.InTutorial = false;
+
+                // Clear out any listeners
+                cm.ArrivedAtTable -= TutorialNext;
+                cm.CakeReceived -= HideTutorial;
+
+                if (levelInd == 1 && tutorialSeq == 2)
+                {
+                    gpc.GateIsOnBelt -= TutorialNext;
+                }
+
+                HideTutorial();
+            }
         }
+
+        public static void ResetTutorial() {
+            GameObject.Find("TutorialItems").GetComponent<QCTutorialLevel>().EndTutorial();
+        }
+
+
+        #endregion
 
     }
 }
