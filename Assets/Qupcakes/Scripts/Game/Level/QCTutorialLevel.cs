@@ -159,14 +159,21 @@ namespace Qupcakery
         private string[] dialogueSeq3 = new string[]
         {
             "Here's a new gate! This SWAP gate will switch the positions " +
-            "of cupcakes on adjacent belts."
+            "of cupcakes on adjacent belts. Try it here!",
+            "When you click play, you'll see the gate swap the positions of" +
+            " these two cupcakes.",
+            "This gate is only swapping their positions and not their flavors." +
+            " Try using it on these cupcakes! ",
+            "You'll see that this swap does nothing, because the cupcakes are the " +
+            "same flavor!",
+            "Have fun with this gate! I'm going back to baking."
         };
 
         public void Tutorial3Next()
         {
             switch (tutorialSeq)
             {
-                case 0:
+                case 0: // Tell student to use SWAP Gate
                     // Setup
                     foreach (GameObject gate in GameObject.FindGameObjectsWithTag("Gate")) {
                         SpriteResolver resolver = gate.GetComponent<SpriteResolver>();
@@ -183,44 +190,61 @@ namespace Qupcakery
                     // Start Tutorial
                     ShowTutorial();
                     FindCustomer();
-                    DeactivateButton();
-                    DeactivateGate(gpc1);
                     tutorialText.text = dialogueSeq3[tutorialSeq];
+
+                    DeactivateButton();
+                    DeactivateGate(gpc1);  
                     gpc2.GateIsOnBelt += TutorialNext;
 
                     tutorialSeq++;
                     break;
-                case 1:
-                    ShowTutorial();
+
+                case 1: // Click play once swap gate has been placed
                     pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+                    tutorialText.text = dialogueSeq3[tutorialSeq];
+
+                    DeactivateGate(gpc2);
+                    ActivateButton();               
+                    gpc2.GateIsOnBelt -= TutorialNext;
+
+                    tutorialSeq++;
+                    break;
+
+                case 2: // Tell student to use SWAP on identical cupcakes
+                    ShowTutorial();
                     FindCustomer();
-                    ActivateGates();
+                    pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+                    tutorialText.text = dialogueSeq3[tutorialSeq];
+
                     DeactivateButton();
-                    tutorialText.text = dialogueSeq3[tutorialSeq];
-                    gpc1.GateIsOnBelt += TutorialNext;
-
+                    ActivateGate(gpc2);
+                    gpc2.GateIsOnBelt += TutorialNext;
+                    
                     tutorialSeq++;
                     break;
-                case 2:
+
+                case 3: // Send SWAP. 
                     pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+                    tutorialText.text = dialogueSeq3[tutorialSeq];
+
                     ActivateButton();
+                    ActivateGate(gpc1);
                     DeactivateGates();
-                    gpc1.GateIsOnBelt -= TutorialNext;
-                    tutorialText.text = dialogueSeq3[tutorialSeq];
-
-                    tutorialSeq++;
-                    break;
-                case 3:
-                    ShowTutorial();
-                    pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
-                    ActivateButton();
-                    ActivateGates();
-                    gm.InTutorial = false;
-                    tutorialText.text = dialogueSeq3[tutorialSeq];
+                    gpc2.GateIsOnBelt -= TutorialNext;
 
                     tutorialSeq++;
                     break;
                 case 4:
+                    ShowTutorial();
+                    tutorialText.text = dialogueSeq1[tutorialSeq];
+
+                    ActivateButton();
+                    ActivateGates();
+
+                    gm.InTutorial = false;
+                    tutorialSeq++;
+                    break;
+                case 5:
                     EndTutorial();
                     break;
                 default:
@@ -288,7 +312,10 @@ namespace Qupcakery
         // Move the chef and text to account for two gates.
         private void TwoGatePosition()
         {
-            chef.GetComponent<Transform>().position += new Vector3(-30f, 30f, 0);
+            chef.GetComponent<Transform>().position += new Vector3(-1.7f, 6.5f, 0);
+            panel.GetComponent<RectTransform>().position += new Vector3(-1.7f, 6.5f, 0);
+            textObject.GetComponent<RectTransform>().position += new Vector3(-1.7f, 6.5f, 0);
+
         }
 
         public void EndTutorial()
@@ -304,6 +331,10 @@ namespace Qupcakery
                 if (levelInd == 1 && tutorialSeq == 2)
                 {
                     gpc1.GateIsOnBelt -= TutorialNext;
+                } else if (levelInd == 3 &&
+                    (tutorialSeq == 1 || tutorialSeq == 3))
+                {
+                    gpc2.GateIsOnBelt -= TutorialNext;
                 }
 
                 HideTutorial();

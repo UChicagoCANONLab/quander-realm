@@ -221,7 +221,7 @@ namespace Qupcakery
             AvailableGates[(int)GateType.SWAP] = 1;
 
             Puzzles[0].UpdatePuzzle(0, 1, 1, 0);
-            Puzzles[1].UpdatePuzzle(0, 1, 0, 1);
+            Puzzles[1].UpdatePuzzle(0, 0, 0, 0);
             Puzzles[2].UpdatePuzzle(1, 0, 1, 0);
             Puzzles[3].UpdatePuzzle(1, 0, 0, 1);
 
@@ -230,7 +230,7 @@ namespace Qupcakery
 
             Solutions = new Tuple<int[], bool>[] {
                 new Tuple<int[], bool>(new int[] {11}, false),
-                new Tuple<int[], bool>(new int[] {1, 1}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
                 new Tuple<int[], bool>(new int[] {1, 1}, false),
                 new Tuple<int[], bool>(new int[] {11}, false),
                 new Tuple<int[], bool>(new int[] {1, 1}, false),
