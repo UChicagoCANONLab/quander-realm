@@ -26,6 +26,8 @@ namespace Qupcakery
         public GateState gateState { get; private set; }
             = GateState.InBank;
 
+        public bool gateActive = true;
+
         private void Start()
         {
             gateBank = GateBank.Instance;
@@ -45,7 +47,9 @@ namespace Qupcakery
         // Drag gate with mouse
         private void OnMouseDrag()
         {
-            if (GameUtilities.gameIsPaused || !GameManagement.Instance.AllowGateMovement)
+            if (GameUtilities.gameIsPaused ||
+                !GameManagement.Instance.AllowGateMovement
+                || !gateActive)
                 return;
 
 

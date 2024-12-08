@@ -216,7 +216,7 @@ namespace Qupcakery
 
         private void SetLevel3()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 2;
             AvailableGates[(int)GateType.SWAP] = 1;
 
