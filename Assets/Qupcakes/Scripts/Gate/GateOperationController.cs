@@ -11,6 +11,10 @@ namespace Qupcakery
         public Gate gate { get; private set; }
         private GatePositionController positionController;
 
+        // Gate flipped publisher
+        public delegate void GateFlippedEventHandler();
+        public event GateFlippedEventHandler GateFlipped;
+
         private List<GameObject> targetCakeBoxes = new List<GameObject>();
         private List<GameObject> controlCakeBoxes = new List<GameObject>();
         [SerializeField]
@@ -109,6 +113,7 @@ namespace Qupcakery
                             sr.flipY = sr.flipY ? false : true; // flip target and control
                             ctrlTgtSwapped = ctrlTgtSwapped ? false : true;
                             waitingForCake = true;
+                            OnGateFlipped();
                         }
                         break;
                 }
@@ -170,6 +175,15 @@ namespace Qupcakery
             }
 
             executionCompleted = true;
+        }
+
+        // Gate flipped publisher
+        protected virtual void OnGateFlipped()
+        {
+            if (GateFlipped != null)
+            {
+                GateFlipped();
+            }
         }
 
         // Subscriber

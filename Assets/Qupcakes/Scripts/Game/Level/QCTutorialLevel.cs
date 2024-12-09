@@ -96,7 +96,6 @@ namespace Qupcakery
         #endregion
 
 
-
         #region Level 1
         private string[] dialogueSeq1 = new string[]
         {
@@ -244,7 +243,13 @@ namespace Qupcakery
             "If the top cupcake is vanilla, the gate won't do anything. Try using" +
             " it on these cupcakes!",
             "The top cupcake is vanilla, so the bottom cupcake will not change!",
-            "..."
+            "Looks like we need a flipped version of this flavor inverter! Let's" +
+            " start by placing it on the belts.",
+            "Now, click on the gate to flip it!",
+            "Great! The small dot represents the side that controls the inverter, " +
+            "and the larger circle is the inverted cupcake. ",
+            "Nice work. Don't forget the book icon on the right can remind you " +
+            "about what any gate does!"
         };
 
         public void Tutorial8Next()
@@ -288,12 +293,29 @@ namespace Qupcakery
 
                 case 4: // Show flipping
                     NewPuzzleUtils();
-
+                    gpc1.GateIsOnBelt += TutorialNext;
                     break;
 
-                case 5:
+                case 5: // Get player to flip gate
+                    DeactivateGate(gpc1);
+                    AllowFlip(goc1, true);
+                    gpc1.GateIsOnBelt -= TutorialNext;
+                    goc1.GateFlipped += TutorialNext;
+                    break;
+
+                case 6:
+                    ClickPlayUtils();
+                    goc1.GateFlipped -= TutorialNext;
+                    break;
+
+                case 7:
+                    LastPuzzleUtils();
+                    break;
+
+                case 8:
                     EndTutorial();
                     break;
+
                 default:
                     break;
             }
