@@ -228,7 +228,6 @@ namespace Qupcakery
                     tutorialText.text = dialogueSeq3[tutorialSeq];
 
                     ActivateButton();
-                    ActivateGate(gpc1);
                     DeactivateGates();
                     gpc2.GateIsOnBelt -= TutorialNext;
 
@@ -236,12 +235,11 @@ namespace Qupcakery
                     break;
                 case 4:
                     ShowTutorial();
-                    tutorialText.text = dialogueSeq1[tutorialSeq];
+                    tutorialText.text = dialogueSeq3[tutorialSeq];
 
                     ActivateButton();
                     ActivateGates();
 
-                    gm.InTutorial = false;
                     tutorialSeq++;
                     break;
                 case 5:
@@ -276,17 +274,21 @@ namespace Qupcakery
 
         private void DeactivateGates()
         {
-            gm.AllowGateMovement = false;
+            gpc1.gateActive = false;
+            gpc2.gateActive = false;
+            gpc3.gateActive = false;
         }
 
         private void ActivateGates()
         {
-            gm.AllowGateMovement = true;
+            gpc1.gateActive = true;
+            gpc2.gateActive = true;
+            gpc3.gateActive = true;
         }
 
         private void ActivateGate(GatePositionController gpc)
         {
-            gpc.gateActive = true; 
+            gpc.gateActive = true;
         }
 
         private void DeactivateGate(GatePositionController gpc)
@@ -320,29 +322,34 @@ namespace Qupcakery
 
         public void EndTutorial()
         {
-            if (gm.InTutorial)
+            gm.InTutorial = false;
+
+            // Clear out any listeners
+            cm.ArrivedAtTable -= TutorialNext;
+            cm.CakeReceived -= HideTutorial;
+
+            if (levelInd == 1 && tutorialSeq == 2)
             {
-                gm.InTutorial = false;
-
-                // Clear out any listeners
-                cm.ArrivedAtTable -= TutorialNext;
-                cm.CakeReceived -= HideTutorial;
-
-                if (levelInd == 1 && tutorialSeq == 2)
-                {
-                    gpc1.GateIsOnBelt -= TutorialNext;
-                } else if (levelInd == 3 &&
-                    (tutorialSeq == 1 || tutorialSeq == 3))
-                {
-                    gpc2.GateIsOnBelt -= TutorialNext;
-                }
-
-                HideTutorial();
+                gpc1.GateIsOnBelt -= TutorialNext;
+            } else if (levelInd == 3 &&
+                (tutorialSeq == 1 || tutorialSeq == 3))
+            {
+                gpc2.GateIsOnBelt -= TutorialNext;
             }
+
+            // Make sure everything is active
+            ActivateGates();
+            ActivateButton();
+
+            HideTutorial();
         }
 
         public static void ResetTutorial() {
-            GameObject.Find("TutorialItems").GetComponent<QCTutorialLevel>().EndTutorial();
+            GameObject tutorial = GameObject.Find("TutorialItems");
+            if (tutorial != null)
+            {
+                tutorial.GetComponent<QCTutorialLevel>().EndTutorial();
+            }
         }
 
         #endregion
