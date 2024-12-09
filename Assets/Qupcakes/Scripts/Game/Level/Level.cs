@@ -339,22 +339,24 @@ namespace Qupcakery
 
         private void SetLevel8()
         {
-            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.CNOT] = 1;
 
             Puzzles[0].UpdatePuzzle(0, 1, 1, 1);
-            Puzzles[1].UpdatePuzzle(1, 0, 1, 1);
-            Puzzles[2].UpdatePuzzle(0, 1, 1, 1);
+            Puzzles[1].UpdatePuzzle(1, 1, 0, 0);
+            Puzzles[2].UpdatePuzzle(1, 1, 1, 0);
             Puzzles[3].UpdatePuzzle(1, 0, 1, 1);
+            Puzzles[4].UpdatePuzzle(1, 1, 0, 1);
 
             Solutions = new Tuple<int[], bool>[] {
                 new Tuple<int[], bool>(new int[] {12}, false),
                 new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, true),
                 new Tuple<int[], bool>(new int[] {12}, false),
-                new Tuple<int[], bool>(new int[] {12}, false)
+                new Tuple<int[], bool>(new int[] {12}, true)
             };
 
-            TotalPuzzleCnt = 4;
+            TotalPuzzleCnt = 5;
         }
 
         // Allow clicking to swap channels 

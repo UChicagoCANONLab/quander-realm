@@ -28,6 +28,7 @@ namespace Qupcakery
         // Tutorial Gates
         GameObject tutorialGate1;
         GatePositionController gpc1;
+        GateOperationController goc1;
         GameObject tutorialGate2;
         GatePositionController gpc2;
         GameObject tutorialGate3;
@@ -42,8 +43,10 @@ namespace Qupcakery
             
 
             if (levelInd == 1 ||
-                levelInd == 3)
+                levelInd == 3 ||
+                levelInd == 8)
             {
+                gm.AllowGateMovement = false;
                 Invoke("InitiateQCTutorial", 0.2f);
             }
         }
@@ -55,6 +58,7 @@ namespace Qupcakery
         public void InitiateQCTutorial()
         {
             gm.InTutorial = true;
+            DeactivateGates();
 
             tutorialSeq = 0;
             pointerAnimator.SetInteger("LevelInd", levelInd);
@@ -81,6 +85,9 @@ namespace Qupcakery
                 case 3:
                     Tutorial3Next();
                     break;
+                case 8:
+                    Tutorial8Next();
+                    break;
                 default:
                     Debug.Log("Tried to run tutorial on level without one.");
                     break;
@@ -101,57 +108,50 @@ namespace Qupcakery
 
         public void Tutorial1Next()
         {
+            if (tutorialSeq >= dialogueSeq1.Length)
+            {
+                return;
+            }
+
+            tutorialText.text = dialogueSeq1[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
             switch (tutorialSeq)
             {
                 case 0:
                     // Setup
                     tutorialGate1 = GameObject.FindGameObjectWithTag("Gate");
                     gpc1 = tutorialGate1.GetComponent<GatePositionController>();
+                    gm.AllowGateMovement = true;
 
                     // Start Tutorial
                     ShowTutorial();
-                    FindCustomer();
-                    ActivateButton();
-                    DeactivateGates();
-                    tutorialText.text = dialogueSeq1[tutorialSeq];
-
-                    tutorialSeq++;
+                    ClickPlayUtils();
                     break;
-                case 1:                   
-                    ShowTutorial();
-                    FindCustomer();
-                    ActivateGates();
-                    DeactivateButton();
-                    tutorialText.text = dialogueSeq1[tutorialSeq];
+
+                case 1:
+                    NewPuzzleUtils();
                     gpc1.GateIsOnBelt += TutorialNext;
-
-                    tutorialSeq++;
                     break;
+
                 case 2:
-                    pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
-                    ActivateButton();
-                    DeactivateGates();
+                    ClickPlayUtils();
                     gpc1.GateIsOnBelt -= TutorialNext;
-                    tutorialText.text = dialogueSeq1[tutorialSeq];
-
-                    tutorialSeq++;
                     break;
+
                 case 3:
-                    ShowTutorial();
-                    ActivateButton();
-                    ActivateGates();
-                    gm.InTutorial = false;
-                    tutorialText.text = dialogueSeq1[tutorialSeq];
-
-                    tutorialSeq++;
+                    LastPuzzleUtils();
                     break;
+
                 case 4:
                     EndTutorial();
                     break;
+
                 default:
                     break;
             }
-            
+
+            tutorialSeq++;
         }
         #endregion
 
@@ -171,6 +171,14 @@ namespace Qupcakery
 
         public void Tutorial3Next()
         {
+            if (tutorialSeq >= dialogueSeq3.Length)
+            {
+                return;
+            }
+
+            tutorialText.text = dialogueSeq3[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
             switch (tutorialSeq)
             {
                 case 0: // Tell student to use SWAP Gate
@@ -186,62 +194,103 @@ namespace Qupcakery
                         }
                     }
                     TwoGatePosition();
+                    gm.AllowGateMovement = true;
 
                     // Start Tutorial
-                    ShowTutorial();
-                    FindCustomer();
-                    tutorialText.text = dialogueSeq3[tutorialSeq];
-
-                    DeactivateButton();
-                    DeactivateGate(gpc1);  
+                    NewPuzzleUtils();
+                    DeactivateGate(gpc1);
                     gpc2.GateIsOnBelt += TutorialNext;
-
-                    tutorialSeq++;
                     break;
 
                 case 1: // Click play once swap gate has been placed
-                    pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
-                    tutorialText.text = dialogueSeq3[tutorialSeq];
-
-                    DeactivateGate(gpc2);
-                    ActivateButton();               
+                    ClickPlayUtils();           
                     gpc2.GateIsOnBelt -= TutorialNext;
-
-                    tutorialSeq++;
                     break;
 
                 case 2: // Tell student to use SWAP on identical cupcakes
-                    ShowTutorial();
-                    FindCustomer();
-                    pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
-                    tutorialText.text = dialogueSeq3[tutorialSeq];
-
-                    DeactivateButton();
-                    ActivateGate(gpc2);
+                    NewPuzzleUtils();
+                    DeactivateGate(gpc1);
                     gpc2.GateIsOnBelt += TutorialNext;
-                    
-                    tutorialSeq++;
                     break;
 
                 case 3: // Send SWAP. 
-                    pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
-                    tutorialText.text = dialogueSeq3[tutorialSeq];
-
-                    ActivateButton();
-                    DeactivateGates();
+                    ClickPlayUtils();
                     gpc2.GateIsOnBelt -= TutorialNext;
-
-                    tutorialSeq++;
                     break;
+
                 case 4:
-                    ShowTutorial();
-                    tutorialText.text = dialogueSeq3[tutorialSeq];
-
-                    ActivateButton();
-                    ActivateGates();
-
-                    tutorialSeq++;
+                    LastPuzzleUtils();
                     break;
+
+                case 5:
+                    EndTutorial();
+                    break;
+
+                default:
+                    break;
+            }
+            tutorialSeq++;
+
+        }
+        #endregion
+
+
+        #region Level 8
+        private string[] dialogueSeq8 = new string[]
+        {
+            "This is my Chocolate-Controlled Flavor Inverter. It changes " +
+            "the bottom cupcake if the top one is chocolate!",
+            "The top cupcake is chocolate, so the bottom cupcake will change.",
+            "If the top cupcake is vanilla, the gate won't do anything. Try using" +
+            " it on these cupcakes!",
+            "The top cupcake is vanilla, so the bottom cupcake will not change!",
+            "..."
+        };
+
+        public void Tutorial8Next()
+        {
+            if (tutorialSeq >= dialogueSeq8.Length)
+            {
+                return;
+            }
+
+            tutorialText.text = dialogueSeq8[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
+            switch (tutorialSeq)
+            {
+                case 0: // Introduce CNOT gate
+                    // Setup
+                    tutorialGate1 = GameObject.FindGameObjectWithTag("Gate");
+                    gpc1 = tutorialGate1.GetComponent<GatePositionController>();
+                    goc1 = tutorialGate1.GetComponent<GateOperationController>();
+                    gm.AllowGateMovement = true;
+
+                    // Start Tutorial
+                    NewPuzzleUtils();
+                    gpc1.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 1: // Click play once CNOT gate has been placed
+                    ClickPlayUtils();
+                    gpc1.GateIsOnBelt -= TutorialNext;
+                    break;
+
+                case 2: // Show CNOT on 0 in control
+                    NewPuzzleUtils();
+                    gpc1.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 3: // Click play 
+                    ClickPlayUtils();
+                    gpc1.GateIsOnBelt -= TutorialNext;
+                    break;
+
+                case 4: // Show flipping
+                    NewPuzzleUtils();
+
+                    break;
+
                 case 5:
                     EndTutorial();
                     break;
@@ -249,12 +298,37 @@ namespace Qupcakery
                     break;
             }
 
+            tutorialSeq++;
+
         }
         #endregion
 
 
+        #region Utilities
+        private void NewPuzzleUtils()
+        {
+            ShowTutorial();
+            FindCustomer();
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+            DeactivateButton();
+            ActivateGates();
+        }
 
-        #region Utilities 
+        private void LastPuzzleUtils()
+        {
+            ShowTutorial();
+            ActivateButton();
+            ActivateGates();
+        }
+
+        private void ClickPlayUtils()
+        {
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+            ActivateButton();
+            DeactivateGates();
+        }
+
+
         private void ShowTutorial()
         {
             chef.GetComponent<SpriteRenderer>().enabled = true;
@@ -274,26 +348,42 @@ namespace Qupcakery
 
         private void DeactivateGates()
         {
-            gpc1.gateActive = false;
-            gpc2.gateActive = false;
-            gpc3.gateActive = false;
+            DeactivateGate(gpc1);
+            DeactivateGate(gpc2);
+            DeactivateGate(gpc3);
         }
 
         private void ActivateGates()
         {
-            gpc1.gateActive = true;
-            gpc2.gateActive = true;
-            gpc3.gateActive = true;
+            ActivateGate(gpc1);
+            ActivateGate(gpc2);
+            ActivateGate(gpc3);
         }
 
         private void ActivateGate(GatePositionController gpc)
         {
-            gpc.gateActive = true;
+            if (gpc != null)
+            {
+                gpc.gateActive = true;
+            }
+            AllowFlip(goc1, true);
         }
 
         private void DeactivateGate(GatePositionController gpc)
         {
-            gpc.gateActive = false;
+            if (gpc != null)
+            {
+                gpc.gateActive = false;
+            }
+            AllowFlip(goc1, false);
+        }
+
+        private void AllowFlip(GateOperationController goc, bool setting)
+        {
+            if (goc != null)
+            {
+                goc.canFlip = setting;
+            }
         }
 
         private void DeactivateButton()
@@ -303,12 +393,20 @@ namespace Qupcakery
 
         private void ActivateButton()
         {
+            if (bc == null)
+            {
+                bc = GameObject.Find("Button(Clone)").GetComponent<ButtonController>();
+            }
             bc.UpdateButtonState(ButtonController.ButtonState.CanBePressed);
         }
 
         private void FindCustomer()
         {
-            cm = GameObject.Find("Monster(Clone)").GetComponent<CustomerManager>();
+            GameObject monster = GameObject.Find("Monster(Clone)");
+            if (monster != null)
+            {
+                cm = monster.GetComponent<CustomerManager>();
+            }
         }
 
         // Move the chef and text to account for two gates.
@@ -325,21 +423,31 @@ namespace Qupcakery
             gm.InTutorial = false;
 
             // Clear out any listeners
-            cm.ArrivedAtTable -= TutorialNext;
-            cm.CakeReceived -= HideTutorial;
+            FindCustomer();
+            if (cm != null)
+            {
+                cm.ArrivedAtTable -= TutorialNext;
+                cm.CakeReceived -= HideTutorial;
+            }
 
-            if (levelInd == 1 && tutorialSeq == 2)
+            if (gpc1 != null)
             {
                 gpc1.GateIsOnBelt -= TutorialNext;
-            } else if (levelInd == 3 &&
-                (tutorialSeq == 1 || tutorialSeq == 3))
+                
+            }
+            if (gpc2 != null)
             {
                 gpc2.GateIsOnBelt -= TutorialNext;
+            }
+            if (gpc3 != null)
+            {
+                gpc3.GateIsOnBelt -= TutorialNext;
             }
 
             // Make sure everything is active
             ActivateGates();
             ActivateButton();
+            AllowFlip(goc1, true);
 
             HideTutorial();
         }

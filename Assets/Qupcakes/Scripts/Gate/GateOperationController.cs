@@ -18,6 +18,7 @@ namespace Qupcakery
         private List<int> beltInd = new List<int>(); // Belt indices for the slot the gate occupies
         private bool executionCompleted = false;
         private bool waitingForCake = false;
+        public bool canFlip = false;
         public bool ctrlTgtSwapped { get; private set; } = false;
 
         private void Awake()
@@ -26,16 +27,8 @@ namespace Qupcakery
             // Subscribe to gate-is-in-new-slot publisher
             positionController.GateIsInNewSlot += OnGateIsInNewSlot;
 
-            switch (GameManagement.Instance.gameMode)
-            {
-                case GameManagement.GameMode.Regular:
-                    Dispatcher dispatcher = GameObject.Find("LevelManager").
+            Dispatcher dispatcher = GameObject.Find("LevelManager").
                     GetComponent<LevelManager>().Dispatcher;
-                    break;
-                default:
-                    /* do nothing */
-                    break;
-            }
         }
 
         private void Update()
@@ -111,9 +104,12 @@ namespace Qupcakery
                 switch (gate.Type)
                 {
                     case GateType.CNOT:
-                        sr.flipY = sr.flipY ? false : true; // flip target and control
-                        ctrlTgtSwapped = ctrlTgtSwapped ? false : true;
-                        waitingForCake = true;
+                        if (canFlip)
+                        {
+                            sr.flipY = sr.flipY ? false : true; // flip target and control
+                            ctrlTgtSwapped = ctrlTgtSwapped ? false : true;
+                            waitingForCake = true;
+                        }
                         break;
                 }
             }
