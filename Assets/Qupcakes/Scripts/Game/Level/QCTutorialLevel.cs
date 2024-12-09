@@ -239,10 +239,12 @@ namespace Qupcakery
         {
             "This is my Chocolate-Controlled Flavor Inverter. It changes " +
             "the bottom cupcake if the top one is chocolate!",
-            "The top cupcake is chocolate, so the bottom cupcake will change.",
+            "The top cupcake is chocolate, so the bottom cupcake will be inverted " +
+            "into a vanilla cupcake.",
             "If the top cupcake is vanilla, the gate won't do anything. Try using" +
             " it on these cupcakes!",
-            "The top cupcake is vanilla, so the bottom cupcake will not change!",
+            "The top cupcake is vanilla, so the bottom cupcake will not change, and" +
+            " will remain chocolate.",
             "Looks like we need a flipped version of this flavor inverter! Let's" +
             " start by placing it on the belts.",
             "Now, click on the gate to flip it!",

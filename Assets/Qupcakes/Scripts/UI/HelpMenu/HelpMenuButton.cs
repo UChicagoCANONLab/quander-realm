@@ -10,6 +10,11 @@ namespace Qupcakery
         public GameObject helpPanel;
         public GameObject recipePanel, startPanel;
         public GameObject topBar;
+        public GameObject notGadget;
+        public GameObject cnotGadget;
+        public GameObject swapGadget;
+        public GameObject hGadget;
+        public GameObject zGadget;
 
         public void OpenPanel()
         {
@@ -24,11 +29,11 @@ namespace Qupcakery
 
                 int[] level_gates = GameManagement.Instance.GetCurrentLevel().AvailableGates;
 
-                GameObject.Find("NOT").SetActive(level_gates[(int)GateType.NOT] > 0);
-                GameObject.Find("CNOT").SetActive(level_gates[(int)GateType.CNOT] > 0);
-                GameObject.Find("SWAP").SetActive(level_gates[(int)GateType.SWAP] > 0);
-                GameObject.Find("H").SetActive(level_gates[(int)GateType.H] > 0);
-                GameObject.Find("Z").SetActive(level_gates[(int)GateType.Z] > 0);
+                notGadget.SetActive(level_gates[(int)GateType.NOT] > 0);
+                cnotGadget.SetActive(level_gates[(int)GateType.CNOT] > 0);
+                swapGadget.SetActive(level_gates[(int)GateType.SWAP] > 0);
+                hGadget.SetActive(level_gates[(int)GateType.H] > 0);
+                zGadget.SetActive(level_gates[(int)GateType.Z] > 0);
 
                 if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
                 {
