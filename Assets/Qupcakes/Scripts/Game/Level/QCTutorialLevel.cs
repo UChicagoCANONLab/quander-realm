@@ -327,6 +327,98 @@ namespace Qupcakery
         }
         #endregion
 
+        #region Level 16
+        private string[] dialogueSeq16 = new string[]
+        {
+            "This is my Chocolate-Controlled Flavor Inverter. It changes " +
+            "the bottom cupcake if the top one is chocolate!",
+            "The top cupcake is chocolate, so the bottom cupcake will be inverted " +
+            "into a vanilla cupcake.",
+            "If the top cupcake is vanilla, the gate won't do anything. Try using" +
+            " it on these cupcakes!",
+            "The top cupcake is vanilla, so the bottom cupcake will not change, and" +
+            " will remain chocolate.",
+            "Looks like we need a flipped version of this flavor inverter! Let's" +
+            " start by placing it on the belts.",
+            "Now, click on the gate to flip it!",
+            "Great! The small dot represents the side that controls the inverter, " +
+            "and the larger circle is the inverted cupcake. ",
+            "Nice work. Don't forget the book icon on the right can remind you " +
+            "about what any gate does!"
+        };
+
+        public void Tutorial16Next()
+        {
+            if (tutorialSeq >= dialogueSeq16.Length)
+            {
+                return;
+            }
+
+            tutorialText.text = dialogueSeq16[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
+            switch (tutorialSeq)
+            {
+                case 0: // Introduce CNOT gate
+                    // Setup
+                    tutorialGate1 = GameObject.FindGameObjectWithTag("Gate");
+                    gpc1 = tutorialGate1.GetComponent<GatePositionController>();
+                    goc1 = tutorialGate1.GetComponent<GateOperationController>();
+                    gm.AllowGateMovement = true;
+
+                    // Start Tutorial
+                    NewPuzzleUtils();
+                    gpc1.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 1: // Click play once CNOT gate has been placed
+                    ClickPlayUtils();
+                    gpc1.GateIsOnBelt -= TutorialNext;
+                    break;
+
+                case 2: // Show CNOT on 0 in control
+                    NewPuzzleUtils();
+                    gpc1.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 3: // Click play 
+                    ClickPlayUtils();
+                    gpc1.GateIsOnBelt -= TutorialNext;
+                    break;
+
+                case 4: // Show flipping
+                    NewPuzzleUtils();
+                    gpc1.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 5: // Get player to flip gate
+                    DeactivateGate(gpc1);
+                    AllowFlip(goc1, true);
+                    gpc1.GateIsOnBelt -= TutorialNext;
+                    goc1.GateFlipped += TutorialNext;
+                    break;
+
+                case 6:
+                    ClickPlayUtils();
+                    goc1.GateFlipped -= TutorialNext;
+                    break;
+
+                case 7:
+                    LastPuzzleUtils();
+                    break;
+
+                case 8:
+                    EndTutorial();
+                    break;
+
+                default:
+                    break;
+            }
+
+            tutorialSeq++;
+
+        }
+        #endregion
 
         #region Utilities
         private void NewPuzzleUtils()
