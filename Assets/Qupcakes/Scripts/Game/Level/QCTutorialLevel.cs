@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.U2D.Animation;
@@ -42,9 +41,7 @@ namespace Qupcakery
             levelInd = gm.GetCurrentLevelInd();
             
 
-            if (levelInd == 1 ||
-                levelInd == 3 ||
-                levelInd == 8)
+            if (TutorialManager.tutorialInd.Contains(levelInd))
             {
                 gm.AllowGateMovement = false;
                 Invoke("InitiateQCTutorial", 0.2f);
@@ -88,27 +85,37 @@ namespace Qupcakery
                 case 8:
                     Tutorial8Next();
                     break;
+                case 13:
+                    Tutorial13Next();
+                    break;
+                case 16:
+                    Tutorial16Next();
+                    break;
+                case 23:
+                    Tutorial23Next();
+                    break;
                 default:
-                    Debug.Log("Tried to run tutorial on level without one.");
+                    Debug.Log("Tried to run tutorial on level without one: " + levelInd);
                     break;
             }
         }
         #endregion
 
 
-        #region Level 1
+        #region Level 1 (NOT)
         private string[] dialogueSeq1 = new string[]
         {
             "The cupcake on the conveyor is what the customer wants, so let's press Play to send it over!",
-            "Oops, looks like I made the wrong cupcake! Let's use the Flavor Inverter gate to change it.",
+            "Oops, looks like I made the wrong cupcake! Let's use this NOT gate to change it.",
             "That should work! Let's send our cupcake down the conveyor now.",
-            "Nice work! I'm going to get back to baking now, but you can handle it from here!"
+            "Nice job! I'm going to get back to baking now, but you can handle it from here!"
         };
 
         public void Tutorial1Next()
         {
             if (tutorialSeq >= dialogueSeq1.Length)
             {
+                EndTutorial();
                 return;
             }
 
@@ -142,10 +149,6 @@ namespace Qupcakery
                     LastPuzzleUtils();
                     break;
 
-                case 4:
-                    EndTutorial();
-                    break;
-
                 default:
                     break;
             }
@@ -154,7 +157,7 @@ namespace Qupcakery
         }
         #endregion
 
-        #region Level 3
+        #region Level 3 (SWAP)
         private string[] dialogueSeq3 = new string[]
         {
             "Here's a new gate! This SWAP gate will switch the positions " +
@@ -172,6 +175,7 @@ namespace Qupcakery
         {
             if (tutorialSeq >= dialogueSeq3.Length)
             {
+                EndTutorial();
                 return;
             }
 
@@ -192,7 +196,7 @@ namespace Qupcakery
                             gpc2 = gate.GetComponent<GatePositionController>();
                         }
                     }
-                    TwoGatePosition();
+                    AltPosition(2);
                     gm.AllowGateMovement = true;
 
                     // Start Tutorial
@@ -221,10 +225,6 @@ namespace Qupcakery
                     LastPuzzleUtils();
                     break;
 
-                case 5:
-                    EndTutorial();
-                    break;
-
                 default:
                     break;
             }
@@ -233,12 +233,11 @@ namespace Qupcakery
         }
         #endregion
 
-
-        #region Level 8
+        #region Level 8 (CNOT)
         private string[] dialogueSeq8 = new string[]
         {
-            "This is my Chocolate-Controlled Flavor Inverter. It changes " +
-            "the bottom cupcake if the top one is chocolate!",
+            "This is my Controlled NOT (CNOT). It only activates the bottom NOT gate if " +
+            "the top cupcake is chocolate!",
             "The top cupcake is chocolate, so the bottom cupcake will be inverted " +
             "into a vanilla cupcake.",
             "If the top cupcake is vanilla, the gate won't do anything. Try using" +
@@ -247,10 +246,10 @@ namespace Qupcakery
             " will remain chocolate.",
             "Looks like we need a flipped version of this flavor inverter! Let's" +
             " start by placing it on the belts.",
-            "Now, click on the gate to flip it!",
-            "Great! The small dot represents the side that controls the inverter, " +
-            "and the larger circle is the inverted cupcake. ",
-            "Nice work. Don't forget the book icon on the right can remind you " +
+            "Now, click on the CNOT gate to flip it!",
+            "Great! The NOT symbol is the side where the cupcake can change, and " +
+            "the small dot controls it. ",
+            "Nice work. Don't forget that the book icon on the right can remind you " +
             "about what any gate does!"
         };
 
@@ -258,6 +257,7 @@ namespace Qupcakery
         {
             if (tutorialSeq >= dialogueSeq8.Length)
             {
+                EndTutorial();
                 return;
             }
 
@@ -314,10 +314,6 @@ namespace Qupcakery
                     LastPuzzleUtils();
                     break;
 
-                case 8:
-                    EndTutorial();
-                    break;
-
                 default:
                     break;
             }
@@ -327,39 +323,38 @@ namespace Qupcakery
         }
         #endregion
 
-        #region Level 16
-        private string[] dialogueSeq16 = new string[]
+        #region Level 13 (H)
+        private string[] dialogueSeq13 = new string[]
         {
-            "This is my Chocolate-Controlled Flavor Inverter. It changes " +
-            "the bottom cupcake if the top one is chocolate!",
-            "The top cupcake is chocolate, so the bottom cupcake will be inverted " +
-            "into a vanilla cupcake.",
-            "If the top cupcake is vanilla, the gate won't do anything. Try using" +
-            " it on these cupcakes!",
-            "The top cupcake is vanilla, so the bottom cupcake will not change, and" +
-            " will remain chocolate.",
-            "Looks like we need a flipped version of this flavor inverter! Let's" +
-            " start by placing it on the belts.",
-            "Now, click on the gate to flip it!",
-            "Great! The small dot represents the side that controls the inverter, " +
-            "and the larger circle is the inverted cupcake. ",
-            "Nice work. Don't forget the book icon on the right can remind you " +
-            "about what any gate does!"
+            "Sometimes customers want a surprise! This H gate turns " +
+            "the cupcake into a mystery.",
+            "When this cupcake gets to the customer, it'll randomly choose a " +
+            "flavor!",
+            "The cupcake will become a mystery no matter what flavor is input into" +
+            "the H gate.",
+            "Don't forget that the customer wants the mystery, so they'll be happy" +
+            " no matter the outcome.",
+            "These H gates also turn mystery boxes back into regular cupcakes!",
+            "This mystery box has the vanilla coloring, so the H will turn it back" +
+            "into vanilla.",
+            "Similarly, the H will turn this to chocolate. These boxes may be a mystery," +
+            " but H demystifies them."
         };
 
-        public void Tutorial16Next()
+        public void Tutorial13Next()
         {
-            if (tutorialSeq >= dialogueSeq16.Length)
+            if (tutorialSeq >= dialogueSeq13.Length)
             {
+                EndTutorial();
                 return;
             }
 
-            tutorialText.text = dialogueSeq16[tutorialSeq];
+            tutorialText.text = dialogueSeq13[tutorialSeq];
             pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
 
             switch (tutorialSeq)
             {
-                case 0: // Introduce CNOT gate
+                case 0: // Introduce H gate
                     // Setup
                     tutorialGate1 = GameObject.FindGameObjectWithTag("Gate");
                     gpc1 = tutorialGate1.GetComponent<GatePositionController>();
@@ -371,12 +366,12 @@ namespace Qupcakery
                     gpc1.GateIsOnBelt += TutorialNext;
                     break;
 
-                case 1: // Click play once CNOT gate has been placed
+                case 1: // Click play once H gate has been placed
                     ClickPlayUtils();
                     gpc1.GateIsOnBelt -= TutorialNext;
                     break;
 
-                case 2: // Show CNOT on 0 in control
+                case 2: // Show that H makes superposition regardless of input.
                     NewPuzzleUtils();
                     gpc1.GateIsOnBelt += TutorialNext;
                     break;
@@ -386,29 +381,18 @@ namespace Qupcakery
                     gpc1.GateIsOnBelt -= TutorialNext;
                     break;
 
-                case 4: // Show flipping
+                case 4: // Show that vanilla superposition + H = vanilla
                     NewPuzzleUtils();
                     gpc1.GateIsOnBelt += TutorialNext;
                     break;
 
-                case 5: // Get player to flip gate
-                    DeactivateGate(gpc1);
-                    AllowFlip(goc1, true);
+                case 5: // Click play
+                    ClickPlayUtils();
                     gpc1.GateIsOnBelt -= TutorialNext;
-                    goc1.GateFlipped += TutorialNext;
                     break;
 
                 case 6:
-                    ClickPlayUtils();
-                    goc1.GateFlipped -= TutorialNext;
-                    break;
-
-                case 7:
                     LastPuzzleUtils();
-                    break;
-
-                case 8:
-                    EndTutorial();
                     break;
 
                 default:
@@ -420,7 +404,176 @@ namespace Qupcakery
         }
         #endregion
 
-        #region Utilities
+        #region Level 16 (Z)
+        private string[] dialogueSeq16 = new string[]
+        {
+            "This Z gate inverts the mystery box, so that it becomes a mystery box " +
+            "of the other color!",
+            "Now that we've changed the color, if we use the H gate, this box will " +
+            "become a vanilla cupcake.",
+            "Click play to watch the magic happen.",
+            "Something to remember: if the cupcake isn't a mystery box, the Z gate " +
+            "won't do anything."
+        };
+
+        public void Tutorial16Next()
+        {
+            if (tutorialSeq >= dialogueSeq16.Length)
+            {
+                EndTutorial();
+                return;
+            }
+
+            tutorialText.text = dialogueSeq16[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
+            switch (tutorialSeq)
+            {
+                case 0: // Introduce Z gate
+                    // Setup
+                    foreach (GameObject gate in GameObject.FindGameObjectsWithTag("Gate"))
+                    {
+                        SpriteResolver resolver = gate.GetComponent<SpriteResolver>();
+                        if (resolver.GetLabel() == "H")
+                        {
+                            tutorialGate1 = gate;
+                            gpc1 = gate.GetComponent<GatePositionController>();
+                        }
+                        else if (resolver.GetLabel() == "Z")
+                        {
+                            tutorialGate2 = gate;
+                            gpc2 = gate.GetComponent<GatePositionController>();
+                        }
+                    }
+                    AltPosition(1);
+                    
+                    gm.AllowGateMovement = true;
+
+                    // Start Tutorial
+                    NewPuzzleUtils();
+                    DeactivateGate(gpc1);
+                    gpc2.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 1: // Force Z to be in slot 1, put H after it.
+                    GateSlots.Instance.moveGateToSlot(tutorialGate2, (0, 0));
+                    gpc2.GateIsOnBelt -= TutorialNext;
+                    DeactivateGate(gpc2);
+
+                    ActivateGate(gpc1);
+                    gpc1.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 2: // Click play
+                    GateSlots.Instance.moveGateToSlot(tutorialGate1, (0, 3));
+                    ClickPlayUtils();
+                    gpc1.GateIsOnBelt -= TutorialNext;
+                    break;
+
+                case 3:
+                    LastPuzzleUtils();
+                    break;
+
+                default:
+                    break;
+            }
+
+            tutorialSeq++;
+
+        }
+        #endregion
+
+        #region Level 23 (Same Entangle)
+        private string[] dialogueSeq23 = new string[]
+        {
+            "These two want mystery boxes, but they want their cupcakes to be " +
+            "the same! Let's start with an H on top.",
+            "If we use a CNOT now, the bottom box will only be chocolate if the top " +
+            "one becomes chocolate when opened.",
+            "That way they'll always have the same flavor cupcake from the mystery " +
+            "box! Let's try it now.",
+            "Keep in mind that this only works if the bottom flavor is vanilla. Next " +
+            "level we'll see what happens if it's not!"
+        };
+
+        public void Tutorial23Next()
+        {
+            if (tutorialSeq >= dialogueSeq23.Length)
+            {
+                EndTutorial();
+                return;
+            }
+
+            tutorialText.text = dialogueSeq23[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
+            switch (tutorialSeq)
+            {
+                case 0: // Start entanglement
+                    // Setup
+                    foreach (GameObject gate in GameObject.FindGameObjectsWithTag("Gate"))
+                    {
+                        SpriteResolver resolver = gate.GetComponent<SpriteResolver>();
+                        if (resolver.GetLabel() == "CNOT")
+                        {
+                            tutorialGate1 = gate;
+                            gpc1 = gate.GetComponent<GatePositionController>();
+                            goc1 = gate.GetComponent<GateOperationController>();
+                        }
+                        else if (resolver.GetLabel() == "NOT")
+                        {
+                            tutorialGate2 = gate;
+                            gpc2 = gate.GetComponent<GatePositionController>();
+                        }
+                        else if (resolver.GetLabel() == "H")
+                        {
+                            tutorialGate3 = gate;
+                            gpc3 = gate.GetComponent<GatePositionController>();
+                        }
+                    }
+                    AltPosition(2);
+
+                    gm.AllowGateMovement = true;
+
+                    // Start Tutorial
+                    NewPuzzleUtils();
+                    DeactivateGate(gpc1);
+                    DeactivateGate(gpc2);
+                    gpc3.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 1: // Move H to top left, place CNOT.
+                    GateSlots.Instance.moveGateToSlot(tutorialGate3, (1, 0));
+                    gpc3.GateIsOnBelt -= TutorialNext;
+                    DeactivateGate(gpc3);
+
+                    ActivateGate(gpc1);
+                    gpc1.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 2: // Click play
+                    ClickPlayUtils();
+                    gpc1.GateIsOnBelt -= TutorialNext;
+                    break;
+
+                case 3:
+                    LastPuzzleUtils();
+                    break;
+
+                default:
+                    break;
+            }
+
+            tutorialSeq++;
+
+        }
+        #endregion
+
+
+
+
+
+        #region Util: Puzzle Paradigms
         private void NewPuzzleUtils()
         {
             ShowTutorial();
@@ -443,25 +596,10 @@ namespace Qupcakery
             ActivateButton();
             DeactivateGates();
         }
+        #endregion
 
 
-        private void ShowTutorial()
-        {
-            chef.GetComponent<SpriteRenderer>().enabled = true;
-            panel.GetComponent<Image>().enabled = true;
-            textObject.GetComponent<Text>().enabled = true;
-            pointer.GetComponent<Canvas>().enabled = true;
-        }
-
-        private void HideTutorial()
-        {
-            chef.GetComponent<SpriteRenderer>().enabled = false;
-            panel.GetComponent<Image>().enabled = false;
-            textObject.GetComponent<Text>().enabled = false;
-            pointer.GetComponent<Canvas>().enabled = false;
-            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
-        }
-
+        #region Util: Functionality
         private void DeactivateGates()
         {
             DeactivateGate(gpc1);
@@ -515,6 +653,52 @@ namespace Qupcakery
             }
             bc.UpdateButtonState(ButtonController.ButtonState.CanBePressed);
         }
+        #endregion
+
+
+        #region Util: Appearance
+
+        private void ShowTutorial()
+        {
+            chef.GetComponent<SpriteRenderer>().enabled = true;
+            panel.GetComponent<Image>().enabled = true;
+            textObject.GetComponent<Text>().enabled = true;
+            pointer.GetComponent<Canvas>().enabled = true;
+        }
+
+        private void HideTutorial()
+        {
+            chef.GetComponent<SpriteRenderer>().enabled = false;
+            panel.GetComponent<Image>().enabled = false;
+            textObject.GetComponent<Text>().enabled = false;
+            pointer.GetComponent<Canvas>().enabled = false;
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+        }
+
+        // Move the chef and text to account for more gates.
+        private void AltPosition(int belts)
+        {
+            switch (belts)
+            {
+                case 1:
+                    chef.GetComponent<Transform>().position += new Vector3(-1.73f, 5.5f, 0);
+                    panel.GetComponent<RectTransform>().position += new Vector3(-1.73f, 5.5f, 0);
+                    textObject.GetComponent<RectTransform>().position += new Vector3(-1.73f, 5.5f, 0);
+                    break;
+                case 2:
+                    chef.GetComponent<Transform>().position += new Vector3(-1.73f, 6.5f, 0);
+                    panel.GetComponent<RectTransform>().position += new Vector3(-1.73f, 6.5f, 0);
+                    textObject.GetComponent<RectTransform>().position += new Vector3(-1.73f, 6.5f, 0);
+                    break;
+                default:
+                    break;
+            }
+            
+        }
+        #endregion
+
+
+        #region Util: Overarching
 
         private void FindCustomer()
         {
@@ -523,15 +707,6 @@ namespace Qupcakery
             {
                 cm = monster.GetComponent<CustomerManager>();
             }
-        }
-
-        // Move the chef and text to account for two gates.
-        private void TwoGatePosition()
-        {
-            chef.GetComponent<Transform>().position += new Vector3(-1.7f, 6.5f, 0);
-            panel.GetComponent<RectTransform>().position += new Vector3(-1.7f, 6.5f, 0);
-            textObject.GetComponent<RectTransform>().position += new Vector3(-1.7f, 6.5f, 0);
-
         }
 
         public void EndTutorial()
@@ -561,6 +736,7 @@ namespace Qupcakery
             }
 
             // Make sure everything is active
+            gm.AllowGateMovement = true;
             ActivateGates();
             ActivateButton();
             AllowFlip(goc1, true);

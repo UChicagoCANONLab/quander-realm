@@ -465,22 +465,24 @@ namespace Qupcakery
 
         private void SetLevel13()
         {
-            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 40, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 50000, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.H] = 1;
 
             Puzzles[0].UpdatePuzzle(1, 3);
             Puzzles[1].UpdatePuzzle(0, 2);
-            Puzzles[2].UpdatePuzzle(1, 2);
-            Puzzles[3].UpdatePuzzle(0, 3);
+            Puzzles[2].UpdatePuzzle(2, 0);
+            Puzzles[3].UpdatePuzzle(3, 1);
+            Puzzles[4].UpdatePuzzle(0, 3);
 
             Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2}, false),
                 new Tuple<int[], bool>(new int[] {2}, false),
                 new Tuple<int[], bool>(new int[] {2}, false),
                 new Tuple<int[], bool>(new int[] {2}, false),
                 new Tuple<int[], bool>(new int[] {2}, false)
             };
 
-            TotalPuzzleCnt = 4;
+            TotalPuzzleCnt = 5;
         }
 
         // Use H to unwrap
@@ -540,33 +542,31 @@ namespace Qupcakery
         // Introduce Z gate
         private void SetLevel16()
         {
-            UpdateLevelSpec(levelGoal: 50, levelTimeLimit: 60, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 50, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.H] = 1;
             AvailableGates[(int)GateType.Z] = 1;
 
             Puzzles[0].UpdatePuzzle(3, 0);
-            Puzzles[1].UpdatePuzzle(2, 0);
-            Puzzles[2].UpdatePuzzle(2, 1);
-            Puzzles[3].UpdatePuzzle(2, 0);
+            Puzzles[1].UpdatePuzzle(2, 1);
+            Puzzles[2].UpdatePuzzle(2, 0);
 
-            Puzzles[4].UpdatePuzzle(0, 2);
-            Puzzles[5].UpdatePuzzle(0, 3);
-            Puzzles[6].UpdatePuzzle(3, 0);
-            Puzzles[7].UpdatePuzzle(2, 0);
+            Puzzles[3].UpdatePuzzle(3, 0);
+            Puzzles[4].UpdatePuzzle(1, 2);
+            Puzzles[5].UpdatePuzzle(1, 3);
+            Puzzles[6].UpdatePuzzle(0, 3);
 
             Solutions = new Tuple<int[], bool>[] {
                 new Tuple<int[], bool>(new int[] {5}, false),
-                new Tuple<int[], bool>(new int[] {2}, false),
                 new Tuple<int[], bool>(new int[] {5}, false),
                 new Tuple<int[], bool>(new int[] {2}, false),
 
-                new Tuple<int[], bool>(new int[] {2}, false),
-                new Tuple<int[], bool>(new int[] {2}, false),
                 new Tuple<int[], bool>(new int[] {5}, false),
-                new Tuple<int[], bool>(new int[] {2}, false)
+                new Tuple<int[], bool>(new int[] {5}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {5}, false)
             };
 
-            TotalPuzzleCnt = 8;
+            TotalPuzzleCnt = 7;
         }
 
         private void SetLevel17()
@@ -745,7 +745,7 @@ namespace Qupcakery
         // Introduce same entanglement
         private void SetLevel23()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
@@ -761,12 +761,12 @@ namespace Qupcakery
 
             Solutions = new Tuple<int[], bool>[] {
                 new Tuple<int[], bool>(new int[] {17}, false),
-                new Tuple<int[], bool>(new int[] {18}, false),
+                new Tuple<int[], bool>(new int[] {17}, false),
                 new Tuple<int[], bool>(new int[] {1, 2}, false),
-                new Tuple<int[], bool>(new int[] {18}, true),
+                new Tuple<int[], bool>(new int[] {17}, true),
 
                 new Tuple<int[], bool>(new int[] {17}, false),
-                new Tuple<int[], bool>(new int[] {18}, true),
+                new Tuple<int[], bool>(new int[] {17}, true),
                 new Tuple<int[], bool>(new int[] {18}, true)
             };
 
