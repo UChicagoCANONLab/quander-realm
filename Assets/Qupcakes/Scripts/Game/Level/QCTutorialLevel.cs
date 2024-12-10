@@ -44,7 +44,7 @@ namespace Qupcakery
             if (TutorialManager.tutorialInd.Contains(levelInd))
             {
                 gm.AllowGateMovement = false;
-                Invoke("InitiateQCTutorial", 0.2f);
+                Invoke("InitiateQCTutorial", 0.5f);
             }
         }
 
@@ -93,6 +93,9 @@ namespace Qupcakery
                     break;
                 case 23:
                     Tutorial23Next();
+                    break;
+                case 24:
+                    Tutorial24Next();
                     break;
                 default:
                     Debug.Log("Tried to run tutorial on level without one: " + levelInd);
@@ -570,6 +573,101 @@ namespace Qupcakery
         #endregion
 
 
+        #region Level 24 (Opposite Entangle)
+        private string[] dialogueSeq24 = new string[]
+        {
+            "These two want opposite mystery boxes. Let's start with the " +
+            "same circuit, first with an H at the top left.",
+            "Like before, we'll add a CNOT afterwards to make their outcomes " +
+            "depend on each other.",
+            "Now, let's try switching the bottom cupcake to chocolate. ",
+            "This way, if the top mystery cupcake becomes chocolate, then the " +
+            "bottom switches to vanilla!",
+            "When two mystery boxes depend on each other, we call them entangled. " +
+            "Have fun with entanglement!"
+        };
+
+        public void Tutorial24Next()
+        {
+            if (tutorialSeq >= dialogueSeq24.Length)
+            {
+                EndTutorial();
+                return;
+            }
+
+            tutorialText.text = dialogueSeq24[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
+            switch (tutorialSeq)
+            {
+                case 0: // Start entanglement
+                    // Setup
+                    foreach (GameObject gate in GameObject.FindGameObjectsWithTag("Gate"))
+                    {
+                        SpriteResolver resolver = gate.GetComponent<SpriteResolver>();
+                        if (resolver.GetLabel() == "CNOT")
+                        {
+                            tutorialGate1 = gate;
+                            gpc1 = gate.GetComponent<GatePositionController>();
+                            goc1 = gate.GetComponent<GateOperationController>();
+                        }
+                        else if (resolver.GetLabel() == "NOT")
+                        {
+                            tutorialGate2 = gate;
+                            gpc2 = gate.GetComponent<GatePositionController>();
+                        }
+                        else if (resolver.GetLabel() == "H")
+                        {
+                            tutorialGate3 = gate;
+                            gpc3 = gate.GetComponent<GatePositionController>();
+                        }
+                    }
+                    AltPosition(2);
+
+                    gm.AllowGateMovement = true;
+
+                    // Start Tutorial
+                    NewPuzzleUtils();
+                    DeactivateGate(gpc1);
+                    DeactivateGate(gpc2);
+                    gpc3.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 1: // Move H to top left, place CNOT.
+                    GateSlots.Instance.moveGateToSlot(tutorialGate3, (1, 0));
+                    gpc3.GateIsOnBelt -= TutorialNext;
+                    DeactivateGate(gpc3);
+
+                    ActivateGate(gpc1);
+                    gpc1.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 2: // Place NOT in bottom left.
+                    gpc1.GateIsOnBelt -= TutorialNext;
+                    DeactivateGate(gpc1);
+
+                    ActivateGate(gpc2);
+                    gpc2.GateIsOnBelt += TutorialNext;
+                    break;
+
+                case 3: // Click play
+                    GateSlots.Instance.moveGateToSlot(tutorialGate2, (0, 0));
+                    ClickPlayUtils();
+                    gpc2.GateIsOnBelt -= TutorialNext;
+                    break;
+
+                case 4:
+                    LastPuzzleUtils();
+                    break;
+
+                default:
+                    break;
+            }
+
+            tutorialSeq++;
+
+        }
+        #endregion
 
 
 

@@ -776,12 +776,12 @@ namespace Qupcakery
         // Introduce opposite entanglement
         private void SetLevel24()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
 
-            Puzzles[0].UpdatePuzzle(1, 6, 0, 7);
+            Puzzles[0].UpdatePuzzle(0, 6, 0, 7);
             Puzzles[1].UpdatePuzzle(0, 6, 1, 7);
             Puzzles[2].UpdatePuzzle(1, 3, 0, 1);
             Puzzles[3].UpdatePuzzle(1, 6, 1, 7);
@@ -790,7 +790,7 @@ namespace Qupcakery
             Puzzles[5].UpdatePuzzle(0, 6, 1, 7);
 
             Solutions = new Tuple<int[], bool>[] {
-                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {18}, false),
                 new Tuple<int[], bool>(new int[] {17}, true),
                 new Tuple<int[], bool>(new int[] {1, 2}, false),
                 new Tuple<int[], bool>(new int[] {17}, false),
