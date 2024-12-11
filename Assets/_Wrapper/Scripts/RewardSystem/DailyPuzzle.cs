@@ -46,5 +46,9 @@ namespace Wrapper
 
         [SerializeField, ContentValue("Question Dependency")]
         public string questionDependency;  
+
+        // Feedback
+        [SerializeField, ContentValue("Explanation")]
+        public string explanation;
     }
 }
