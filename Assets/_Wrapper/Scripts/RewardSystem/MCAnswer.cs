@@ -9,21 +9,23 @@ namespace Wrapper
 {
     public class MCAnswer : MonoBehaviour
     {
-        [SerializeField] private Toggle toggle;
-        [SerializeField] private Image answerImage;
-        [SerializeField] private TextMeshProUGUI answerText;
-        [SerializeField] private bool correctAnswer;
+        [SerializeField] public Toggle toggle;
+        [SerializeField] public Image answerImage;
+        [SerializeField] public TextMeshProUGUI answerText;
+        [SerializeField] public bool correctAnswer;
 
-        private void SetMCAnswer(string imagePath, string text, bool correct) 
+        public void SetMCAnswer(string imagePath, string text, bool correct) 
         {  
             if (imagePath != "") {
-                answerImage = Resources.Load<Image>(imagePath);
+                answerImage.sprite = Resources.Load<Sprite>(imagePath);
                 answerText.enabled = false;
             } else {
                 answerImage.enabled = false;
                 answerText.text = text;
             }
             correctAnswer = correct;
+
+            // toggle.onValueChanged.AddListener();
         }
 
 

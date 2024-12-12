@@ -28,11 +28,6 @@ namespace Wrapper
             QB.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.QueueBits);
             BT.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.BlackBox);
         }
-
-        public void OpenTanglesTrivia() {
-            // SceneManager.LoadScene("TanglesTrivia");
-            Events.OpenMinigame.Invoke(Minigame.Trivia);
-        }
         
     }
 }
