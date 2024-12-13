@@ -14,18 +14,20 @@ namespace Wrapper
         [SerializeField] public TextMeshProUGUI answerText;
         [SerializeField] public bool correctAnswer;
 
-        public void SetMCAnswer(string imagePath, string text, bool correct) 
+        public void SetMCAnswer(string imagePath, int i, string text, bool correct) 
         {  
+            toggle.isOn = false;
+
             if (imagePath != "") {
-                answerImage.sprite = Resources.Load<Sprite>(imagePath);
+                answerImage.sprite = Resources.LoadAll<Sprite>(imagePath)[i];
+                answerImage.enabled = true;
                 answerText.enabled = false;
             } else {
                 answerImage.enabled = false;
                 answerText.text = text;
+                answerText.enabled = true;
             }
             correctAnswer = correct;
-
-            // toggle.onValueChanged.AddListener();
         }
 
 

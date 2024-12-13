@@ -12,7 +12,7 @@ namespace Wrapper
     {
         [SerializeField] private DailyPuzzle currPuzzle;
         [SerializeField] private Animator animator;
-        // [SerializeField] private Button nextButton;
+        [SerializeField] private Button nextButton;
 
         [SerializeField] private TextMeshProUGUI questionText;
         [SerializeField] private Image questionImage;
@@ -21,8 +21,8 @@ namespace Wrapper
 
         private int seq = 0;
         private string[] questionSequence = {
-            // "E1_1",
-            // "E1_2",
+            "E1_1",
+            "E1_2",
             "NA1_1",
             "NA1_2",
             "SP1_1",
@@ -48,8 +48,8 @@ namespace Wrapper
             questionText.text = currPuzzle.question;
             if (currPuzzle.questionImagePath != "") {
                 questionImage.sprite = Resources.Load<Sprite>(currPuzzle.questionImagePath);
-                Debug.Log(currPuzzle.questionImagePath);
                 animator.SetBool("QuestionImageOn", true);
+                // questionImage.gameObject.GetComponent<Button>().onClick.AddListener(ToggleQuestionImageBig);
             } else {
                 animator.SetBool("QuestionImageOn", false);
             }
@@ -59,11 +59,12 @@ namespace Wrapper
                 for (int i=0; i<4; i++) {
                     string tempImagePath = "";
                     if (currPuzzle.answersImagePath != "") {
-                       tempImagePath = $"{currPuzzle.answersImagePath}_{i}";
+                       tempImagePath = $"{currPuzzle.answersImagePath}";
                     }
-                    Debug.Log(tempImagePath);
-                    MCAnswerObjs[i].SetMCAnswer(tempImagePath, currPuzzle.answers[i], 
+                    MCAnswerObjs[i].SetMCAnswer(tempImagePath, i, currPuzzle.answers[i], 
                         (currPuzzle.answers[i]==currPuzzle.correctAnswer));
+                    MCAnswerObjs[i].toggle.onValueChanged.AddListener(
+                        delegate {nextButton.interactable = true;});
                 }
             }
             
@@ -81,6 +82,7 @@ namespace Wrapper
 
         public void CheckAnswer() {
             animator.SetBool("TriviaOn", false);
+            explanationText.text = currPuzzle.explanation;
 
             foreach(MCAnswer ans in MCAnswerObjs) {
                 if (ans.toggle.isOn != ans.correctAnswer) {
@@ -96,6 +98,7 @@ namespace Wrapper
 
         public void NextQuestion() {
             animator.SetBool("FeedbackOn", false);
+            nextButton.interactable = false;
 
             if (seq < questionSequence.Length) {
                 seq++; setQuestion();
@@ -103,7 +106,11 @@ namespace Wrapper
             } else {
                 //do ending screen
             }
-            
+        }
+        
+        public void ToggleQuestionImageBig() {
+            bool active = animator.GetBool("QuestionImageBig");
+            animator.SetBool("QuestionImageBig", !active);
         }
 
     }
