@@ -21,12 +21,12 @@ namespace Wrapper
 
         private int seq = 0;
         private string[] questionSequence = {
-            "E1_1",
-            "E1_2",
+            // "E1_1",
+            // "E1_2",
             "NA1_1",
             "NA1_2",
             "SP1_1",
-            "SP1_2",
+            // "SP1_2",
             "SP1_3",
             "SP1_4"
         };
