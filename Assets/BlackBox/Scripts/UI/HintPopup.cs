@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 namespace BlackBox 
@@ -13,6 +14,7 @@ namespace BlackBox
             "Remember, if you use too many hints, you'll lose a star..."
         }; */
 
+        [SerializeField] private GameObject hintButton;
         [SerializeField] private GameObject linePrefab;
         [SerializeField] private GameObject lineContainer;
     
@@ -61,8 +63,12 @@ namespace BlackBox
 
             // If not tutorial, penalize hints
             if (currLevel.number != 1) {
+                BBEvents.LoseLife.Invoke();
+                
+                if (BBEvents.GetLivesRemaining.Invoke() == 1) {
+                    hintButton.GetComponent<Button>().interactable = false;
+                }
                 // BBEvents.DecrementEnergy.Invoke();
-                // BBEvents.LoseLife.Invoke();
             }
 
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
@@ -305,145 +311,6 @@ namespace BlackBox
                     break;
             }
 
-
-
-            /* if (start.x==end.x && start.y==end.y) { // Direct Hit or Reflect        
-                switch(start.z) {
-                    case 1:     // Left
-                        turn.x = maxSize;
-                        foreach (Vector2Int node in currLevel.nodePositions) {
-                            if ((node.y == start.y || node.y == start.y + 1) // Direct Hit || Reflect
-                            && (node.x < turn.x)) {  // Closest node
-                                turn.x = node.x - 0.5f;
-                            }
-                        } break;
-                    case 2:     // Bottom
-                        turn.y = maxSize;
-                        foreach (Vector2Int node in currLevel.nodePositions) {
-                            if ((node.x == start.x || node.x == start.x + 1)
-                            && (node.y < turn.y)) {
-                                turn.y = node.y - 0.5f;
-                            }
-                        } break;
-                    case 3:     // Right
-                        turn.x = 0;
-                        foreach (Vector2Int node in currLevel.nodePositions) {
-                            if ((node.y == start.y || node.y == start.y + 1)
-                            && (node.x > turn.x)) {
-                                turn.x = node.x + 0.5f;
-                            }
-                        } break;
-                    case 4:     // Top
-                        turn.y = 0;
-                        foreach (Vector2Int node in currLevel.nodePositions) {
-                            if ((node.x == start.x || node.x == start.x + 1)
-                            && (node.y > turn.y)) {
-                                turn.y = node.y + 0.5f;
-                            }
-                        } break;
-                }
-            }
-            else if (start.x==end.x || start.y==end.y) { // Miss or Two Detours
-                if (start.z != end.z) { // Miss
-                    turn.x = (start.x+end.x)/2;
-                    turn.y = (start.y+end.y)/2;
-                    cornerOn = false;    
-                }
-                else { // Two Detours where end on same side
-                    cornerOffset = new Vector3(offsetPt, offsetPt, 0);
-                    cornerOffset2 = new Vector3(offsetPt, offsetPt, 0);
-                    cornerOn2 = true;
-
-                    turn = new Vector3(start.x, start.y, 0);
-                    turn2 = new Vector3(end.x, end.y, 0); // will be changed according to start.z
-
-                    switch(start.z) {
-                        case 1:     // Left
-                            turn.x = maxSize;
-                            foreach (Vector2Int node in currLevel.nodePositions) {
-                                if ((node.y == start.y + 1 || node.y == start.y - 1) // First detour
-                                && (node.x < turn.x)) {  // Closest node
-                                    turn.x = node.x - 1;
-                                    turn2.x = node.x - 1;
-                                }
-                            } if (turn.y > turn2.y) {
-                                cornerOffset2.y *= -1;
-                            } else {
-                                cornerOffset.y *= -1;
-                            }
-                            break;
-                        case 2:     // Bottom
-                            turn.y = maxSize;
-                            foreach (Vector2Int node in currLevel.nodePositions) {
-                                if ((node.x == start.x + 1 || node.x == start.x - 1) 
-                                && (node.y < turn.y)) {  
-                                    turn.y = node.y - 1;
-                                    turn2.y = node.y - 1;
-                                }
-                            } if (turn.x > turn2.x) {
-                                cornerOffset2.x *= -1;
-                            } else {
-                                cornerOffset.x *= -1;
-                            }
-                            break;
-                        case 3:     // Right
-                            turn.x = 0;
-                            foreach (Vector2Int node in currLevel.nodePositions) {
-                                if ((node.y == start.y + 1 || node.y == start.y - 1) 
-                                && (node.x > turn.x)) {  
-                                    turn.x = node.x + 1;
-                                    turn2.x = node.x + 1;
-                                }
-                            } if (turn.y > turn2.y) {
-                                cornerOffset.x *= -1;
-                                cornerOffset2.x *= -1;
-                                cornerOffset2.y *= -1;
-                            } else {
-                                cornerOffset.x *= -1;
-                                cornerOffset.y *= -1;
-                                cornerOffset2.x *= -1;
-                            }
-                            break;
-                        case 4:     // Top
-                            turn.y = 0;
-                            foreach (Vector2Int node in currLevel.nodePositions) {
-                                if ((node.x == start.x + 1 || node.x == start.x - 1) 
-                                && (node.y > turn.y)) {  
-                                    turn.y = node.y + 1;
-                                    turn2.y = node.y + 1;
-                                }
-                            } if (turn.x > turn2.x) {
-                                cornerOffset.y *= -1;
-                                cornerOffset2.x *= -1;
-                                cornerOffset2.y *= -1;
-                            } else {
-                                cornerOffset.x *= -1;
-                                cornerOffset.y *= -1;
-                                cornerOffset2.y *= -1;
-                            }
-                            break;
-                    }
-                }
-            } 
-            else { // Detour
-                cornerOffset = new Vector3(offsetPt, offsetPt, 0);
-
-                if (start.x==-1 || start.x==maxSize) { // Invert line shape
-                    turn.x = end.x; turn.y = start.y; 
-                }
-                // Change turn icon location by type of turn
-                if ((start.z==1 && end.z==2) || (start.z==2 && end.z==1)) {
-                    // No need to change direction of icon offset
-                } else if ((start.z==2 && end.z==3) || (start.z==3 && end.z==2)) {
-                    cornerOffset.x *= -1;
-                } else if ((start.z==3 && end.z==4) || (start.z==4 && end.z==3)) {
-                    cornerOffset.x *= -1;
-                    cornerOffset.y *= -1;
-                } else if ((start.z==4 && end.z==1) || (start.z==1 && end.z==4)) {
-                    cornerOffset.y *= -1;
-                }
-            } */
-
             Vector3[] positions = new Vector3[] {start, turn, end};
             if (cornerOn2) { 
                 positions = new Vector3[] {start, turn, turn2, end};
@@ -489,6 +356,8 @@ namespace BlackBox
             hintCounter = 0;
             hintPairs.Clear();
             hintType.Clear();
+
+            hintButton.GetComponent<Button>().interactable = true;
         }
 
         public void AppendHintCoor(Vector3Int orig, Dir origDir, Vector3Int dest, Dir destDir, Marker type) {    

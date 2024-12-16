@@ -55,6 +55,7 @@ namespace BlackBox
         public static Func<int> GetNumEnergyUnits;
         public static Action<int> UpdateHUDWolfieLives;
         public static Action LoseLife;
+        public static Func<int> GetLivesRemaining;
 
         /// Level Submission
         public static Action CheckWinState;

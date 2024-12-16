@@ -104,6 +104,7 @@ namespace BlackBox
             BBEvents.GetFrontMount += GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits += GetNumEnergyUnits;
             BBEvents.LoseLife += LoseLife;
+            BBEvents.GetLivesRemaining += GetLivesRemaining;
             BBEvents.ReturnLanternHome += ReturnLanternHome;
             BBEvents.CompleteBlackBox += PlayEndDialog;
             BBEvents.PlayLevel += SetAndPlayLevel;
@@ -128,6 +129,7 @@ namespace BlackBox
             BBEvents.GetFrontMount -= GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits -= GetNumEnergyUnits;
             BBEvents.LoseLife -= LoseLife;
+            BBEvents.GetLivesRemaining -= GetLivesRemaining;
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
             BBEvents.CompleteBlackBox -= PlayEndDialog;
             BBEvents.PlayLevel -= SetAndPlayLevel;
@@ -515,6 +517,11 @@ namespace BlackBox
                 WinState winState = new(totalNodes, numCorrect, levelWon, level.number, livesRemaining, ParseLevelID(level.nextLevelID) == -1);
                 Routine.Start(DisplayPlayerFeedBack(winState));
             }
+        }
+
+        private int GetLivesRemaining()
+        {
+            return livesRemaining;
         }
 
         private bool GetDebugBool()
