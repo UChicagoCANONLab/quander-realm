@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 using BeauRoutine;
 using System;
@@ -18,6 +19,7 @@ namespace Wrapper
         [SerializeField] private Image questionImage;
         [SerializeField] private MCAnswer[] MCAnswerObjs;
         [SerializeField] private TextMeshProUGUI explanationText;
+        [SerializeField] private TextMeshProUGUI finalScoreText;
 
         private int seq = 0;
         private string[] questionSequence = {
@@ -28,7 +30,8 @@ namespace Wrapper
             "SP1_1",
             // "SP1_2",
             "SP1_3",
-            "SP1_4"
+            "SP1_4",
+            "C1_1"
         };
         private int numCorrect = 0;
 
@@ -37,6 +40,7 @@ namespace Wrapper
             animator.SetBool("StartOn", true);
             animator.SetBool("TriviaOn", false);
             animator.SetBool("FeedbackOn", false);
+            animator.SetBool("EndOn", false);
         }
 
 
@@ -74,8 +78,10 @@ namespace Wrapper
         // Button Functionality
 
         public void StartTrivia() {
-            seq = 0; setQuestion();
+            seq = 0; numCorrect = 0;
+            setQuestion();
 
+            animator.SetBool("EndOn", false);
             animator.SetBool("StartOn", false);
             animator.SetBool("TriviaOn", true);
         }
@@ -100,17 +106,27 @@ namespace Wrapper
             animator.SetBool("FeedbackOn", false);
             nextButton.interactable = false;
 
-            if (seq < questionSequence.Length) {
+            if (seq < questionSequence.Length -1) {
                 seq++; setQuestion();
                 animator.SetBool("TriviaOn", true);
             } else {
-                //do ending screen
+                EndTrivia();
             }
         }
         
+        public void EndTrivia() {
+            animator.SetBool("EndOn", true);
+            finalScoreText.text = $"{numCorrect} / {questionSequence.Length}";
+        }
+
         public void ToggleQuestionImageBig() {
             bool active = animator.GetBool("QuestionImageBig");
             animator.SetBool("QuestionImageBig", !active);
+        }
+
+        public void ExitTrivia() { // Copied from BackButton.cs
+            Events.ScreenFadeMidAction?.Invoke(() =>
+                { SceneManager.LoadScene(0); Events.MinigameClosed?.Invoke();}, 0.1F);
         }
 
     }
