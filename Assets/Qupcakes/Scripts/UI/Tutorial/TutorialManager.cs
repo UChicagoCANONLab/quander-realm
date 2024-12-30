@@ -21,13 +21,14 @@ namespace Qupcakery
         {
             if (finishedLevel == -1)
             {
-                foreach (int ind in tutorialInd)
+                // Disabled dialogue if not intro/outro now that tutorials are implemented
+                /* foreach (int ind in tutorialInd)
                 {
                     if (ind > GameManagement.Instance.game.gameStat.MaxLevelCompleted)
                         tutorialAvailable[ind] = true;
                     else
                         tutorialAvailable[ind] = false;
-                }
+                } */
                 if (GameManagement.Instance.game.gameStat.MaxLevelCompleted >= 1) {
                     IntroPlayed = true;
                 }
