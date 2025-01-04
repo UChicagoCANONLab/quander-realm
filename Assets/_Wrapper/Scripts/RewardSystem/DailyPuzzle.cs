@@ -50,5 +50,8 @@ namespace Wrapper
         // Feedback
         [SerializeField, ContentValue("Explanation")]
         public string explanation;
+        
+        [SerializeField, ContentValue("Explanation Image Path")]
+        public string explanationImagePath;
     }
 }

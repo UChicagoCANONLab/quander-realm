@@ -1,3 +1,4 @@
+// using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using BeauRoutine;
-using System;
+
 
 namespace Wrapper 
 {
@@ -19,6 +20,7 @@ namespace Wrapper
         [SerializeField] private Image questionImage;
         [SerializeField] private MCAnswer[] MCAnswerObjs;
         [SerializeField] private TextMeshProUGUI explanationText;
+        [SerializeField] private Image explanationImage;
         [SerializeField] private TextMeshProUGUI finalScoreText;
 
         private int seq = 0;
@@ -79,6 +81,7 @@ namespace Wrapper
 
         public void StartTrivia() {
             seq = 0; numCorrect = 0;
+            ShuffleQuestions();
             setQuestion();
 
             animator.SetBool("EndOn", false);
@@ -90,14 +93,21 @@ namespace Wrapper
             animator.SetBool("TriviaOn", false);
             explanationText.text = currPuzzle.explanation;
 
+            if (currPuzzle.explanationImagePath != "") {
+                explanationImage.sprite = Resources.Load<Sprite>(currPuzzle.explanationImagePath);
+                animator.SetBool("FeedbackImage", true);
+            } else {
+                animator.SetBool("FeedbackImage", false);
+            }
+
             foreach(MCAnswer ans in MCAnswerObjs) {
                 if (ans.toggle.isOn != ans.correctAnswer) {
                     animator.SetBool("AnswerCorrect", false);
                     animator.SetBool("FeedbackOn", true);
                     return;
                 }
-            } numCorrect++;
-            
+            } 
+            numCorrect++;            
             animator.SetBool("AnswerCorrect", true);
             animator.SetBool("FeedbackOn", true);
         }
@@ -127,6 +137,16 @@ namespace Wrapper
         public void ExitTrivia() { // Copied from BackButton.cs
             Events.ScreenFadeMidAction?.Invoke(() =>
                 { SceneManager.LoadScene(0); Events.MinigameClosed?.Invoke();}, 0.1F);
+        }
+
+        public void ShuffleQuestions() {
+            // Knuth shuffle algorithm
+            for(int i=0; i<questionSequence.Length; i++) {
+                string temp = questionSequence[i];
+                int j = Random.Range(i, questionSequence.Length);
+                questionSequence[i] = questionSequence[j];
+                questionSequence[j] = temp;
+            }
         }
 
     }
