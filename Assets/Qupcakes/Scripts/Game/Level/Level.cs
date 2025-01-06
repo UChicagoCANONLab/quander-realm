@@ -161,7 +161,7 @@ namespace Qupcakery
 
         private void SetLevel1()
         {
-            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 40, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.NOT] = 1;            
 
             Puzzles[0].UpdatePuzzle(0, 0);
@@ -170,22 +170,16 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 1);
 
             Puzzles[4].UpdatePuzzle(0, 1);
-            Puzzles[5].UpdatePuzzle(0, 0);
-            Puzzles[6].UpdatePuzzle(1, 0);
-            Puzzles[7].UpdatePuzzle(1, 1);
 
             Solutions = new Tuple<int[], bool>[] {
                 new Tuple<int[], bool>(new int[] { 0 }, false),
                 new Tuple<int[], bool>(new int[] { 1 }, false),
                 new Tuple<int[], bool>(new int[] { 1 }, false),
                 new Tuple<int[], bool>(new int[] { 0 }, false),
-                new Tuple<int[], bool>(new int[] { 1 }, false),
-                new Tuple<int[], bool>(new int[] { 0 }, false),
-                new Tuple<int[], bool>(new int[] { 1 }, false),
-                new Tuple<int[], bool>(new int[] { 0 }, false)
+                new Tuple<int[], bool>(new int[] { 1 }, false)
             };
 
-            TotalPuzzleCnt = 8;
+            TotalPuzzleCnt = 5;
 
         }
 
@@ -542,31 +536,23 @@ namespace Qupcakery
         // Introduce Z gate
         private void SetLevel16()
         {
-            UpdateLevelSpec(levelGoal: 50, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 30, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.H] = 1;
             AvailableGates[(int)GateType.Z] = 1;
 
             Puzzles[0].UpdatePuzzle(3, 0);
             Puzzles[1].UpdatePuzzle(2, 1);
             Puzzles[2].UpdatePuzzle(2, 0);
-
             Puzzles[3].UpdatePuzzle(3, 0);
-            Puzzles[4].UpdatePuzzle(1, 2);
-            Puzzles[5].UpdatePuzzle(1, 3);
-            Puzzles[6].UpdatePuzzle(0, 3);
 
             Solutions = new Tuple<int[], bool>[] {
-                new Tuple<int[], bool>(new int[] {5}, false),
-                new Tuple<int[], bool>(new int[] {5}, false),
-                new Tuple<int[], bool>(new int[] {2}, false),
-
                 new Tuple<int[], bool>(new int[] {5}, false),
                 new Tuple<int[], bool>(new int[] {5}, false),
                 new Tuple<int[], bool>(new int[] {2}, false),
                 new Tuple<int[], bool>(new int[] {5}, false)
             };
 
-            TotalPuzzleCnt = 7;
+            TotalPuzzleCnt = 4;
         }
 
         private void SetLevel17()
