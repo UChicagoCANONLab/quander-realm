@@ -161,7 +161,7 @@ namespace Qupcakery
 
         private void SetLevel1()
         {
-            UpdateLevelSpec(levelGoal: 40, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 70, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.NOT] = 1;            
 
             Puzzles[0].UpdatePuzzle(0, 0);
@@ -210,7 +210,7 @@ namespace Qupcakery
 
         private void SetLevel3()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 180, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 2;
             AvailableGates[(int)GateType.SWAP] = 1;
 
@@ -333,7 +333,7 @@ namespace Qupcakery
 
         private void SetLevel8()
         {
-            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 160, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.CNOT] = 1;
 
             Puzzles[0].UpdatePuzzle(0, 1, 1, 1);
@@ -536,7 +536,7 @@ namespace Qupcakery
         // Introduce Z gate
         private void SetLevel16()
         {
-            UpdateLevelSpec(levelGoal: 30, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.H] = 1;
             AvailableGates[(int)GateType.Z] = 1;
 
@@ -731,7 +731,7 @@ namespace Qupcakery
         // Introduce same entanglement
         private void SetLevel23()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
@@ -741,9 +741,7 @@ namespace Qupcakery
             Puzzles[2].UpdatePuzzle(1, 3, 0, 1);
             Puzzles[3].UpdatePuzzle(1, 4, 0, 5);
 
-            Puzzles[4].UpdatePuzzle(0, 4, 0, 5);
-            Puzzles[5].UpdatePuzzle(1, 4, 0, 5);
-            Puzzles[6].UpdatePuzzle(1, 4, 1, 5);
+            Puzzles[4].UpdatePuzzle(1, 4, 1, 5);
 
             Solutions = new Tuple<int[], bool>[] {
                 new Tuple<int[], bool>(new int[] {17}, false),
@@ -751,18 +749,16 @@ namespace Qupcakery
                 new Tuple<int[], bool>(new int[] {1, 2}, false),
                 new Tuple<int[], bool>(new int[] {17}, true),
 
-                new Tuple<int[], bool>(new int[] {17}, false),
-                new Tuple<int[], bool>(new int[] {17}, true),
                 new Tuple<int[], bool>(new int[] {18}, true)
             };
 
-            TotalPuzzleCnt = 7;
+            TotalPuzzleCnt = 5;
         }
 
         // Introduce opposite entanglement
         private void SetLevel24()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 180, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
