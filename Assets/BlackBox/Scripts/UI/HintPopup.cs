@@ -26,6 +26,7 @@ namespace BlackBox
 
         private int maxSize;
         private int hintCounter = 0;
+        private int gridPixelSize = 1000; // if 16:10, 900
         
         private int offsetPt = 30;
         private Vector3[] offsetType = new Vector3[5] {
@@ -320,12 +321,12 @@ namespace BlackBox
                 Vector3 pos = positions[i];
                 switch (pos.x) {
                     case -1:        positions[i].x=0; break;
-                    case var value when value == maxSize:   positions[i].x=900; break;
-                    default:        positions[i].x= pos.x*(900/maxSize)+(900/(maxSize*2)); break;
+                    case var value when value == maxSize:   positions[i].x=gridPixelSize; break;
+                    default:        positions[i].x= pos.x*(gridPixelSize/maxSize)+(gridPixelSize/(maxSize*2)); break;
                 } switch (pos.y) {
                     case -1:        positions[i].y=0; break;
-                    case var value when value == maxSize:   positions[i].y=900; break;
-                    default:        positions[i].y= pos.y*(900/maxSize)+(900/(maxSize*2)); break;
+                    case var value when value == maxSize:   positions[i].y=gridPixelSize; break;
+                    default:        positions[i].y= pos.y*(gridPixelSize/maxSize)+(gridPixelSize/(maxSize*2)); break;
                 }
             }
             GameObject currLine = Instantiate(linePrefab, lineContainer.transform);
