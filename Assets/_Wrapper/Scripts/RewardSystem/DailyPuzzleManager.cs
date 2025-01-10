@@ -21,21 +21,23 @@ namespace Wrapper
         [SerializeField] private MCAnswer[] MCAnswerObjs;
         [SerializeField] private TextMeshProUGUI explanationText;
         [SerializeField] private Image explanationImage;
-        [SerializeField] private TextMeshProUGUI finalScoreText;
+        [SerializeField] private TextMeshProUGUI finalScoreNumText;
+        [SerializeField] private TextMeshProUGUI finalScoreWinnerText;
 
         private int seq = 0;
         private string[] questionSequence = {
-            // "E1_1",
-            // "E1_2",
-            "NA1_1",
-            "NA1_2",
-            "SP1_1",
-            // "SP1_2",
-            "SP1_3",
-            "SP1_4",
+            "E1_1", "E1_2",
+            "NA1_1", "NA1_2",
+            "SP1_1", "SP1_2", "SP1_3", "SP1_4",
             "C1_1"
         };
         private int numCorrect = 0;
+
+        private bool demo = true;
+        private string[] demoQuestionSequence = 
+            {"NA1_1", "NA1_2", "SP1_1", "SP1_3", "SP1_4", "C1_1"};
+        private string[] demoWinnerText = 
+            {"Padawan", "Intern", "Assistant", "Associate", "Expert", "Black Belt", "The GOAT"};
 
 
         private void Awake() {
@@ -48,7 +50,12 @@ namespace Wrapper
 
         private void setQuestion() {
             // Load next puzzle in sequence
-            currPuzzle = Resources.Load<DailyPuzzle>($"_Wrapper/Incentives/DailyPuzzles/{questionSequence[seq]}");
+            if (demo) {
+                currPuzzle = Resources.Load<DailyPuzzle>($"_Wrapper/Incentives/DailyPuzzles/{demoQuestionSequence[seq]}");
+            } else {
+                currPuzzle = Resources.Load<DailyPuzzle>($"_Wrapper/Incentives/DailyPuzzles/{questionSequence[seq]}");
+            }
+            
 
             // Set question and question image
             questionText.text = currPuzzle.question;
@@ -73,8 +80,7 @@ namespace Wrapper
                         delegate {nextButton.interactable = true;});
                 }
             }
-            
-
+            nextButton.interactable = false;
         }
 
         // Button Functionality
@@ -114,9 +120,9 @@ namespace Wrapper
 
         public void NextQuestion() {
             animator.SetBool("FeedbackOn", false);
-            nextButton.interactable = false;
 
-            if (seq < questionSequence.Length -1) {
+            if ((demo && (seq < demoQuestionSequence.Length -1))
+            || (!demo && (seq < questionSequence.Length -1))) {
                 seq++; setQuestion();
                 animator.SetBool("TriviaOn", true);
             } else {
@@ -126,7 +132,15 @@ namespace Wrapper
         
         public void EndTrivia() {
             animator.SetBool("EndOn", true);
-            finalScoreText.text = $"{numCorrect} / {questionSequence.Length}";
+
+            if (demo) {
+                finalScoreNumText.text = $"{numCorrect} / {demoQuestionSequence.Length}";
+                finalScoreWinnerText.text = demoWinnerText[numCorrect];
+            } else {
+                finalScoreNumText.text = $"{numCorrect} / {questionSequence.Length}";
+                finalScoreWinnerText.text = "Tangle's Assistant!";
+            }
+
         }
 
         public void ToggleQuestionImageBig() {
@@ -141,11 +155,13 @@ namespace Wrapper
 
         public void ShuffleQuestions() {
             // Knuth shuffle algorithm
-            for(int i=0; i<questionSequence.Length; i++) {
-                string temp = questionSequence[i];
-                int j = Random.Range(i, questionSequence.Length);
-                questionSequence[i] = questionSequence[j];
-                questionSequence[j] = temp;
+            if (demo) {
+                for(int i=0; i<demoQuestionSequence.Length; i++) {
+                    string temp = demoQuestionSequence[i];
+                    int j = Random.Range(i, demoQuestionSequence.Length);
+                    demoQuestionSequence[i] = demoQuestionSequence[j];
+                    demoQuestionSequence[j] = temp;
+                }
             }
         }
 
