@@ -43,7 +43,7 @@ namespace Labyrinth
 
 
         public void SetLevelNumber(string num) {
-            levelTypeAnimator.SetInteger("Level", int.Parse(num));
+            levelTypeAnimator.SetInteger("Degree", SaveData.Instance.Degree);
             if (num == "0") { return; }
             levelNumber.text = num;
         }
