@@ -14,7 +14,7 @@ namespace Qupcakery
 #if LITE_VERSION
     public static int[] tutorialInd = new int[] { 1, 3, 8, 13, 16 };
 #else
-    public static int[] tutorialInd = new int[] { 1, 3, 8, 13, 16, 23, 24 };
+    public static int[] tutorialInd = new int[] { 1, 2, 3, 8, 13, 16, 23, 24 };
 #endif
 
         public static void UpdateAvailability(int finishedLevel = -1)

@@ -79,6 +79,9 @@ namespace Qupcakery
                 case 1:
                     Tutorial1Next();
                     break;
+                case 2:
+                    Tutorial2Next();
+                    break;
                 case 3:
                     Tutorial3Next();
                     break;
@@ -149,6 +152,47 @@ namespace Qupcakery
                     break;
 
                 case 3:
+                    LastPuzzleUtils();
+                    break;
+
+                default:
+                    break;
+            }
+
+            tutorialSeq++;
+        }
+        #endregion
+
+        #region Level 2 (Time Controls)
+        private string[] dialogueSeq2 = new string[]
+        {
+            "Our customers won't wait forever! The bar under each customer is their " +
+            "patience.",
+            "The top left bar shows how long my shop will be open - see how many cupcakes " + 
+            "you can serve!"
+        };
+
+        public void Tutorial2Next()
+        {
+            if (tutorialSeq >= dialogueSeq2.Length)
+            {
+                EndTutorial();
+                return;
+            }
+
+            tutorialText.text = dialogueSeq2[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
+            switch (tutorialSeq)
+            {
+                case 0:
+                    ShowTutorial();
+                    gm.AllowGateMovement = true;
+                    gm.InTutorial = false;
+                    LastPuzzleUtils();
+                    break;
+
+                case 1:
                     LastPuzzleUtils();
                     break;
 
@@ -571,7 +615,6 @@ namespace Qupcakery
 
         }
         #endregion
-
 
         #region Level 24 (Opposite Entangle)
         private string[] dialogueSeq24 = new string[]

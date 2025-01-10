@@ -185,7 +185,7 @@ namespace Qupcakery
 
         private void SetLevel2()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 200, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 2;
 
             Puzzles[0].UpdatePuzzle(0, 0, 1, 0);
