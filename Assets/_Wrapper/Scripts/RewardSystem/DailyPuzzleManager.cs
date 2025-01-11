@@ -137,7 +137,7 @@ namespace Wrapper
                 finalScoreNumText.text = $"{numCorrect} / {demoQuestionSequence.Length}";
                 finalScoreWinnerText.text = demoWinnerText[numCorrect];
             } else {
-                finalScoreNumText.text = $"{numCorrect} / {questionSequence.Length}";
+                finalScoreNumText.text = $"{numCorrect/questionSequence.Length}%";
                 finalScoreWinnerText.text = "Tangle's Assistant!";
             }
 
