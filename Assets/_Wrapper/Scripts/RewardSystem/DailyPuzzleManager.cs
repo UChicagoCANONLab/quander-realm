@@ -37,7 +37,7 @@ namespace Wrapper
         private string[] demoQuestionSequence = 
             {"NA1_1", "NA1_2", "SP1_1", "SP1_3", "SP1_4", "C1_1"};
         private string[] demoWinnerText = 
-            {"Padawan", "Intern", "Assistant", "Associate", "Expert", "Black Belt", "The GOAT"};
+            {"Padawan", "Intern", "Apprentice", "Assistant", "Expert", "Black Belt", "The GOAT"};
 
 
         private void Awake() {
