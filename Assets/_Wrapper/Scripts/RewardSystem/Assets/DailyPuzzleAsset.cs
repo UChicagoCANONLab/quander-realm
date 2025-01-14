@@ -19,8 +19,8 @@ namespace Wrapper
         [SerializeField, ContentValue("Question Type")]
         public QuestionType questionType;
 
-        [SerializeField, ContentValue("Card Type")]
-        public CardType cardType;
+        [SerializeField, ContentValue("Concept")]
+        public Concept concept;
 
         // Puzzle content
 

@@ -93,7 +93,8 @@ namespace Wrapper
     public enum Category
     {
         Play,
-        Knowledge
+        Knowledge,
+        Lore
     };
 
     public enum QuestionType
@@ -109,6 +110,7 @@ namespace Wrapper
         QuantumCircuits,
         QuantumGates,
         Entanglement,
-        Measurement
+        Measurement,
+        None
     };
 }
