@@ -70,8 +70,77 @@ namespace Wrapper
             {(10, 0),   new string[] {"MS_BB2",  "",        "Reflect unlocked"}},
             {(13, 0),   new string[] {"MS_BB3",  "",        "Multiple Detours unlocked"}},
             {(24, 0),   new string[] {"MS_BB4",  "",        "Completed game"}},
-            {(0, 72),   new string[] {"MS_BB6",  "MS_BB4",  "Win all stars"}}
+            {(0, 72),   new string[] {"MS_BB5",  "MS_BB4",  "Win all stars"}}
         };
+
+
+        public void LoadMilestoneData(Game game, int maxLevel, int totalStars) {
+            switch(game) 
+            {
+                case Game.Qupcakes:
+                    for(int i=0; i<=maxLevel; i++) {
+                        if(QupcakeryMilestones.ContainsKey(i,0)) {
+                            CompletedMilestones.Add(QupcakeryMilestones[(i,0)][0]);
+                        }
+                    }
+                    if (totalStars < 10) { break; }
+                    else if (totalStars < 27) {
+                        CompletedMilestones.Add(QupcakeryMilestones[(0,10)][0]);
+                    } else if (totalStars < 81) {
+                        CompletedMilestones.Add(QupcakeryMilestones[(0,10)][0]);
+                        CompletedMilestones.Add(QupcakeryMilestones[(0,27)][0]);
+                    } else {
+                        CompletedMilestones.Add(QupcakeryMilestones[(0,10)][0]);
+                        CompletedMilestones.Add(QupcakeryMilestones[(0,27)][0]);
+                        CompletedMilestones.Add(QupcakeryMilestones[(0,81)][0]);
+                    } break;
+
+                case Game.Labyrinth:
+                    for(int i=0; i<=maxLevel; i++) {
+                        if(TwintanglementMilestones.ContainsKey(i,0)) {
+                            CompletedMilestones.Add(TwintanglementMilestones[(i,0)][0]);
+                        }
+                    }
+                    if (totalStars < 10) { break; }
+                    else if (totalStars < 45) {
+                        CompletedMilestones.Add(TwintanglementMilestones[(0,10)][0]);
+                    } else {
+                        CompletedMilestones.Add(TwintanglementMilestones[(0,10)][0]);
+                        CompletedMilestones.Add(TwintanglementMilestones[(0,45)][0]);
+                    } break;
+
+                case Game.Circuits:
+                    for(int i=0; i<=maxLevel; i++) {
+                        if(TanglesLairMilestones.ContainsKey(i,0)) {
+                            CompletedMilestones.Add(TanglesLairMilestones[(i,0)][0]);
+                        }
+                    }
+                    if (totalStars == 75) { 
+                        CompletedMilestones.Add(TanglesLairMilestones[(0,75)][0]);
+                    } break;
+
+                case Game.QueueBits:
+                    for(int i=0; i<=maxLevel; i++) {
+                        if(QueueBitsMilestones.ContainsKey(i,0)) {
+                            CompletedMilestones.Add(QueueBitsMilestones[(i,0)][0]);
+                        }
+                    }
+                    if (totalStars == 45) { 
+                        CompletedMilestones.Add(QueueBitsMilestones[(0,45)][0]);
+                    } break;
+
+
+                case Game.BlackBox:
+                    for(int i=0; i<=maxLevel; i++) {
+                        if(QueueBitsMilestones.ContainsKey(i,0)) {
+                            CompletedMilestones.Add(QueueBitsMilestones[(i,0)][0]);
+                        }
+                    }
+                    if (totalStars == 72) { 
+                        CompletedMilestones.Add(QueueBitsMilestones[(0,72)][0]);
+                    } break;
+            }
+        }
 
 
         public void CheckMilestone(Game game, int level, int totalStars) {
