@@ -12,7 +12,7 @@ namespace Wrapper
 {
     public class DailyPuzzleManager : MonoBehaviour
     {
-        [SerializeField] private DailyPuzzle currPuzzle;
+        [SerializeField] private DailyPuzzleAsset currPuzzle;
         [SerializeField] private Animator animator;
         [SerializeField] private Button nextButton;
 
@@ -23,6 +23,8 @@ namespace Wrapper
         [SerializeField] private Image explanationImage;
         [SerializeField] private TextMeshProUGUI finalScoreNumText;
         [SerializeField] private TextMeshProUGUI finalScoreWinnerText;
+
+        private string prefix = "_Wrapper/Incentives/DailyPuzzles";
 
         private int seq = 0;
         private string[] questionSequence = {
@@ -51,16 +53,16 @@ namespace Wrapper
         private void setQuestion() {
             // Load next puzzle in sequence
             if (demo) {
-                currPuzzle = Resources.Load<DailyPuzzle>($"_Wrapper/Incentives/DailyPuzzles/{demoQuestionSequence[seq]}");
+                currPuzzle = Resources.Load<DailyPuzzleAsset>($"{prefix}/{demoQuestionSequence[seq]}");
             } else {
-                currPuzzle = Resources.Load<DailyPuzzle>($"_Wrapper/Incentives/DailyPuzzles/{questionSequence[seq]}");
+                currPuzzle = Resources.Load<DailyPuzzleAsset>($"{prefix}/{questionSequence[seq]}");
             }
             
 
             // Set question and question image
             questionText.text = currPuzzle.question;
-            if (currPuzzle.questionImagePath != "") {
-                questionImage.sprite = Resources.Load<Sprite>(currPuzzle.questionImagePath);
+            if (currPuzzle.questionImageName != "") {
+                questionImage.sprite = Resources.Load<Sprite>($"{prefix}_Images/{currPuzzle.questionImageName}");
                 animator.SetBool("QuestionImageOn", true);
                 // questionImage.gameObject.GetComponent<Button>().onClick.AddListener(ToggleQuestionImageBig);
             } else {
@@ -70,11 +72,11 @@ namespace Wrapper
             // Set answers and answer images
             if (currPuzzle.questionType == QuestionType.MC) {
                 for (int i=0; i<4; i++) {
-                    string tempImagePath = "";
-                    if (currPuzzle.answersImagePath != "") {
-                       tempImagePath = $"{currPuzzle.answersImagePath}";
+                    string tempImageName = "";
+                    if (currPuzzle.answersImageName != "") {
+                       tempImageName = $"{prefix}_Images/{currPuzzle.answersImageName}";
                     }
-                    MCAnswerObjs[i].SetMCAnswer(tempImagePath, i, currPuzzle.answers[i], 
+                    MCAnswerObjs[i].SetMCAnswer(tempImageName, i, currPuzzle.answers[i], 
                         (currPuzzle.answers[i]==currPuzzle.correctAnswer));
                     MCAnswerObjs[i].toggle.onValueChanged.AddListener(
                         delegate {nextButton.interactable = true;});
@@ -99,8 +101,8 @@ namespace Wrapper
             animator.SetBool("TriviaOn", false);
             explanationText.text = currPuzzle.explanation;
 
-            if (currPuzzle.explanationImagePath != "") {
-                explanationImage.sprite = Resources.Load<Sprite>(currPuzzle.explanationImagePath);
+            if (currPuzzle.explanationImageName != "") {
+                explanationImage.sprite = Resources.Load<Sprite>($"{prefix}_Images/{currPuzzle.explanationImageName}");
                 animator.SetBool("FeedbackImage", true);
             } else {
                 animator.SetBool("FeedbackImage", false);

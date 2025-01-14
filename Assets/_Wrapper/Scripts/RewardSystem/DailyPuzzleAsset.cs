@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Wrapper
 {
-    public class DailyPuzzle : ContentAsset
+    public class DailyPuzzleAsset : ContentAsset
     {
         // Identifying information
 
@@ -27,14 +27,14 @@ namespace Wrapper
         [SerializeField, ContentValue("Question")]
         public string question;
 
-        [SerializeField, ContentValue("Question Image Path")]
-        public string questionImagePath;
+        [SerializeField, ContentValue("Question Image Name")]
+        public string questionImageName;
 
         [SerializeField, ContentValue("Answers")]
         public string[] answers;
 
-        [SerializeField, ContentValue("Answers Image Path")]
-        public string answersImagePath;
+        [SerializeField, ContentValue("Answers Image Name")]
+        public string answersImageName;
 
         [SerializeField, ContentValue("Correct Answer")]
         public string correctAnswer;
@@ -51,7 +51,7 @@ namespace Wrapper
         [SerializeField, ContentValue("Explanation")]
         public string explanation;
         
-        [SerializeField, ContentValue("Explanation Image Path")]
-        public string explanationImagePath;
+        [SerializeField, ContentValue("Explanation Image Name")]
+        public string explanationImageName;
     }
 }

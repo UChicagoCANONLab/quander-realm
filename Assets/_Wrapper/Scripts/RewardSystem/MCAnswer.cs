@@ -14,12 +14,13 @@ namespace Wrapper
         [SerializeField] public TextMeshProUGUI answerText;
         [SerializeField] public bool correctAnswer;
 
-        public void SetMCAnswer(string imagePath, int i, string text, bool correct) 
+        public void SetMCAnswer(string imageName, int i, string text, bool correct) 
         {  
             toggle.isOn = false;
 
-            if (imagePath != "") {
-                answerImage.sprite = Resources.LoadAll<Sprite>(imagePath)[i];
+            // imageName already includes prefix from DailyPuzzleManager
+            if (imageName != "") {
+                answerImage.sprite = Resources.LoadAll<Sprite>(imageName)[i];
                 answerImage.enabled = true;
                 answerText.enabled = false;
             } else {
