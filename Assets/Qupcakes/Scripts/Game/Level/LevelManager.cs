@@ -31,28 +31,17 @@ namespace Qupcakery
         private void Start()
         {
             GameManagement gameManager = GameManagement.Instance;
-            switch(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
+            level = gameManager.GetCurrentLevel();
+
+            // If tutorial available, start tutorial sequence
+            int levelInd = level.LevelInd;
+
+            if (TutorialManager.tutorialAvailable[levelInd])
             {
-                case "QU_DailyLevel":
-                    gameManager.SetGameMode(GameManagement.GameMode.Daily);
-                    gameManager.SetCurrentLevel(28);
-                    level = gameManager.GetCurrentLevel();
-                    break;
-                default:
-                    gameManager.SetGameMode(GameManagement.GameMode.Regular);
-                    level = gameManager.GetCurrentLevel();
-
-                    // If tutorial available, start tutorial sequence
-                    int levelInd = level.LevelInd;
-
-                    if (TutorialManager.tutorialAvailable[levelInd])
-                    {
-                        hasTutorial = true;
-                        Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level" + levelInd.ToString());
-                        TutorialManager.UpdateAvailability(levelInd);
-                        Wrapper.Events.DialogueSequenceEnded += StartLevel;
-                    }
-                    break;
+                hasTutorial = true;
+                Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level" + levelInd.ToString());
+                TutorialManager.UpdateAvailability(levelInd);
+                Wrapper.Events.DialogueSequenceEnded += StartLevel;
             }
 
             /* Create timer */
@@ -115,10 +104,7 @@ namespace Qupcakery
             if (levelEnded)
                 return;
 
-            if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
-            {
-                timer.Tick(Time.deltaTime);
-            }
+            timer.Tick(Time.deltaTime);
         }
 
         public void OnLevelEnded()

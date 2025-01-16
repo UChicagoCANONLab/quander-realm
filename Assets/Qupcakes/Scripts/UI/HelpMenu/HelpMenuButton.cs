@@ -35,11 +35,7 @@ namespace Qupcakery
                 hGadget.SetActive(level_gates[(int)GateType.H] > 0);
                 zGadget.SetActive(level_gates[(int)GateType.Z] > 0);
 
-                if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
-                {
-                    // pause game
-                    GameUtilities.PauseGame();
-                }
+                GameUtilities.PauseGame();
 
                 // Deactivate top bar
                 topBar.SetActive(false);

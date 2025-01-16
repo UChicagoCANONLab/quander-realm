@@ -92,7 +92,6 @@ namespace Qupcakery
 
                 LevelSelectorButtonManager m =
                     icon.GetComponent<LevelSelectorButtonManager>();
-                m.SetMode(GameManagement.GameMode.Regular);
 
                 // If player has completed this level
                 if (currentLevelCount <= GameManagement.Instance.game.gameStat.MaxLevelCompleted)

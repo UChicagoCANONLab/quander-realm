@@ -31,17 +31,9 @@ namespace Qupcakery
         private void Start()
         {
             gateBank = GateBank.Instance;
-            switch (GameManagement.Instance.gameMode)
-            {
-                case GameManagement.GameMode.Regular:
-                    Dispatcher dispatcher = GameObject.Find("LevelManager").
+            Dispatcher dispatcher = GameObject.Find("LevelManager").
                     GetComponent<LevelManager>().Dispatcher;
-                    dispatcher.BatchDonePublisher += OnBatchDone;
-                    break;
-                default:
-                    /* do nothing */
-                    break;
-            }
+            dispatcher.BatchDonePublisher += OnBatchDone;
         }
 
         // Drag gate with mouse

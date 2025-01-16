@@ -61,19 +61,5 @@ namespace Qupcakery
             }
         }
 
-        // Set icon sprite for given game mode
-        public void SetMode(GameManagement.GameMode mode)
-        {
-            GameObject regIcon = gameObject.transform.Find("RegularIcon").gameObject;
-
-            switch (mode)
-            {
-                case GameManagement.GameMode.Regular:
-                    regIcon.SetActive(true);
-                    break;
-                default:
-                    throw new System.ArgumentException("Unrecognized mode: " + mode);
-            }
-        }
     }
 }

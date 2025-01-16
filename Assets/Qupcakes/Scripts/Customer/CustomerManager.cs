@@ -49,8 +49,6 @@ namespace Qupcakery
 
         public void SetBeltInd(int ind) { BeltInd = ind; }
 
-        GameManagement.GameMode mode;
-
         // Use this for initialization
         void Awake()
         {
@@ -74,8 +72,6 @@ namespace Qupcakery
             // Subscribe to button event
             GameObjectsManagement.Button.GetComponent<ButtonController>().
                 ButtonPressed += OnCakeInDelivery;
-
-            mode = GameManagement.Instance.gameMode;
         }
 
         private void FixedUpdate()
@@ -92,8 +88,7 @@ namespace Qupcakery
                     }
                     break;
                 case CustomerStatus.Waiting:
-                    if (mode == GameManagement.GameMode.Regular && 
-                        !GameManagement.Instance.InTutorial)
+                    if (!GameManagement.Instance.InTutorial)
                     {
                         Patience.DecreasePatience(Time.fixedDeltaTime);
                     }
