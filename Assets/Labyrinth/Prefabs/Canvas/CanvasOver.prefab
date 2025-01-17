@@ -60,11 +60,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   litePanel: {fileID: 0}
   levelButtons: []
-  movementButtons:
-  - {fileID: 6677087675208547206}
-  - {fileID: 1372644415293558578}
-  - {fileID: 8653385108220595030}
-  - {fileID: 6339945628489455893}
 --- !u!223 &3971587562941622547
 Canvas:
   m_ObjectHideFlags: 0
@@ -1137,29 +1132,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f01ac4df1a054cc6a46ec1d1db4e3d2, type: 3}
---- !u!1 &1372644415293558578 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2598987147153580782, guid: 0f01ac4df1a054cc6a46ec1d1db4e3d2, type: 3}
-  m_PrefabInstance: {fileID: 3971587564252048860}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4715309436244413731 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8533702457681731839, guid: 0f01ac4df1a054cc6a46ec1d1db4e3d2, type: 3}
-  m_PrefabInstance: {fileID: 3971587564252048860}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6339945628489455893 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6981119478071145673, guid: 0f01ac4df1a054cc6a46ec1d1db4e3d2, type: 3}
-  m_PrefabInstance: {fileID: 3971587564252048860}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6677087675208547206 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7760878660355855962, guid: 0f01ac4df1a054cc6a46ec1d1db4e3d2, type: 3}
-  m_PrefabInstance: {fileID: 3971587564252048860}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8653385108220595030 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5695670550794266250, guid: 0f01ac4df1a054cc6a46ec1d1db4e3d2, type: 3}
   m_PrefabInstance: {fileID: 3971587564252048860}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3971587564544959778
@@ -1629,6 +1604,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1987680297097350812, guid: 6ea25bead16de409790c3ea7c1e023e7, type: 3}
+      propertyPath: InfoAnimator
+      value: 
+      objectReference: {fileID: 6658636609894325036}
     - target: {fileID: 3949197239271064268, guid: 6ea25bead16de409790c3ea7c1e023e7, type: 3}
       propertyPath: m_Name
       value: InfoMessage
@@ -1639,6 +1618,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ea25bead16de409790c3ea7c1e023e7, type: 3}
+--- !u!95 &6658636609894325036 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2643397518360067671, guid: 6ea25bead16de409790c3ea7c1e023e7, type: 3}
+  m_PrefabInstance: {fileID: 8702932218553148795}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7789004014750233239 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1503955281408612332, guid: 6ea25bead16de409790c3ea7c1e023e7, type: 3}
