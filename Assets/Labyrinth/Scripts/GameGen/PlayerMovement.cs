@@ -74,6 +74,9 @@ namespace Labyrinth
                     }
                     else {
                         movementx = new Vector3(Input.GetAxisRaw("Horizontal"),0,0);
+
+                        if (movementx.x == 1) { TTEvents.SetButtonTrigger("right", "FromKeyboard"); }
+                        else if (movementx.x == -1) { TTEvents.SetButtonTrigger("left", "FromKeyboard"); }
                     }
 
                     Vector3 mirrorMovementx = mirroredMovement(deg, sign, movementx, "horizontal");
@@ -96,8 +99,8 @@ namespace Labyrinth
                         //Debug.Log("Can't go there!");
                     } */
                 }
-                if ((Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || (
-                buttonMov == new Vector3(0,-1,0)) || 
+                if ((Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || 
+                (buttonMov == new Vector3(0,-1,0)) || 
                 (buttonMov == new Vector3(0,1,0)))) {
                 
                     Vector3 movementy;
@@ -106,7 +109,11 @@ namespace Labyrinth
                     }
                     else {
                         movementy = new Vector3(0,Input.GetAxisRaw("Vertical"),0);
+
+                        if (movementy.y == 1) { TTEvents.SetButtonTrigger("up", "FromKeyboard"); }
+                        else if (movementy.y == -1) { TTEvents.SetButtonTrigger("down", "FromKeyboard"); }
                     }
+
                     Vector3 mirrorMovementy = mirroredMovement(deg, sign, movementy, "vertical");
                     
                     if (!Physics2D.OverlapCircle(main.getActualPosition + movementy/3, .25f)) {
