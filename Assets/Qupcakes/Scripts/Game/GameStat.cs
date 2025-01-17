@@ -80,7 +80,7 @@ namespace Qupcakery
             //Debug.Log("setting level performance for level " + levelInd);
 
             // If player completes a brand new level
-            if (levelInd > MaxLevelCompleted & levelInd < 28)
+            if (levelInd > MaxLevelCompleted)
                 MaxLevelCompleted = levelInd;
 
             // Updates performance info

@@ -7,7 +7,7 @@ namespace Qupcakery
 #if LITE_VERSION
     public const int MaxLevelCnt = 16;
 #else
-    public const int MaxLevelCnt = 28;
+    public const int MaxLevelCnt = 27;
 #endif
         public const int MaxPuzzleCnt = 10;
         public const int MaxGateTypeCnt = 5;

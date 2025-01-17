@@ -790,9 +790,17 @@ namespace Qupcakery
         {
             if (bc == null)
             {
-                bc = GameObject.Find("Button(Clone)").GetComponent<ButtonController>();
+                GameObject button = GameObject.Find("Button(Clone)");
+                if (button != null)
+                {
+                    bc = button.GetComponent<ButtonController>();
+                }
             }
-            bc.UpdateButtonState(ButtonController.ButtonState.CanBePressed);
+            if (bc != null)
+            {
+                bc.UpdateButtonState(ButtonController.ButtonState.CanBePressed);
+            }
+            
         }
         #endregion
 

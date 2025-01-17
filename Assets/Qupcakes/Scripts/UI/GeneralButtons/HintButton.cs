@@ -1,12 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
+using UnityEngine.UI;
 
 
 namespace Qupcakery
 {
     public class HintButton : MonoBehaviour
     {
+
+        [Header("Sequenced Tutorial Objects")]
+        [SerializeField] public GameObject chef;
+        [SerializeField] public GameObject panel;
+        [SerializeField] public GameObject textObject;
+        [SerializeField] public Text tutorialText;
+
         LevelManager manager;
         Level level;
         Solution solution; 
@@ -20,6 +28,11 @@ namespace Qupcakery
 
         public void GiveHint()
         {
+
+            if (GameManagement.Instance.InTutorial)
+            {
+                return; // Don't give a hint if you're still in tutorial!
+            }
 
             if (level == null)
             {
@@ -96,15 +109,22 @@ namespace Qupcakery
 
             if (!gaveHint)
             {
-                GameObject.Find("HintPanel").SetActive(true);
-                Invoke("EndHintPanel", 5);
+                tutorialText.text = "You're using the right gates! That's all" +
+                    " the help I can give you right now - I have to get back to " +
+                    "baking!";
+                chef.GetComponent<SpriteRenderer>().enabled = true;
+                panel.GetComponent<Image>().enabled = true;
+                textObject.GetComponent<Text>().enabled = true;
+                Invoke("EndHintMessage", 5);
             }
 
         }
 
-        private void EndHintPanel()
+        private void EndHintMessage()
         {
-            GameObject.Find("HintPanel").SetActive(false);
+            chef.GetComponent<SpriteRenderer>().enabled = false;
+            panel.GetComponent<Image>().enabled = false;
+            textObject.GetComponent<Text>().enabled = false;
         }
 
     }
