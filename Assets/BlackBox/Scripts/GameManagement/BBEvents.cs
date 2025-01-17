@@ -17,6 +17,7 @@ namespace BlackBox
         public static Action ShowHint;
         public static Action<Vector3Int, Dir, Vector3Int, Dir, Marker> AppendHint;
         public static Action ClearHints;
+        public static Func<int> GetHintsUsed;
         public static Action ShowInfo;
         public static Action InitiateTutorialLevel;
         public static Action EndTutorialLevel;

@@ -45,6 +45,7 @@ namespace BlackBox
             BBEvents.ShowHint += GiveHint;
             BBEvents.AppendHint += AppendHintCoor;
             BBEvents.ClearHints += ClearHintLines;
+            BBEvents.GetHintsUsed += HintsUsed;
         }
 
         private void OnDisable() 
@@ -52,6 +53,7 @@ namespace BlackBox
             BBEvents.ShowHint -= GiveHint;
             BBEvents.AppendHint -= AppendHintCoor;
             BBEvents.ClearHints -= ClearHintLines;
+            BBEvents.GetHintsUsed -= HintsUsed;
         }
 
         public void GiveHint() 
@@ -390,6 +392,10 @@ namespace BlackBox
         public void TryNextHint() {
             hintCounter++;
             GiveHint();
+        }
+
+        public int HintsUsed() {
+            return hintCounter;
         }
 
     }
