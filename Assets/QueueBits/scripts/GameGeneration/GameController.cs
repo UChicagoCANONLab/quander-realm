@@ -257,16 +257,15 @@ namespace QueueBits
 		// Called from GameMode#, sets up dialogue, data, and prefilled board
 		public void StartGame()
 		{
-			// Debug.Log("Not starting!");
-			// return;
-			if (GameManager.saveData.dialogueSystem[LEVEL_NUMBER])
+			// Removed dialogue from levels -- just intro and end now
+			/* if (GameManager.saveData.dialogueSystem[LEVEL_NUMBER])
 			{
 				// dialoguePhase = true;
 				Wrapper.Events.StartDialogueSequence?.Invoke($"QB_Level{LEVEL_NUMBER}");
 				GameManager.saveData.dialogueSystem[LEVEL_NUMBER] = false;
 				GameManager.Save();
 				// Wrapper.Events.DialogueSequenceEnded += updateDialoguePhase;
-			}
+			} */
 
 			initMyData();
 
@@ -328,13 +327,6 @@ namespace QueueBits
 			}
 			cpuAI.superpositionArray = myData.superposition;
 		}
-
-		// dialogue, UNSURE IF NEEDED
-		/* void updateDialoguePhase()
-		{
-			// dialoguePhase = false;
-			Wrapper.Events.DialogueSequenceEnded -= updateDialoguePhase;
-		} */
 
 		// New funtion to spawn piece when clicking buttons on TokenSelector
 		public void tokenSelectedByButton(int prob)
