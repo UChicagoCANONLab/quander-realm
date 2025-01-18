@@ -18,6 +18,7 @@ namespace Qupcakery
 
         public Level level;
         public int currentBatchNum { get; private set; } = -1;
+        public Solution solution { get; private set; } = new Solution();
 
         private Timer timer;
         private bool levelEnded = false;
@@ -27,17 +28,17 @@ namespace Qupcakery
 
         private bool hasTutorial = false;
 
-        private void Awake()
+        private void Start()
         {
-            GameManagement.Instance.SetGameMode(GameManagement.GameMode.Regular);
-            level = GameManagement.Instance.GetCurrentLevel();
+            GameManagement gameManager = GameManagement.Instance;
+            level = gameManager.GetCurrentLevel();
 
             // If tutorial available, start tutorial sequence
             int levelInd = level.LevelInd;
 
             if (TutorialManager.tutorialAvailable[levelInd])
             {
-                hasTutorial = true; 
+                hasTutorial = true;
                 Wrapper.Events.StartDialogueSequence?.Invoke("QU_Level" + levelInd.ToString());
                 TutorialManager.UpdateAvailability(levelInd);
                 Wrapper.Events.DialogueSequenceEnded += StartLevel;
@@ -55,9 +56,26 @@ namespace Qupcakery
             PuzzleCorrectionChecker.UpdateOnNewLevel();
 
             /* Update game state */
-            GameManagement.Instance.game.gameStat.SetLevelJustAttempted(level.LevelInd);
+            gameManager.game.gameStat.SetLevelJustAttempted(level.LevelInd);
+
+            if (hasTutorial)
+                return;
+
+            /* Subscribe to events that trigger level to end */
+            timer.TimerEnded += OnLevelEnded;
+            Dispatcher.AllBatchDonePublisher += OnLevelEnded;
+            Dispatcher.NewBatchDispatchedPublisher += OnNewBatchDispatched;
+
+            /* Set up UI */
+            timer.TimerClicked += UIClockController.Instance.OnTimerClicked;
+            UIProgressBar.Instance.SetGoal(level.Goal);
+
+            /* Dispatch first batch */
+            Dispatcher.DispatchNewBatch();
+
         }
 
+        /* Only called after the dialogue-based tutorial ends. */
         private void StartLevel()
         {
             /* Subscribe to events that trigger level to end */
@@ -75,24 +93,6 @@ namespace Qupcakery
             Wrapper.Events.DialogueSequenceEnded -= StartLevel;
 
             hasTutorial = false;
-        }
-
-        private void Start()
-        {
-            if (hasTutorial)
-                return;
-
-            /* Subscribe to events that trigger level to end */
-            timer.TimerEnded += OnLevelEnded;
-            Dispatcher.AllBatchDonePublisher += OnLevelEnded;
-            Dispatcher.NewBatchDispatchedPublisher += OnNewBatchDispatched;
-
-            /* Set up UI */
-            timer.TimerClicked += UIClockController.Instance.OnTimerClicked;
-            UIProgressBar.Instance.SetGoal(level.Goal);
-
-            /* Dispatch first batch */
-            Dispatcher.DispatchNewBatch();
         }
 
         // Update is called once per frame

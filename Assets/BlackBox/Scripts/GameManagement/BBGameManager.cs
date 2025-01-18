@@ -103,6 +103,7 @@ namespace BlackBox
             BBEvents.CheckWolfieReady += CheckWolfieReady;
             BBEvents.GetFrontMount += GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits += GetNumEnergyUnits;
+            BBEvents.LoseLife += LoseLife;
             BBEvents.ReturnLanternHome += ReturnLanternHome;
             BBEvents.CompleteBlackBox += PlayEndDialog;
             BBEvents.PlayLevel += SetAndPlayLevel;
@@ -126,6 +127,7 @@ namespace BlackBox
             BBEvents.CheckWolfieReady -= CheckWolfieReady;
             BBEvents.GetFrontMount -= GetLanternFrontMount;
             BBEvents.GetNumEnergyUnits -= GetNumEnergyUnits;
+            BBEvents.LoseLife -= LoseLife;
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
             BBEvents.CompleteBlackBox -= PlayEndDialog;
             BBEvents.PlayLevel -= SetAndPlayLevel;
@@ -256,8 +258,7 @@ namespace BlackBox
             else
             {
                 Wrapper.Events.PlaySound?.Invoke("BB_WolfieFail");
-                livesRemaining--;
-                BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
+                LoseLife();
             }
 
             WinState winState = new(totalNodes, numCorrect, levelWon, level.number, livesRemaining, ParseLevelID(level.nextLevelID) == -1);
@@ -501,9 +502,19 @@ namespace BlackBox
             return level.numEnergyUnits;
         }
 
-        private int GetLivesRemaining() 
+        private void LoseLife() 
         {
-            return livesRemaining;
+            livesRemaining--;
+            BBEvents.UpdateHUDWolfieLives?.Invoke(livesRemaining);
+
+            if (livesRemaining == 0)
+            {
+                int numCorrect = mainGridGO.GetComponent<MainGrid>().GetNumCorrect(level.nodePositions);
+                bool levelWon = totalNodes == numCorrect;
+
+                WinState winState = new(totalNodes, numCorrect, levelWon, level.number, livesRemaining, ParseLevelID(level.nextLevelID) == -1);
+                Routine.Start(DisplayPlayerFeedBack(winState));
+            }
         }
 
         private bool GetDebugBool()

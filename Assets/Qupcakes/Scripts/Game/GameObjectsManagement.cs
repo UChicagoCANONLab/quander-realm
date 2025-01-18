@@ -68,6 +68,9 @@ namespace Qupcakery
                 ResetCustomerObj(Customers[i]);
             }
             ResetButtonObj(Button);
+
+            QCTutorialLevel.ResetTutorial();
+            
         }
 
         public static void ResetButtonObj(GameObject button)

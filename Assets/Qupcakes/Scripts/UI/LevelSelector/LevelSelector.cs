@@ -61,6 +61,7 @@ namespace Qupcakery
                 panel.GetComponent<RectTransform>().localPosition = new Vector2(panelDimensions.width * (i - 1), 0);
                 SetupGrid(panel);
                 int numberOfIcons = (i == numberOfPanels) ? numberOfLevels - currentLevelCount : amountPerPage;
+
                 LoadIcons(numberOfIcons, panel);
             }
 
@@ -85,9 +86,9 @@ namespace Qupcakery
                 icon.transform.SetParent(thisCanvas.transform, false);
                 icon.transform.SetParent(parentObject.transform);
                 icon.name = "Level" + currentLevelCount;
+
                 LevelSelectorButtonManager m =
                     icon.GetComponent<LevelSelectorButtonManager>();
-                m.SetMode(GameManagement.Instance.gameMode);
 
                 // If player has completed this level
                 if (currentLevelCount <= GameManagement.Instance.game.gameStat.MaxLevelCompleted)

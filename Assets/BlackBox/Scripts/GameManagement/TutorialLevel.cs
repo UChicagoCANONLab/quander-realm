@@ -25,6 +25,7 @@ namespace BlackBox
         private Vector3[] coordinateSeq = new Vector3[] {
             new Vector3(0,4,0),
             new Vector3(0,-1, 1),
+            new Vector3(0,0, 4),
             new Vector3(-1,2,0),
             new Vector3(-1,2,0),
             new Vector3(-1,2, 1),
@@ -38,24 +39,24 @@ namespace BlackBox
         };
 
         private string[] dialogueSeq = new string[] {
-            "Let's get started! Click Batty to send her into the graveyard", //(0,4)
-            "She passed right through! No treasure on this path or the one next to it", //(MISS) (highlight (0,4),(0,-1))
-            "Click here to move Batty", //(-1,2)
-            "Click Batty again to send her into the graveyard", //(-1,2)
-            "Oh! She bumped into something! There must be treasure in this row", //(HIT) (highlight (-1,2))
-            "Let's try here. Click this spot", //(-1,1)
-            "Now click Batty again", //(-1,1)
-            "Hm... Batty turned, there must be treasure diagonal from where she turned", //(DETOUR) (highlight (-1,1),(1,-1))
-            "Just to be sure... Let's try here", //(4,3)
-            "Click Batty one more time", //(4,3)
-            "Great, we found it! Click and drag a lantern to the correct spot", //(highlight (4,3),(3,4)) (2,2)
+            "Let's get started! Click Batty to send her into the graveyard.", //(0,4)
+            "She passed right through! No treasure on this path or the one next to it.", //(MISS) (highlight (0,4),(0,-1))
+            "Notice that when you send Batty, your energy meter at the top goes down...",
+            "So be careful! Click here to move Batty.", //(-1,2)
+            "Click Batty again to send her into the graveyard.", //(-1,2)
+            "Oh! She bumped into something! There must be treasure in this row.", //(HIT) (highlight (-1,2))
+            "Let's try here. Click this spot.", //(-1,1)
+            "Now click Batty again.", //(-1,1)
+            "Hm... Batty turned, there must be treasure diagonal from where she turned.", //(DETOUR) (highlight (-1,1),(1,-1))
+            "Just to be sure... Let's try here.", //(4,3)
+            "Click Batty one more time.", //(4,3)
+            "Great, we found it! Click and drag a lantern to the correct spot.", //(highlight (4,3),(3,4)) (2,2)
             "Now let's send Wolfie to check! Congrats, you found the treasure!"
         };
 
         private GameObject currCell = null;
         private GameObject goalCell = null;
         private int tutorialSeq = 0;
-
 
 
         void OnEnable() 
@@ -69,7 +70,7 @@ namespace BlackBox
             BBEvents.EndTutorialLevel -= EndTutorial;
         }
 
-
+        /* Called from BBEvents */
         public void InitiateTutorial() {
             TutorialAnimator.SetBool("TutorialActive", true);
 
@@ -88,13 +89,12 @@ namespace BlackBox
             // turn off HUD stuff
         }
 
+        /* Called from BBEvents */
         public void EndTutorial() {
             TutorialAnimator.SetBool("TutorialActive", false);
-            // turn on HUD stuff
-            // disable animator
-            // reset navcells
         }
 
+        
         void FixedUpdate() {
             // If starting tutorial didn't work, try again
             if ((rightGridGO.transform.GetChild(0).gameObject.GetComponent<Button>().interactable) 
@@ -103,12 +103,13 @@ namespace BlackBox
                 Invoke("InitiateTutorial", 0.1f);
             }
             // If lantern placed correctly, end tutorial 
-            if ((goalCell != null) && (goalCell.GetComponent<NodeCell>().HasFlag()) && (tutorialSeq < 11)) {
-                tutorialSeq = 10;
+            if ((goalCell != null) && (goalCell.GetComponent<NodeCell>().HasFlag()) && (tutorialSeq < 12)) {
+                tutorialSeq = 11;
                 tutorialNext();
             }
         }
 
+        /* "Next" called from clicking button on Wolfie popup */
         public void tutorialNext() {
             tutorialSeq++;
 
@@ -125,6 +126,12 @@ namespace BlackBox
             tutorialText.text = dialogueSeq[tutorialSeq];
         }
 
+        /* Helper function */
+        public void endDialogue() {
+            TutorialAnimator.SetBool("WolfieOn", false);
+        }
+
+        /* "Next" called from clicking cell */
         public void navCellNext() {
             if ((tutorialSeq == 0)
             || (currCell.GetComponent<NavCell>().isMollyAt && !currCell.GetComponent<Animator>().GetBool("BatTravelOut"))
@@ -133,29 +140,35 @@ namespace BlackBox
             }
         }
 
+        /* Disables all cells to init grid for sequenced clicking */
         public void disableNavCells(GameObject parent) {
             for (int i=0; i<4; i++) { //size of tutorial grid, 4x4
                 parent.transform.GetChild(i).gameObject.GetComponent<Button>().interactable = false;
             }
         }
 
+        /* Enables cell in sequence, plus does nother actions depending on z-value */
         public void enableNavCell(Vector3 coor) {
-            // Debug.Log($"Sequence: {tutorialSeq}");
-
             if (coor.z != 0) {
-                if (coor.z == 3) { return; }
+                if (coor.z == 3) { return; } // end
+                if (coor.z == 4) { // indicate energy meter
+                    nextButton.SetActive(true);
+                    BBEvents.IndicateEmptyMeter?.Invoke();
+                    return;
+                }
+                BBEvents.ShowHint?.Invoke(); // show path line
+                highlightCurrentCell(); // highlight start cell of path
                 
-                BBEvents.ShowHint?.Invoke();
-                highlightCurrentCell(); // highlight start cell
-                if (coor.z == 1) {
+                if (coor.z == 1) { // show helper images
                     nextButton.SetActive(true);
                     TutorialAnimator.SetBool("InfoOn", true);
                 } 
-                else if (coor.z == 2) {
+                else if (coor.z == 2) { // highlight goal cell
                     goalCell.GetComponent<Animator>().SetBool("NodeCell/Flagged", true);
                 } 
             }
 
+            // finding current cell game object
             GameObject parent = null; int i = -1;
             switch(coor.x){
                 case -1:    parent = leftGridGO; i = (int)coor.y;   break;
@@ -166,22 +179,23 @@ namespace BlackBox
                 case 4:     parent = topGridGO; i = (int)coor.x;    break;
             }
 
+            // If already the current cell, do nothing
             if (currCell == parent.transform.GetChild(i).gameObject) { 
                 return; 
             } else {
+                // Disable original currCell if not null
+                if (currCell != null) { 
+                    currCell.GetComponent<Button>().interactable = false;
+                } 
+                // Set new currCell
                 currCell = parent.transform.GetChild(i).gameObject;
                 currCell.GetComponent<Button>().interactable = true;
                 currCell.GetComponent<Button>().onClick.AddListener(navCellNext);
             }
-            if (coor.z!=0) { Invoke("highlightCurrentCell", 0.25f); } // highlight end cell
+            if (coor.z!=0) { Invoke("highlightCurrentCell", 0.25f); } // highlight end cell of path
         }
 
-        // Helper functions
-        public void endDialogue() {
-            TutorialAnimator.SetBool("WolfieOn", false);
-        }
-
-
+        /* Still working on this one */
         public void highlightCurrentCell() {
             if (currCell == null) { return; }
 

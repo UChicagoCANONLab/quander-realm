@@ -40,6 +40,11 @@ namespace Qupcakery
                     GameManagement.Instance.game.gameStat.SetLevelPerformance((int)i+1, (int)starCnt);
                     GameManagement.Instance.game.gameStat.totalStars += (int)starCnt;
                 }
+
+                // Loop for testing if the rewards are unlocked
+                /* for (int i=1; i<=8; i++) {
+                    Debug.Log($"QU_0{i} Unlocked: {Wrapper.Events.IsRewardUnlocked?.Invoke($"QU_0{i}")}");
+                } */
             }
 
             Data.researchData = new ResearchData();

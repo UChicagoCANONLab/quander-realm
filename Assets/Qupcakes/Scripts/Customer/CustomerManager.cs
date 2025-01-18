@@ -88,7 +88,10 @@ namespace Qupcakery
                     }
                     break;
                 case CustomerStatus.Waiting:
-                    Patience.DecreasePatience(Time.fixedDeltaTime);
+                    if (!GameManagement.Instance.InTutorial)
+                    {
+                        Patience.DecreasePatience(Time.fixedDeltaTime);
+                    }
                     break;
                 case CustomerStatus.ReactionInProgress:
                 case CustomerStatus.WaitingDeliveryToArrive:
@@ -213,6 +216,11 @@ namespace Qupcakery
                 animator.enabled = true;
             else
                 animator.enabled = false;
+        }
+
+        public bool AtTable()
+        {
+            return arrivedAtTable;
         }
 
     }

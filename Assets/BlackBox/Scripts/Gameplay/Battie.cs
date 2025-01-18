@@ -33,7 +33,8 @@ namespace BlackBox
             BBEvents.StartFlyingAnimation -= InitFlyingAnimation;
         }
 
-        void Update() {
+        void Update() 
+        {
             if (active) {
                 if (phase != 0) {
                     BattieContainer.transform.localPosition = Vector3.MoveTowards(BattieContainer.transform.localPosition,
@@ -52,7 +53,8 @@ namespace BlackBox
         }
 
 
-        public void InitFlyingAnimation() {
+        public void InitFlyingAnimation() 
+        {
             if (flyingCoors == null) { return; }
             ReturnBattieHelper(); // Return before start
             // Debug.Log($"Coordinates: {string.Join("; ", flyingCoors)}");
@@ -62,7 +64,8 @@ namespace BlackBox
             active = true; phase = 1;
         }
 
-        public void EndFlyingAnimation() {
+        public void EndFlyingAnimation() 
+        {
             active = false; phase = 0;
             BattieAnimator.SetInteger("MoveType", 0);
             Invoke("ReturnBattieHelper", 0.5f);
@@ -70,12 +73,14 @@ namespace BlackBox
             flyingCoors = null; // Clear array
         }
 
-        public void ReturnBattieHelper() {
+        public void ReturnBattieHelper() 
+        {
             BattieContainer.transform.localPosition = new Vector3(0,0,0); //return Battie to (0,0)            
         }
 
 
-        public void AppendFlyingCoors(Vector3Int orig, Dir origDir, Vector3Int dest, Dir destDir) {    
+        public void AppendFlyingCoors(Vector3Int orig, Dir origDir, Vector3Int dest, Dir destDir) 
+        {    
             Vector3Int[] pair = new Vector3Int[] {orig, dest};
             Dir[] dirPair = new Dir[] {origDir, destDir};
 

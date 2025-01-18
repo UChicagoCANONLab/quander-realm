@@ -19,7 +19,7 @@ namespace Qupcakery
 
             if (Mathf.Approximately(ctrlCakeState.probabilities[1], 1))
             {
-                Debug.Log("Control is chocolate");
+                // Debug.Log("Control is chocolate");
                 /* Ctrl is Chocolate */
                 if (Mathf.Approximately(targetCakeState.probabilities[0], 1))
                 {
