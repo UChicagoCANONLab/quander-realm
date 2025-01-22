@@ -13,9 +13,9 @@ namespace Wrapper
             {(1, 0),    new string[] {"MS_QU0",  "",         "NOT Gate"}},
             {(3, 0),    new string[] {"MS_QU1",  "",         "SWAP Gate"}},
             {(8, 0),    new string[] {"MS_QU2",  "",         "CNOT Gate"}},
-            {(9, 0),    new string[] {"MS_QU3",  "",         "CNOT Gate flip"}},
+            // {(9, 0), new string[] {"MS_QU3",  "",         "CNOT Gate flip"}},
             {(13, 0),   new string[] {"MS_QU4",  "",         "H-Gate / Mystery boxes"}},
-            {(14, 0),   new string[] {"MS_QU5",  "",         "H-Gate reverse"}},
+            // {(14, 0),new string[] {"MS_QU5",  "",         "H-Gate reverse"}},
             {(16, 0),   new string[] {"MS_QU6",  "",         "Z-Gate"}},
             {(23, 0),   new string[] {"MS_QU7",  "",         "Same-Entangled boxes"}},
             {(24, 0),   new string[] {"MS_QU8",  "",         "Opposite-Entangled boxes"}},
@@ -41,11 +41,11 @@ namespace Wrapper
         {   //  (Level Criteria, Star Criteria); Name, Co-Criteria, Description
             {(1, 0),    new string[] {"MS_CT0",  "",        "H-Gate"}},
             {(3, 0),    new string[] {"MS_CT1",  "",        "Not Gate / HXH -> Z"}},
-            {(6, 0),    new string[] {"MS_CT2",  "",        "HZH -> X"}},
-            {(9, 0),    new string[] {"MS_CT3",  "",        "Two Not Gates -> Nothing"}},
-            {(14, 0),   new string[] {"MS_CT4",  "",        "CNOT / CZ"}},
-            {(18, 0),   new string[] {"MS_CT5",  "",        "H-CNOT-H -> CZ"}},
-            {(22, 0),   new string[] {"MS_CT6",  "",        "SWAP Gate / HHCXHH"}},
+            {(5, 0),    new string[] {"MS_CT2",  "",        "HZH -> X"}},
+            {(7, 0),    new string[] {"MS_CT3",  "",        "Two Not Gates -> Nothing"}},
+            {(14, 0),   new string[] {"MS_CT4",  "",        "H-CX-H -> CZ"}},
+            {(15, 0),   new string[] {"MS_CT5",  "",        "H-CZ-H -> CX"}},
+            {(22, 0),   new string[] {"MS_CT6",  "",        "HHCXHH -> SWAP"}},
             {(25, 0),   new string[] {"MS_CT7",  "",        "Completed game"}},
             {(0, 75),   new string[] {"MS_CT8",  "MS_CT7",  "Win all stars"}}
         };
@@ -79,7 +79,7 @@ namespace Wrapper
             {
                 case Game.Qupcakes:
                     for(int i=0; i<=maxLevel; i++) {
-                        if(QupcakeryMilestones.ContainsKey(i,0)) {
+                        if(QupcakeryMilestones.ContainsKey((i,0))) {
                             CompletedMilestones.Add(QupcakeryMilestones[(i,0)][0]);
                         }
                     }
@@ -97,7 +97,7 @@ namespace Wrapper
 
                 case Game.Labyrinth:
                     for(int i=0; i<=maxLevel; i++) {
-                        if(TwintanglementMilestones.ContainsKey(i,0)) {
+                        if(TwintanglementMilestones.ContainsKey((i,0))) {
                             CompletedMilestones.Add(TwintanglementMilestones[(i,0)][0]);
                         }
                     }
@@ -111,7 +111,7 @@ namespace Wrapper
 
                 case Game.Circuits:
                     for(int i=0; i<=maxLevel; i++) {
-                        if(TanglesLairMilestones.ContainsKey(i,0)) {
+                        if(TanglesLairMilestones.ContainsKey((i,0))) {
                             CompletedMilestones.Add(TanglesLairMilestones[(i,0)][0]);
                         }
                     }
@@ -121,7 +121,7 @@ namespace Wrapper
 
                 case Game.QueueBits:
                     for(int i=0; i<=maxLevel; i++) {
-                        if(QueueBitsMilestones.ContainsKey(i,0)) {
+                        if(QueueBitsMilestones.ContainsKey((i,0))) {
                             CompletedMilestones.Add(QueueBitsMilestones[(i,0)][0]);
                         }
                     }
@@ -132,7 +132,7 @@ namespace Wrapper
 
                 case Game.BlackBox:
                     for(int i=0; i<=maxLevel; i++) {
-                        if(QueueBitsMilestones.ContainsKey(i,0)) {
+                        if(QueueBitsMilestones.ContainsKey((i,0))) {
                             CompletedMilestones.Add(QueueBitsMilestones[(i,0)][0]);
                         }
                     }
