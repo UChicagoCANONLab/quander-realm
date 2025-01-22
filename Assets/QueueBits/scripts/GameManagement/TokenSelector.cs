@@ -38,6 +38,7 @@ namespace QueueBits {
         public void switchTurns(bool showing) {
             playerDisplay.SetActive(showing);
             pieceContainer.SetActive(showing);
+            TC.toggleButtons(showing);
         }
 
         // Function called by token buttons to select token
@@ -55,6 +56,7 @@ namespace QueueBits {
                 GC.tokenSelectedByButton(50);
                 pieceContainer.SetActive(false);
             }
+            TC.toggleButtons(false);
         }
 
 

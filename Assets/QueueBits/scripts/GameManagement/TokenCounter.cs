@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using QueueBits;
 
@@ -114,6 +115,17 @@ namespace QueueBits
                 counterObjects[probToIndex[prob]].SetActive(false);
             }
         }
+
+
+        // Make buttons not interactable when not turn/already picked one
+        public void toggleButtons(bool enabled) {
+            foreach(GameObject holder in counterObjects) {
+                foreach(Transform item in holder.transform) {
+                    item.gameObject.GetComponent<Button>().interactable = enabled;
+                }
+            }
+        }
+
         
     }
 }
