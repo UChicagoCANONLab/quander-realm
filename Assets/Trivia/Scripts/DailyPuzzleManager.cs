@@ -8,7 +8,7 @@ using TMPro;
 using BeauRoutine;
 
 
-namespace Wrapper 
+namespace Trivia 
 {
     public class DailyPuzzleManager : MonoBehaviour
     {
@@ -151,8 +151,8 @@ namespace Wrapper
         }
 
         public void ExitTrivia() { // Copied from BackButton.cs
-            Events.ScreenFadeMidAction?.Invoke(() =>
-                { SceneManager.LoadScene(0); Events.MinigameClosed?.Invoke();}, 0.1F);
+            Wrapper.Events.ScreenFadeMidAction?.Invoke(() =>
+                { SceneManager.LoadScene(0); Wrapper.Events.MinigameClosed?.Invoke();}, 0.1F);
         }
 
         public void ShuffleQuestions() {

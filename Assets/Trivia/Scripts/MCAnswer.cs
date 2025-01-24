@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 
-namespace Wrapper
+namespace Trivia
 {
     public class MCAnswer : MonoBehaviour
     {

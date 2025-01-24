@@ -1,7 +1,7 @@
 using Filament.Content;
 using UnityEngine;
 
-namespace Wrapper
+namespace Trivia
 {
     public class DailyPuzzleAsset : ContentAsset
     {
@@ -11,7 +11,7 @@ namespace Wrapper
         public string name;
 
         [SerializeField, ContentValue("Game")]
-        public Game game;
+        public Wrapper.Game game;
 
         [SerializeField, ContentValue("Category")]
         public Category category;
