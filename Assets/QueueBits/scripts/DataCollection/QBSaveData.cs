@@ -11,7 +11,7 @@ namespace QueueBits
 
         // total stars
         public int totalStars = 0;
-        public int maxLevelUnlocked;
+        public int maxLevelUnlocked = 1;
         public int LEVEL;
 
         // star system testing

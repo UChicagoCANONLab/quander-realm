@@ -293,11 +293,13 @@ namespace QueueBits
 
 			// Manage stars awarded
 			int starsWon = starDisplay.getResults(result);
-			if (GameManager.saveData.starSystem[LEVEL_NUMBER] <= starsWon)
-			{
+			if (GameManager.saveData.starSystem[LEVEL_NUMBER] <= starsWon) {
 				GameManager.saveData.starSystem[LEVEL_NUMBER] = starsWon;
-				GameManager.Save();
+			} // Update max level unlocked
+			if (LEVEL_NUMBER == GameManager.saveData.maxLevelUnlocked) {
+				GameManager.saveData.maxLevelUnlocked++;
 			}
+			GameManager.Save();
 
 			// Update display
 			fieldObject.SetActive(false);
