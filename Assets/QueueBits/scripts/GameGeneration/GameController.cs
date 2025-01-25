@@ -161,7 +161,8 @@ namespace QueueBits
 						tutorialStepButton.SetActive(false);
 						break;		
 					case 10:
-						tutorialToggle("Amazing!\n\nLooks like you got the hang of it! If you ever need a reminder of what to do be sure to click on the hint button: \n\n\n\n\n\n\n", 3);
+						// tutorialToggle("Amazing!\n\nLooks like you got the hang of it! If you ever need a reminder of what to do be sure to click on the hint button: \n\n\n\n\n\n\n", 3);
+						tutorialToggle("Amazing!\n\nLooks like you got the hang of it!\n\nHave fun!");
 						tutorialStepButton.SetActive(true);
 						GM1.disconnectTutorial();
 						break;
