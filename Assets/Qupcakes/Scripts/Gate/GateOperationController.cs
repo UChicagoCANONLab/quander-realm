@@ -108,13 +108,13 @@ namespace Qupcakery
                 switch (gate.Type)
                 {
                     case GateType.CNOT:
-                        if (canFlip)
-                        {
+                        // if (canFlip)
+                        // {
                             sr.flipY = sr.flipY ? false : true; // flip target and control
                             ctrlTgtSwapped = ctrlTgtSwapped ? false : true;
                             waitingForCake = true;
                             OnGateFlipped();
-                        }
+                        // }
                         break;
                 }
             }
