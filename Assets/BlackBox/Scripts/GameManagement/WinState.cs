@@ -1,6 +1,7 @@
 
 namespace BlackBox
 {
+    [System.Serializable]
     public class WinState
     {
         public bool levelWon = false;

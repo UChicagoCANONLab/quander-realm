@@ -100,7 +100,7 @@ namespace BlackBox
                 BBEvents.IsDebug += GetDebugBool; // Debug
                 BBEvents.ToggleDebug += ToggleDebug; // Debug
             }
-            BBEvents.RestartLevel += StartLevel;
+            BBEvents.RestartLevel += RestartLevel;
             BBEvents.StartNextLevel += NextLevel;
             BBEvents.CheckWinState += CheckWinState;
             BBEvents.CheckWolfieReady += CheckWolfieReady;
@@ -125,7 +125,7 @@ namespace BlackBox
                 BBEvents.IsDebug -= GetDebugBool; // Debug
                 BBEvents.ToggleDebug -= ToggleDebug; // Debug
             }
-            BBEvents.RestartLevel -= StartLevel;
+            BBEvents.RestartLevel -= RestartLevel;
             BBEvents.StartNextLevel -= NextLevel;
             BBEvents.CheckWinState -= CheckWinState;
             BBEvents.CheckWolfieReady -= CheckWolfieReady;
@@ -172,6 +172,10 @@ namespace BlackBox
             string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
 
+            if (levelID == firstLevelID) {
+                Events.StartDialogueSequence?.Invoke("BB_Intro_0");
+            }
+
             ShowLevelSelect(true);
         }
 
@@ -203,6 +207,21 @@ namespace BlackBox
             InitializeLanterns(level.nodePositions.Length);
 
             playTimes[0] = Time.time;
+        }
+
+        private void RestartLevel() 
+        {
+            // Now collecting data when the player restarts, but not when already saved WinState
+            if (livesRemaining > 0)
+            {
+                playTimes[1] = Time.time;
+                SM.researchData.hintsUsed = BBEvents.GetHintsUsed.Invoke();
+                SM.researchData.timePlayed = playTimes[1] - playTimes[0];
+
+                SM.researchData.winStateString = $"\"RESTART\", \"livesRemaining\": {livesRemaining}, \"wonLevel\": false";
+                SM.SaveGame();
+            }
+            StartLevel();
         }
 
         private void NextLevel()
@@ -284,22 +303,20 @@ namespace BlackBox
             // else Debug.Log("Player has completed a higher level; save data not updated.");
             
             // Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
-            SM.SaveGame();
-            // Debug.Log(string.Join(",", saveData.starsPerLevel));
+            // SM.SaveGame();
         }
 
         private IEnumerator DisplayPlayerFeedBack(WinState winState)
         {
             BBEvents.UpdateEndPanel?.Invoke(winState);
             
-            if (winState.levelWon || winState.livesRemaining == 0) {
+            if (winState.levelWon || winState.livesRemaining == 0) 
+            {    
                 playTimes[1] = Time.time;
-
-                SM.researchData.wonLevel = winState.levelWon;
-                SM.researchData.starsWon = winState.livesRemaining;
                 SM.researchData.timePlayed = playTimes[1] - playTimes[0];
                 SM.researchData.hintsUsed = BBEvents.GetHintsUsed.Invoke();
-                
+
+                SM.researchData.winStateString = JsonUtility.ToJson(winState);
                 SM.SaveGame();
             }
 
