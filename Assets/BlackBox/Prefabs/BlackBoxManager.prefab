@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2284771050065626854}
   - component: {fileID: 2284771050065626855}
+  - component: {fileID: 8119501031652398835}
   m_Layer: 0
   m_Name: BlackBoxManager
   m_TagString: Untagged
@@ -52,6 +53,7 @@ MonoBehaviour:
   levelSelect: {fileID: 0}
   levelButtons: []
   gameBackButton: {fileID: 0}
+  backgroundAnimator: {fileID: 0}
   mainGridGO: {fileID: 0}
   leftGridGO: {fileID: 0}
   botGridGO: {fileID: 0}
@@ -77,6 +79,33 @@ MonoBehaviour:
   - 166.66
   - 142.85
   - 250
+  SM: {fileID: 8119501031652398835}
+--- !u!114 &8119501031652398835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2284771050065626853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23ba6cf4409ea4a8f856aa4f92b260c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveData:
+    gameID: 0
+    currentLevelID: 
+    tutorialsSeen: 0000000000
+    completed: 0
+    starsPerLevel: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    totalStars: 0
+  researchData:
+    Username: 
+    BBSaveDataString: 
+    timePlayed: 0
+    wonLevel: 0
+    hintsUsed: 0
+    starsWon: 3
 --- !u!1 &7492448674175222985
 GameObject:
   m_ObjectHideFlags: 0

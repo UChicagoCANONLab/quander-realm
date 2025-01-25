@@ -15,8 +15,9 @@ namespace BlackBox
         /// Tutorial
         public static Action<BBSaveData, Level> ShowTutorial;
         public static Action ShowHint;
-        public static Action<Vector3Int, Dir, Vector3Int, Dir> AppendHint;
+        public static Action<Vector3Int, Dir, Vector3Int, Dir, Marker> AppendHint;
         public static Action ClearHints;
+        public static Func<int> GetHintsUsed;
         public static Action ShowInfo;
         public static Action InitiateTutorialLevel;
         public static Action EndTutorialLevel;
@@ -55,6 +56,7 @@ namespace BlackBox
         public static Func<int> GetNumEnergyUnits;
         public static Action<int> UpdateHUDWolfieLives;
         public static Action LoseLife;
+        public static Func<int> GetLivesRemaining;
 
         /// Level Submission
         public static Action CheckWinState;
