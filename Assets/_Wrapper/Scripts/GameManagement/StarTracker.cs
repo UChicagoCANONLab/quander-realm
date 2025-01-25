@@ -50,7 +50,7 @@ namespace Wrapper
             {Game.BlackBox, false},     // max 45
             {Game.Circuits, false},     // max 75
             {Game.Labyrinth, true},    // max 45
-            {Game.QueueBits, false},    // max 45
+            {Game.QueueBits, true},    // max 45
             {Game.Qupcakes, true}      // max 81
         };
 

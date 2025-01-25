@@ -28,7 +28,7 @@ namespace QueueBits {
             LEVEL_NUMBER = level;
 
             displayHolder.SetActive(true);
-            resultDisplay.gameObject.SetActive(false);
+            resultDisplay.animator.SetBool("IsOn", false);
             numDisplay.initLevelNumber(level);
         }
 
@@ -41,7 +41,6 @@ namespace QueueBits {
         // Display when the game is over
         public void GameOver(Results result) {
             displayHolder.SetActive(false);
-            resultDisplay.gameObject.SetActive(true);
             resultDisplay.GameOver(result, LEVEL_NUMBER);
             numDisplay.resetLevelNumber();
         }

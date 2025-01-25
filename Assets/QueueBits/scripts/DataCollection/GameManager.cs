@@ -29,6 +29,11 @@ namespace QueueBits
             if (saveData == null) {
                 saveData = new QBSaveData();
             }
+
+            if (saveData.maxLevelUnlocked == 0) {
+                saveData.maxLevelUnlocked = 1;
+            }
+
             Save();
         }
 
