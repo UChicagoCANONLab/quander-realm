@@ -72,7 +72,7 @@ namespace Qupcakery
         {
             GridLayoutGroup grid = panel.AddComponent<GridLayoutGroup>();
             grid.cellSize = new Vector2(iconDimensions.width, iconDimensions.height);
-            grid.childAlignment = TextAnchor.UpperCenter;
+            grid.childAlignment = TextAnchor.MiddleCenter;
             grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             grid.constraintCount = 9;
         }
