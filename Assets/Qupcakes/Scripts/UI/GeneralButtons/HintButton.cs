@@ -112,7 +112,7 @@ namespace Qupcakery
                 tutorialText.text = "You're using the right gates! That's all" +
                     " the help I can give you right now - I have to get back to " +
                     "baking!";
-                chef.GetComponent<SpriteRenderer>().enabled = true;
+                chef.GetComponent<Image>().enabled = true;
                 panel.GetComponent<Image>().enabled = true;
                 textObject.GetComponent<Text>().enabled = true;
                 Invoke("EndHintMessage", 5);
@@ -122,7 +122,7 @@ namespace Qupcakery
 
         private void EndHintMessage()
         {
-            chef.GetComponent<SpriteRenderer>().enabled = false;
+            chef.GetComponent<Image>().enabled = false;
             panel.GetComponent<Image>().enabled = false;
             textObject.GetComponent<Text>().enabled = false;
         }

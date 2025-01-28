@@ -809,7 +809,7 @@ namespace Qupcakery
 
         private void ShowTutorial()
         {
-            chef.GetComponent<SpriteRenderer>().enabled = true;
+            chef.GetComponent<Image>().enabled = true;
             panel.GetComponent<Image>().enabled = true;
             textObject.GetComponent<Text>().enabled = true;
             pointer.GetComponent<Canvas>().enabled = true;
@@ -817,7 +817,7 @@ namespace Qupcakery
 
         private void HideTutorial()
         {
-            chef.GetComponent<SpriteRenderer>().enabled = false;
+            chef.GetComponent<Image>().enabled = false;
             panel.GetComponent<Image>().enabled = false;
             textObject.GetComponent<Text>().enabled = false;
             pointer.GetComponent<Canvas>().enabled = false;
@@ -830,14 +830,14 @@ namespace Qupcakery
             switch (belts)
             {
                 case 1:
-                    chef.GetComponent<Transform>().position += new Vector3(-1.73f, 5.5f, 0);
+                    chef.GetComponent<RectTransform>().position += new Vector3(-1.73f, 5.5f, 0);
                     panel.GetComponent<RectTransform>().position += new Vector3(-1.73f, 5.5f, 0);
-                    textObject.GetComponent<RectTransform>().position += new Vector3(-1.73f, 5.5f, 0);
+                    // textObject.GetComponent<RectTransform>().position += new Vector3(-1.73f, 5.5f, 0);
                     break;
                 case 2:
-                    chef.GetComponent<Transform>().position += new Vector3(-1.73f, 6.5f, 0);
+                    chef.GetComponent<RectTransform>().position += new Vector3(-1.73f, 6.5f, 0);
                     panel.GetComponent<RectTransform>().position += new Vector3(-1.73f, 6.5f, 0);
-                    textObject.GetComponent<RectTransform>().position += new Vector3(-1.73f, 6.5f, 0);
+                    // textObject.GetComponent<RectTransform>().position += new Vector3(-1.73f, 6.5f, 0);
                     break;
                 default:
                     break;
