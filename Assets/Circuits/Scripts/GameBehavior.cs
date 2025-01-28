@@ -162,7 +162,7 @@ namespace Circuits
                 numberObject.sprite = numberSprites[GameData.getCurrLevel()];
             }
 
-            if (GameData.getCurrLevel() > CTConstants.N_LEVELS)
+            if (GameData.getCurrLevel() >= CTConstants.N_LEVELS)
             {
                 SceneManager.LoadScene("Circuits_Menu");
                 return; // sorry david :/
