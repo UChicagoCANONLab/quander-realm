@@ -5,28 +5,28 @@ namespace Wrapper
 {
     public class BadgeAsset : ContentAsset
     {
-        [SerializeField, ContentValue("Game")]
-        public Game game;
-
-        [SerializeField, ContentValue("Difficulty")]
-        public int difficulty;
-
         [SerializeField, ContentValue("Title")]
         public string title;
 
-        /* [SerializeField, ContentValue("Card Type")]
-        public CardType cardType;
+        [SerializeField, ContentValue("Game")]
+        public Game game;
 
-        [SerializeField, ContentValue("Sticker Title")]
-        public string title;
+        [SerializeField, ContentValue("Description")]
+        public string description;
 
-        [SerializeField, ContentValue("Back Text")]
-        public string backText;
+        [SerializeField, ContentValue("Star Levels")]
+        public int starLevels;
 
-        [SerializeField, ContentValue("Front Flavor Text")]
-        public string flavorText;
+        [SerializeField, ContentValue("Criteria Type")]
+        public CriteriaType criteriaType;
 
-        [SerializeField, ContentValue("Front Image Path")]
-        public string imagePath; */
+        [SerializeField, ContentValue("Criteria")]
+        public int[] criteria;
+
+        [SerializeField, ContentValue("Icon Name")]
+        public string iconName;
+        
+        [SerializeField, ContentValue("Criteria Description")]
+        public string criteriaDescription;
     }
 }
