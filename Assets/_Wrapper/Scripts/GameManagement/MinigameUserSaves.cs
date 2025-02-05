@@ -13,10 +13,10 @@ namespace Wrapper
         public BlackBox.BBSaveData data_BuriedTreasure;
 
 
-        void Start() 
-        {
-            LoadAllMinigames();
-        }
+        // void Start() 
+        // {
+        //     LoadAllMinigames();
+        // }
 
 
         public void LoadAllMinigames()
@@ -89,12 +89,14 @@ namespace Wrapper
             } return 0;
         }
 
-        public int GetMaxLevel(Game game)
+        // NOTE: Some games save the max level the player has completed, others the 
+        // max level they have access to play. This returns the max level they can play
+        public int GetMaxLevelUnlocked(Game game)
         {
             switch(game) {
                 case Game.Qupcakes:
                     if (data_Qupcakery != null) {
-                        return data_Qupcakery.MaxLevelCompleted;
+                        return data_Qupcakery.MaxLevelCompleted + 1;
                     } break;
                 case Game.Labyrinth:
                     if (data_Twintanglement != null) {
@@ -102,16 +104,21 @@ namespace Wrapper
                     } break;
                 case Game.Circuits:
                     if (data_TanglesLair != null) {
-                        return data_TanglesLair.MaxLevel;
+                        return data_TanglesLair.maxLevel + 1;
                     } break;
                 case Game.QueueBits:
                     if (data_Queuebits != null) {
-                        return data_Queuebits.MaxLevelUnlocked;
+                        return data_Queuebits.maxLevelUnlocked;
                     } break;
                 case Game.BlackBox:
                     if (data_BuriedTreasure != null) {
-                        return data_BuriedTreasure.totalStars;
-                        // NEED TO UPDATE BT SAVEDATA
+                        if (data_BuriedTreasure.completed) return 25;
+                        int maxLevel = 0;
+                        for(int i=0; i<24; i++) {
+                            if (data_BuriedTreasure.starsPerLevel[i] > 0) {
+                                maxLevel = i+1;
+                            }
+                        } return maxLevel;                        
                     } break;
             } return 0;
         }
