@@ -64,7 +64,8 @@ namespace Circuits
 
         public TutorialManager tutorialManager;
 
-        public GameObject book;
+        // public GameObject book;
+        public InfoPopup info;
         public GameObject gates;
         public GameObject grid;
 
@@ -161,7 +162,7 @@ namespace Circuits
                 numberObject.sprite = numberSprites[GameData.getCurrLevel()];
             }
 
-            if (GameData.getCurrLevel() > CTConstants.N_LEVELS)
+            if (GameData.getCurrLevel() >= CTConstants.N_LEVELS)
             {
                 SceneManager.LoadScene("Circuits_Menu");
                 return; // sorry david :/
@@ -618,14 +619,17 @@ namespace Circuits
         }
 
         public void showInfo(){
-            book.SetActive(true);
+            // book.SetActive(true);
+            info.SetInfo(GameData.getCurrLevel());
+            info.gameObject.SetActive(true);
             gates.SetActive(false);
             grid.SetActive(false);
         }
 
         public void hideInfo(){
             Debug.Log("Hide");
-            book.SetActive(false);
+            // book.SetActive(false);
+            info.gameObject.SetActive(false);
             gates.SetActive(true);
             grid.SetActive(true);
         }
