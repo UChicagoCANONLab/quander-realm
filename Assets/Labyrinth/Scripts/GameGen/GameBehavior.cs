@@ -36,7 +36,7 @@ namespace Labyrinth
         { {"N", "W"}, {"W", "S"}, {"E", "N"}, {"S", "E"} };
 
         private Dictionary<string, string> goalTextNormal = new Dictionary<string, string>() 
-        { {"N", "Up"}, {"W", "Left"}, {"E", "Right"}, {"S", "Down"} };
+        { {"N", "up"}, {"W", "left"}, {"E", "right"}, {"S", "down"} };
 
 
     // ~~~~~~~~~~~~~~~ INITIALIZING ~~~~~~~~~~~~~~~
@@ -84,6 +84,7 @@ namespace Labyrinth
 
             if (Input.GetKeyDown(KeyCode.Space)) {
                 TTEvents.SwitchPlayer?.Invoke();
+                TTEvents.SetButtonTrigger("switch", "FromKeyboard");
             }
         }
 
@@ -123,24 +124,22 @@ namespace Labyrinth
     // ~~~~~~~~~~~~~~~ BUTTONS ~~~~~~~~~~~~~~~
 
         public void GiveHint() {
-            string hintDir;
-
             object[] hint = TTEvents.CalculatePathToGoal.Invoke();
             string hintPath = hint[0].ToString();
             int hintDeg = (int)hint[1];
 
+            string hintDir;
 
             if (hintDeg == 90) {
                 hintDir = goalTextNormal[rot90[hintPath[0].ToString()]];
             } else if (hintDeg == 180) {
                 hintDir = goalTextNormal[rot180[hintPath[0].ToString()]];
-            } else { 
+            } else if (hintDeg == 0) { 
                 hintDir = goalTextNormal[hintPath[0].ToString()];
+            } else { // hintDeg == -1
+                hintDir = "switch";
             }
-            
-            string buttonPath = $"Canvases/CanvasOver/GameplayButtons/MovementButtons/{hintDir}";
-            // GameObject.Find(buttonPath).GetComponent<ParticleSystem>().Play();
-            GameObject.Find(buttonPath).GetComponent<Animation>().Play("ButtonHighlight");
+            TTEvents.SetButtonTrigger(hintDir, "Hint");
 
             hintsUsed++; steps++;
         }
