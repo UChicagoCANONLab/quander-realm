@@ -22,6 +22,7 @@ namespace Wrapper
         private int starStatus = 0;
         private bool UNLOCKED = false;
 
+
         public void InitBadge(BadgeAsset bAsset) 
         {
             game = bAsset.game;
@@ -33,9 +34,13 @@ namespace Wrapper
             descriptionText.text = bAsset.description;
             icon.sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
 
-            // badgeAnimator.SetInteger("Game", (int)bAsset.game);
-            badgeAnimator.SetInteger("Game", 5);
-            badgeAnimator.SetInteger("Star Level", bAsset.starLevels);
+            SetAnimator();
+        }
+
+        public void SetAnimator()
+        {
+            badgeAnimator.SetInteger("Game", (int)game);
+            badgeAnimator.SetInteger("Star Level", starLevel);
 
             starStatus = 0;
             for (int i=0; i<starLevel; i++) 

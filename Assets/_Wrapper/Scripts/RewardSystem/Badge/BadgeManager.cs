@@ -23,15 +23,24 @@ namespace Wrapper
             "Reward_QU", "Reward_QB", "Reward_BB", "Reward_CT", "Reward_LA", 
             "Stars_QU", "Stars_QB", "Stars_BB", "Stars_CT", "Stars_LA"
         };
+        
+        private string[] badgeIDs2 = {
+            "Leveler_QU", "Reward_QU", "Stars_QU",
+            "Leveler_QB", "Reward_QB", "Stars_QB",
+            "Leveler_BB", "Reward_BB", "Stars_BB",
+            "Leveler_CT", "Reward_CT", "Stars_CT",
+            "Leveler_LA", "Reward_LA", "Stars_LA",
+            "Reward_all", "Reward_first", "Unlocked"
+        };
 
-        void Awake()
+        void Start()
         {
             LoadBadges();
         }
 
         private void LoadBadges()
         {
-            foreach (string ID in badgeIDs)
+            foreach (string ID in badgeIDs2)
             {
                 BadgeAsset bAsset = Resources.Load<BadgeAsset>($"{prefix}/{ID}");
                 GameObject bObject = Instantiate(badgePrefab, badgeHolder.transform);
