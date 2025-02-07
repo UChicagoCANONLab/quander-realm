@@ -20,7 +20,6 @@ namespace Wrapper
         public static Func<Game, string> GetMinigameTitle;
         public static Action<Game> UnlockAndDisplayGame;
         public static Action DisplayAgeSelector;
-        public static Func<Game, bool> GetGameUnlocked;
         public static Action InitializeStarTracker;
         public static Action ResetStarCounts;
         public static Action InitializeMap;
@@ -82,5 +81,11 @@ namespace Wrapper
         public static Action BBClearMarkers;
         public static Action<string> ShowCardPopup;
         public static Func<bool> IsDebugEnabled;
+
+        /// Minigame User Saves ///
+        public static Func<Game, int> GetMinigameTotalStars;
+        public static Func<int> GetOverallTotalStars;
+        public static Func<Game, bool> GetGameUnlocked;
+
     }
 }
