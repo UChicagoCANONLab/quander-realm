@@ -86,6 +86,9 @@ namespace Wrapper
         public static Func<Game, int> GetMinigameTotalStars;
         public static Func<int> GetOverallTotalStars;
         public static Func<Game, bool> GetGameUnlocked;
+        public static Func<Game, int> GetMinigameMaxLevel;
+        public static Action<Game> LoadMinigameSave;
+        public static Action LoadAllMinigameSaves;
 
     }
 }

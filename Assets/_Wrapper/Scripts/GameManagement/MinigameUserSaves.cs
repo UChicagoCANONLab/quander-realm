@@ -14,9 +14,9 @@ namespace Wrapper
 
         // [SerializeField] public int TOTALSTARS = 0;
 
-        private Game[] gamesArray = 
-            {Game.Qupcakes, Game.Labyrinth, Game.Circuits, Game.QueueBits, Game.BlackBox};
-
+        private Game[] gamesArray = {
+            Game.Qupcakes, Game.Labyrinth, Game.Circuits, Game.QueueBits, Game.BlackBox
+        };
 
 
         private void OnEnable()
@@ -24,6 +24,10 @@ namespace Wrapper
             Events.GetMinigameTotalStars += GetMinigameStars;
             Events.GetOverallTotalStars += GetOverallStars;
             Events.GetGameUnlocked += GetMinigameUnlocked;
+            Events.GetMinigameMaxLevel += GetMaxLevelUnlocked;
+
+            Events.LoadMinigameSave += LoadMinigameSave;
+            Events.LoadAllMinigameSaves += LoadAllMinigames;
         }
 
         private void OnDisable()
@@ -31,16 +35,11 @@ namespace Wrapper
             Events.GetMinigameTotalStars -= GetMinigameStars;
             Events.GetOverallTotalStars -= GetOverallStars;
             Events.GetGameUnlocked -= GetMinigameUnlocked;
+            Events.GetMinigameMaxLevel -= GetMaxLevelUnlocked;
+
+            Events.LoadMinigameSave -= LoadMinigameSave;
+            Events.LoadAllMinigameSaves -= LoadAllMinigames;
         }
-
-
-
-
-        // void Start() 
-        // {
-        //     LoadAllMinigames();
-        // }
-
 
         // Loads/Updates all local minigame saves
         public void LoadAllMinigames()
@@ -50,7 +49,7 @@ namespace Wrapper
             }
         }
 
-        // Loads/Updates the minigame save locally
+        // Loads/Updates the local minigame save
         public void LoadMinigameSave(Game game)
         {
             string tempData;
@@ -85,10 +84,9 @@ namespace Wrapper
         }
 
 
-        // Updates local minigame save; returns total stars won in minigame
+        // Returns total stars won in minigame
         public int GetMinigameStars(Game game)
         {
-            LoadMinigameSave(game);
             switch(game) {
                 case Game.Qupcakes:
                     if (data_Qupcakery != null) {
@@ -113,7 +111,7 @@ namespace Wrapper
             } return 0;
         }
 
-        // Returns total stars won across all games; updates each local minigame save
+        // Returns total stars won across all games
         public int GetOverallStars() 
         {
             int tempTotal = 0;
@@ -128,24 +126,27 @@ namespace Wrapper
         // max level they have access to play. This returns the max level they can play
         public int GetMaxLevelUnlocked(Game game)
         {
-            LoadMinigameSave(game);
             switch(game) {
                 case Game.Qupcakes:
                     if (data_Qupcakery != null) {
                         return data_Qupcakery.MaxLevelCompleted + 1;
                     } break;
+                
                 case Game.Labyrinth:
                     if (data_Twintanglement != null) {
                         return data_Twintanglement.MaxLevelUnlocked;
                     } break;
+                
                 case Game.Circuits:
                     if (data_TanglesLair != null) {
                         return data_TanglesLair.maxLevel + 1;
                     } break;
+                
                 case Game.QueueBits:
                     if (data_Queuebits != null) {
                         return data_Queuebits.maxLevelUnlocked;
                     } break;
+                
                 case Game.BlackBox:
                     if (data_BuriedTreasure != null) {
                         if (data_BuriedTreasure.completed) return 25;
@@ -156,7 +157,8 @@ namespace Wrapper
                             }
                         } return maxLevel;                        
                     } break;
-            } return 0;
+            }
+            return 0;
         }
 
 

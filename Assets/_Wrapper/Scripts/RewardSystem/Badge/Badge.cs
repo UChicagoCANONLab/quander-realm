@@ -39,6 +39,8 @@ namespace Wrapper
 
         public void SetAnimator()
         {
+            Events.LoadMinigameSave?.Invoke(game);
+
             badgeAnimator.SetInteger("Game", (int)game);
             badgeAnimator.SetInteger("Star Level", starLevel);
 
@@ -54,7 +56,28 @@ namespace Wrapper
 
 
         public bool CheckCriteria(Game game, CriteriaType criteriaType, int criteria)
-        {
+        {            
+            switch(criteriaType)
+            {
+                case CriteriaType.Level:
+                    if (Events.GetMinigameMaxLevel.Invoke(game) >= criteria) {
+                        return true;
+                    } break;
+
+                case CriteriaType.Star:
+                    if (Events.GetMinigameTotalStars.Invoke(game) >= criteria) {
+                        return true;
+                    } break;
+
+                case CriteriaType.Card:
+                    break;
+
+                case CriteriaType.Unlocked:
+                    return Events.GetGameUnlocked.Invoke((Game)criteria);
+                    /* if (Events.GetGameUnlocked.Invoke((Game)criteria)){
+                        return true;
+                    } break; */
+            }
             return false;
         }
     
