@@ -14,13 +14,15 @@ namespace Wrapper
         [SerializeField] public CriteriaType type;
         [SerializeField] public int[] criteria;
         
-        [SerializeField] public Image icon;
+        [SerializeField] public Image[] icons; // two icons; one is a shadow
         [SerializeField] public TextMeshProUGUI titleText;
         [SerializeField] public TextMeshProUGUI descriptionText;
 
         private string iconPrefix = "_Wrapper/Incentives/BadgeIcons";
         private int starStatus = 0;
+        
         private bool UNLOCKED = false;
+        private bool MINI = true;
 
 
         public void InitBadge(BadgeAsset bAsset) 
@@ -32,8 +34,15 @@ namespace Wrapper
 
             titleText.text = bAsset.title;
             descriptionText.text = bAsset.description;
-            icon.sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
+            icons[0].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
+            icons[1].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
 
+            // SetAnimator();
+            // this.gameObject.onClick.AddListener(ToggleMini);
+        }
+
+        public void OnEnable()
+        {
             SetAnimator();
         }
 
@@ -74,11 +83,15 @@ namespace Wrapper
 
                 case CriteriaType.Unlocked:
                     return Events.GetGameUnlocked.Invoke((Game)criteria);
-                    /* if (Events.GetGameUnlocked.Invoke((Game)criteria)){
-                        return true;
-                    } break; */
+
             }
             return false;
+        }
+
+        public void ToggleMini()
+        {
+            badgeAnimator.SetBool("Mini", !MINI);
+            MINI = !MINI;
         }
     
     }

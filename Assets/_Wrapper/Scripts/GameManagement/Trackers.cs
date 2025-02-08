@@ -42,7 +42,6 @@ namespace Wrapper
 
         private void OnEnable()
         {
-            // Events.GetGameUnlocked += CheckUnlocked;
             // Events.InitializeStarTracker += InitStarTracker;
             Events.InitializeStarTracker += DelayInitTrackers;
             Events.ResetStarCounts += ResetStarCounts;
@@ -50,7 +49,6 @@ namespace Wrapper
 
         private void OnDisable()
         {
-            // Events.GetGameUnlocked -= CheckUnlocked;
             // Events.InitializeStarTracker -= InitStarTracker;
             Events.InitializeStarTracker -= DelayInitTrackers;
             Events.ResetStarCounts -= ResetStarCounts;

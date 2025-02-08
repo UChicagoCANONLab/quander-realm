@@ -173,31 +173,31 @@ namespace Wrapper
 #if LITE_VERSION
                 case Game.Circuits: // CRITERIA: 12 QC stars
                     if (GetMinigameStars(Game.Qupcakes) >= 12) {
-                        Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
+                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
                         return true;
                     } break;
                 case Game.QueueBits: // CRITERIA: unlocked
                     return true; break;
                 case Game.BlackBox: // CRITERIA: 50 total stars
                     if (GetOverallStars() >= 50) {
-                        Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
+                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
                         return true;
                     } break;
 #else
                 case Game.Circuits: // CRITERIA: 27 QC stars
                     if (GetMinigameStars(Game.Qupcakes) >= 27) {
-                        Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
+                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
                         return true;
                     } break;
                 case Game.QueueBits: // CRITERIA: 10 QC && 10 TT stars
                     if (GetMinigameStars(Game.Qupcakes) >= 10
                     && GetMinigameStars(Game.Labyrinth) >= 10) {
-                        Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.QueueBits);
+                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.QueueBits);
                         return true;
                     } break;
                 case Game.BlackBox: // CRITERIA: 120 total stars
                     if (GetOverallStars() >= 50) {
-                        Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
+                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
                         return true;
                     } break;
 #endif
