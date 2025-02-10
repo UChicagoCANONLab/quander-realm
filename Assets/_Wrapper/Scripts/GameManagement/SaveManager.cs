@@ -1,5 +1,5 @@
 /* Code by Srivathsan Prakash (Filament), Rob Frank (Filament), Tianle Liu (UChicago)
- * 
+ *
  * This class uploads/downloads players' save data by communicating with a firebase app
  * It also sends analytics data to an AWS server hosted by UChicago (Implemented by Tianle)
  *   All AWS related code is marked with a comments: "// AWS"
@@ -140,7 +140,7 @@ namespace Wrapper
 #if LITE_VERSION
         private IEnumerator LoginRoutine(string researchCode)
         {
-            currentUserSave.id = "GUEST"; 
+            currentUserSave.id = "GUEST";
 	        Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             isUserLoggedIn = true;
 
@@ -189,14 +189,14 @@ namespace Wrapper
             }
 
             // Check if user's save data exists, create new save file if not
-            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);  
+            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;
 
-                UpdateRemoteSave(); 
+                UpdateRemoteSave();
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => uploadSuccess == true), 
+                    Routine.WaitCondition(() => uploadSuccess == true),
                     Routine.WaitSeconds(networkRequestTimeout));
 
                 //yield return Routine.Race(
@@ -211,8 +211,15 @@ namespace Wrapper
             currentUserSave = JsonUtility.FromJson<UserSave>(
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
 
+            //Delete these two lines
+            string json = JsonUtility.ToJson(currentUserSave);
+            Debug.Log("Saving: " + json);
+
+            currentUserSave.ResetStreak();
+            Events.UpdateStreakLength?.Invoke(currentUserSave.streak);
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
+
             isUserLoggedIn = true;
 
             // Checking if age is set in database
@@ -220,7 +227,7 @@ namespace Wrapper
             byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(usernameJson);
 
             string url = awsURL + "/check_research_code";
-            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST"))
             {
                 www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
                 www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
@@ -294,9 +301,9 @@ namespace Wrapper
             {
                 currentUserSave.id = formattedCode;
 
-                UpdateRemoteSave(); 
+                UpdateRemoteSave();
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => webGLUploadSuccess == true), 
+                    Routine.WaitCondition(() => webGLUploadSuccess == true),
                     Routine.WaitSeconds(networkRequestTimeout));
 
                 loadDataJson = "";
@@ -306,16 +313,19 @@ namespace Wrapper
             }
 
             currentUserSave = JsonUtility.FromJson<UserSave>(loadDataJson);
+            currentUserSave.ResetStreak();
+            Events.UpdateStreakLength?.Invoke(currentUserSave.streak);
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
+
 
             // Checking if age is set in database
             string usernameJson = JsonUtility.ToJson(new UserCode(researchCode));
             byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(usernameJson);
 
             string url = awsURL + "/check_research_code";
-            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST"))
             {
                 www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
                 www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
@@ -449,7 +459,9 @@ namespace Wrapper
                 yield break;
             }
 
+            currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
+
             if (json.Equals(string.Empty))
             {
                 Debug.LogError("Empty UserSave");
@@ -474,6 +486,7 @@ namespace Wrapper
         private IEnumerator UpdateRemoteSaveRoutine()
         {
             webGLUploadSuccess = false;
+            currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
@@ -484,7 +497,7 @@ namespace Wrapper
             // Call the JS SaveData function
             SaveData(currentUserSave.id, json);
 
-            // Wait for whichever completes first: the SaveData callback function or the network timeout 
+            // Wait for whichever completes first: the SaveData callback function or the network timeout
             yield return Routine.Race(
                 Routine.WaitCondition(() => webGLUploadSuccess == true),
                 Routine.WaitSeconds(networkRequestTimeout));

@@ -1,38 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-namespace Wrapper 
+namespace Wrapper
 {
-    public class Trackers : MonoBehaviour 
+    public class Trackers : MonoBehaviour
     {
 
         [Header("StarTrackers on Panel")]
-        [SerializeField] private StarTracker starTotal;        
-        
+        [SerializeField] private StarTracker starTotal;
+
         [SerializeField] private StarTracker starQupcakery;
         [SerializeField] private StarTracker starTwinTanglement;
         [SerializeField] private StarTracker starTanglesLair;
         [SerializeField] private StarTracker starQueueBits;
         [SerializeField] private StarTracker starBuriedTreasure;
-        
+
         [SerializeField] private StarTracker starChallenge;
 
-        
+
         [Header("General Trackers at top of screen")]
-        [SerializeField] private TMP_Text totalStarsTMP; 
-        private int totalStars; 
+        [SerializeField] private TMP_Text totalStarsTMP;
+        private int totalStars;
         [SerializeField] private TMP_Text totalCoinsTMP;
         private int totalCoins;
         [SerializeField] private TMP_Text streakLengthTMP;
         private int streakLength;
 
-        
+
         [Header("Animator")]
         [SerializeField] private Animator trackerAnimator;
-        
+
         private bool panelVisible = false;
         private Game[] games = new Game[] {
             Game.Qupcakes, Game.Labyrinth, Game.Circuits, Game.QueueBits, Game.BlackBox
@@ -43,6 +44,7 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.GetGameUnlocked += CheckUnlocked;
+            Events.UpdateStreakLength += OnUpdateStreakLength;
             // Events.InitializeStarTracker += InitStarTracker;
             Events.InitializeStarTracker += DelayInitTrackers;
             Events.ResetStarCounts += ResetStarCounts;
@@ -53,6 +55,7 @@ namespace Wrapper
             Events.GetGameUnlocked -= CheckUnlocked;
             // Events.InitializeStarTracker -= InitStarTracker;
             Events.InitializeStarTracker -= DelayInitTrackers;
+            Events.UpdateStreakLength -= OnUpdateStreakLength;
             Events.ResetStarCounts -= ResetStarCounts;
         }
 
@@ -99,7 +102,7 @@ namespace Wrapper
                     } break;
 
                 case Game.QueueBits:
-                    if (starQupcakery.starsWon >= 10 
+                    if (starQupcakery.starsWon >= 10
                     && starTwinTanglement.starsWon >= 10) {
                         Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.QueueBits);
                         starQueueBits.SetGameUnlocked(true);
@@ -159,7 +162,7 @@ namespace Wrapper
                     if (data2_TT != null) {
                         starTwinTanglement.SetStarDisplay(data2_TT.TotalStars);
                     } return;
-                
+
                 case Game.Circuits:
                     string data_TL = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.Circuits);
                     Circuits.Circuits_SaveData data2_TL = JsonUtility.FromJson<Circuits.Circuits_SaveData>(data_TL);
@@ -167,7 +170,7 @@ namespace Wrapper
                         CheckUnlocked(Game.Circuits);
                         starTanglesLair.SetStarDisplay(data2_TL.totalStars);
                     } return;
-                
+
                 case Game.QueueBits:
                     string data_QB = Wrapper.Events.GetMinigameSaveData?.Invoke(Wrapper.Game.QueueBits);
                     QueueBits.QBSaveData data2_QB = JsonUtility.FromJson<QueueBits.QBSaveData>(data_QB);
@@ -196,13 +199,17 @@ namespace Wrapper
             starTanglesLair.ResetStarDisplay();
             starQueueBits.ResetStarDisplay();
             starBuriedTreasure.ResetStarDisplay();
-            
+
             starTotal.ResetStarDisplay();
             totalStars = 0;
             totalStarsTMP.text = "0";
         }
 
-
+        public void OnUpdateStreakLength(long streak)
+        {
+            Debug.Log("Updating streak length");
+            streakLengthTMP.text = streak.ToString();
+        }
         // Updates the total star count on panel and main screen
         public void RecountTotal() {
             int i = 0;
@@ -211,7 +218,7 @@ namespace Wrapper
             i += starTanglesLair.starsWon;
             i += starQueueBits.starsWon;
             i += starBuriedTreasure.starsWon;
-            
+
             starTotal.SetStarDisplay(i);
             totalStars = i;
             totalStarsTMP.text = $"{i}";
@@ -224,5 +231,5 @@ namespace Wrapper
             trackerAnimator.SetBool("ShowPanel", panelVisible);
         }
 
-    }    
+    }
 }

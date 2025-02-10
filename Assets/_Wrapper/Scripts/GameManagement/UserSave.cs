@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace Wrapper
@@ -14,10 +15,16 @@ namespace Wrapper
         public bool rewardDialogueSeen = false;
         public int totalStars = 0;
 
+        [NonSerialized]
+        public DateTime lastLoginDate;
+        [NonSerialized]
+        public long streak = 0;
+        public string streakString = string.Empty;
+        public string loginticks = string.Empty;
         public UserSave(string idString = "", string rewardID = "")
         {
             rewards = new List<string>();
-            
+
             // In order: {BT, TL, TT, QB, QC}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
             minigameUnlocked = new bool[] {false, false, true, false, true};
@@ -26,6 +33,7 @@ namespace Wrapper
                 id = idString.Trim();
 
             AddReward(rewardID);
+            loginticks = "5";
         }
 
         public bool AddReward(string rewardID)
@@ -62,6 +70,31 @@ namespace Wrapper
         {
             if (rewards == null) return false;
             else return rewards.Count > 0;
+        }
+        public void UpdateStreak()
+        {
+            if (lastLoginDate.Date == DateTime.Now.AddDays(-1).Date || streak == 0)
+            {
+                streak = streak + 1;
+                streakString = streak.ToString();
+            }
+            lastLoginDate = DateTime.Now;
+            loginticks = lastLoginDate.ToString();
+            Events.UpdateStreakLength?.Invoke(streak);
+        }
+        public void ResetStreak()
+        {
+            lastLoginDate = DateTime.Parse(loginticks);
+            streak = long.Parse(streakString);
+            if (lastLoginDate.Date > DateTime.Now.AddDays(-1).Date)
+            {
+                streak = long.Parse(streakString);
+            }
+            else
+            {
+                streak = 0;
+                streakString = "0";
+            }
         }
 
         public bool FirstRewardFromGame(string gamePrefix)
