@@ -72,6 +72,8 @@ namespace Wrapper
             Events.GetRewardDialogStats += GetRewardStatsForDialog;
             Events.SetRewardTextSeen += ToggleRewardDialogueSeen;
             Events.GetFirstRewardBool += GetHasFirstReward;
+            Events.UpdateUserSaveTotalStars += UpdateTotalStars;
+            Events.UpdateUserSaveTotalCoins += UpdateTotalCoins;
         }
 
         private void OnDisable()
@@ -88,6 +90,8 @@ namespace Wrapper
             Events.GetRewardDialogStats -= GetRewardStatsForDialog;
             Events.SetRewardTextSeen -= ToggleRewardDialogueSeen;
             Events.GetFirstRewardBool -= GetHasFirstReward;
+            Events.UpdateUserSaveTotalStars -= UpdateTotalStars;
+            Events.UpdateUserSaveTotalCoins -= UpdateTotalCoins;
         }
 
 #if !UNITY_WEBGL
@@ -418,6 +422,18 @@ namespace Wrapper
         private void UpdateMinigameSaveData(Game game, object minigameSave)
         {
             currentUserSave.UpdateMinigameSave(game, minigameSave);
+            UpdateRemoteSave();
+        }
+
+        private void UpdateTotalStars(int numStars)
+        {
+            currentUserSave.totalStars = numStars;
+            UpdateRemoteSave();
+        }
+
+        private void UpdateTotalCoins(int numCoins)
+        {
+            currentUserSave.totalCoins = numCoins;
             UpdateRemoteSave();
         }
 

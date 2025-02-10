@@ -23,6 +23,10 @@ namespace Wrapper
         {
             Events.GetMinigameTotalStars += GetMinigameStars;
             Events.GetOverallTotalStars += GetOverallStars;
+
+            Events.GetMinigameTotalCoins += GetMinigameCoins;
+            Events.GetOverallTotalCoins += GetOverallCoins;
+
             Events.GetGameUnlocked += GetMinigameUnlocked;
             Events.GetMinigameMaxLevel += GetMaxLevelUnlocked;
 
@@ -34,12 +38,18 @@ namespace Wrapper
         {
             Events.GetMinigameTotalStars -= GetMinigameStars;
             Events.GetOverallTotalStars -= GetOverallStars;
+            
+            Events.GetMinigameTotalCoins -= GetMinigameCoins;
+            Events.GetOverallTotalCoins -= GetOverallCoins;
+
             Events.GetGameUnlocked -= GetMinigameUnlocked;
             Events.GetMinigameMaxLevel -= GetMaxLevelUnlocked;
 
             Events.LoadMinigameSave -= LoadMinigameSave;
             Events.LoadAllMinigameSaves -= LoadAllMinigames;
         }
+
+#region Loading UserSaves
 
         // Loads/Updates all local minigame saves
         public void LoadAllMinigames()
@@ -82,7 +92,9 @@ namespace Wrapper
                 default: return;
             }
         }
+#endregion
 
+#region Stars
 
         // Returns total stars won in minigame
         public int GetMinigameStars(Game game)
@@ -119,8 +131,57 @@ namespace Wrapper
             {
                 tempTotal += GetMinigameStars(game);
             }
+            Events.UpdateUserSaveTotalStars?.Invoke(tempTotal);
             return tempTotal;
         }
+
+#endregion
+
+#region Coins
+
+        // Returns total coins won in minigame
+        public int GetMinigameCoins(Game game)
+        {
+            /* NEED TO IMPLEMENT TOTALCOINS IN MINIGAME USERDATAS */
+            switch(game) {
+                case Game.Qupcakes:
+                    if (data_Qupcakery != null) {
+                        // return data_Qupcakery.TotalStars;
+                    } break;
+                case Game.Labyrinth:
+                    if (data_Twintanglement != null) {
+                        // return data_Twintanglement.TotalStars;
+                    } break;
+                case Game.Circuits:
+                    if (data_TanglesLair != null) {
+                        // return data_TanglesLair.totalStars;
+                    } break;
+                case Game.QueueBits:
+                    if (data_Queuebits != null) {
+                        // return data_Queuebits.totalStars;
+                    } break;
+                case Game.BlackBox:
+                    if (data_BuriedTreasure != null) {
+                        // return data_BuriedTreasure.totalStars;
+                    } break;
+            } return 0;
+        }
+
+        // Returns total coins won across all games
+        public int GetOverallCoins() 
+        {
+            int tempTotal = 0;
+            foreach(Game game in gamesArray)
+            {
+                tempTotal += GetMinigameCoins(game);
+            }
+            Events.UpdateUserSaveTotalCoins?.Invoke(tempTotal);
+            return tempTotal;
+        }
+        
+#endregion
+
+#region Unlocked (level/game)
 
         // NOTE: Some games save the max level the player has completed, others the 
         // max level they have access to play. This returns the max level they can play
@@ -173,37 +234,32 @@ namespace Wrapper
 #if LITE_VERSION
                 case Game.Circuits: // CRITERIA: 12 QC stars
                     if (GetMinigameStars(Game.Qupcakes) >= 12) {
-                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
                         return true;
                     } break;
                 case Game.QueueBits: // CRITERIA: unlocked
                     return true; break;
                 case Game.BlackBox: // CRITERIA: 50 total stars
                     if (GetOverallStars() >= 50) {
-                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
                         return true;
                     } break;
 #else
                 case Game.Circuits: // CRITERIA: 27 QC stars
                     if (GetMinigameStars(Game.Qupcakes) >= 27) {
-                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
                         return true;
                     } break;
                 case Game.QueueBits: // CRITERIA: 10 QC && 10 TT stars
                     if (GetMinigameStars(Game.Qupcakes) >= 10
                     && GetMinigameStars(Game.Labyrinth) >= 10) {
-                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.QueueBits);
                         return true;
                     } break;
                 case Game.BlackBox: // CRITERIA: 120 total stars
                     if (GetOverallStars() >= 50) {
-                        // Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
                         return true;
                     } break;
 #endif
             } return false;
         }
-
+#endregion
 
     }
 }

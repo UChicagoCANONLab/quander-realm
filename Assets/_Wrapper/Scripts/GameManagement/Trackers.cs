@@ -54,7 +54,6 @@ namespace Wrapper
             Events.ResetStarCounts -= ResetStarCounts;
         }
 
-
         // Initializes or updates trackers to reflect number of stars in data
         // Needs a slight delay to allow the user save to load when logging in
         public void DelayInitTrackers() {
@@ -132,6 +131,11 @@ namespace Wrapper
         public void ToggleStarPanel() {
             panelVisible = !panelVisible;
             trackerAnimator.SetBool("ShowPanel", panelVisible);
+        }
+
+        // Toggles all tracker visibility
+        public void ToggleTrackers(bool isOn) {
+            trackerAnimator.SetBool("IsOn", isOn);
         }
 
     }    
