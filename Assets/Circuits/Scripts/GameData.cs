@@ -109,6 +109,9 @@ namespace Circuits
                     saveData.maxLevel = saveData.currLevel + 1;
                 }
 
+                int coins = Math.Max(StarDisplay.SD.numStars - saveData.starsPerLevel[saveData.currLevel], 0) * 10
+                    + Math.Min(StarDisplay.SD.numStars, saveData.starsPerLevel[saveData.currLevel]);
+
                 if (saveData.starsPerLevel[saveData.currLevel] < StarDisplay.SD.numStars) {
                     saveData.starsPerLevel[saveData.currLevel] = StarDisplay.SD.numStars;
                 }
