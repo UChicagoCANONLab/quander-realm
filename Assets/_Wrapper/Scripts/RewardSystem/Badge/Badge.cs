@@ -16,6 +16,7 @@ namespace Wrapper
         
         [SerializeField] public Image[] icons; // two icons; one is a shadow
         [SerializeField] public TextMeshProUGUI titleText;
+        [SerializeField] public TextMeshProUGUI miniTitleText;
         [SerializeField] public TextMeshProUGUI descriptionText;
 
         private string iconPrefix = "_Wrapper/Incentives/BadgeIcons";
@@ -33,6 +34,7 @@ namespace Wrapper
             criteria = bAsset.criteria;
 
             titleText.text = bAsset.title;
+            miniTitleText.text = bAsset.title;
             descriptionText.text = bAsset.description;
             icons[0].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
             icons[1].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
@@ -92,6 +94,11 @@ namespace Wrapper
         {
             badgeAnimator.SetBool("Mini", !MINI);
             MINI = !MINI;
+        }
+
+        public int GetStarStatus()
+        {
+            return starStatus;
         }
     
     }

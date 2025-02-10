@@ -9,11 +9,10 @@ namespace Wrapper
 {
     public class BadgeManager : MonoBehaviour
     {
-        [SerializeField] private BadgeAsset currBadge;
         [SerializeField] private Animator animator;
-        
-        [SerializeField] private GameObject badgeHolder;
-        [SerializeField] private GameObject badgePrefab;
+
+        [SerializeField] private BadgeHolder[] badgeHolders;
+        [SerializeField] private TextMeshProUGUI starCount;
 
         private string prefix = "_Wrapper/Incentives/Badges";
 
@@ -43,10 +42,27 @@ namespace Wrapper
             foreach (string ID in badgeIDs2)
             {
                 BadgeAsset bAsset = Resources.Load<BadgeAsset>($"{prefix}/{ID}");
-                GameObject bObject = Instantiate(badgePrefab, badgeHolder.transform);
-                bObject.name = ID;
-                bObject.GetComponent<Badge>().InitBadge(bAsset);
+                badgeHolders[(int)bAsset.criteriaType].AddBadge(bAsset, ID);
             }
+        }
+
+
+        public void DelayGetStars()
+        {
+            Invoke("GetBonusStars", 0.5f);
+        }
+        public void GetBonusStars()
+        {
+            int stars = 0;
+            foreach(BadgeHolder holder in badgeHolders)
+            {
+                foreach(Badge badge in holder.badges)
+                {
+                    stars += badge.GetStarStatus();
+                    Debug.Log(badge.GetStarStatus());
+                }
+            }
+            starCount.text = $"{stars}";
         }
 
 
