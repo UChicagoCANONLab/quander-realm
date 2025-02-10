@@ -9,14 +9,14 @@ namespace Qupcakery
     {
         public static Dictionary<int, string> rewardsInd = new Dictionary<int, string>
         {
-            { 1, "QU_03" },
-            { 5, "QU_05" },
-            { 9, "QU_01" },
-            { 13, "QU_06" },
-            { 15, "QU_08" },
-            { 20, "QU_07" },
-            { 23, "QU_04" },
-            { 27, "QU_02" }
+            { 9,    "QU_01" },
+            { 27,   "QU_02" },
+            { 1,    "QU_03" },
+            { 23,   "QU_04" },
+            { 5,    "QU_05" },
+            { 13,   "QU_06" },
+            { 20,   "QU_07" },
+            { 15,   "QU_08" }
         };
     }
 }

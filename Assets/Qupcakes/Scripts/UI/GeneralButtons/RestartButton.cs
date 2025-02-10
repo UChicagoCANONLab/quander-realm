@@ -18,16 +18,8 @@ namespace Qupcakery
 
             if (GameUtilities.gameIsPaused) GameUtilities.UnpauseGame();
 
-            switch (GameManagement.Instance.gameMode)
-            {
-                case GameManagement.GameMode.Regular:
-                    GameObjectsManagement.ResetAllGameObjects();
-                    SceneManagementUtilities.LoadGameScene();
-                    break;
-                //case GameManagement.GameMode.Experiment:
-                //    SceneManagementUtilities.LoadExperimentMode();
-                //    break;
-            }
+            GameObjectsManagement.ResetAllGameObjects();
+            SceneManagementUtilities.LoadGameScene();
         }
     }
 }

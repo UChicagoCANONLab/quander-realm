@@ -27,7 +27,7 @@ namespace Wrapper
         [SerializeField] private AgePopup agePopup;
         [SerializeField] private GameObject loadingScreenPrefab;
         [SerializeField] Button universalBackButton;
-        [SerializeField] private GameObject trackers;
+        [SerializeField] private Trackers trackers;
 
         [Header("Reward Card Prefabs")]
         [SerializeField] private GameObject BBRewardPrefab;
@@ -117,7 +117,7 @@ namespace Wrapper
         {
             SceneManager.LoadScene(minigame.StartScene);
             currentGame = minigame.gameValue;
-            trackers.GetComponent<Animator>().SetBool("IsOn", false);
+            trackers.ToggleTrackers(false);
         }
 
         void BackToMain()
@@ -129,7 +129,7 @@ namespace Wrapper
                 Events.ToggleTitleScreen?.Invoke(false);
                 
                 Events.InitializeStarTracker?.Invoke();
-                trackers.GetComponent<Animator>().SetBool("IsOn", true);
+                trackers.ToggleTrackers(true);
             }
             Events.PlayMusic?.Invoke("W_Music");
             currentGame = Game.None;

@@ -45,6 +45,7 @@ namespace Wrapper
             gameUnlocked = isGameUnlocked;
             if (animator != null) {
                 animator.SetBool("Unlocked", isGameUnlocked);
+                Events.UnlockAndDisplayGame?.Invoke(minigame);
             }
         }
 

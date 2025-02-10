@@ -13,18 +13,18 @@ namespace Circuits
 
             int offset = 0;
 
-            GameData.InitCircuitsSaveData();
+            // GameData.InitCircuitsSaveData();
             // Debug.Log(GameData.getCurrLevel());
 
             if (SceneManager.GetActiveScene().name == "Circuits_Title") {
-                Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
+                // Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
                 return;
             }
 
             switch (GameData.getCurrLevel() - offset)
             {
                 case 0:
-                    // Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
+                    Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
                     SceneManager.LoadScene("CircuitsLevelSceneTutorial");
                     break;
                 case 3:

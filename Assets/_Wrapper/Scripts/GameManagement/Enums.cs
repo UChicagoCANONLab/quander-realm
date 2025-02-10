@@ -82,9 +82,20 @@ namespace Wrapper
     };
 
     /// Audio ///
+
     public enum AudioType
     {
         Music,
         SFX
+    };
+
+    /// Badges ///
+
+    public enum CriteriaType
+    {
+        Level,
+        Star,
+        Card,
+        Unlocked
     };
 }

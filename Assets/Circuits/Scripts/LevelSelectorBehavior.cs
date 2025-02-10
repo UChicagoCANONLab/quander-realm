@@ -16,6 +16,7 @@ namespace Circuits
         // Start is called before the first frame update
         void Start()
         {
+            GameData.InitCircuitsSaveData();
             buttons = new LevelButtonBehavior[CTConstants.N_LEVELS];
 
             //Debug.Log(GameData.getCompletedLevels());
