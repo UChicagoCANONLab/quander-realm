@@ -272,10 +272,18 @@ namespace BlackBox
             if (levelWon)
             {
                 Wrapper.Events.PlaySound?.Invoke("BB_WolfieSuccess");
-                if (SM.saveData.starsPerLevel[level.number-1] < livesRemaining) {
-                    SM.saveData.totalStars += (livesRemaining - SM.saveData.starsPerLevel[level.number-1]);
-                    SM.saveData.starsPerLevel[level.number-1] = livesRemaining;
+
+                int origStars = SM.saveData.starsPerLevel[level.number - 1];
+
+                if (origStars < livesRemaining) {
+                    SM.saveData.totalStars += (livesRemaining - origStars);
+                    origStars = livesRemaining;
                 }
+
+                // Earn coins for level completion
+                int coins = Math.Max(livesRemaining - origStars, 0) * 10 + Math.Min(livesRemaining, origStars);
+
+
                 // PLAY END OF LEVEL DIALOGUE IF APPLICABLE
                 TrySetNewLevelSave();
 
