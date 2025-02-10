@@ -20,8 +20,6 @@ namespace Wrapper
 
         [Header("Animators")]
         [SerializeField] private Animator RewardCenterAnimator;
-        // [SerializeField] private Animator RewardJournalAnimator;
-        // [SerializeField] private Animator BadgeBulletinAnimator;
 
         [Header("Back Button")]
         [SerializeField] BackButton gameBackButton;
@@ -39,18 +37,16 @@ namespace Wrapper
             gameBackButton.onClick.RemoveListener(returnToRewardCenter);
         }
 
-        
 
         public void openRewardJournal() {
             RewardCenterAnimator.SetBool("On", false);
-            // RewardJournalAnimator.SetBool("On", true);
             RewardJournalCanvas.GetComponent<Animator>().SetBool("On", true);
         }
 
         public void openBadgeBulletin() {
             RewardCenterAnimator.SetBool("On", false);
-            // BadgeBulletinAnimator.SetBool("On", true);
             BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", true);
+            BadgeBulletinCanvas.GetComponent<BadgeManager>().DelayGetStars();
         }
 
         public void returnToRewardCenter() {
