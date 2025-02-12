@@ -443,7 +443,7 @@ namespace Wrapper
 
         private void UpdateTotalCoins(int numCoins)
         {
-            currentUserSave.totalCoins = numCoins;
+            currentUserSave.totalCoins += numCoins;
             UpdateRemoteSave();
         }
 
