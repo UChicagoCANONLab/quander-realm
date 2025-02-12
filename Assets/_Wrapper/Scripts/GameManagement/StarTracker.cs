@@ -22,7 +22,6 @@ namespace Wrapper
             starDisplay.text = $"{num}";
 
             if (animator != null) {
-                animator.SetBool("Unlocked", gameUnlocked);
                 if (starsWon == totalStars) { 
                     animator.SetBool("Completed", true);
                 } else {
@@ -30,6 +29,15 @@ namespace Wrapper
                 }
             }
         }
+
+        public void OnEnable()
+        {
+            if (animator != null) {
+                animator.SetBool("Unlocked", gameUnlocked);
+                animator.SetBool("Completed", (starsWon == totalStars));
+            }
+        }
+
 
         public void ResetStarDisplay() {
             if (minigame == Game.Circuits 
@@ -42,10 +50,15 @@ namespace Wrapper
 
 
         public void SetGameUnlocked(bool isGameUnlocked) {
-            gameUnlocked = isGameUnlocked;
-            if (animator != null) {
+            if (animator != null)
+            {
                 animator.SetBool("Unlocked", isGameUnlocked);
-                Events.UnlockAndDisplayGame?.Invoke(minigame);
+                if (gameUnlocked == isGameUnlocked) {
+                    return;
+                } else {
+                    gameUnlocked = isGameUnlocked;
+                    Events.UnlockAndDisplayGame?.Invoke(minigame);
+                }
             }
         }
 

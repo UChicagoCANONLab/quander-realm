@@ -11,14 +11,7 @@ namespace Wrapper
     {
 
         [Header("StarTrackers on Panel")]
-        [SerializeField] private StarTracker tracker_Overall;
-
-        // [SerializeField] private StarTracker tracker_Qupcakery;
-        // [SerializeField] private StarTracker tracker_Twintanglement;
-        // [SerializeField] private StarTracker tracker_TanglesLair;
-        // [SerializeField] private StarTracker tracker_Queuebits;
-        // [SerializeField] private StarTracker tracker_BuriedTreasure;
-        
+        [SerializeField] private StarTracker tracker_Overall;        
         // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
         [SerializeField] private StarTracker[] tracker_Minigames;
 
@@ -46,7 +39,6 @@ namespace Wrapper
 
         private void OnEnable()
         {
-            // Events.InitializeStarTracker += InitStarTracker;
             Events.InitializeStarTracker += DelayInitTrackers;
             Events.UpdateStreakLength += OnUpdateStreakLength;
             Events.ResetStarCounts += ResetStarCounts;
@@ -54,7 +46,6 @@ namespace Wrapper
 
         private void OnDisable()
         {
-            // Events.InitializeStarTracker -= InitStarTracker;
             Events.InitializeStarTracker -= DelayInitTrackers;
             Events.UpdateStreakLength -= OnUpdateStreakLength;
             Events.ResetStarCounts -= ResetStarCounts;
@@ -70,6 +61,9 @@ namespace Wrapper
 #if LITE_VERSION
             ResetStarCounts();
 #else
+            // for (int i=0; i<5; i++) {
+            //     initMinigameStarDisplay((Game)i);
+            // }
             foreach (Game minigame in gamesArray) {
                 initMinigameStarDisplay(minigame);
             }
@@ -86,47 +80,14 @@ namespace Wrapper
 
             tracker_Minigames[(int)game].SetStarDisplay(totalStars);
             tracker_Minigames[(int)game].SetGameUnlocked(gameUnlocked);
-
-            /* switch(game)
-            {
-                case Game.Qupcakes:
-                    tracker_Qupcakery.SetStarDisplay(totalStars);
-                    // Unlocked by default
-                    break;
-                case Game.Labyrinth:
-                    tracker_Twintanglement.SetStarDisplay(totalStars);
-                    // Unlocked by default
-                    break;
-                case Game.Circuits:
-                    tracker_TanglesLair.SetStarDisplay(totalStars);
-                    tracker_TanglesLair.SetGameUnlocked(gameUnlocked);
-                    break;
-                case Game.QueueBits:
-                    tracker_Queuebits.SetStarDisplay(totalStars);
-                    tracker_Queuebits.SetGameUnlocked(gameUnlocked);
-                    break;
-                case Game.BlackBox:
-                    tracker_BuriedTreasure.SetStarDisplay(totalStars);
-                    tracker_BuriedTreasure.SetGameUnlocked(gameUnlocked);
-                    break;
-                default: return;
-            } */
         }
 
 
         // Resets all the counts to be zero for when NewGame button pressed
         public void ResetStarCounts() {
-            // tracker_Qupcakery.ResetStarDisplay();
-            // tracker_Twintanglement.ResetStarDisplay();
-            // tracker_TanglesLair.ResetStarDisplay();
-            // tracker_Queuebits.ResetStarDisplay();
-            // tracker_BuriedTreasure.ResetStarDisplay();
-
-            foreach(StarTracker tracker in tracker_Minigames)
-            {
+            foreach(StarTracker tracker in tracker_Minigames) {
                 tracker.ResetStarDisplay();
             }
-
             tracker_Overall.ResetStarDisplay();
             totalStars = 0;
             totalStarsTMP.text = "0";
