@@ -17,6 +17,15 @@ namespace Wrapper
         public int totalCoins = 0;
         // DateTime for last login?
 
+        [NonSerialized]
+        public DateTime lastLoginDate;
+        [NonSerialized]
+        public long streak = 0;
+        // public string streakString = string.Empty;
+        public string streakString = "0";
+        public string loginticks = string.Empty;
+
+
         public UserSave(string idString = "", string rewardID = "")
         {
             rewards = new List<string>();
@@ -66,6 +75,7 @@ namespace Wrapper
             if (rewards == null) return false;
             else return rewards.Count > 0;
         }
+
         public void UpdateStreak()
         {
             if (lastLoginDate.Date == DateTime.Now.AddDays(-1).Date || streak == 0)
@@ -77,8 +87,14 @@ namespace Wrapper
             loginticks = lastLoginDate.ToString();
             Events.UpdateStreakLength?.Invoke(streak);
         }
+
         public void ResetStreak()
         {
+            if (loginticks == null) { 
+                loginticks = DateTime.Now.ToString();
+                streakString = "0";
+            }
+
             lastLoginDate = DateTime.Parse(loginticks);
             streak = long.Parse(streakString);
             if (lastLoginDate.Date > DateTime.Now.AddDays(-1).Date)

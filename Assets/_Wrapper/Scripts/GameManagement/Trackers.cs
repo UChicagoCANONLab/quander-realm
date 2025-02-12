@@ -45,6 +45,7 @@ namespace Wrapper
         {
             // Events.InitializeStarTracker += InitStarTracker;
             Events.InitializeStarTracker += DelayInitTrackers;
+            Events.UpdateStreakLength += OnUpdateStreakLength;
             Events.ResetStarCounts += ResetStarCounts;
         }
 
@@ -125,6 +126,7 @@ namespace Wrapper
             Debug.Log("Updating streak length");
             streakLengthTMP.text = streak.ToString();
         }
+        
         // Updates the total star count on panel and main screen
         public void RecountTotal() {
             totalStars = Events.GetOverallTotalStars.Invoke();
