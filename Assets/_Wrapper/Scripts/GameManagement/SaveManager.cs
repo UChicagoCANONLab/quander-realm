@@ -74,6 +74,7 @@ namespace Wrapper
             Events.GetFirstRewardBool += GetHasFirstReward;
             Events.UpdateUserSaveTotalStars += UpdateTotalStars;
             Events.UpdateUserSaveTotalCoins += UpdateTotalCoins;
+            Events.GetUserSaveTotalCoins += GetTotalCoins;
         }
 
         private void OnDisable()
@@ -92,6 +93,7 @@ namespace Wrapper
             Events.GetFirstRewardBool -= GetHasFirstReward;
             Events.UpdateUserSaveTotalStars -= UpdateTotalStars;
             Events.UpdateUserSaveTotalCoins -= UpdateTotalCoins;
+            Events.GetUserSaveTotalCoins -= GetTotalCoins;
         }
 
 #if !UNITY_WEBGL
@@ -445,6 +447,11 @@ namespace Wrapper
         {
             currentUserSave.totalCoins += numCoins;
             UpdateRemoteSave();
+        }
+        
+        private int GetTotalCoins()
+        {
+            return currentUserSave.totalCoins;
         }
 
         private void UpdateRemoteSave()

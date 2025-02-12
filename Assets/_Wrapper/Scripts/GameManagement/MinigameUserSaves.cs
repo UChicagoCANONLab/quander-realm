@@ -24,8 +24,8 @@ namespace Wrapper
             Events.GetMinigameTotalStars += GetMinigameStars;
             Events.GetOverallTotalStars += GetOverallStars;
 
-            Events.GetMinigameTotalCoins += GetMinigameCoins;
-            Events.GetOverallTotalCoins += GetOverallCoins;
+            // Events.GetMinigameTotalCoins += GetMinigameCoins;
+            // Events.GetOverallTotalCoins += GetOverallCoins;
 
             Events.GetGameUnlocked += GetMinigameUnlocked;
             Events.GetMinigameMaxLevel += GetMaxLevelUnlocked;
@@ -39,8 +39,8 @@ namespace Wrapper
             Events.GetMinigameTotalStars -= GetMinigameStars;
             Events.GetOverallTotalStars -= GetOverallStars;
             
-            Events.GetMinigameTotalCoins -= GetMinigameCoins;
-            Events.GetOverallTotalCoins -= GetOverallCoins;
+            // Events.GetMinigameTotalCoins -= GetMinigameCoins;
+            // Events.GetOverallTotalCoins -= GetOverallCoins;
 
             Events.GetGameUnlocked -= GetMinigameUnlocked;
             Events.GetMinigameMaxLevel -= GetMaxLevelUnlocked;
@@ -137,12 +137,12 @@ namespace Wrapper
 
 #endregion
 
-#region Coins
+/* #region Coins
 
         // Returns total coins won in minigame
         public int GetMinigameCoins(Game game)
         {
-            /* NEED TO IMPLEMENT TOTALCOINS IN MINIGAME USERDATAS */
+            // NEED TO IMPLEMENT TOTALCOINS IN MINIGAME USERDATAS
             switch(game) {
                 case Game.Qupcakes:
                     if (data_Qupcakery != null) {
@@ -179,7 +179,7 @@ namespace Wrapper
             return tempTotal;
         }
         
-#endregion
+#endregion */
 
 #region Unlocked (level/game)
 

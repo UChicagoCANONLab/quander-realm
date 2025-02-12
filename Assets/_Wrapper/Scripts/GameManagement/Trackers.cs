@@ -13,11 +13,14 @@ namespace Wrapper
         [Header("StarTrackers on Panel")]
         [SerializeField] private StarTracker tracker_Overall;
 
-        [SerializeField] private StarTracker tracker_Qupcakery;
-        [SerializeField] private StarTracker tracker_Twintanglement;
-        [SerializeField] private StarTracker tracker_TanglesLair;
-        [SerializeField] private StarTracker tracker_Queuebits;
-        [SerializeField] private StarTracker tracker_BuriedTreasure;
+        // [SerializeField] private StarTracker tracker_Qupcakery;
+        // [SerializeField] private StarTracker tracker_Twintanglement;
+        // [SerializeField] private StarTracker tracker_TanglesLair;
+        // [SerializeField] private StarTracker tracker_Queuebits;
+        // [SerializeField] private StarTracker tracker_BuriedTreasure;
+        
+        // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
+        [SerializeField] private StarTracker[] tracker_Minigames;
 
         [SerializeField] private StarTracker tracker_Challenge;
 
@@ -81,7 +84,10 @@ namespace Wrapper
             int totalStars = Events.GetMinigameTotalStars.Invoke(game);
             bool gameUnlocked = Events.GetGameUnlocked.Invoke(game);
 
-            switch(game)
+            tracker_Minigames[(int)game].SetStarDisplay(totalStars);
+            tracker_Minigames[(int)game].SetGameUnlocked(gameUnlocked);
+
+            /* switch(game)
             {
                 case Game.Qupcakes:
                     tracker_Qupcakery.SetStarDisplay(totalStars);
@@ -104,17 +110,22 @@ namespace Wrapper
                     tracker_BuriedTreasure.SetGameUnlocked(gameUnlocked);
                     break;
                 default: return;
-            }
+            } */
         }
 
 
         // Resets all the counts to be zero for when NewGame button pressed
         public void ResetStarCounts() {
-            tracker_Qupcakery.ResetStarDisplay();
-            tracker_Twintanglement.ResetStarDisplay();
-            tracker_TanglesLair.ResetStarDisplay();
-            tracker_Queuebits.ResetStarDisplay();
-            tracker_BuriedTreasure.ResetStarDisplay();
+            // tracker_Qupcakery.ResetStarDisplay();
+            // tracker_Twintanglement.ResetStarDisplay();
+            // tracker_TanglesLair.ResetStarDisplay();
+            // tracker_Queuebits.ResetStarDisplay();
+            // tracker_BuriedTreasure.ResetStarDisplay();
+
+            foreach(StarTracker tracker in tracker_Minigames)
+            {
+                tracker.ResetStarDisplay();
+            }
 
             tracker_Overall.ResetStarDisplay();
             totalStars = 0;
@@ -126,7 +137,7 @@ namespace Wrapper
             Debug.Log("Updating streak length");
             streakLengthTMP.text = streak.ToString();
         }
-        
+
         // Updates the total star count on panel and main screen
         public void RecountTotal() {
             totalStars = Events.GetOverallTotalStars.Invoke();

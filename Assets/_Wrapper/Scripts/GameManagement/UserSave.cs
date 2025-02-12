@@ -15,7 +15,6 @@ namespace Wrapper
 
         public int totalStars = 0;
         public int totalCoins = 0;
-        // DateTime for last login?
 
         [NonSerialized]
         public DateTime lastLoginDate;
