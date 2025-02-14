@@ -119,11 +119,18 @@ namespace Qupcakery
 
             if (starCnt > 0)
             {
+                int origStars = GameManagement.Instance.game.gameStat.GetLevelPerformance(level.LevelInd);
+                int coins = Math.Max(starCnt - origStars, 0) * 10 + Math.Min(starCnt, origStars);
+                // Give coins to user
+                // print(coins);
+
                 /* If level passed, save progress */
                 GameUtilities.SaveLevelResult(level.LevelInd, starCnt);
                 GameUtilities.UpdateTotalEarning(UIProgressBar.Instance.GetCurrentEarning());
 
                 GameManagement.Instance.game.gameStat.SetLevelResultAndSave(GameStat.LevelResult.WIN);
+
+                
             }
             else
             {
