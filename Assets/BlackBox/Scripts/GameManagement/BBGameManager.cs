@@ -277,7 +277,7 @@ namespace BlackBox
 
                 if (origStars < livesRemaining) {
                     SM.saveData.totalStars += (livesRemaining - origStars);
-                    origStars = livesRemaining;
+                    SM.saveData.starsPerLevel[level.number - 1] = livesRemaining;
                 }
 
                 // Earn coins for level completion
