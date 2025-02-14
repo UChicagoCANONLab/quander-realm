@@ -1,78 +1,187 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 namespace Labyrinth
 {
     public class Tutorial : MonoBehaviour
     {
-        public TM tutMap1;
-        public TM tutMap2;
-
+        private int degree;
+        private int seq = 0;
+        private bool[] completed = {false, false, false, false};
+        
         public Player p1;
-        public Player p2;
+        public ButtonBehavior BB;
 
-        public bool instruction1 = true;
-        public bool instruction2 = true;
-        public bool instruction3 = true;
+        // public GameObject upButton;
+        // public GameObject switchButton;
+        public GameObject pointer;
 
-        public GameObject instructionPanel;
-        public GameObject help1;
-        public GameObject help2;
-        public GameObject help3;
+        [Header("Twin0 Objects")]
+        public GameObject twin0Popup;
+        public TMP_Text twin0Text;
+        public Image twin0Image;
+        
+        [Header("Twin1 Objects")]
+        public GameObject twin1Popup;
+        public TMP_Text twin1Text;
+        public Image twin1Image;
 
-        private Maze maze;
-        private PlayerMovement pm;
-        private ButtonBehavior btn;
+        [Header("Tutorial Dialogue and Images")]
+        public string[] tutorial0 = {
+            "Use the keyboard or arrows to move Fran",
+            "When you move me,\n Ken moves too! Even through walls!",
+            "Press the Switch button to control Fran",
+            "Get us to the exit ladder in as few moves as you can"
+        };
+        public Sprite[] images0;
 
-        public void StartTutorial() {
-            maze = GameObject.Find("MazeGen").GetComponent<Maze>();
-            pm = GameObject.Find("Players").GetComponent<PlayerMovement>();
-            btn = GameObject.Find("GameManagerLocal").GetComponent<ButtonBehavior>();
+        public string[] tutorial180 = {
+            "See how I’m at the opposite corner as I was last time? Now every move I make...",
+            "I do the opposite!",
+            "Typical of my annoying sister…",
+            ""
+        };
+        // public Sprite[] images180;
+
+        public string[] tutorial90 = {
+            "Now my brother goes sideways when I go up and down!",
+            "Things are starting to get suuuper funky.",
+            "",
+            ""
+        };
+        // public Sprite[] images90;
+
+        
+
+        void Start() {
+            degree = SaveData.Instance.Degree;
+            twinNext(0);
         }
 
         void Update() {
-            if ((p1.getPloc == new Vector3(0,1,0)) & (instruction1 == true)) {
-                // Debug.Log("Here's some help!");
-                help1.SetActive(true);
-                instruction1 = false;
-                Invoke("highlightSwitchButton", 1f);
-                Invoke("endHelp1", 3f);
+            if (p1.getPloc == new Vector3(0,1,0) && !completed[1]) {
+                twinNext(1);
             }
-            if ((p1.getPloc == new Vector3(1,0,0)) & (instruction3 == true)) {
-                Debug.Log("Here's some helP!!!!");
-                help3.SetActive(true);
-                instruction3 = false;
-                Invoke("endHelp3", 3f);
-            }
-            if ((p2.getPloc == new Vector3(2,2,0)) & (instruction2 == true)) {
-                // Debug.Log("Here's some help! 2");
-                help2.SetActive(true);
-                instruction2 = false;
-                Invoke("highlightSwitchButton", 1f);
-                Invoke("endHelp2", 3f);
+            if (p1.getPloc == new Vector3(1,1,0) && !completed[3] ){
+                twinNext(1);
             }
         }
 
-        public void endHelp1() {
-            help1.SetActive(false);
+        // ~~~~~~~~~~~~~~~ Sequenced Dialogue Function ~~~~~~~~~~~~~~~
+
+        public void twinNext(int type) {
+            string textTemp; Sprite imageTemp = null;
+
+            switch(degree) {
+                case 0:
+                    textTemp = tutorial0[seq];
+                    imageTemp = images0[seq];
+                    break;
+                case 180:
+                    textTemp = tutorial180[seq];
+                    // imageTemp = images180[seq];
+                    break;
+                case 90:
+                    textTemp = tutorial90[seq];
+                    // imageTemp = images90[seq];
+                    break;
+                default:
+                    textTemp = ""; imageTemp = null;
+                    break;
+            }
+        
+            if (textTemp == "") { return; }
+            
+            if (type == 0) {
+                twin0Text.text = textTemp;
+                if (imageTemp == null) {
+                    twin0Image.gameObject.SetActive(false);
+                } else {
+                    twin0Image.sprite = imageTemp;
+                    twin0Image.gameObject.SetActive(true);
+                }
+                twin0Popup.SetActive(true);
+            } 
+            else {
+                twin1Text.text = textTemp;
+                if (imageTemp == null) {
+                    twin1Image.gameObject.SetActive(false);
+                } else {
+                    twin1Image.sprite = imageTemp;
+                    twin1Image.gameObject.SetActive(true);
+                }
+                twin1Popup.SetActive(true);
+            }     
         }
 
-        public void endHelp2() {
-            help2.SetActive(false);
+        // ~~~~~~~~~~~~~~~ Button Functions ~~~~~~~~~~~~~~~
+
+        public void nextButton() {
+            switch(seq) {
+                case 0:
+                    completed[seq] = true;
+                    doExitAnimation(twin0Popup);
+                    Invoke("closePopups", 1f);
+                    pointer.SetActive(true);
+                    // upButton.GetComponent<Animation>().Play();
+                    seq++;
+                    break;
+
+                case 1:
+                    completed[seq] = true;
+                    doExitAnimation(twin1Popup);
+                    // Invoke("closePopups", 1f);
+                    seq++;
+                    twinNext(0);
+                    break;
+
+                case 2:
+                    completed[seq] = true;
+                    doExitAnimation(twin0Popup);
+                    Invoke("closePopups", 1f);
+                    pointer.GetComponent<Animation>().Play("Pointer-Switch");
+                    // switchButton.GetComponent<Animation>().Play();
+                    seq++;
+                    break;
+
+                case 3:
+                    completed[seq] = true;
+                    doExitAnimation(twin1Popup);
+                    Invoke("closePopups", 1f);
+                    seq++;
+                    break;
+
+                default:
+                    return;
+            }
         }
 
-        public void endHelp3() {
-            help3.SetActive(false);
+        public void tutorialNextLevel() {
+            if (degree == 0) {
+                DialogueAndRewards.Instance.tutorialSeen[0] = true;
+                BB.LevelSelect(1);
+            } else if (degree == 180) {
+                DialogueAndRewards.Instance.tutorialSeen[1] = true;
+                BB.LevelSelect(6);
+            } else if (degree == 90) {
+                DialogueAndRewards.Instance.tutorialSeen[2] = true;
+                BB.LevelSelect(11);
+            } else { return; }
         }
 
-        public void highlightSwitchButton() {
-            GameObject.Find("Canvases/CanvasOver/GameplayButtons/SwitchPlayers").GetComponent<ParticleSystem>().Play();
+
+        // ~~~~~~~~~~~~~~~ Helper Functions ~~~~~~~~~~~~~~~
+
+        public void doExitAnimation(GameObject popup) {
+            popup.GetComponent<Animation>().Play("Popup-Exit");
         }
 
-        public void exitPanel() {
-            instructionPanel.SetActive(false);
-            GameObject.Find("Canvases/CanvasOver/GameplayButtons").SetActive(true);
+        public void closePopups() {
+            twin0Popup.SetActive(false);
+            twin1Popup.SetActive(false);
         }
 
     }

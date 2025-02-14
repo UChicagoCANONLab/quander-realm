@@ -8,15 +8,26 @@ namespace Labyrinth
 { 
     public class ButtonBehavior : MonoBehaviour
     {
-        public GameObject winScreen;
-        public GameObject loseScreen;
-        public GameObject gameplayButtons;
-        public GameObject gameplayObjects;
-        public GameObject progressBar;
-        public GameObject[] starsWonArr;
         public GameObject litePanel;
+        public Button[] levelButtons;
 
-        public Button[] buttons;
+
+        private void OnEnable() 
+        {
+            Wrapper.Events.MinigameClosed += DestroyDataObject;
+            TTEvents.SelectLevel += LevelSelect;
+        }
+        private void OnDisable()
+        {
+            Wrapper.Events.MinigameClosed -= DestroyDataObject;
+            TTEvents.SelectLevel += LevelSelect;
+        }
+        
+        private void DestroyDataObject() 
+        {
+            Destroy(GameObject.Find("ProfileData"));
+        }
+
 
         void Start() {
             if (SceneManager.GetActiveScene().name == "LA_MainMenu") {
@@ -29,25 +40,16 @@ namespace Labyrinth
                 DialogueAndRewards.Instance.levelDialogue[-1] = true;
             }
 
-            if (buttons == null) {
+            if (levelButtons == null) {
                 return;
             }
-            /* else if (buttons.Length > 0) {
-                for (int i=0; i<15; i++) {
-                    if (i < FindObjectOfType<SaveData>().levelUnlocked) {
-                        buttons[i].interactable = true;
-                    }
-                    else {
-                        buttons[i].interactable = false;
-                    }
-                }
-            } */
-            else if (buttons.Length > 0) {
+            else if (levelButtons.Length > 0) {
                 string prefix = "Canvas/LevelButtons-New/Container";
+
                 for (int i=1; i<=15; i++) {
-                    GameObject.Find($"StarMessage{i}").GetComponent<StarMessage>().displayStars();
+                    GameObject.Find($"{prefix}/{i}/StarMessage{i}").GetComponent<StarMessage>().displayStars();
                     if (i > SaveData.Instance.MaxLevelUnlocked) {
-                        buttons[i-1].enabled = false;
+                        levelButtons[i-1].enabled = false;
                         GameObject.Find($"{prefix}/{i}/Locked{i}").SetActive(true);
                     }
                 }
@@ -59,85 +61,21 @@ namespace Labyrinth
 #endif
         }
 
-        /* void Update() {
-            if (Input.GetKeyDown(KeyCode.Escape)) {
-                LoadMainMenu();
-            }
-        } */
+        
+        // ~~~~~~~~~~~~~~~ Scene Loading Functions ~~~~~~~~~~~~~~~
 
         public void LoadLevelSelectMenu() {
-            Time.timeScale = 1f;
-            // Load.LoadGame();
-            // DialogueAndRewards.Instance.updateDialogueDict();
-
-            /* if (DialogueAndRewards.Instance.levelDialogue[0] == false) {
-                LevelSelect(0);
-            }
-            else {
-                SceneManager.LoadScene("LA_LevelSelect");
-            } */
             SceneManager.LoadScene("LA_LevelSelect");
         }
 
         public void LoadMainMenu() {
-            Time.timeScale = 1f;
-            // Load.LoadTTSaveData();
             Load.LoadGame();
             SceneManager.LoadScene("LA_MainMenu");
         }
 
-        public void Exit() {
-            // Save.SaveGame();
-            Application.Quit();
-        }
-
-        public void Win(int starsWon) {      
-            if (starsWon == 0) {
-                SaveData.Instance.winner = false;
-                loseScreen.SetActive(true);
-            }
-            else {
-                SaveData.Instance.winner = true;
-                winScreen.SetActive(true);
-                
-                for (int i=0; i<starsWon; i++) { 
-                    starsWonArr[i].SetActive(true); 
-                }
-
-                if (SaveData.Instance.CurrentLevel == SaveData.Instance.MaxLevelUnlocked) {
-                    SaveData.Instance.MaxLevelUnlocked += 1;
-                }
-            }
-            
-            Save.Instance.SaveGame();
-            
-            gameplayButtons.SetActive(false);
-            gameplayObjects.SetActive(false);
-            progressBar.SetActive(false);
-
-            // Time.timeScale = 0f;
-
-            if ((SaveData.Instance.CurrentLevel % 5 == 0) 
-            && (SaveData.Instance.CurrentLevel != 0)) {
-                DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
-            }
-            DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
-            // DialogueAndRewards.Instance.updateDialogueDict();
-        }
-
-        public void UndoWin(int starsWon) {
-            SaveData.Instance.winner = false;
-
-            winScreen.SetActive(false);
-            loseScreen.SetActive(false);
-            gameplayButtons.SetActive(true);
-            gameplayObjects.SetActive(true);
-            progressBar.SetActive(true);
-
-            for (int i=0; i<starsWon; i++) {
-                starsWonArr[i].SetActive(false);
-            }
-            // Time.timeScale = 1f;
+        public void NextLevel() {
+            SaveData.Instance.CurrentLevel += 1;
+            LevelSelect(SaveData.Instance.CurrentLevel);
         }
 
         public void LevelSelect(int sel) {
@@ -145,14 +83,20 @@ namespace Labyrinth
             SaveData.Instance.CurrentLevel = sel;
 
             switch(sel) {
-                /* case 0:
-                    DialogueAndRewards.Instance.doDialogue(sel);
-                    SaveData.Instance.Degree = 0;
+                // 0 Degree Levels
+                case 0:
+                    // DialogueAndRewards.Instance.doDialogue(sel);
+                    // SaveData.Instance.Degree = 0;
                     currScene = "LA_Tutorial";
-                    break; */
+                    break;
                 case < 3:
-                    DialogueAndRewards.Instance.doDialogue(sel);
+                    // DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 0;
+                    if (!DialogueAndRewards.Instance.tutorialSeen[0]) {
+                        SaveData.Instance.CurrentLevel = 0;
+                        currScene = "LA_Tutorial";
+                        break;
+                    }
                     currScene = "LA_4x4";
                     break;
                 case < 5:
@@ -164,10 +108,15 @@ namespace Labyrinth
                     currScene = "LA_6x6";
                     break;
 
-
+                // 180 Degree Levels
                 case < 8:
-                    DialogueAndRewards.Instance.doDialogue(sel);
+                    // DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 180;
+                    if (!DialogueAndRewards.Instance.tutorialSeen[1]) {
+                        SaveData.Instance.CurrentLevel = 0;
+                        currScene = "LA_Tutorial";
+                        break;
+                    }
                     currScene = "LA_4x4";
                     break;
                 case < 10:
@@ -179,10 +128,15 @@ namespace Labyrinth
                     currScene = "LA_6x6";
                     break;
 
-
+                // 90 Degree Levels
                 case < 13:
-                    DialogueAndRewards.Instance.doDialogue(sel);
+                    // DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 90;
+                    if (!DialogueAndRewards.Instance.tutorialSeen[2]) {
+                        SaveData.Instance.CurrentLevel = 0;
+                        currScene = "LA_Tutorial";
+                        break;
+                    }
                     currScene = "LA_4x4";
                     break;
                 case < 15:
@@ -193,7 +147,6 @@ namespace Labyrinth
                     SaveData.Instance.Degree = 90;
                     currScene = "LA_6x6";
                     break;
-                
 
                 default:
                     currScene = "LA_LevelSelect";
@@ -202,31 +155,26 @@ namespace Labyrinth
             SceneManager.LoadScene(currScene);
         }
 
-        /* public void doDialogue(int level) {
-            if (SaveData.Instance.levelDialogue.ContainsKey(level) &&
-            SaveData.Instance.levelDialogue[level] == true) {
-                Wrapper.Events.StartDialogueSequence?.Invoke("LA_Level"+level);
-                SaveData.Instance.levelDialogue[level] = false;
-            }
+        // ~~~~~~~~~~~~~~~ Calling Button Functions from Other Scripts ~~~~~~~~~~~~~~~
+
+        public void HintButton() {
+            TTEvents.GiveHint?.Invoke();
         }
 
-        public void giveReward(int level) {
-            if (Events.IsRewardUnlocked?.Invoke(levelRewards[level]) == false) {
-                Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.Labyrinth, level);
-            }
-        } */
-
-        // ~~~~~~~~~~~~~~~ Enabled in Filament Environment ~~~~~~~~~~~~~~~
-
-        private void OnEnable() {
-            Wrapper.Events.MinigameClosed += DestroyDataObject;
+        public void RestartLevel() {
+            TTEvents.RestartLevel?.Invoke();
         }
-        private void OnDisable(){
-            Wrapper.Events.MinigameClosed -= DestroyDataObject;
+
+        public void MoveButton(string move) {
+            Vector3 press = TTEvents.GetButtonPress.Invoke(move);
         }
-        private void DestroyDataObject() {
-            Time.timeScale = 1f;
-            Destroy(GameObject.Find("ProfileData"));
+
+        public void SwitchButton() {
+            TTEvents.SwitchPlayer?.Invoke();
+        }
+
+        public void InfoButton() {
+            TTEvents.ShowInfoMessage?.Invoke();
         }
 
     }

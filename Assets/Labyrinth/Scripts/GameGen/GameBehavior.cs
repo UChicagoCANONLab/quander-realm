@@ -9,37 +9,23 @@ namespace Labyrinth
 { 
     public class GameBehavior : MonoBehaviour
     {
-        private int goalsCollected = 0;
-        private int numGoals = 1;
         private bool winner = false;
         public int hintsUsed = 0;
         public int numStars = 3;
 
         [Header("Maze Info")]
-        public int degree;
         public int size;
-        public double wallProb = 0.5;
+        public double wallProb = 0.95;
         
         [Header("Path Info")]
         public int steps = 0;
         public int pathLength;
-
-        [Header("Feedback Objects")]
-        public Star[] stars;
-        public GameObject levelNumber;
 
         [Header("Time Info (for research)")]
         // Time in seconds for research data
         private float initTime;
         private float endTime;
         public float timePlayed;
-
-        [Header("GameObjects")]
-        public Maze maze;
-        public PlayerMovement pm;
-        // public Camera cam;
-        public ButtonBehavior btn;
-        public ProgressBar pb;
 
         public static GameBehavior Instance;
 
@@ -55,84 +41,81 @@ namespace Labyrinth
 
     // ~~~~~~~~~~~~~~~ INITIALIZING ~~~~~~~~~~~~~~~
 
+
+        private void OnEnable() 
+        {
+            TTEvents.GiveHint += GiveHint;
+            TTEvents.RestartLevel += Restart;
+            TTEvents.Size += GetSize;
+            TTEvents.WallProb += GetWallProb;
+            TTEvents.CollectGoal += collectGoal;
+            TTEvents.IncrementSteps += incrementSteps;
+        }
+        private void OnDisable() 
+        {
+            TTEvents.GiveHint -= GiveHint;
+            TTEvents.RestartLevel -= Restart;
+            TTEvents.Size -= GetSize;
+            TTEvents.WallProb -= GetWallProb;
+            TTEvents.CollectGoal -= collectGoal;
+            TTEvents.IncrementSteps -= incrementSteps;
+        }
+
+
         void Start() 
         {
-            degree = SaveData.Instance.Degree;
-
-            Time.timeScale = 1f;
             initTime = Time.time;
-
-            pm = GameObject.Find("Players").GetComponent<PlayerMovement>();
-            btn = GameObject.Find("GameManagerLocal").GetComponent<ButtonBehavior>();
-            maze = GameObject.Find("MazeGen").GetComponent<Maze>();
-            pb = GameObject.Find("StarCountdown").GetComponent<ProgressBar>();
             
-            pm.StartPM();
-            maze.StartMaze();
+            TTEvents.StartPlayerMovement?.Invoke();
+            TTEvents.StartMaze?.Invoke();
+            TTEvents.SetLevelNumber?.Invoke($"{SaveData.Instance.CurrentLevel}");
 
             if (SaveData.Instance.CurrentLevel == 0) {
                 pathLength = 8;
             }
             else {
-                // string imagePath = $"Canvases/CanvasUnder/LevelNumbers/Level{SaveData.Instance.CurrentLevel}";
-                // GameObject.Find(imagePath).SetActive(true);
-                levelNumber.GetComponent<TextMeshProUGUI>().text = $"{SaveData.Instance.CurrentLevel}";
-                pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
+                pathLength = TTEvents.PathFinder.Invoke(0, size-1, size-1, 0).Length;
             }
-            pb.resestBar();
-            pb.initializeBar(pathLength);
+            TTEvents.SetProgressBar?.Invoke(pathLength);
         }
 
         void Update() {
             checkNumStars();
-            /* if (winner == true) {
-                endTime = Time.time;
-                timePlayed = endTime - initTime;
-                //SaveSystem.SaveGame(this);
-                FindObjectOfType<SaveData>().updateSave(this);
 
-                btn.Win(numStars);
-            } */
-            /* if (Input.GetKeyDown(KeyCode.Escape)) {
-                btn.MainMenu();
-            } */
             if (Input.GetKeyDown(KeyCode.Space)) {
-                pm.SwitchPlayer();
+                TTEvents.SwitchPlayer?.Invoke();
             }
         }
 
         public void collectGoal() {
-            goalsCollected++;
             checkNumStars();
 
-            if (goalsCollected == numGoals) {
-                maze.clearGoal();
-                winner = true;
+            TTEvents.ClearGoal?.Invoke();
+            winner = true;
 
-                endTime = Time.time;
-                timePlayed = endTime - initTime;
-                SaveData.Instance.updateSave(this);
+            endTime = Time.time;
+            timePlayed = endTime - initTime;
+            SaveData.Instance.updateSave(this);
 
-                btn.Win(numStars);
+            TTEvents.LevelComplete?.Invoke(numStars);
+            if (SaveData.Instance.CurrentLevel == 15) {
+                DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
             }
+            DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
+
             steps = 0;
         }
 
         public void checkNumStars() {
-            pb.detractBar(steps);
+            TTEvents.UpdateProgressBar?.Invoke(steps);
+            
             if (steps > (int)(pathLength + 2)) { // 1 mistake
-                stars[2].visibilityOff();
                 numStars = 2;
-            }
-            if (steps > (int)(pathLength + 4)) { // 2 mistakes
-                stars[1].visibilityOff();
+            } if (steps > (int)(pathLength + 4)) { // 2 mistakes
                 numStars = 1;
-            }
-            if (steps > (int)(pathLength + 8)) { // 4 mistakes
-                stars[0].visibilityOff();
+            } if (steps > (int)(pathLength + 8)) { // 4 mistakes
                 numStars = 0;
-            }
-            return;
+            } return;
         }
 
         
@@ -142,40 +125,26 @@ namespace Labyrinth
         public void GiveHint() {
             string hintDir;
 
-            /* if (hintsUsed == 3) {
-                hintText = "You used all your hints!";
-                return;
-            } */
-
-            object[] hint = maze.calcPathToGoal();
+            object[] hint = TTEvents.CalculatePathToGoal.Invoke();
             string hintPath = hint[0].ToString();
             int hintDeg = (int)hint[1];
 
 
             if (hintDeg == 90) {
                 hintDir = goalTextNormal[rot90[hintPath[0].ToString()]];
-                // hintText = $"Hint: Try going {goalTextNormal[rot90[hintPath[0].ToString()]]}!";
-            }
-            else if (hintDeg == 180) {
+            } else if (hintDeg == 180) {
                 hintDir = goalTextNormal[rot180[hintPath[0].ToString()]];
-                // hintText = $"Hint: Try going {goalTextNormal[rot180[hintPath[0].ToString()]]}!";
-            }
-            else { //if (hintDeg == 0) {
+            } else { 
                 hintDir = goalTextNormal[hintPath[0].ToString()];
-                // hintText = $"Hint: Try going {goalTextNormal[hintPath[0].ToString()]}!";
             }
             
             string buttonPath = $"Canvases/CanvasOver/GameplayButtons/MovementButtons/{hintDir}";
-            GameObject.Find(buttonPath).GetComponent<ParticleSystem>().Play();
-            // Button button = GameObject.Find(hintDir); //.GetComponent<SpriteRenderer>();
-            // button.IsHighlighted = true;
+            // GameObject.Find(buttonPath).GetComponent<ParticleSystem>().Play();
+            GameObject.Find(buttonPath).GetComponent<Animation>().Play("ButtonHighlight");
 
-            hintsUsed++;
+            hintsUsed++; steps++;
         }
 
-        /* public void highlightMovButton(Button movButton) {
-            movButton.color = new Color((1f,1f,1f,Mathf.SmoothStep(0f, 1f, 1f)));
-        } */
 
         public void Restart() {
             // Saving restart data
@@ -184,50 +153,43 @@ namespace Labyrinth
             timePlayed = endTime - initTime;
             SaveData.Instance.updateSave(this);
             if (SaveData.Instance.CurrentLevel > 0) {
-                // Save.SaveTTSaveData();
                 Save.Instance.SaveGame();
             }
 
             // Resetting level
             initTime = Time.time;
 
-            pm.player1.returnPlayer();
-            pm.player2.returnPlayer();
-
-            maze.generateMazes();
-            maze.renderMazes();
-
             if (winner == true) {
                 winner = false;
-                btn.UndoWin(numStars);
+                TTEvents.ResetUI?.Invoke();
             }
 
-            pathLength = maze.pathfinder(0, size-1, size-1, 0).Length;
-            goalsCollected = 0;
-            numGoals = 1;
+            TTEvents.ReturnPlayers?.Invoke();
+
+            TTEvents.GenerateMazes?.Invoke();
+            TTEvents.RenderMazes?.Invoke();
+
+            pathLength = TTEvents.PathFinder.Invoke(0, size-1, size-1, 0).Length;
             hintsUsed = 0;
             steps = 0;
             numStars = 3;
 
-            for (int i=0; i<3; i++) {
-                stars[i].resetStar();
+            if (!TTEvents.GetPlayer.Invoke(1).current) {
+                TTEvents.SwitchPlayer?.Invoke();
             }
-
-            if (pm.player1.current == false) {
-                pm.SwitchPlayer();
-            }
-
-            pb.resestBar();
-            pb.initializeBar(pathLength);
+            TTEvents.SetProgressBar?.Invoke(pathLength);
         }
 
-        public void MoveButton(string mov) {
-            Vector3 press = pm.getButtonPress(mov);
+        // Get/Set functions
+        public int GetSize() {
+            return size;
+        }
+        public double GetWallProb() {
+            return wallProb;
         }
 
-        public void NextLevel() {
-            SaveData.Instance.CurrentLevel += 1;
-            btn.LevelSelect(SaveData.Instance.CurrentLevel);
+        public void incrementSteps() {
+            steps++;
         }
     }
 }
