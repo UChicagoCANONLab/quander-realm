@@ -305,11 +305,8 @@ namespace QueueBits
 			fieldObject.SetActive(false);
 			DM.GameOver(result);
 
-			// Check if there's a reward card
-			if (GameManager.rewardSystem[LEVEL_NUMBER])
-			{
-				Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER);
-			}
+			// Check if there's a reward card 
+			Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER);
 		}
 
 		// Helper to initialize myData
