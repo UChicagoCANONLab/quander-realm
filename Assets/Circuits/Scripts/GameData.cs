@@ -51,7 +51,7 @@ namespace Circuits
         // Helper function to save formatted timestamps
         private static void LogAtTime(string type) 
         {
-            log.Add(string.Format("{0}-",type,"-{1}", saveData.currLevel, DateTime.UtcNow.ToString(datePatt)));
+            log.Add(string.Format("{0}-{1}-{2}", saveData.currLevel, type, DateTime.UtcNow.ToString(datePatt)));
         }
         public static void hintRequested()  { LogAtTime("hint"); }
 
@@ -105,7 +105,7 @@ namespace Circuits
             {
                 saveData.completedLevels[saveData.currLevel] = true;
 
-                if (saveData.currLevel > saveData.maxLevel) {
+                if (saveData.currLevel >= saveData.maxLevel) {
                     saveData.maxLevel = saveData.currLevel + 1;
                 }
 
@@ -149,13 +149,13 @@ namespace Circuits
                     return "Circuits_Dialogue";
                 case 3:
                     return "Circuits_Dialogue";
-                case 6:
+                case 5:
                     return "Circuits_Dialogue";
                 case 7: // case 9:
                     return "Circuits_Dialogue";
                 case 14:
                     return "Circuits_Dialogue";
-                case 18:
+                case 15:
                     return "Circuits_Dialogue";
                 case 22:
                     return "Circuits_Dialogue";

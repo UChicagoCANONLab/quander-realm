@@ -8,12 +8,20 @@ namespace Circuits
     {
         public GameObject[] stars = new GameObject[3];
         public int numStars = 3;
+        public int starPenalties = 0;
 
         // Defining static StarDisplay Singleton
         public static StarDisplay SD;
         void Awake() {
             if (SD != null) Debug.LogError("StarDisplay Singleton already exists!");
             SD = this;
+        }
+
+        public void AddPenalty() {
+            starPenalties += 1;
+            if (starPenalties % 2 == 0 && starPenalties > 0) {
+                LoseStar();
+            }
         }
 
         // Called when a hint is used -- lose one star
@@ -39,6 +47,7 @@ namespace Circuits
                 i.SetActive(true);
             }
             numStars = 3;
+            starPenalties = 0;
         }
 
     }

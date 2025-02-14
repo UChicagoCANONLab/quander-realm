@@ -11,14 +11,16 @@ namespace Qupcakery
         public GameObject recipePanel;
         public GameObject startPanel;
         public Image recipeImage;
+        public Sprite graphic;
 
         public void ShowZRecipe()
         {
             startPanel.SetActive(false);
             recipePanel.SetActive(true);
-            recipePanel.GetComponentInChildren<Text>().text = "Mystery-inverter (Z Gate)";
+            recipePanel.GetComponentInChildren<Text>().text = "PhaZe Device (Z Gate)";
 
-            recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "Z").SingleOrDefault();
+            // recipeImage.sprite = Utilities.helpMenuSprites.Where(obj => obj.name == "Z-new").SingleOrDefault();
+            recipeImage.sprite = graphic;
         }
     }
 }
