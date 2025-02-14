@@ -70,7 +70,8 @@ namespace Wrapper
         Character,
         Computer_Part,
         Visual,
-        Concept
+        Concept,
+        Hint
     };
 
     public enum DisplayType
