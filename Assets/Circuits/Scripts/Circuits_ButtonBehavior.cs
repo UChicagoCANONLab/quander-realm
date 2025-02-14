@@ -9,8 +9,17 @@ namespace Circuits
     public class Circuits_ButtonBehavior : MonoBehaviour
     {
         public void toMenu()
-        {
-            SceneManager.LoadScene("Circuits_Menu");
+        {            
+	        var completedLevels = GameData.getCompletedLevels();
+            Debug.Log(completedLevels[0]);
+            if (!completedLevels[0]) {
+                SceneManager.LoadScene("Circuits_Dialogue");
+	        }
+            else { 
+	    
+			    SceneManager.LoadScene("Circuits_Menu");
+		    }
+            //Debug.Log("test");
         }
 
         public void toTitle()

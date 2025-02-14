@@ -12,7 +12,7 @@ namespace Wrapper
         public GameObject QB;
         public GameObject BT;
 
-        private string prefix = "MapCanvas 1/MapPanel";
+        private string prefix = "MapCanvas/MapPanel";
 
         /* 
         Functions to initialize map and unlock games
