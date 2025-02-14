@@ -23,6 +23,11 @@ namespace Labyrinth
             }
         }
 
+        public void switchMaps() {
+            toggleRenderer(overlay);
+            toggleCollider(walls);
+        }
+
         public void toggleRenderer(Tilemap map) {
             TilemapRenderer rend = map.GetComponent<TilemapRenderer>();
             if (rend.enabled == true) {

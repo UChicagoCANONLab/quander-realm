@@ -1071,7 +1071,7 @@ namespace BeauRoutine.Internal
             m_LogBuilder.Append(inMessage);
             string logged = m_LogBuilder.ToString();
             m_LogBuilder.Length = 0;
-            UnityEngine.Debug.Log(logged);
+            // UnityEngine.Debug.Log(logged);
         }
     }
 }

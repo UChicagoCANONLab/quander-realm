@@ -231,13 +231,15 @@ namespace Wrapper
             ColorUtility.TryParseHtmlString("#ffe698", out Color charColor);
             ColorUtility.TryParseHtmlString("#ff8062", out Color conceptColor);
             ColorUtility.TryParseHtmlString("#97fb9b", out Color compPartColor);
+            ColorUtility.TryParseHtmlString("#c382ff", out Color hintColor);
 
             colorDict = new Dictionary<CardType, Color>
             {
                 { CardType.Visual, visualColor },
                 { CardType.Character, charColor },
                 { CardType.Concept, conceptColor },
-                { CardType.Computer_Part, compPartColor }
+                { CardType.Computer_Part, compPartColor },
+                { CardType.Hint, hintColor }
             };
         }
 
