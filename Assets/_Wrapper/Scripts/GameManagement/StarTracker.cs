@@ -27,7 +27,7 @@ namespace Wrapper
 
         // Total stars per each game
         public Dictionary<Game, int> starsPerGame = new Dictionary<Game, int>() {
-            {Game.BlackBox, 0},     // max 45
+            {Game.BlackBox, 0},     // max 72
             {Game.Circuits, 0},     // max 75
             {Game.Labyrinth, 0},    // max 45
             {Game.QueueBits, 0},    // max 45
@@ -47,7 +47,7 @@ namespace Wrapper
         Game unlock status 
         */
         public Dictionary<Game, bool> gameUnlocked = new Dictionary<Game, bool>() {
-            {Game.BlackBox, false},     // max 45
+            {Game.BlackBox, false},     // max 72
             {Game.Circuits, false},     // max 75
             {Game.Labyrinth, true},    // max 45
             {Game.QueueBits, false},    // max 45
@@ -65,7 +65,8 @@ namespace Wrapper
                 return true;
             }
             else if (game == Game.Circuits 
-            && starsPerGame[Game.Qupcakes] >= 12) { // NORMAL SETTING
+            // && starsPerGame[Game.Qupcakes] >= 12) { // NORMAL SETTING
+            && starsPerGame[Game.Qupcakes] >= 9) { // BGCC temporary setting
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
                 gameUnlocked[Game.Circuits] = true;
                 return true;
@@ -76,7 +77,7 @@ namespace Wrapper
                 return true;
             }
             else if (game == Game.BlackBox
-            && TotalStars >= 50) { // NORMAL SETTING
+            && TotalStars >= 50) {
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
                 gameUnlocked[Game.BlackBox] = true;
                 return true;
@@ -88,21 +89,22 @@ namespace Wrapper
             if (gameUnlocked[game] == true) {
                 return true;
             }
-            else if (game == Game.Circuits 
-            && starsPerGame[Game.Qupcakes] >= 27) { // NORMAL SETTING
+            else if ((game == Game.Circuits)
+            && (starsPerGame[Game.Qupcakes] >= 27)) { // NORMAL SETTING
+            // && starsPerGame[Game.Qupcakes] >= 9) { // BGCC temporary setting
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.Circuits);
                 gameUnlocked[Game.Circuits] = true;
                 return true;
             }
-            else if (game == Game.QueueBits
-            && starsPerGame[Game.Qupcakes] >= 10
-            && starsPerGame[Game.Labyrinth] >= 10) {
+            else if ((game == Game.QueueBits)
+            && (starsPerGame[Game.Qupcakes] >= 10)
+            && (starsPerGame[Game.Labyrinth] >= 10)) {
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.QueueBits);
                 gameUnlocked[Game.QueueBits] = true;
                 return true;
             }
-            else if (game == Game.BlackBox
-            && TotalStars >= 120) {
+            else if ((game == Game.BlackBox)
+            && (TotalStars >= 120)) {
                 Wrapper.Events.UnlockAndDisplayGame?.Invoke(Game.BlackBox);
                 gameUnlocked[Game.BlackBox] = true;
                 return true;

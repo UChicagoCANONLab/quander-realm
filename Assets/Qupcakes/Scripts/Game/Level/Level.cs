@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using CT = Qupcakery.GameCakeType;
+using UnityEngine;
 
 /*
- * Level information : goal, time constraint, puzzle setup
+ * Level information : goal, time constraint, puzzle setup, solution
  * 
  * Puzzle specification index meaning:
  * 0 - |0>
@@ -40,6 +38,8 @@ namespace Qupcakery
         public Puzzle[] Puzzles { get; private set; }
         public int[] AvailableGates { get; private set; }
 
+        public Tuple<int[], bool>[] Solutions { get; private set; }
+
         // Constructor
         public Level(int maxPuzzleCnt, int maxGateCnt)
         {
@@ -51,6 +51,8 @@ namespace Qupcakery
                 Puzzles[i] = new Puzzle(3);
             }
             AvailableGates = new int[maxGateCnt];
+
+            Solutions = new Tuple<int[], bool>[] { new Tuple<int[], bool> (new int[] { 0 }, false) };
         }
 
         public void Update(int levelInd)
@@ -156,8 +158,8 @@ namespace Qupcakery
 
         private void SetLevel1()
         {
-            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 50, levelTotalBeltCnt: 1);
-            AvailableGates[(int)GateType.NOT] = 1;
+            UpdateLevelSpec(levelGoal: 70, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
+            AvailableGates[(int)GateType.NOT] = 1;            
 
             Puzzles[0].UpdatePuzzle(0, 0);
             Puzzles[1].UpdatePuzzle(0, 1);
@@ -165,15 +167,22 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 1);
 
             Puzzles[4].UpdatePuzzle(0, 1);
-            Puzzles[5].UpdatePuzzle(0, 0);
-            Puzzles[6].UpdatePuzzle(1, 0);
-            Puzzles[7].UpdatePuzzle(1, 1);
-            TotalPuzzleCnt = 8;
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] { 0 }, false),
+                new Tuple<int[], bool>(new int[] { 1 }, false),
+                new Tuple<int[], bool>(new int[] { 1 }, false),
+                new Tuple<int[], bool>(new int[] { 0 }, false),
+                new Tuple<int[], bool>(new int[] { 1 }, false)
+            };
+
+            TotalPuzzleCnt = 5;
+
         }
 
         private void SetLevel2()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 200, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 2;
 
             Puzzles[0].UpdatePuzzle(0, 0, 1, 0);
@@ -183,22 +192,41 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(0, 1, 1, 1);
             Puzzles[5].UpdatePuzzle(0, 1, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] { 1, 0 }, false),
+                new Tuple<int[], bool>(new int[] { 1, 1 }, false),
+                new Tuple<int[], bool>(new int[] { 0, 1 }, false),
+                new Tuple<int[], bool>(new int[] { 1, 1 }, false),
+                new Tuple<int[], bool>(new int[] { 0, 1 }, false),
+                new Tuple<int[], bool>(new int[] { 1, 1 }, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
         private void SetLevel3()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 180, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 2;
             AvailableGates[(int)GateType.SWAP] = 1;
 
             Puzzles[0].UpdatePuzzle(0, 1, 1, 0);
-            Puzzles[1].UpdatePuzzle(0, 1, 0, 1);
+            Puzzles[1].UpdatePuzzle(0, 0, 0, 0);
             Puzzles[2].UpdatePuzzle(1, 0, 1, 0);
             Puzzles[3].UpdatePuzzle(1, 0, 0, 1);
 
             Puzzles[4].UpdatePuzzle(1, 0, 1, 0);
             Puzzles[5].UpdatePuzzle(0, 1, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {1, 1}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {1, 1}, false),
+                new Tuple<int[], bool>(new int[] {1, 1}, false)
+            };
             TotalPuzzleCnt = 6;
         }
 
@@ -214,7 +242,17 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(0, 1, 1, 0, 1, 0);
 
             Puzzles[4].UpdatePuzzle(1, 0, 1, 0, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false)
+            };
+
             TotalPuzzleCnt = 5;
+
         }
 
         private void SetLevel5()
@@ -229,6 +267,15 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 0, 0, 1, 1, 0);
 
             Puzzles[4].UpdatePuzzle(0, 1, 0, 1, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 0, 1}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 0}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
@@ -245,6 +292,16 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(0, 1, 1, 0, 1, 1);
             Puzzles[5].UpdatePuzzle(1, 1, 0, 1, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false),
+                new Tuple<int[], bool>(new int[] {11, 0}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {0, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 0}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -259,20 +316,38 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 0, 1, 1, 0, 1);
 
             Puzzles[4].UpdatePuzzle(1, 0, 0, 0, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {101}, true),
+                new Tuple<int[], bool>(new int[] {101}, false),
+                new Tuple<int[], bool>(new int[] {0, 11}, false),
+                new Tuple<int[], bool>(new int[] {101}, false),
+                new Tuple<int[], bool>(new int[] {101}, true)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
         private void SetLevel8()
         {
-            UpdateLevelSpec(levelGoal: 80, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 160, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.CNOT] = 1;
 
             Puzzles[0].UpdatePuzzle(0, 1, 1, 1);
-            Puzzles[1].UpdatePuzzle(1, 0, 1, 1);
-            Puzzles[2].UpdatePuzzle(0, 1, 1, 1);
+            Puzzles[1].UpdatePuzzle(1, 1, 0, 0);
+            Puzzles[2].UpdatePuzzle(1, 1, 1, 0);
             Puzzles[3].UpdatePuzzle(1, 0, 1, 1);
+            Puzzles[4].UpdatePuzzle(1, 1, 0, 1);
 
-            TotalPuzzleCnt = 4;
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, true),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, true)
+            };
+
+            TotalPuzzleCnt = 5;
         }
 
         // Allow clicking to swap channels 
@@ -288,6 +363,16 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(1, 0, 1, 1);
             Puzzles[5].UpdatePuzzle(1, 1, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {12}, true),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, true),
+                new Tuple<int[], bool>(new int[] {12}, true),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, true)
+            };
+
 
             TotalPuzzleCnt = 6;
         }
@@ -306,6 +391,17 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(1, 0, 0, 1);
             Puzzles[5].UpdatePuzzle(1, 0, 1, 1);
             Puzzles[6].UpdatePuzzle(0, 1, 1, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {12}, true),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {12}, false),
+                new Tuple<int[], bool>(new int[] {12}, false)
+            };
+
             TotalPuzzleCnt = 7;
         }
 
@@ -322,6 +418,15 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 1, 1, 0, 1, 0);
 
             Puzzles[4].UpdatePuzzle(1, 0, 0, 1, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 11}, false),
+                new Tuple<int[], bool>(new int[] {0, 1, 0}, false),
+                new Tuple<int[], bool>(new int[] {11, 1}, false),
+                new Tuple<int[], bool>(new int[] {13, 0}, false),
+                new Tuple<int[], bool>(new int[] {1, 11}, false)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
@@ -337,20 +442,38 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(0, 1, 0, 1, 1, 0);
 
             Puzzles[4].UpdatePuzzle(1, 1, 1, 0, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {12, 0}, false),
+                new Tuple<int[], bool>(new int[] {102}, true),
+                new Tuple<int[], bool>(new int[] {103}, true),
+                new Tuple<int[], bool>(new int[] {103}, true),
+                new Tuple<int[], bool>(new int[] {104}, true)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
         private void SetLevel13()
         {
-            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 40, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 50000, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.H] = 1;
 
             Puzzles[0].UpdatePuzzle(1, 3);
             Puzzles[1].UpdatePuzzle(0, 2);
-            Puzzles[2].UpdatePuzzle(1, 2);
-            Puzzles[3].UpdatePuzzle(0, 3);
+            Puzzles[2].UpdatePuzzle(2, 0);
+            Puzzles[3].UpdatePuzzle(3, 1);
+            Puzzles[4].UpdatePuzzle(0, 3);
 
-            TotalPuzzleCnt = 4;
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {2}, false)
+            };
+
+            TotalPuzzleCnt = 5;
         }
 
         // Use H to unwrap
@@ -361,15 +484,17 @@ namespace Qupcakery
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
 
-            Puzzles[0].UpdatePuzzle(2, 0);
-            Puzzles[1].UpdatePuzzle(3, 1);
-            Puzzles[2].UpdatePuzzle(2, 1);
-            Puzzles[3].UpdatePuzzle(3, 0);
-
             Puzzles[0].UpdatePuzzle(3, 1);
             Puzzles[1].UpdatePuzzle(3, 0);
             Puzzles[2].UpdatePuzzle(2, 1);
             Puzzles[3].UpdatePuzzle(2, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {4}, false),
+                new Tuple<int[], bool>(new int[] {4}, false),
+                new Tuple<int[], bool>(new int[] {2}, false)
+            };
 
             TotalPuzzleCnt = 4;
         }
@@ -389,26 +514,42 @@ namespace Qupcakery
             Puzzles[5].UpdatePuzzle(1, 3, 3, 1);
             Puzzles[6].UpdatePuzzle(2, 0, 1, 3);
             Puzzles[7].UpdatePuzzle(2, 1, 3, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {0, 2}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {14}, false),
+
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {11}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {14}, false)
+            };
+
             TotalPuzzleCnt = 8;
         }
 
         // Introduce Z gate
         private void SetLevel16()
         {
-            UpdateLevelSpec(levelGoal: 50, levelTimeLimit: 60, levelTotalBeltCnt: 1);
+            UpdateLevelSpec(levelGoal: 60, levelTimeLimit: 5000, levelTotalBeltCnt: 1);
             AvailableGates[(int)GateType.H] = 1;
             AvailableGates[(int)GateType.Z] = 1;
 
             Puzzles[0].UpdatePuzzle(3, 0);
-            Puzzles[1].UpdatePuzzle(2, 0);
-            Puzzles[2].UpdatePuzzle(2, 1);
-            Puzzles[3].UpdatePuzzle(2, 0);
+            Puzzles[1].UpdatePuzzle(2, 1);
+            Puzzles[2].UpdatePuzzle(2, 0);
+            Puzzles[3].UpdatePuzzle(3, 0);
 
-            Puzzles[4].UpdatePuzzle(0, 2);
-            Puzzles[5].UpdatePuzzle(0, 3);
-            Puzzles[6].UpdatePuzzle(3, 0);
-            Puzzles[7].UpdatePuzzle(2, 0);
-            TotalPuzzleCnt = 8;
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {5}, false),
+                new Tuple<int[], bool>(new int[] {5}, false),
+                new Tuple<int[], bool>(new int[] {2}, false),
+                new Tuple<int[], bool>(new int[] {5}, false)
+            };
+
+            TotalPuzzleCnt = 4;
         }
 
         private void SetLevel17()
@@ -427,6 +568,19 @@ namespace Qupcakery
             Puzzles[5].UpdatePuzzle(0, 1, 2, 0);
             Puzzles[6].UpdatePuzzle(2, 1, 3, 0);
             Puzzles[7].UpdatePuzzle(0, 3, 1, 2);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 5}, false),
+                new Tuple<int[], bool>(new int[] {5, 2}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {5, 5}, false),
+
+                new Tuple<int[], bool>(new int[] {1, 6}, false),
+                new Tuple<int[], bool>(new int[] {2, 1}, false),
+                new Tuple<int[], bool>(new int[] {5, 5}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false)
+            };
+
             TotalPuzzleCnt = 8;
         }
 
@@ -443,6 +597,15 @@ namespace Qupcakery
             Puzzles[3].UpdatePuzzle(1, 2, 0, 3, 2, 1);
 
             Puzzles[4].UpdatePuzzle(0, 3, 0, 2, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2, 11}, false),
+                new Tuple<int[], bool>(new int[] {0, 11}, false),
+                new Tuple<int[], bool>(new int[] {5, 0, 2}, false),
+                new Tuple<int[], bool>(new int[] {5, 2, 2}, false),
+                new Tuple<int[], bool>(new int[] {16, 2}, true)
+            };
+
             TotalPuzzleCnt = 5;
         }
 
@@ -461,6 +624,18 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(1, 2, 0, 3);
             Puzzles[5].UpdatePuzzle(0, 3, 0, 2);
             Puzzles[6].UpdatePuzzle(3, 0, 2, 3);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2, 0}, false),
+                new Tuple<int[], bool>(new int[] {2, 5}, false),
+                new Tuple<int[], bool>(new int[] {16}, true),
+                new Tuple<int[], bool>(new int[] {0, 2}, false),
+
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {0, 5}, false)
+            };
+
             TotalPuzzleCnt = 7;
         }
        
@@ -479,6 +654,18 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(3, 1, 1, 0);
             Puzzles[5].UpdatePuzzle(0, 3, 0, 2);
             Puzzles[6].UpdatePuzzle(0, 1, 3, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {2, 5}, false),
+                new Tuple<int[], bool>(new int[] {2, 6}, false),
+                new Tuple<int[], bool>(new int[] {6, 2}, false),
+                new Tuple<int[], bool>(new int[] {0, 2}, false),
+
+                new Tuple<int[], bool>(new int[] {6, 2}, false),
+                new Tuple<int[], bool>(new int[] {2, 2}, false),
+                new Tuple<int[], bool>(new int[] {5, 6}, false)
+            };
+
             TotalPuzzleCnt = 7;
         }
 
@@ -496,6 +683,17 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(1, 2, 0, 3, 2, 1);
             Puzzles[5].UpdatePuzzle(0, 3, 0, 2, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {1, 1, 6}, false),
+                new Tuple<int[], bool>(new int[] {1, 5, 1}, false),
+                new Tuple<int[], bool>(new int[] {2, 2, 5}, false),
+                new Tuple<int[], bool>(new int[] {1, 1, 6}, false),
+
+                new Tuple<int[], bool>(new int[] {5, 2, 2}, false),
+                new Tuple<int[], bool>(new int[] {1, 2, 2}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -513,13 +711,24 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(0, 1, 1, 0, 0, 1);
             Puzzles[5].UpdatePuzzle(0, 3, 2, 2, 2, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {6, 11}, false),
+                new Tuple<int[], bool>(new int[] {6, 11}, false),
+                new Tuple<int[], bool>(new int[] {11, 5}, false),
+                new Tuple<int[], bool>(new int[] {5, 0, 2}, false),
+
+                new Tuple<int[], bool>(new int[] {6, 11}, false),
+                new Tuple<int[], bool>(new int[] {5, 0, 2}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
         // Introduce same entanglement
         private void SetLevel23()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 150, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
@@ -529,27 +738,46 @@ namespace Qupcakery
             Puzzles[2].UpdatePuzzle(1, 3, 0, 1);
             Puzzles[3].UpdatePuzzle(1, 4, 0, 5);
 
-            Puzzles[4].UpdatePuzzle(0, 4, 0, 5);
-            Puzzles[5].UpdatePuzzle(1, 4, 0, 5);
-            Puzzles[6].UpdatePuzzle(1, 4, 1, 5);
-            TotalPuzzleCnt = 7;
+            Puzzles[4].UpdatePuzzle(1, 4, 1, 5);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {1, 2}, false),
+                new Tuple<int[], bool>(new int[] {17}, true),
+
+                new Tuple<int[], bool>(new int[] {18}, true)
+            };
+
+            TotalPuzzleCnt = 5;
         }
 
         // Introduce opposite entanglement
         private void SetLevel24()
         {
-            UpdateLevelSpec(levelGoal: 100, levelTimeLimit: 60, levelTotalBeltCnt: 2);
+            UpdateLevelSpec(levelGoal: 180, levelTimeLimit: 5000, levelTotalBeltCnt: 2);
             AvailableGates[(int)GateType.NOT] = 1;
             AvailableGates[(int)GateType.CNOT] = 1;
             AvailableGates[(int)GateType.H] = 1;
 
-            Puzzles[0].UpdatePuzzle(1, 6, 0, 7);
+            Puzzles[0].UpdatePuzzle(0, 6, 0, 7);
             Puzzles[1].UpdatePuzzle(0, 6, 1, 7);
             Puzzles[2].UpdatePuzzle(1, 3, 0, 1);
             Puzzles[3].UpdatePuzzle(1, 6, 1, 7);
 
             Puzzles[4].UpdatePuzzle(1, 6, 0, 7);
             Puzzles[5].UpdatePuzzle(0, 6, 1, 7);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {18}, false),
+                new Tuple<int[], bool>(new int[] {17}, true),
+                new Tuple<int[], bool>(new int[] {1, 2}, false),
+                new Tuple<int[], bool>(new int[] {17}, false),
+
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {17}, true)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -569,6 +797,18 @@ namespace Qupcakery
             Puzzles[4].UpdatePuzzle(0, 4, 0, 5);
             Puzzles[5].UpdatePuzzle(1, 6, 1, 7);
             Puzzles[6].UpdatePuzzle(0, 1, 0, 1);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {17}, true),
+                new Tuple<int[], bool>(new int[] {17}, true),
+                new Tuple<int[], bool>(new int[] {19}, false),
+                new Tuple<int[], bool>(new int[] {17}, false),
+
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {17}, false),
+                new Tuple<int[], bool>(new int[] {20}, false)
+            };
+
             TotalPuzzleCnt = 7;
         }
 
@@ -587,6 +827,17 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(1, 6, 1, 0, 0, 7);
             Puzzles[5].UpdatePuzzle(0, 4, 1, 5, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {105}, true),
+                new Tuple<int[], bool>(new int[] {17, 1}, false),
+                new Tuple<int[], bool>(new int[] {1, 17}, true),
+                new Tuple<int[], bool>(new int[] {1, 17}, true),
+
+                new Tuple<int[], bool>(new int[] {107}, true),
+                new Tuple<int[], bool>(new int[] {1, 17}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
 
@@ -606,687 +857,20 @@ namespace Qupcakery
 
             Puzzles[4].UpdatePuzzle(1, 6, 0, 1, 0, 7);
             Puzzles[5].UpdatePuzzle(0, 1, 1, 1, 1, 0);
+
+            Solutions = new Tuple<int[], bool>[] {
+                new Tuple<int[], bool>(new int[] {108}, false),
+                new Tuple<int[], bool>(new int[] {2, 11}, false),
+                new Tuple<int[], bool>(new int[] {20, 0}, false),
+                new Tuple<int[], bool>(new int[] {109}, true),
+
+                new Tuple<int[], bool>(new int[] {110}, false),
+                new Tuple<int[], bool>(new int[] {1, 12}, false)
+            };
+
             TotalPuzzleCnt = 6;
         }
+
     }
 }
 
-
-//using System;
-//using UnityEngine;
-//using CT = GameCakeType;
-
-///*
-// * Set up hard-coded levels 
-// */
-
-//public static class LevelUtil
-//{
-//    // Load level #levelInd into game
-
-//    private static void LoadLevel(Game game, int levelInd)
-//    {
-//        Level l = new Level(levelInd);
-//        switch (levelInd)
-//        {
-//            case 1:
-//                l.
-
-//                l.AddGateToBank(GateType.NOT, 1);
-
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla,
-//                        orderCakeType: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla,
-//                       orderCakeType: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Chocolate,
-//                        orderCakeType: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Chocolate,
-//                        orderCakeType: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla,
-//                        orderCakeType: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla,
-//                        orderCakeType: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Chocolate,
-//                        orderCakeType: CT.Vanilla));
-//                break;
-
-//            case 2:
-//                l.SetLevelSpec(levelGoal: 100,
-//                    levelTimeLimit: 40,
-//                    levelTotalBeltCnt: 2);
-
-//                l.AddGateToBank(GateType.NOT, 2);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Chocolate));
-//                break;
-
-//            case 3:
-//                l.SetLevelSpec(levelGoal: 100,
-//                    levelTimeLimit: 40,
-//                    levelTotalBeltCnt: 2);
-
-//                l.AddGateToBank(GateType.NOT, 2);
-//                l.AddGateToBank(GateType.SWAP, 1);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate));
-//                break;
-
-//            case 4:
-//                l.SetLevelSpec(levelGoal: 120,
-//                    levelTimeLimit: 50,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.NOT, 3);
-//                l.AddGateToBank(GateType.SWAP, 1);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                break;
-
-//            case 5:
-//                l.SetLevelSpec(levelGoal: 120,
-//                    levelTimeLimit: 50,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.NOT, 2);
-//                l.AddGateToBank(GateType.SWAP, 1);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                break;
-
-//            case 6:
-//                l.SetLevelSpec(levelGoal: 150,
-//                    levelTimeLimit: 40,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.NOT, 1);
-//                l.AddGateToBank(GateType.SWAP, 1);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                break;
-
-//            case 7:
-//                l.SetLevelSpec(levelGoal: 150,
-//                    levelTimeLimit: 50,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.SWAP, 2);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                break;
-
-//            case 8:
-//                l.SetLevelSpec(levelGoal: 120,
-//                    levelTimeLimit: 60,
-//                    levelTotalBeltCnt: 2);
-
-//                l.AddGateToBank(GateType.SWAP, 1);
-//                l.AddGateToBank(GateType.CNOT, 1);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla));
-//                break;
-
-//            case 9:
-//                l.SetLevelSpec(levelGoal: 150,
-//                    levelTimeLimit: 60,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.NOT, 1);
-//                l.AddGateToBank(GateType.SWAP, 2);
-//                l.AddGateToBank(GateType.CNOT, 1);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                break;
-
-//            case 10: // Exactly the same as level9, but with different available gates
-//                l.SetLevelSpec(levelGoal: 150,
-//                    levelTimeLimit: 60,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.SWAP, 1);
-//                l.AddGateToBank(GateType.CNOT, 2);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                      cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                      cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                      cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                break;
-
-//            case 11:
-//                l.SetLevelSpec(levelGoal: 80,
-//                    levelTimeLimit: 40,
-//                    levelTotalBeltCnt: 2);
-
-//                l.AddGateToBank(GateType.NOT, 1);
-//                l.AddGateToBank(GateType.H, 2);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla50_Chocolate50_Neg));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50));
-
-//                break;
-
-//            case 12:
-//                l.SetLevelSpec(levelGoal: 80,
-//                    levelTimeLimit: 60,
-//                    levelTotalBeltCnt: 2);
-
-//                l.AddGateToBank(GateType.NOT, 1);
-//                l.AddGateToBank(GateType.H, 2);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50_Neg, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50_Neg, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla));
-//                break;
-
-//            case 13:
-//                l.SetLevelSpec(levelGoal: 100,
-//                    levelTimeLimit: 50,
-//                    levelTotalBeltCnt: 2);
-
-//                l.AddGateToBank(GateType.NOT, 2);
-//                l.AddGateToBank(GateType.H, 2);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50_Neg, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50_Neg, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla50_Chocolate50));
-//                break;
-
-//            case 14:
-//                l.SetLevelSpec(levelGoal: 100,
-//                    levelTimeLimit: 60,
-//                    levelTotalBeltCnt: 2);
-
-//                l.AddGateToBank(GateType.NOT, 2);
-//                l.AddGateToBank(GateType.SWAP, 1);
-//                l.AddGateToBank(GateType.H, 2);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50_Neg, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50_Neg));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                       cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Chocolate,
-//                       cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla50_Chocolate50_Neg));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50_Neg));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50_Neg, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla50_Chocolate50_Neg));
-//                break;
-
-//            case 15:
-//                l.SetLevelSpec(levelGoal: 150,
-//                    levelTimeLimit: 70,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.NOT, 2);
-//                l.AddGateToBank(GateType.SWAP, 1);
-//                l.AddGateToBank(GateType.H, 3);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Vanilla50_Chocolate50));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType2: CT.Vanilla50_Chocolate50, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType2: CT.Vanilla50_Chocolate50, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                break;
-//            case 16: // level that introduces z
-//                l.SetLevelSpec(levelGoal: 50,
-//                    levelTimeLimit: 40,
-//                    levelTotalBeltCnt: 1);
-
-//                l.AddGateToBank(GateType.H, 1);
-//                l.AddGateToBank(GateType.Z, 1);
-
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla50_Chocolate50_Neg,
-//                        orderCakeType: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla50_Chocolate50,
-//                        orderCakeType: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla50_Chocolate50,
-//                        orderCakeType: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla50_Chocolate50_Neg,
-//                        orderCakeType: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla50_Chocolate50_Neg,
-//                        orderCakeType: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla,
-//                        orderCakeType: CT.Vanilla50_Chocolate50));
-//                l.AddPuzzle(new Puzzle(cakeType: CT.Vanilla50_Chocolate50,
-//                       orderCakeType: CT.Chocolate));
-
-//                break;
-
-//            case 17:
-//                l.SetLevelSpec(levelGoal: 80,
-//                    levelTimeLimit: 50,
-//                    levelTotalBeltCnt: 2);
-
-//                l.AddGateToBank(GateType.H, 3);
-//                l.AddGateToBank(GateType.Z, 2);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50_Neg, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla50_Chocolate50));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla50_Chocolate50_Neg));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50_Neg, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Vanilla));
-//                break;
-//            case 18:
-//                l.SetLevelSpec(levelGoal: 100,
-//                    levelTimeLimit: 60,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.NOT, 2);
-//                l.AddGateToBank(GateType.H, 3);
-//                l.AddGateToBank(GateType.Z, 2);
-
-//                l.AddPuzzle(new Puzzle(
-//                       cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                       cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                       cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Vanilla50_Chocolate50, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType2: CT.Vanilla50_Chocolate50, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                break;
-
-//            case 19:
-//                l.SetLevelSpec(levelGoal: 120,
-//                    levelTimeLimit: 60,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.SWAP, 1);
-//                l.AddGateToBank(GateType.H, 2);
-//                l.AddGateToBank(GateType.Z, 1);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla50_Chocolate50_Neg, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Vanilla50_Chocolate50,
-//                        cakeType2: CT.Vanilla50_Chocolate50, orderCakeType2: CT.Chocolate));
-//                break;
-
-//            case 20:
-//                l.SetLevelSpec(levelGoal: 160,
-//                    levelTimeLimit: 80,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.NOT, 1);
-//                l.AddGateToBank(GateType.SWAP, 1);
-//                l.AddGateToBank(GateType.H, 3);
-//                l.AddGateToBank(GateType.Z, 1);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Vanilla, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Vanilla50_Chocolate50_Neg, orderCakeType1: CT.Chocolate,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla50_Chocolate50,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Chocolate, orderCakeType2: CT.Vanilla));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Chocolate,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50_Neg,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                break;
-
-//            case 21: // Test level for entanglement
-//                l.SetLevelSpec(levelGoal: 80,
-//                    levelTimeLimit: 40,
-//                    levelTotalBeltCnt: 3);
-
-//                l.AddGateToBank(GateType.SWAP, 1);
-//                l.AddGateToBank(GateType.CNOT, 1);
-//                l.AddGateToBank(GateType.H, 1);
-
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla50_Chocolate50,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.Puzzles[l.Puzzles.Count - 1].EntangleOrderPair(0, 1, EntanglementStatus.Equal);
-
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Chocolate, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla50_Chocolate50,
-//                        cakeType2: CT.Vanilla, orderCakeType2: CT.Chocolate));
-//                l.Puzzles[l.Puzzles.Count - 1].EntangleOrderPair(0, 1, EntanglementStatus.Equal);
-
-//                l.AddPuzzle(new Puzzle(
-//                       cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                       cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla50_Chocolate50,
-//                       cakeType2: CT.Vanilla50_Chocolate50_Neg, orderCakeType2: CT.Chocolate));
-//                l.Puzzles[l.Puzzles.Count - 1].EntangleOrderPair(0, 1, EntanglementStatus.Equal);
-
-//                l.AddPuzzle(new Puzzle(
-//                       cakeType0: CT.Vanilla50_Chocolate50, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                       cakeType1: CT.Vanilla, orderCakeType1: CT.Vanilla50_Chocolate50,
-//                       cakeType2: CT.Vanilla50_Chocolate50_Neg, orderCakeType2: CT.Chocolate));
-//                l.Puzzles[l.Puzzles.Count - 1].EntangleOrderPair(0, 1, EntanglementStatus.Equal);
-
-//                break;
-//            case 22: // Test level for data saving
-//                l.SetLevelSpec(levelGoal: 0,
-//                    levelTimeLimit: 10,
-//                    levelTotalBeltCnt: 2);
-
-//                l.AddGateToBank(GateType.CNOT, 1);
-//                l.AddGateToBank(GateType.H, 1);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla50_Chocolate50_Neg, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Vanilla50_Chocolate50, orderCakeType1: CT.Vanilla50_Chocolate50));
-//                l.Puzzles[l.Puzzles.Count - 1].EntangleOrderPair(0, 1, EntanglementStatus.Equal);
-
-//                l.AddPuzzle(new Puzzle(
-//                        cakeType0: CT.Vanilla, orderCakeType0: CT.Vanilla50_Chocolate50,
-//                        cakeType1: CT.Chocolate, orderCakeType1: CT.Vanilla50_Chocolate50));
-//                l.Puzzles[l.Puzzles.Count - 1].EntangleOrderPair(0, 1, EntanglementStatus.Equal);
-
-//                break;
-
-//            default:
-//                throw new Exception("Unrecognized level index: "
-//                    + levelInd.ToString());
-//        }
-
-//        game.AddLevel(l);
-//    }
-//}

@@ -13,15 +13,13 @@ namespace Qupcakery
     {
         public static GameManagement Instance;
 
-        public enum GameMode
-        {
-            Regular, Experiment
-        }
-
         public GameObject customerPrefab, cakePrefab, buttonPrefab, panelPrefab;
 
-        public GameMode gameMode { get; private set; }
         public bool GameIsPaused { get; private set; } = false;
+
+        public bool InTutorial { get; set; } = false;
+        public bool AllowGateMovement { get; set; } = true;
+
 
         public Game game { get; set; }
 
@@ -95,9 +93,5 @@ namespace Qupcakery
             return game.MaxLevelCnt;
         }
 
-        public void SetGameMode(GameMode gm)
-        {
-            gameMode = gm;
-        }
     }
 }

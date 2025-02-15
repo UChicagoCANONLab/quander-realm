@@ -297,28 +297,29 @@ namespace Labyrinth
 
         public object[] calcPathToGoal() {
             Vector3 start; Vector3 end;
-            int degree;
+            int degree = -1; int curr = 0;
         
             if (TTEvents.GetPlayer.Invoke(1).current) {
-                start = TTEvents.GetPlayer.Invoke(1).getPloc;
-                degree = 0;
+                degree = 0; curr = 1;
             }
             else if (TTEvents.GetPlayer.Invoke(2).current) {
-                start = TTEvents.GetPlayer.Invoke(2).getPloc;
-                degree = deg;
+                degree = deg; curr = 2;
             }
-            else { return new object[] {"X", 0}; }
 
+            start = TTEvents.GetPlayer.Invoke(curr).getPloc;
             end = new Vector3(size-1, 0, 0);
 
-            // int startx = size-1-(int)start.x;
-            // int starty = size-1-(int)start.y;
-            // int endx = size-1-(int)end.x;
-            // int endy = size-1-(int)end.y;
-
             string hint = pathfinder((int)start.x, (int)start.y, (int)end.x, (int)end.y);
+
+            // Check if need to switch 
+            MazeCell tile;
+            if (curr == 1) {
+                tile = maze1[Mathf.Abs((int)start.x), Mathf.Abs((int)start.y)];
+            } else {
+                tile = maze2[Mathf.Abs((int)start.x), Mathf.Abs((int)start.y)];
+            }            
+            if (tile.walls[hint[0].ToString()] == true) { degree = -1; }
             
-            // Debug.Log($"Hint: Start {start}, End {end}, Path {hint}");
             return new object[] {hint, degree};
         }
 

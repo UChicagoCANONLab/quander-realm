@@ -95,6 +95,13 @@ namespace Qupcakery
             }
         }
 
+        // Move gate from one slot to another
+        public void moveGateToSlot(GameObject gateObject, (int, int) newSlot)
+        {
+            RemoveGateFromSlot(gateObject, gateObject.GetComponent<Transform>().position);
+            PlaceGateInSlot(gateObject, GetSlotPosition(newSlot), new List<int>());
+        }
+
         // Calculate slot position based on index
         private Vector2 GetSlotPosition((int, int) slotIndex)
         {

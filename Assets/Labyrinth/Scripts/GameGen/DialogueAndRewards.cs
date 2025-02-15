@@ -10,13 +10,15 @@ namespace Labyrinth
         public static DialogueAndRewards Instance;
 
         public Dictionary<int, bool> levelDialogue = new Dictionary<int, bool>()
-            { {-1, false}, {1, false}, {6, false}, {11, false}, {15, false} }; //{5, false}, {10, false}
+            { {-1, false}, {1, true}, {6, true}, {11, true}, {15, false} }; //{5, false}, {10, false}
+            // changed dialogue for levels 1, 6, 11 to true instead of changing array length
 
         public bool[] tutorialSeen = {false, false, false};
 
         public Dictionary<int, string> levelRewards = new Dictionary<int, string>()
             { {5, "LA_01"}, {15, "LA_02"}, {4, "LA_03"}, {14, "LA_04"}, 
-            {9, "LA_05"}, {10, "LA_06"}, {8, "LA_07"}, {3, "LA_08"} };
+            {9, "LA_05"}, {10, "LA_06"}, {8, "LA_07"}, {3, "LA_08"},
+            {1, "LA_09"}, {6, "LA_10"} };
 
 
         private void Awake() {

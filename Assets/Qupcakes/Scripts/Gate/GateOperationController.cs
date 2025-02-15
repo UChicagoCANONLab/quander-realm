@@ -11,6 +11,10 @@ namespace Qupcakery
         public Gate gate { get; private set; }
         private GatePositionController positionController;
 
+        // Gate flipped publisher
+        public delegate void GateFlippedEventHandler();
+        public event GateFlippedEventHandler GateFlipped;
+
         private List<GameObject> targetCakeBoxes = new List<GameObject>();
         private List<GameObject> controlCakeBoxes = new List<GameObject>();
         [SerializeField]
@@ -18,6 +22,7 @@ namespace Qupcakery
         private List<int> beltInd = new List<int>(); // Belt indices for the slot the gate occupies
         private bool executionCompleted = false;
         private bool waitingForCake = false;
+        public bool canFlip = false;
         public bool ctrlTgtSwapped { get; private set; } = false;
 
         private void Awake()
@@ -26,16 +31,8 @@ namespace Qupcakery
             // Subscribe to gate-is-in-new-slot publisher
             positionController.GateIsInNewSlot += OnGateIsInNewSlot;
 
-            switch (GameManagement.Instance.gameMode)
-            {
-                case GameManagement.GameMode.Regular:
-                    Dispatcher dispatcher = GameObject.Find("LevelManager").
+            Dispatcher dispatcher = GameObject.Find("LevelManager").
                     GetComponent<LevelManager>().Dispatcher;
-                    break;
-                default:
-                    /* do nothing */
-                    break;
-            }
         }
 
         private void Update()
@@ -87,14 +84,6 @@ namespace Qupcakery
         // Once a cake enters
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (GameManagement.Instance.gameMode
-                == GameManagement.GameMode.Experiment)
-            {
-                if (ExperimentButtonController.Instance.buttonState
-                    != ExperimentButtonController.ButtonState.Pressed)
-                    return;
-            }
-
             if ((!(positionController.gateState == GateState.OnBelt))
                 || executionCompleted)
                 return;
@@ -109,14 +98,9 @@ namespace Qupcakery
             if (GameUtilities.gameIsPaused)
                 return;
 
-            if (GameManagement.Instance.gameMode
-                == GameManagement.GameMode.Regular)
-            {
-                if (GameObjectsManagement.Button.GetComponent<ButtonController>()
+            if (GameObjectsManagement.Button.GetComponent<ButtonController>()
                     .buttonState == ButtonController.ButtonState.Pressed)
                     return;
-            }
-
 
             if (positionController.gateState == GateState.OnBelt)
             {
@@ -124,9 +108,13 @@ namespace Qupcakery
                 switch (gate.Type)
                 {
                     case GateType.CNOT:
-                        sr.flipY = sr.flipY ? false : true; // flip target and control
-                        ctrlTgtSwapped = ctrlTgtSwapped ? false : true;
-                        waitingForCake = true;
+                        // if (canFlip)
+                        // {
+                            sr.flipY = sr.flipY ? false : true; // flip target and control
+                            ctrlTgtSwapped = ctrlTgtSwapped ? false : true;
+                            waitingForCake = true;
+                            OnGateFlipped();
+                        // }
                         break;
                 }
             }
@@ -135,14 +123,7 @@ namespace Qupcakery
 
         private CakeBoxController GetCakeBoxControllerFromCake(GameObject cakeObject)
         {
-            switch (GameManagement.Instance.gameMode)
-            {
-                case GameManagement.GameMode.Regular:
-                    return cakeObject.GetComponent<CakeBoxController>();
-                case GameManagement.GameMode.Experiment:
-                    return cakeObject.GetComponent<ExperimentCakeBoxController>();
-            }
-            return null;
+            return cakeObject.GetComponent<CakeBoxController>();
         }
 
         // Execute gate
@@ -194,6 +175,15 @@ namespace Qupcakery
             }
 
             executionCompleted = true;
+        }
+
+        // Gate flipped publisher
+        protected virtual void OnGateFlipped()
+        {
+            if (GateFlipped != null)
+            {
+                GateFlipped();
+            }
         }
 
         // Subscriber

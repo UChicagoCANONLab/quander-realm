@@ -56,7 +56,11 @@ namespace Labyrinth {
             if (currStep == 0) { return; }
             
             int i = (pathLength+buffer) - currStep;
-            parent.transform.GetChild(i).gameObject.GetComponent<Animator>().SetTrigger("Disable");
+            if (i < 0) { 
+                return; 
+            } else {
+                parent.transform.GetChild(i).gameObject.GetComponent<Animator>().SetTrigger("Disable");
+            }
 
             /* if (currStep <= pathLength) {
                 GameObject.Find($"{path}/Steps/Step{pathLength-currStep}").SetActive(false);

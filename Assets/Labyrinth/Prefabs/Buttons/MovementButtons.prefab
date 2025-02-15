@@ -86,7 +86,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8533702457681731839}
   - component: {fileID: 4878460941427249519}
-  - component: {fileID: 3493224479837517042}
   m_Layer: 0
   m_Name: MovementButtons
   m_TagString: Untagged
@@ -126,36 +125,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2240910481348679534}
   m_CullTransparentMesh: 1
---- !u!114 &3493224479837517042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2240910481348679534}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.49019608}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7c968b20d94034e67a5d95b31067be5c, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2598987147153580782
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,7 +137,7 @@ GameObject:
   - component: {fileID: 9045244214720173756}
   - component: {fileID: 8320596225104020571}
   - component: {fileID: 7549848112430821641}
-  - component: {fileID: 1949698537180210775}
+  - component: {fileID: 8388845589216832967}
   m_Layer: 5
   m_Name: Down
   m_TagString: Untagged
@@ -254,7 +223,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9693305, g: 0.8254717, b: 1, a: 1}
@@ -291,22 +260,26 @@ MonoBehaviour:
           m_StringArgument: down
           m_BoolArgument: 0
         m_CallState: 2
---- !u!111 &1949698537180210775
-Animation:
+--- !u!95 &8388845589216832967
+Animator:
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2598987147153580782}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 952773140f75b4d91baf9926222889e4, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 952773140f75b4d91baf9926222889e4, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3430eb3e349594e85a0af44cbc699eda, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4904642282870289419
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +368,7 @@ GameObject:
   - component: {fileID: 6135298407653757949}
   - component: {fileID: 7894814600143134205}
   - component: {fileID: 1397263115720494540}
-  - component: {fileID: 5476591694158129076}
+  - component: {fileID: 5979231928150078978}
   m_Layer: 5
   m_Name: Left
   m_TagString: Untagged
@@ -481,7 +454,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9693305, g: 0.8254717, b: 1, a: 1}
@@ -518,22 +491,26 @@ MonoBehaviour:
           m_StringArgument: left
           m_BoolArgument: 0
         m_CallState: 2
---- !u!111 &5476591694158129076
-Animation:
+--- !u!95 &5979231928150078978
+Animator:
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5695670550794266250}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 952773140f75b4d91baf9926222889e4, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 952773140f75b4d91baf9926222889e4, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3430eb3e349594e85a0af44cbc699eda, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6981119478071145673
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +523,7 @@ GameObject:
   - component: {fileID: 1990184565878565399}
   - component: {fileID: 1638360012228592746}
   - component: {fileID: 4617574865130199384}
-  - component: {fileID: 1169419295023331305}
+  - component: {fileID: 9095950668419303592}
   m_Layer: 5
   m_Name: Right
   m_TagString: Untagged
@@ -632,7 +609,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9693305, g: 0.8254717, b: 1, a: 1}
@@ -669,22 +646,26 @@ MonoBehaviour:
           m_StringArgument: right
           m_BoolArgument: 0
         m_CallState: 2
---- !u!111 &1169419295023331305
-Animation:
+--- !u!95 &9095950668419303592
+Animator:
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6981119478071145673}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 952773140f75b4d91baf9926222889e4, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 952773140f75b4d91baf9926222889e4, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3430eb3e349594e85a0af44cbc699eda, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7159026189742596650
 GameObject:
   m_ObjectHideFlags: 0
@@ -849,7 +830,7 @@ GameObject:
   - component: {fileID: 4298193532237961302}
   - component: {fileID: 9032104933790707946}
   - component: {fileID: 4687102004427464815}
-  - component: {fileID: 558103215529918236}
+  - component: {fileID: 2286911436127287052}
   m_Layer: 5
   m_Name: Up
   m_TagString: Untagged
@@ -935,7 +916,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9693305, g: 0.8254717, b: 1, a: 1}
@@ -972,19 +953,23 @@ MonoBehaviour:
           m_StringArgument: up
           m_BoolArgument: 0
         m_CallState: 2
---- !u!111 &558103215529918236
-Animation:
+--- !u!95 &2286911436127287052
+Animator:
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7760878660355855962}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 952773140f75b4d91baf9926222889e4, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 952773140f75b4d91baf9926222889e4, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3430eb3e349594e85a0af44cbc699eda, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

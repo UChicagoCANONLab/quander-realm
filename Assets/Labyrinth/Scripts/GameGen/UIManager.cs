@@ -9,6 +9,7 @@ namespace Labyrinth
     public class UIManager : MonoBehaviour
     {
         public TMP_Text levelNumber;
+        public Animator levelTypeAnimator;
 
         public Animator winScreen;
         public Animator loseScreen;
@@ -16,6 +17,9 @@ namespace Labyrinth
         public GameObject gameplayButtons;
         public GameObject gameplayObjects;
         public GameObject progressBar;
+
+        public GameObject[] movementButtons;
+        public GameObject switchButton;
 
 
         private void OnEnable() 
@@ -25,6 +29,7 @@ namespace Labyrinth
             TTEvents.UpdateProgressBar += UpdateProgressBar;
             TTEvents.ResetUI += Reset;
             TTEvents.LevelComplete += LevelComplete;
+            TTEvents.SetButtonTrigger += SetButtonTrigger;
         }
         private void OnDisable() 
         {
@@ -33,10 +38,12 @@ namespace Labyrinth
             TTEvents.UpdateProgressBar -= UpdateProgressBar;
             TTEvents.ResetUI -= Reset;
             TTEvents.LevelComplete -= LevelComplete;
+            TTEvents.SetButtonTrigger -= SetButtonTrigger;
         }
 
 
         public void SetLevelNumber(string num) {
+            levelTypeAnimator.SetInteger("Degree", SaveData.Instance.Degree);
             if (num == "0") { return; }
             levelNumber.text = num;
         }
@@ -81,5 +88,18 @@ namespace Labyrinth
             progressBar.SetActive(false);
         }
 
+        public void SetButtonTrigger(string buttonName, string triggerName) {
+            GameObject button;
+            switch(buttonName) {
+                case "up":      button = movementButtons[0];    break;
+                case "down":    button = movementButtons[1];    break;
+                case "left":    button = movementButtons[2];    break;
+                case "right":   button = movementButtons[3];    break;
+                case "switch":  button = switchButton;          break;
+                default:        button = switchButton;    break;
+            }
+            button.GetComponent<Animator>().SetTrigger(triggerName);
+        }
+
     }
-}
+} 

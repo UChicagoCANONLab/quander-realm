@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 namespace QueueBits 
@@ -19,6 +20,9 @@ namespace QueueBits
 
             if (level % 2 == 0) {
                 evenNumberToken.SetActive(true);
+            }
+            if (level > GameManager.saveData.maxLevelUnlocked) {
+                this.gameObject.GetComponent<Button>().interactable = false;
             }
         }
     }

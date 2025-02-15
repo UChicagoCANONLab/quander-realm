@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 namespace Labyrinth 
 { 
@@ -40,6 +41,9 @@ namespace Labyrinth
 
         public void updateSave(GameBehavior GB) {
             if (CurrentLevel == 0) { return; }
+
+            int coins = Math.Max(GB.numStars - starsPerLevel[CurrentLevel - 1], 0) * 10
+                + Math.Min(GB.numStars, starsPerLevel[CurrentLevel - 1]);
 
             if (GB.numStars > starsPerLevel[CurrentLevel - 1]) {
                 totalStars += (GB.numStars - starsPerLevel[CurrentLevel-1]);
