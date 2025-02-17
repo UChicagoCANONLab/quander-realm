@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BeauRoutine;
@@ -26,6 +27,7 @@ namespace Wrapper
         [SerializeField] private AgePopup agePopup;
         [SerializeField] private GameObject loadingScreenPrefab;
         [SerializeField] Button universalBackButton;
+        [SerializeField] private Trackers trackers;
 
         [Header("Reward Card Prefabs")]
         [SerializeField] private GameObject BBRewardPrefab;
@@ -115,7 +117,7 @@ namespace Wrapper
         {
             SceneManager.LoadScene(minigame.StartScene);
             currentGame = minigame.gameValue;
-            StarTracker.ST.gameObject.SetActive(false);
+            trackers.ToggleTrackers(false);
         }
 
         void BackToMain()
@@ -125,11 +127,12 @@ namespace Wrapper
             {
                 Events.CloseLoginScreen?.Invoke();
                 Events.ToggleTitleScreen?.Invoke(false);
-                StarTracker.ST.Invoke("InitStarTracker", 0.2f);
+                
+                Events.InitializeStarTracker?.Invoke();
+                trackers.ToggleTrackers(true);
             }
             Events.PlayMusic?.Invoke("W_Music");
             currentGame = Game.None;
-            StarTracker.ST.gameObject.SetActive(true);
         }
 
         private void ToggleLoadingScreen()

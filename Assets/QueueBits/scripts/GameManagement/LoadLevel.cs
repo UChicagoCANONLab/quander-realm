@@ -18,6 +18,7 @@ namespace QueueBits
         public void loadLevel(int level) {
             GameManager.LEVEL = level;
             GameManager.Save();
+            Debug.Log(level);
 
             SceneManager.LoadScene("QB_Level");
         }
@@ -31,6 +32,11 @@ namespace QueueBits
                 SceneManager.LoadScene("QB_Level");
             }
             else {
+                if (GameManager.saveData.dialogueSystem[1]) {
+                    Wrapper.Events.StartDialogueSequence?.Invoke("QB_End");
+                    GameManager.saveData.dialogueSystem[1] = false;
+                    GameManager.Save();
+                }
                 SceneManager.LoadScene("QB_LevelSelect");
             }         
         }

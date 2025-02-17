@@ -104,7 +104,7 @@ namespace Wrapper
                 continueButton.gameObject.SetActive(false);
                 newButton.gameObject.SetActive(false);
 
-                StarTracker.ST.ResetStarCounts();
+                Events.ResetStarCounts?.Invoke();
             }
             else
             {
@@ -127,6 +127,8 @@ namespace Wrapper
             loadingPanel.OpenPopup();
             Events.ClearSaveFile?.Invoke();
 
+            Events.ResetStarCounts?.Invoke();
+            Events.ResetMap?.Invoke();
             // loading screen will cover this when completed
             //Events.SetNewPlayerStatus?.Invoke(true);
         }

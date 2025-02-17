@@ -29,6 +29,7 @@ namespace BlackBox
     {
         Small,
         Medium,
-        Large
+        Large,
+        Tutorial
     };
 }

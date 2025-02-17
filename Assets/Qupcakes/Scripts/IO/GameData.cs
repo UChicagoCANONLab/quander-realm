@@ -19,7 +19,7 @@ namespace Qupcakery
             MaxLevelCompleted = stat.MaxLevelCompleted;
 
             TotalStars = 0;
-            for (int i=0; i< MaxLevelCompleted; i++)
+            for (int i=0; i < MaxLevelCompleted; i++)
             {
                 levelPerformance[i] = stat.GetLevelPerformance(i+1);
                 TotalStars += stat.GetLevelPerformance(i+1);
