@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace BlackBox
 {
@@ -10,6 +11,7 @@ namespace BlackBox
         [SerializeField] private GameObject unitContainer = null;
         [SerializeField] private GameObject unitPrefab = null;
         [SerializeField] private Button wolfieButton = null;
+        [SerializeField] private TextMeshProUGUI levelNumberText = null;
 
         private Animator HUDAnimator = null;
         private List<Animator> reversedAnimatorList = null;
@@ -29,6 +31,7 @@ namespace BlackBox
             BBEvents.ToggleWolfieButton += ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives += UpdateWolfieLives;
             BBEvents.CloseLevel += CloseLevel;
+            BBEvents.UpdateHUDLevelNumber += SetLevelNumber;
         }
 
         private void OnDisable()
@@ -40,6 +43,7 @@ namespace BlackBox
             BBEvents.ToggleWolfieButton -= ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives -= UpdateWolfieLives;
             BBEvents.CloseLevel -= CloseLevel;
+            BBEvents.UpdateHUDLevelNumber -= SetLevelNumber;
         }
 
         private void UpdateWolfieLives(int livesRemaining)
@@ -50,6 +54,11 @@ namespace BlackBox
         private void ToggleWolfieButton(bool isOn)
         {
             wolfieButton.interactable = isOn;
+        }
+
+        private void SetLevelNumber(int levelNum)
+        {
+            levelNumberText.text = $"{levelNum}";
         }
 
         #region Energy Bar

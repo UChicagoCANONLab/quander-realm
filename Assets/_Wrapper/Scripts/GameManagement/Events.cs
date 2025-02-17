@@ -20,6 +20,11 @@ namespace Wrapper
         public static Func<Game, string> GetMinigameTitle;
         public static Action<Game> UnlockAndDisplayGame;
         public static Action DisplayAgeSelector;
+        public static Action InitializeStarTracker;
+        public static Action ResetStarCounts;
+        public static Action<long> UpdateStreakLength;
+        public static Action InitializeMap;
+        public static Action ResetMap;
 
         /// Screen Fading ///
         public static Action<Action, float> ScreenFadeMidAction;
@@ -37,6 +42,9 @@ namespace Wrapper
         public static Action<Game, object> SaveMinigameResearchData;
         public static Action<bool> SetNewPlayerStatus;
         public static Action Logout;
+        public static Action<int> UpdateUserSaveTotalStars;
+        public static Action<int> UpdateUserSaveTotalCoins;
+        public static Func<int> GetUserSaveTotalCoins;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;
@@ -78,5 +86,16 @@ namespace Wrapper
         public static Action BBClearMarkers;
         public static Action<string> ShowCardPopup;
         public static Func<bool> IsDebugEnabled;
+
+        /// Minigame User Saves ///
+        public static Func<Game, int> GetMinigameTotalStars;
+        public static Func<int> GetOverallTotalStars;
+        // public static Func<Game, int> GetMinigameTotalCoins;
+        // public static Func<int> GetOverallTotalCoins;
+        public static Func<Game, bool> GetGameUnlocked;
+        public static Func<Game, int> GetMinigameMaxLevel;
+        public static Action<Game> LoadMinigameSave;
+        public static Action LoadAllMinigameSaves;
+
     }
 }

@@ -14,6 +14,13 @@ namespace BlackBox
 
         /// Tutorial
         public static Action<BBSaveData, Level> ShowTutorial;
+        public static Action ShowHint;
+        public static Action<Vector3Int, Dir, Vector3Int, Dir, Marker> AppendHint;
+        public static Action ClearHints;
+        public static Func<int> GetHintsUsed;
+        public static Action ShowInfo;
+        public static Action InitiateTutorialLevel;
+        public static Action EndTutorialLevel;
 
         /// Level Select
         public static Action<string> PlayLevel;
@@ -28,6 +35,8 @@ namespace BlackBox
         public static Action<Dir, Vector3Int> TestLinkHovered;
         public static Action DisableMolly;
         public static Action SendMollyIn;
+        public static Action<Vector3Int, Dir, Vector3Int, Dir> AppendFlyingCoordinates;
+        public static Action StartFlyingAnimation;
 
         /// Interaction Delays
         public static Func<bool> IsInteractionDelayed;
@@ -40,22 +49,26 @@ namespace BlackBox
         public static Action<bool> ToggleLanternHeld;
         public static Func<Transform> GetFrontMount;
 
-        /// Energy Bar
+        /// Energy Bar and Lives
         public static Action DecrementEnergy;
         public static Action IndicateEmptyMeter;
         public static Action InitEnergyBar;
         public static Func<int> GetNumEnergyUnits;
+        public static Action<int> UpdateHUDWolfieLives;
+        public static Action LoseLife;
+        public static Func<int> GetLivesRemaining;
 
         /// Level Submission
         public static Action CheckWinState;
         public static Action CheckWolfieReady;
         public static Action<bool> ToggleWolfieButton;
-        public static Action<int> UpdateHUDWolfieLives;
+        public static Action<int> UpdateHUDLevelNumber;
         public static Action<WinState> UpdateEndPanel;
         public static Action StartNextLevel;
         public static Action RestartLevel;
         public static Action QuitBlackBox;
         public static Action CompleteBlackBox;
         public static Func<int> LanternPlacedCount;
+        public static Func<Level> GetLevel;
     }
 }

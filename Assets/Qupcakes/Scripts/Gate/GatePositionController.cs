@@ -15,6 +15,10 @@ namespace Qupcakery
         // Gate is put in new slot event
         public delegate void GateInSlotEventHandler(List<int> beltInd);
         public event GateInSlotEventHandler GateIsInNewSlot;
+
+        public delegate void GateOnBeltEventHandler();
+        public event GateOnBeltEventHandler GateIsOnBelt;
+
         public int gateSize; // Set by the operation controller
 
         private GateBank gateBank;
@@ -22,27 +26,24 @@ namespace Qupcakery
         public GateState gateState { get; private set; }
             = GateState.InBank;
 
+        public bool gateActive = true;
+
         private void Start()
         {
             gateBank = GateBank.Instance;
-            switch (GameManagement.Instance.gameMode)
-            {
-                case GameManagement.GameMode.Regular:
-                    Dispatcher dispatcher = GameObject.Find("LevelManager").
+            Dispatcher dispatcher = GameObject.Find("LevelManager").
                     GetComponent<LevelManager>().Dispatcher;
-                    dispatcher.BatchDonePublisher += OnBatchDone;
-                    break;
-                default:
-                    /* do nothing */
-                    break;
-            }
+            dispatcher.BatchDonePublisher += OnBatchDone;
         }
 
         // Drag gate with mouse
         private void OnMouseDrag()
         {
-            if (GameUtilities.gameIsPaused)
+            if (GameUtilities.gameIsPaused ||
+                !GameManagement.Instance.AllowGateMovement
+                || !gateActive)
                 return;
+
 
             switch (gateState)
             {
@@ -84,6 +85,7 @@ namespace Qupcakery
             if (success)
             {
                 SetGateState(GateState.OnBelt);
+                OnGateIsOnBelt();
                 OnGateIsInNewSlot(beltInd);
             }
             else // put back to bank
@@ -126,6 +128,14 @@ namespace Qupcakery
             }
         }
 
+        protected virtual void OnGateIsOnBelt()
+        {
+            if (GateIsOnBelt != null)
+            {
+                GateIsOnBelt();
+            }
+        }
+
         // Subscriber on batch is done, reset everything
         public void OnBatchDone()
         {
@@ -139,11 +149,6 @@ namespace Qupcakery
             }
         }
 
-        //// #TODO: reset gate position and gate execution status
-        //private void resetGate()
-        //{
 
-
-        //}
     }
 }

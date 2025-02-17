@@ -51,7 +51,8 @@ namespace Wrapper
         QueueBits = 3,
         Qupcakes = 4,
         Rewards = 5,
-        None = 6
+        None = 6,
+        Trivia = 7
     };
 
     public enum LoginStatus
@@ -82,9 +83,20 @@ namespace Wrapper
     };
 
     /// Audio ///
+
     public enum AudioType
     {
         Music,
         SFX
-    }
+    };
+
+    /// Badges ///
+
+    public enum CriteriaType
+    {
+        Level,
+        Star,
+        Card,
+        Unlocked
+    };
 }

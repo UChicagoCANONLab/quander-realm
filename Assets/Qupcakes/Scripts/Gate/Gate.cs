@@ -8,7 +8,7 @@ namespace Qupcakery
 {
     public enum GateType
     {
-        None,
+        None = -1,
         NOT = 0, CNOT = 1, SWAP = 2, H = 3, Z = 4
     }
 

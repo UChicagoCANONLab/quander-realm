@@ -25,12 +25,14 @@ namespace QueueBits
 		public GameObject pieceCPU100;
 		public GameObject pieceCPU75; 
 		public GameObject pieceCPU50; 
+		public GameObject pieceCPU00; 
 
 		[Header("Player Pieces")]
 		public TokenCounter tokenCounterPlayer;
 		public GameObject piecePlayer100;
 		public GameObject piecePlayer75;
 		public GameObject piecePlayer50;
+		public GameObject piecePlayer00;
 
 		// Dictionaries for token counts
 		private Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
@@ -125,6 +127,7 @@ namespace QueueBits
 					GameObject obj;
 					if (prefilledBoard[i].Item1 == Piece.Player)
 					{
+						field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 3;
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75)
                         {
@@ -137,6 +140,7 @@ namespace QueueBits
 					}
 					else
 					{
+						field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 4;
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 100 - prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75)
 						{
@@ -338,7 +342,7 @@ namespace QueueBits
 							GC.myData.outcome[index] = 2;
 							field[x, i] = 2;
 						} else {
-							field[x, i] = 3;
+							field[x, i] = 4;
 						}
 					}
 
@@ -432,9 +436,16 @@ namespace QueueBits
 				{
 					if (pieces[i] != null)
 					{
+						GameObject tempPieceType;
+						if (field[x,y] == 3) { // placed by player
+							tempPieceType = piecePlayer100;
+						} else { //if (field[x,y] == 4) { // placed by CPU
+							tempPieceType = pieceCPU00;
+						}
+
 						Vector3 pos = pieces[i].transform.position;
 						finalColor = Instantiate(
-							piecePlayer100,
+							tempPieceType,
 							new Vector3(pos.x, pos.y, 0),
 							Quaternion.identity, GC.fieldObject.transform) as GameObject;
 						DestroyImmediate(pieces[i]);
@@ -448,9 +459,16 @@ namespace QueueBits
 				{
 					if (pieces[i] != null)
 					{
+						GameObject tempPieceType;
+						if (field[x,y] == 3) { // placed by player
+							tempPieceType = piecePlayer00;
+						} else { //if (field[x,y] == 4) { // placed by CPU
+							tempPieceType = pieceCPU100;
+						}
+
 						Vector3 pos = pieces[i].transform.position;
 						finalColor = Instantiate(
-							pieceCPU100,
+							tempPieceType,
 							new Vector3(pos.x, pos.y, 0),
 							Quaternion.identity, GC.fieldObject.transform) as GameObject;
 						DestroyImmediate(pieces[i]);
@@ -489,7 +507,7 @@ namespace QueueBits
 				{
 					//if somebody won, gameOver = true;
 					int color = field[x, y];
-					if (color != 0 && color != 3)
+					if (color == 1 || color == 2)
 					{
 						//check up
 						if (y >= 3 && field[x, y - 1] == color && field[x, y - 2] == color && field[x, y - 3] == color)

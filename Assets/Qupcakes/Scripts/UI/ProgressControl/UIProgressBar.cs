@@ -79,6 +79,7 @@ namespace Qupcakery
         {
             currentProgress += amount;
             SetValue((float)currentProgress / (float)goal);
+            
             UILevelCoinTracker.instance.UpdateCoinAmount(currentProgress);
         }
     }
