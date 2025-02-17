@@ -11,7 +11,7 @@ namespace QueueBits
 
         // total stars
         public int totalStars = 0;
-        public int maxLevelUnlocked;
+        public int maxLevelUnlocked = 1;
         public int LEVEL;
 
         // star system testing
@@ -35,8 +35,8 @@ namespace QueueBits
             0, // level 15
         };
 
-        // dialogue system
-        public bool[] dialogueSystem = new bool[]
+        // ORIGINAL dialogue system
+        /* public bool[] dialogueSystem = new bool[]
         {
             true, // level select
             true, // level 1
@@ -54,6 +54,13 @@ namespace QueueBits
             true, // level 13
             true, // level 14
             true, // level 15
+        }; */
+        
+        // NEW Dialogue System -- just intro and end
+        public bool[] dialogueSystem = new bool[]
+        {
+            true, // level select
+            true // end
         };
     }
 }

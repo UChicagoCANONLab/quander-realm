@@ -17,7 +17,6 @@ namespace Qupcakery
             {
                 helpPanel.SetActive(false);
 
-                // Unpause game
                 GameUtilities.UnpauseGame();
                 pauseButton.GetComponent<PauseButton>().SetPauseSprite();
 

@@ -23,14 +23,8 @@ namespace Qupcakery
 
         public static void LoadModeSelectionScene()
         {
-            // SceneManager.LoadScene("ModeSelection");
             SceneManager.LoadScene("QU_LevelSelection");
         }
-
-        //public static void LoadExperimentMode()
-        //{
-        //    SceneManager.LoadScene("ExperimentMode");
-        //}
 
         public static void LoadLevelSelectionMenu()
         {
