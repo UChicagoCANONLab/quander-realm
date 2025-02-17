@@ -282,6 +282,7 @@ namespace BlackBox
 
                 // Earn coins for level completion
                 int coins = Math.Max(livesRemaining - origStars, 0) * 10 + Math.Min(livesRemaining, origStars);
+                Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
 
 
                 // PLAY END OF LEVEL DIALOGUE IF APPLICABLE
