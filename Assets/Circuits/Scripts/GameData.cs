@@ -111,6 +111,7 @@ namespace Circuits
 
                 int coins = Math.Max(StarDisplay.SD.numStars - saveData.starsPerLevel[saveData.currLevel], 0) * 10
                     + Math.Min(StarDisplay.SD.numStars, saveData.starsPerLevel[saveData.currLevel]);
+                Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
 
                 if (saveData.starsPerLevel[saveData.currLevel] < StarDisplay.SD.numStars) {
                     saveData.starsPerLevel[saveData.currLevel] = StarDisplay.SD.numStars;
