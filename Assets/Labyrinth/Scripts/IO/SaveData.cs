@@ -44,6 +44,7 @@ namespace Labyrinth
 
             int coins = Math.Max(GB.numStars - starsPerLevel[CurrentLevel - 1], 0) * 10
                 + Math.Min(GB.numStars, starsPerLevel[CurrentLevel - 1]);
+            Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
 
             if (GB.numStars > starsPerLevel[CurrentLevel - 1]) {
                 totalStars += (GB.numStars - starsPerLevel[CurrentLevel-1]);
