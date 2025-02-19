@@ -34,6 +34,7 @@ namespace Wrapper
         private Game[] gamesArray = new Game[] {
             Game.Qupcakes, Game.Labyrinth, Game.Circuits, Game.QueueBits, Game.BlackBox
         };
+        private bool active = true;
 
 
 
@@ -95,8 +96,10 @@ namespace Wrapper
 
         public void OnUpdateStreakLength(long streak)
         {
-            Debug.Log("Updating streak length");
-            streakLengthTMP.text = streak.ToString();
+            // Debug.Log("Updating streak length");
+            if (active) {
+                streakLengthTMP.text = streak.ToString();
+            }
         }
 
         // Updates the total star count on panel and main screen
@@ -116,6 +119,7 @@ namespace Wrapper
         // Toggles all tracker visibility
         public void ToggleTrackers(bool isOn) {
             trackerAnimator.SetBool("IsOn", isOn);
+            active = isOn;
         }
 
     }

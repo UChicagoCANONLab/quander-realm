@@ -482,7 +482,7 @@ namespace Wrapper
                 yield break;
             }
 
-            currentUserSave.UpdateStreak();
+            // currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
 
             if (json.Equals(string.Empty))
@@ -509,7 +509,7 @@ namespace Wrapper
         private IEnumerator UpdateRemoteSaveRoutine()
         {
             webGLUploadSuccess = false;
-            currentUserSave.UpdateStreak();
+            // currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
