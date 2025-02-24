@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Wrapper
 {
@@ -26,7 +27,7 @@ namespace Wrapper
         [SerializeField] private TMP_Text streakLengthTMP;
         private int streakLength;
         [SerializeField] private GameObject fire;
-        [SerializeField] private GameObject lanternFront;
+        [SerializeField] private Image lanternFront;
 
 
         [Header("Animator")]
@@ -101,14 +102,13 @@ namespace Wrapper
             //Debug.Log("Updating streak length");
             bool active = streak > 0;
             if(active){
-                lanternFront.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
+                lanternFront.color = new Color(1f, 1f, 1f);
                 fire.SetActive(true);
             }
             else{
-                lanternFront.GetComponent<SpriteRenderer>().color = new Color(77, 77, 77);
+                lanternFront.color = new Color(0.3f, 0.3f, 0.3f);
                 fire.SetActive(false);
             }
-            Debug.Log(fire.activeSelf);
             if (active) {
                 streakLengthTMP.text = streak.ToString();
             }

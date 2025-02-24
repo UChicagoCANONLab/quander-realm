@@ -89,7 +89,7 @@ namespace Wrapper
 
         public void ResetStreak()
         {
-            if (loginticks == null) { 
+            if (loginticks == null) {
                 loginticks = DateTime.Now.ToString();
                 streakString = "0";
             }

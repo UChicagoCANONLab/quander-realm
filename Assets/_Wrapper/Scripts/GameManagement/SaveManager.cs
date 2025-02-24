@@ -448,7 +448,7 @@ namespace Wrapper
             currentUserSave.totalCoins += numCoins;
             UpdateRemoteSave();
         }
-        
+
         private int GetTotalCoins()
         {
             return currentUserSave.totalCoins;
@@ -482,7 +482,7 @@ namespace Wrapper
                 yield break;
             }
 
-            // currentUserSave.UpdateStreak();
+            currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
 
             if (json.Equals(string.Empty))
