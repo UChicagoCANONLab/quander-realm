@@ -11,7 +11,7 @@ namespace Wrapper
     {
 
         [Header("StarTrackers on Panel")]
-        [SerializeField] private StarTracker tracker_Overall;        
+        [SerializeField] private StarTracker tracker_Overall;
         // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
         [SerializeField] private StarTracker[] tracker_Minigames;
 
@@ -25,6 +25,8 @@ namespace Wrapper
         private int totalCoins;
         [SerializeField] private TMP_Text streakLengthTMP;
         private int streakLength;
+        [SerializeField] private GameObject fire;
+        [SerializeField] private GameObject lanternFront;
 
 
         [Header("Animator")]
@@ -96,7 +98,17 @@ namespace Wrapper
 
         public void OnUpdateStreakLength(long streak)
         {
-            // Debug.Log("Updating streak length");
+            //Debug.Log("Updating streak length");
+            bool active = streak > 0;
+            if(active){
+                lanternFront.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
+                fire.SetActive(true);
+            }
+            else{
+                lanternFront.GetComponent<SpriteRenderer>().color = new Color(77, 77, 77);
+                fire.SetActive(false);
+            }
+            Debug.Log(fire.activeSelf);
             if (active) {
                 streakLengthTMP.text = streak.ToString();
             }
