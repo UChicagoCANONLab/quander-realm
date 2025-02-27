@@ -16,6 +16,9 @@ namespace Wrapper
         public int totalStars = 0;
         public int totalCoins = 0;
 
+        // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes, Rewards, None, Trivia}
+        public List<int> starsPerGame = new List<int>(8); 
+
         [NonSerialized]
         public DateTime lastLoginDate;
         [NonSerialized]
@@ -31,6 +34,7 @@ namespace Wrapper
 
             // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+            starsPerGame = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
 
             if (!(idString.Equals(string.Empty)))
                 id = idString.Trim();

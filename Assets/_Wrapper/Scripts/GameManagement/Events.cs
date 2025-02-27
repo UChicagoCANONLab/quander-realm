@@ -45,6 +45,8 @@ namespace Wrapper
         public static Action<int> UpdateUserSaveTotalStars;
         public static Action<int> UpdateUserSaveTotalCoins;
         public static Func<int> GetUserSaveTotalCoins;
+        public static Action<Game, int> UpdateMinigameStarCount;
+        public static Func<Game, int> GetMinigameStarCount;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;

@@ -63,6 +63,7 @@ namespace Wrapper
                 }
             }
             starCount.text = $"{stars}";
+            Events.UpdateMinigameStarCount(Game.Rewards, stars);
         }
 
 

@@ -15,7 +15,6 @@ namespace Wrapper
         [SerializeField] private StarTracker tracker_Overall;
         // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
         [SerializeField] private StarTracker[] tracker_Minigames;
-
         [SerializeField] private StarTracker tracker_Challenge;
 
 
@@ -93,6 +92,8 @@ namespace Wrapper
                 tracker.ResetStarDisplay();
             }
             tracker_Overall.ResetStarDisplay();
+            tracker_Challenge.ResetStarDisplay();
+
             totalStars = 0;
             totalStarsTMP.text = "0";
         }
@@ -116,6 +117,7 @@ namespace Wrapper
 
         // Updates the total star count on panel and main screen
         public void RecountTotal() {
+            tracker_Challenge.SetStarDisplay(Events.GetMinigameStarCount.Invoke(Game.Rewards));
             totalStars = Events.GetOverallTotalStars.Invoke();
             tracker_Overall.SetStarDisplay(totalStars);
             totalStarsTMP.text = $"{totalStars}";
