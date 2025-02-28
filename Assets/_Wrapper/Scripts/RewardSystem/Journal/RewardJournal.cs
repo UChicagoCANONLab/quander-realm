@@ -213,7 +213,7 @@ namespace Wrapper
             Events.ResetPageNumbers?.Invoke();
         }
 
-        private void InitFirstPage()
+        public void InitFirstPage()
         {
             currentPage = journal.First().Value.pages.First();
             currentPage.ClickNavDot();

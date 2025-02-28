@@ -76,6 +76,7 @@ namespace Wrapper
         public static Action<bool> SetRewardTextSeen;
         public static Func<(bool, bool)> GetRewardDialogStats;
         public static Func<string, bool> GetFirstRewardBool;
+        public static Func<bool> ReturnToRewardCenter;
 
         /// Audio System ///
         public static Action<string> PlayMusic;

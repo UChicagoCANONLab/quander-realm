@@ -28,19 +28,22 @@ namespace Wrapper
 
         private void OnEnable()
         {
-            gameBackButton = GameObject.Find("GameManager/BackButton").GetComponent<BackButton>();
-            gameBackButton.onClick.AddListener(returnToRewardCenter);
+            Events.ReturnToRewardCenter += returnToRewardCenter;
+            // gameBackButton = GameObject.Find("GameManager/BackButton").GetComponent<BackButton>();
+            // gameBackButton.onClick.AddListener(returnToRewardCenter);
         }
 
         private void OnDisable()
         {
-            gameBackButton.onClick.RemoveListener(returnToRewardCenter);
+            Events.ReturnToRewardCenter -= returnToRewardCenter;
+            // gameBackButton.onClick.RemoveListener(returnToRewardCenter);
         }
 
 
         public void openRewardJournal() {
             RewardCenterAnimator.SetBool("On", false);
             RewardJournalCanvas.GetComponent<Animator>().SetBool("On", true);
+            RewardJournalCanvas.GetComponent<RewardJournal>().InitFirstPage();
         }
 
         public void openBadgeBulletin() {
@@ -49,13 +52,17 @@ namespace Wrapper
             BadgeBulletinCanvas.GetComponent<BadgeManager>().DelayGetStars();
         }
 
-        public void returnToRewardCenter() {
-            if (RewardCenterAnimator.GetBool("On") == false) {
+        public bool returnToRewardCenter() {
+            if (RewardCenterAnimator.GetBool("On") == false) 
+            {
                 RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
                 BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
 
                 RewardCenterAnimator.SetBool("On", true);
-            }
+                return true;
+            } 
+            return false;
         }
+
     }
 }

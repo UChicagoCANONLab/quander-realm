@@ -15,6 +15,11 @@ namespace Wrapper
             {
                 Time.timeScale = 1;
             }
+            else if (SceneManager.GetActiveScene().name == "RewardCenter")
+            {
+                bool stop = Events.ReturnToRewardCenter.Invoke();
+                if (stop) return;
+            }
 
             if (SceneManager.GetActiveScene().buildIndex == 0) 
             {
