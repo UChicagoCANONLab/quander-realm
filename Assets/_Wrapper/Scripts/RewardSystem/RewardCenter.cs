@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BeauRoutine;
 
 namespace Wrapper
 {
@@ -39,6 +40,15 @@ namespace Wrapper
             // gameBackButton.onClick.RemoveListener(returnToRewardCenter);
         }
 
+        private void Start()
+        {
+            DelayStart();
+            RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
+            BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
+
+            RewardCenterAnimator.SetBool("On", true);
+        }
+
 
         public void openRewardJournal() {
             RewardCenterAnimator.SetBool("On", false);
@@ -52,7 +62,9 @@ namespace Wrapper
             BadgeBulletinCanvas.GetComponent<BadgeManager>().DelayGetStars();
         }
 
+
         public bool returnToRewardCenter() {
+            DelayStart();
             if (RewardCenterAnimator.GetBool("On") == false) 
             {
                 RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
@@ -62,6 +74,10 @@ namespace Wrapper
                 return true;
             } 
             return false;
+        }
+        IEnumerator DelayStart() 
+        {
+            yield return 0.5f;
         }
 
     }
