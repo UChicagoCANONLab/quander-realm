@@ -77,7 +77,9 @@ namespace Qupcakery
         public void DispatchNewBatch()
         {
             DispatchPuzzle.Dispatch(level.Puzzles[NextBatchInd],
-                GameObjectsManagement.Customers, GameObjectsManagement.CakeBoxes);
+                level.Solutions[NextBatchInd],
+                GameObjectsManagement.Customers,
+                GameObjectsManagement.CakeBoxes);
 
             if (NewBatchDispatchedPublisher != null) NewBatchDispatchedPublisher();
             NextBatchInd++;

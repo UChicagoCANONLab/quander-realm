@@ -25,7 +25,7 @@ namespace Qupcakery
             CanNotBePressed, CanBePressed, Pressed
         }
 
-        public ButtonState buttonState { get; protected set; }
+        public ButtonState buttonState { get; set; }
 
         public void ResetButton()
         {
@@ -45,7 +45,7 @@ namespace Qupcakery
             }
         }
 
-        protected void UpdateButtonState(ButtonState bs)
+        public void UpdateButtonState(ButtonState bs)
         {
             buttonState = bs;
 
@@ -87,7 +87,7 @@ namespace Qupcakery
         // Subscriber
         public void OnCustomerArrivalAtTable()
         {
-            if (buttonState == ButtonState.CanNotBePressed)
+            if (buttonState == ButtonState.CanNotBePressed && !GameManagement.Instance.InTutorial)
                 UpdateButtonState(ButtonState.CanBePressed);
         }
 

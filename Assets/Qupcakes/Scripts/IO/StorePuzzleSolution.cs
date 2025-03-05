@@ -9,8 +9,10 @@ namespace Qupcakery
         LevelManager lm;
         ButtonController bc;
 
+        public GameObject button;
+
         // Use this for initialization
-        void Start()
+        public void Initialize()
         {
             lm = GameObject.Find("LevelManager").GetComponent<LevelManager>();
             bc = GameObject.Find("Button(Clone)").GetComponent<ButtonController>();
@@ -29,19 +31,6 @@ namespace Qupcakery
             GameManagement.Instance.game.gameStat.
                 SetCompressedPuzzleSolution(puzzleInd, GateSlots.Instance.Solution, puzzle.Size);
 
-            //Debug.Log("Saving level " + levelInd + ", puzzle " + puzzleInd + " solution: ");
-
-            //string print = "\n";
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    for (int j = 0; j < 6; j++)
-            //    {
-            //        print += puzzleAndSolutions[i,j];
-            //        print += ", ";
-            //    }
-            //    print += "\n";
-            //}
-            //Debug.Log(print);
         }
 
         private void OnDestroy()

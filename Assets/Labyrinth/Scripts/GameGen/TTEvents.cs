@@ -29,6 +29,7 @@ namespace Labyrinth
         public static Action<int> UpdateProgressBar;
         public static Action ResetUI;
         public static Action<int> LevelComplete;
+        public static Action<string,string> SetButtonTrigger;
         // InfoPopup
         public static Action ShowInfoMessage;
         // ButtonBehavior

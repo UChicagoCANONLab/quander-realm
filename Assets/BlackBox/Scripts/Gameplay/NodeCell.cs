@@ -7,8 +7,8 @@ namespace BlackBox
 {
     public class NodeCell : Cell
     {
-        private bool hasNode = false;
-        private bool hasFlag = false;
+        private bool hasNode = false; // IF TOMBSTONE THERE
+        private bool hasFlag = false; // IF LANTERN PLACED THERE
         private bool debug = false; // Debug
 
         [SerializeField] private LanternMount lanternMount = null;
@@ -38,7 +38,7 @@ namespace BlackBox
             if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ToggleDebug -= ToggleDebug;
         }
         public override void Interact()
-        {
+        {            
             if (cellType == CellType.EdgeNode)
                 return;
 
@@ -49,6 +49,7 @@ namespace BlackBox
                 nodeObj.SetActive(hasNode);
             }
         }
+
 
         public void SetNode()
         {

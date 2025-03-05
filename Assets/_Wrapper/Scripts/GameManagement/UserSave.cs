@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace Wrapper
@@ -8,24 +9,38 @@ namespace Wrapper
     {
         public string id = string.Empty;
         public string[] minigameSaves;
-        public bool[] minigameUnlocked;
         public List<string> rewards;
         public bool introDialogueSeen = false;
         public bool rewardDialogueSeen = false;
+
         public int totalStars = 0;
+        public int totalCoins = 0;
+
+        // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes, Rewards, None, Trivia}
+        public List<int> starsPerGame = new List<int>(8); 
+
+        [NonSerialized]
+        public DateTime lastLoginDate;
+        [NonSerialized]
+        public long streak = 0;
+        // public string streakString = string.Empty;
+        public string streakString = "0";
+        public string loginticks = string.Empty;
+
 
         public UserSave(string idString = "", string rewardID = "")
         {
             rewards = new List<string>();
-            
-            // In order: {BT, TL, TT, QB, QC}
+
+            // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-            minigameUnlocked = new bool[] {false, false, true, false, true};
+            starsPerGame = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
 
             if (!(idString.Equals(string.Empty)))
                 id = idString.Trim();
 
             AddReward(rewardID);
+            loginticks = "5";
         }
 
         public bool AddReward(string rewardID)
@@ -64,6 +79,38 @@ namespace Wrapper
             else return rewards.Count > 0;
         }
 
+        public void UpdateStreak()
+        {
+            if (lastLoginDate.Date == DateTime.Now.AddDays(-1).Date || streak == 0)
+            {
+                streak = streak + 1;
+                streakString = streak.ToString();
+            }
+            lastLoginDate = DateTime.Now;
+            loginticks = lastLoginDate.ToString();
+            Events.UpdateStreakLength?.Invoke(streak);
+        }
+
+        public void ResetStreak()
+        {
+            if (loginticks == null) {
+                loginticks = DateTime.Now.ToString();
+                streakString = "0";
+            }
+
+            lastLoginDate = DateTime.Parse(loginticks);
+            streak = long.Parse(streakString);
+            if (lastLoginDate.Date > DateTime.Now.AddDays(-1).Date)
+            {
+                streak = long.Parse(streakString);
+            }
+            else
+            {
+                streak = 0;
+                streakString = "0";
+            }
+        }
+
         public bool FirstRewardFromGame(string gamePrefix)
         {
             // will already have one, check for exactly one
@@ -93,20 +140,6 @@ namespace Wrapper
         private string FormatString(string rawString)
         {
             return rawString.Trim().ToLower();
-        }
-
-        public void UnlockGame(Game game) {
-            if (minigameUnlocked[(int)game] == false) {
-                minigameUnlocked[(int)game] = true;
-            }
-        }
-
-        public void UpdateTotalStars(Game game, int i) {
-            totalStars += i;
-        }
-
-        public int GetTotalStars() {
-            return totalStars;
         }
 
         public void printSaveStrings() {
