@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using QueueBits;
+using System;
 
 namespace QueueBits 
 {
@@ -29,19 +30,25 @@ namespace QueueBits
 
         // Sets display to show proper number of stars per Result
         public void setResults(Results winner) {
+            int stars;
             // If player ties, they get 2 stars
             if (winner == Results.Draw) {
-                setDisplay(2);
+                stars = 2;
             } // If they win, they get 3 stars
             else if (winner == Results.Win) {
-                setDisplay(3);
+                stars = 3;
             } // If they lose, they get 1 star 
             else if (winner == Results.Lose) {
-                setDisplay(1);
+                stars = 1;
             } // If anything weird happens, they get 0
             else {
-                setDisplay(0);
+                stars = 0;
             }
+            setDisplay(stars);
+            int origStars = GameManager.saveData.starSystem[GameManager.LEVEL];
+            int coins = Math.Max(stars - origStars, 0) * 10
+                + Math.Min(stars, origStars);
+            Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
         }
 
         // Returns number of stars per Result
