@@ -71,6 +71,7 @@ namespace Wrapper
                 initMinigameStarDisplay(minigame);
             }
             RecountTotal();
+            UpdateCoinTracker();
 #endif
             Events.InitializeMap?.Invoke();
         }
@@ -96,6 +97,12 @@ namespace Wrapper
 
             totalStars = 0;
             totalStarsTMP.text = "0";
+        }
+
+        public void UpdateCoinTracker()
+        {
+            totalCoins = Events.GetUserSaveTotalCoins.Invoke();
+            totalCoinsTMP.text = $"{totalCoins}";
         }
 
         public void OnUpdateStreakLength(long streak)
