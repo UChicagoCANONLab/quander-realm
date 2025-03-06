@@ -24,9 +24,6 @@ namespace Wrapper
             Events.GetMinigameTotalStars += GetMinigameStars;
             Events.GetOverallTotalStars += GetOverallStars;
 
-            // Events.GetMinigameTotalCoins += GetMinigameCoins;
-            // Events.GetOverallTotalCoins += GetOverallCoins;
-
             Events.GetGameUnlocked += GetMinigameUnlocked;
             Events.GetMinigameMaxLevel += GetMaxLevelUnlocked;
 
@@ -38,9 +35,6 @@ namespace Wrapper
         {
             Events.GetMinigameTotalStars -= GetMinigameStars;
             Events.GetOverallTotalStars -= GetOverallStars;
-            
-            // Events.GetMinigameTotalCoins -= GetMinigameCoins;
-            // Events.GetOverallTotalCoins -= GetOverallCoins;
 
             Events.GetGameUnlocked -= GetMinigameUnlocked;
             Events.GetMinigameMaxLevel -= GetMaxLevelUnlocked;
@@ -142,49 +136,6 @@ namespace Wrapper
 
 #endregion
 
-/* #region Coins
-
-        // Returns total coins won in minigame
-        public int GetMinigameCoins(Game game)
-        {
-            // NEED TO IMPLEMENT TOTALCOINS IN MINIGAME USERDATAS
-            switch(game) {
-                case Game.Qupcakes:
-                    if (data_Qupcakery != null) {
-                        // return data_Qupcakery.TotalStars;
-                    } break;
-                case Game.Labyrinth:
-                    if (data_Twintanglement != null) {
-                        // return data_Twintanglement.TotalStars;
-                    } break;
-                case Game.Circuits:
-                    if (data_TanglesLair != null) {
-                        // return data_TanglesLair.totalStars;
-                    } break;
-                case Game.QueueBits:
-                    if (data_Queuebits != null) {
-                        // return data_Queuebits.totalStars;
-                    } break;
-                case Game.BlackBox:
-                    if (data_BuriedTreasure != null) {
-                        // return data_BuriedTreasure.totalStars;
-                    } break;
-            } return 0;
-        }
-
-        // Returns total coins won across all games
-        public int GetOverallCoins() 
-        {
-            int tempTotal = 0;
-            foreach(Game game in gamesArray)
-            {
-                tempTotal += GetMinigameCoins(game);
-            }
-            Events.UpdateUserSaveTotalCoins?.Invoke(tempTotal);
-            return tempTotal;
-        }
-        
-#endregion */
 
 #region Unlocked (level/game)
 

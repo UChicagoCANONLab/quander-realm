@@ -79,6 +79,7 @@ namespace Wrapper
             Events.GetUserSaveTotalCoins += GetTotalCoins;
             Events.UpdateMinigameStarCount += UpdateMinigameStarCount;
             Events.GetMinigameStarCount += GetMinigameStarCount;
+            Events.GetStreakLength += GetStreakLength;
         }
 
         private void OnDisable()
@@ -100,6 +101,7 @@ namespace Wrapper
             Events.GetUserSaveTotalCoins -= GetTotalCoins;
             Events.UpdateMinigameStarCount -= UpdateMinigameStarCount;
             Events.GetMinigameStarCount -= GetMinigameStarCount;
+            Events.GetStreakLength -= GetStreakLength;
         }
 
 #if !UNITY_WEBGL
@@ -482,6 +484,11 @@ namespace Wrapper
         private int GetTotalCoins()
         {
             return currentUserSave.totalCoins;
+        }
+
+        private int GetStreakLength()
+        {
+            return (int)currentUserSave.streak;
         }
 
         private void UpdateRemoteSave()

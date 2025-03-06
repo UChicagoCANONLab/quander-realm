@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using BeauRoutine;
+using TMPro;
 
 namespace Wrapper
 {
@@ -15,8 +16,9 @@ namespace Wrapper
         [SerializeField] private GameObject RewardJournalCanvas;
 
         [Header("Numerical Counters")]
-        [SerializeField] private GameObject StarTracker;
-        [SerializeField] private GameObject CoinTracker;
+        [SerializeField] private TextMeshProUGUI StarTracker;
+        [SerializeField] private TextMeshProUGUI CoinTracker;
+        [SerializeField] private TextMeshProUGUI StreakTracker;
 
 
         [Header("Animators")]
@@ -30,14 +32,10 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.ReturnToRewardCenter += returnToRewardCenter;
-            // gameBackButton = GameObject.Find("GameManager/BackButton").GetComponent<BackButton>();
-            // gameBackButton.onClick.AddListener(returnToRewardCenter);
         }
-
         private void OnDisable()
         {
             Events.ReturnToRewardCenter -= returnToRewardCenter;
-            // gameBackButton.onClick.RemoveListener(returnToRewardCenter);
         }
 
         private void Start()
@@ -46,6 +44,7 @@ namespace Wrapper
             RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
             BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
 
+            SetRewardCenterTrackers();
             RewardCenterAnimator.SetBool("On", true);
         }
 
@@ -75,9 +74,16 @@ namespace Wrapper
             } 
             return false;
         }
+
         IEnumerator DelayStart() 
         {
             yield return 0.5f;
+        }
+
+        public void SetRewardCenterTrackers() {
+            StarTracker.text = $"{Events.GetOverallTotalStars.Invoke()}";
+            CoinTracker.text = $"{Events.GetUserSaveTotalCoins.Invoke()}";
+            StreakTracker.text = $"{Events.GetStreakLength.Invoke()}";
         }
 
     }

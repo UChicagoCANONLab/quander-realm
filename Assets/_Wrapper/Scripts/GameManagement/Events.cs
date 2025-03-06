@@ -47,6 +47,7 @@ namespace Wrapper
         public static Func<int> GetUserSaveTotalCoins;
         public static Action<Game, int> UpdateMinigameStarCount;
         public static Func<Game, int> GetMinigameStarCount;
+        public static Func<int> GetStreakLength;
 
         /// Dialogue System ///
         public static Action<string> PrintDialogue;
@@ -93,8 +94,6 @@ namespace Wrapper
         /// Minigame User Saves ///
         public static Func<Game, int> GetMinigameTotalStars;
         public static Func<int> GetOverallTotalStars;
-        // public static Func<Game, int> GetMinigameTotalCoins;
-        // public static Func<int> GetOverallTotalCoins;
         public static Func<Game, bool> GetGameUnlocked;
         public static Func<Game, int> GetMinigameMaxLevel;
         public static Action<Game> LoadMinigameSave;
