@@ -47,7 +47,8 @@ namespace Wrapper
         Game unlock status 
         */
         public Dictionary<Game, bool> gameUnlocked = new Dictionary<Game, bool>() {
-            {Game.BlackBox, false},     // max 72
+            // {Game.BlackBox, false},     // max 72
+            {Game.BlackBox, true},     // max 72    // UNLOCKED FOR PLAYTESTING
             {Game.Circuits, false},     // max 75
             {Game.Labyrinth, true},    // max 45
             {Game.QueueBits, false},    // max 45
@@ -158,7 +159,7 @@ namespace Wrapper
             TotalStars = 0;
             scoreNumber.text = "0";
 
-            gameUnlocked[Game.BlackBox] = false;
+            // gameUnlocked[Game.BlackBox] = false; // UNLOCKED FOR PLAYTESTING
             gameUnlocked[Game.Circuits] = false;
             gameUnlocked[Game.QueueBits] = false;
         }

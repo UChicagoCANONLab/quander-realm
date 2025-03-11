@@ -20,7 +20,7 @@ namespace Wrapper
         */
         public void InitMap() {
             // StarTracker.ST.PrintDict();
-            Lock(BT);
+            // Lock(BT); // UNLOCKED FOR PLAYTESTING
             Lock(QB);
             Lock(TL);
             TryUnlockGames();
