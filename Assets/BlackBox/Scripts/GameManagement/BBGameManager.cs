@@ -21,6 +21,7 @@ namespace BlackBox
         [SerializeField] GameObject gameBoard;
         [SerializeField] GameObject gameUI;
         [SerializeField] GameObject levelSelect;
+        [SerializeField] GameObject levelSelectLitePanel;
         [SerializeField] LevelButton[] levelButtons;
         [SerializeField] QButton gameBackButton;
         [SerializeField] Animator backgroundAnimator;
@@ -69,7 +70,12 @@ namespace BlackBox
         private Level level;
         private bool debug = false;
         private float[] playTimes = {0f,0f};
-
+        
+#if LITE_VERSION
+        private int NUM_LEVELS = 18;
+#else
+        private int NUM_LEVELS = 24;
+#endif
 
         #region Unity Functions
 
@@ -232,7 +238,14 @@ namespace BlackBox
                 // Quit();
                 ShowLevelSelect(true);
                 return;
-            }   
+            }
+#if LITE_VERSION
+            if (level.nextLevelID == "7.1")
+            {
+                ShowLevelSelect(true);
+                return;
+            }
+#endif
 
             // reusing the SetNodes function. Toggles the initially set nodes off
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions); // todo: refactor
@@ -383,6 +396,12 @@ namespace BlackBox
             gameUI.SetActive(!show);
 
             if (show) InitLevelSelect();
+
+#if LITE_VERSION
+            levelSelectLitePanel.SetActive(show);
+#else
+            levelSelectLitePanel.SetActive(false);
+#endif            
         }
 
         void InitLevelSelect()
@@ -424,6 +443,12 @@ namespace BlackBox
                 {
                     for (int i = 0; i < levelButtons.Length; i++) {
                         levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+
+#if LITE_VERSION
+                        if (i >= NUM_LEVELS) {
+                            levelButtons[i].gameObject.SetActive(false);
+                        }
+#endif                        
                     }
                 }
             }
@@ -584,6 +609,9 @@ namespace BlackBox
         public static int ParseLevelID(string levelID)
         {
             if (levelID == "") return -1;
+#if LITE_VERSION
+            if (levelID == "7.1") return -1;
+#endif
 
             int[] temp = levelID.Split(".").Select(int.Parse).ToArray();
             int levelNum = ((temp[0]-4) * 6) + temp[1];
@@ -603,7 +631,7 @@ namespace BlackBox
         }
 
         public int GetLevelStars(int level) {
-            if (level >= SM.saveData.starsPerLevel.Length) return 0;
+            if (level >= NUM_LEVELS) return 0;
             return SM.saveData.starsPerLevel[level];
         }
     }
