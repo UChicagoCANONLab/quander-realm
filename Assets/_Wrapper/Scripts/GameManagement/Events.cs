@@ -99,7 +99,7 @@ namespace Wrapper
 
         /// DialogueButton ///
         public static Action<bool> TogglePreviousButton;
-        public static Action EnableSkipButton;
+        public static Action<bool> ToggleSkipButton;
 
         /// Within Minigame Scripts ///
         public static Action DialogueSequenceEnded;
