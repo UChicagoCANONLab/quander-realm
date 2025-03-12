@@ -40,7 +40,8 @@ namespace Wrapper
 
         private void Start()
         {
-            DelayStart();
+            Events.Delay?.Invoke(0.5f);
+            // DelayStart();
             RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
             BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
 
@@ -63,7 +64,8 @@ namespace Wrapper
 
 
         public bool returnToRewardCenter() {
-            DelayStart();
+            Events.Delay?.Invoke(0.5f);
+
             if (RewardCenterAnimator.GetBool("On") == false) 
             {
                 RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
@@ -73,11 +75,6 @@ namespace Wrapper
                 return true;
             } 
             return false;
-        }
-
-        IEnumerator DelayStart() 
-        {
-            yield return 0.5f;
         }
 
         public void SetRewardCenterTrackers() {

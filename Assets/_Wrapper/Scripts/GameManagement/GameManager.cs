@@ -91,6 +91,7 @@ namespace Wrapper
             Events.GetMinigameTitle += GetGameTitle;
             Events.GetCurrentGame += GetCurrentGame;
             Events.IsDebugEnabled += () => debugScreen.DebugEnabled;
+            Events.Delay += DelayEvent;
         }
 
         private void OnDisable()
@@ -109,6 +110,7 @@ namespace Wrapper
             Events.GetMinigameTitle -= GetGameTitle;
             Events.GetCurrentGame -= GetCurrentGame;
             Events.IsDebugEnabled -= () => debugScreen.DebugEnabled;
+            Events.Delay -= DelayEvent;
         }
 
         #endregion
@@ -312,6 +314,15 @@ namespace Wrapper
         Game GetCurrentGame()
         {
             return currentGame;
+        }
+
+        void DelayEvent(float time)
+        {
+            Routine.Start(Delay(time));
+        }
+        IEnumerator Delay(float time) 
+        {
+            yield return time;
         }
 
         #endregion

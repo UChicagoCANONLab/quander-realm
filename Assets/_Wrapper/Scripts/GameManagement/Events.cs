@@ -24,6 +24,7 @@ namespace Wrapper
         public static Func<Game, string> GetMinigameTitle;
         public static Func<Game> GetCurrentGame;
         public static Func<bool> IsDebugEnabled;
+        public static Action<float> Delay;
 
         /// Trackers ///
         public static Action InitializeStarTracker;
