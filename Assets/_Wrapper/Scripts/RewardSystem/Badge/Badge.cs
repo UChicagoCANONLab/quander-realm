@@ -81,7 +81,9 @@ namespace Wrapper
                     } break;
 
                 case CriteriaType.Card:
-                    break;
+                    if (Events.HasRewardsFromGame.Invoke(game) >= criteria) {
+                        return true;
+                    } break;
 
                 case CriteriaType.Unlocked:
                     return Events.GetGameUnlocked.Invoke((Game)criteria);

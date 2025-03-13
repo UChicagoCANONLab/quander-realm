@@ -79,6 +79,15 @@ namespace Wrapper
             else return rewards.Count > 0;
         }
 
+        public int HasRewardsFromGame(Game game)
+        {
+            if (game == Game.Rewards) return rewards.Count;
+
+            string[] prefixes = {"bb", "ct", "la", "qb", "qu"};
+            int num = rewards.FindAll(str => str.IndexOf(prefixes[(int)game]) == 0).Count;
+            return num;
+        }
+
         public void UpdateStreak()
         {
             if (lastLoginDate.Date == DateTime.Now.AddDays(-1).Date || streak == 0)

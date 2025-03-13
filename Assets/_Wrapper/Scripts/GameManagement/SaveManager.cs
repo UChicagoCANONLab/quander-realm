@@ -80,6 +80,7 @@ namespace Wrapper
             Events.UpdateMinigameStarCount += UpdateMinigameStarCount;
             Events.GetMinigameStarCount += GetMinigameStarCount;
             Events.GetStreakLength += GetStreakLength;
+            Events.HasRewardsFromGame += NumberRewardsFromGame;
         }
 
         private void OnDisable()
@@ -102,6 +103,7 @@ namespace Wrapper
             Events.UpdateMinigameStarCount -= UpdateMinigameStarCount;
             Events.GetMinigameStarCount -= GetMinigameStarCount;
             Events.GetStreakLength -= GetStreakLength;
+            Events.HasRewardsFromGame -= NumberRewardsFromGame;
         }
 
 #if !UNITY_WEBGL
@@ -432,6 +434,11 @@ namespace Wrapper
         private bool IsRewardUnlocked(string rewardID)
         {
             return currentUserSave.HasReward(rewardID);
+        }
+
+        private int NumberRewardsFromGame(Game game)
+        {
+            return currentUserSave.HasRewardsFromGame(game);
         }
 
         private string GetMinigameSaveData(Game game)
