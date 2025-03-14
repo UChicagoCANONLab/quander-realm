@@ -25,6 +25,7 @@ namespace Wrapper
         [SerializeField] private CardPopup cardPopup;
         [SerializeField] private GamePopup gamePopup;
         [SerializeField] private AgePopup agePopup;
+        [SerializeField] private CoinPopup coinPopup;
         [SerializeField] private GameObject loadingScreenPrefab;
         [SerializeField] Button universalBackButton;
         [SerializeField] private Trackers trackers;
@@ -84,6 +85,7 @@ namespace Wrapper
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
             Events.UnlockAndDisplayGame += UnlockAndDisplayGame;
             Events.DisplayAgeSelector += DisplayAgeSelector;
+            Events.DisplayCoinsCollected += DisplayCoinsCollected;
             Events.ToggleBackButton += ToggleBackButton;
             Events.Logout += Logout;
             Events.PlayIntroDialog += PlayIntroDialog;
@@ -91,6 +93,7 @@ namespace Wrapper
             Events.GetMinigameTitle += GetGameTitle;
             Events.GetCurrentGame += GetCurrentGame;
             Events.IsDebugEnabled += () => debugScreen.DebugEnabled;
+            Events.Delay += DelayEvent;
         }
 
         private void OnDisable()
@@ -102,6 +105,7 @@ namespace Wrapper
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
             Events.UnlockAndDisplayGame -= UnlockAndDisplayGame;
             Events.DisplayAgeSelector -= DisplayAgeSelector;
+            Events.DisplayCoinsCollected -= DisplayCoinsCollected;
             Events.ToggleBackButton -= ToggleBackButton;
             Events.Logout -= Logout;
             Events.PlayIntroDialog -= PlayIntroDialog;
@@ -109,6 +113,7 @@ namespace Wrapper
             Events.GetMinigameTitle -= GetGameTitle;
             Events.GetCurrentGame -= GetCurrentGame;
             Events.IsDebugEnabled -= () => debugScreen.DebugEnabled;
+            Events.Delay -= DelayEvent;
         }
 
         #endregion
@@ -174,6 +179,10 @@ namespace Wrapper
 
         private void DisplayAgeSelector() {
             Routine.Start(agePopup.DisplayAgePopup());
+        }
+
+        private void DisplayCoinsCollected(int coins) {
+            Routine.Start(coinPopup.DisplayCoins(coins));
         }
 
         private GameObject CreateCard(string rewardID, GameObject mount, DisplayType displayType)
@@ -312,6 +321,15 @@ namespace Wrapper
         Game GetCurrentGame()
         {
             return currentGame;
+        }
+
+        void DelayEvent(float time)
+        {
+            Routine.Start(Delay(time));
+        }
+        IEnumerator Delay(float time) 
+        {
+            yield return time;
         }
 
         #endregion

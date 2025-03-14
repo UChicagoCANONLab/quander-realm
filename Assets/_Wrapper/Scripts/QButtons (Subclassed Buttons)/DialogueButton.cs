@@ -12,14 +12,16 @@ namespace Wrapper
         {
             if (this.step == Step.Backward)
                 Events.TogglePreviousButton += ToggleInteractable;
-            else if (step == Step.Skip) Events.EnableSkipButton += () => ToggleInteractable(true);
+            else if (step == Step.Skip) 
+                Events.ToggleSkipButton += ToggleInteractable;
         }
 
         protected override void OnDestroy()
         {
             if (this.step == Step.Backward)
                 Events.TogglePreviousButton -= ToggleInteractable;
-            else if (step == Step.Skip) Events.EnableSkipButton -= () => ToggleInteractable(true);
+            else if (step == Step.Skip) 
+                Events.ToggleSkipButton -= ToggleInteractable;
         }
 
         private void ToggleInteractable(bool isOn)
@@ -42,8 +44,8 @@ namespace Wrapper
         {
             base.OnPointerEnter(eventData);
 
-            if (step == Step.Forward)
-                Events.EnableSkipButton?.Invoke();
+            // if (step == Step.Forward)
+            //     Events.ToggleSkipButton?.Invoke(true);
         }
     }
 }

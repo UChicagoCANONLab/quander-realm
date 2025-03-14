@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Wrapper
 {
@@ -11,10 +12,9 @@ namespace Wrapper
     {
 
         [Header("StarTrackers on Panel")]
-        [SerializeField] private StarTracker tracker_Overall;        
+        [SerializeField] private StarTracker tracker_Overall;
         // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
         [SerializeField] private StarTracker[] tracker_Minigames;
-
         [SerializeField] private StarTracker tracker_Challenge;
 
 
@@ -25,6 +25,8 @@ namespace Wrapper
         private int totalCoins;
         [SerializeField] private TMP_Text streakLengthTMP;
         private int streakLength;
+        [SerializeField] private GameObject fire;
+        [SerializeField] private Image lanternFront;
 
 
         [Header("Animator")]
@@ -34,6 +36,7 @@ namespace Wrapper
         private Game[] gamesArray = new Game[] {
             Game.Qupcakes, Game.Labyrinth, Game.Circuits, Game.QueueBits, Game.BlackBox
         };
+        private bool active = true;
 
 
 
@@ -68,6 +71,7 @@ namespace Wrapper
                 initMinigameStarDisplay(minigame);
             }
             RecountTotal();
+            UpdateCoinTracker();
 #endif
             Events.InitializeMap?.Invoke();
         }
@@ -89,18 +93,38 @@ namespace Wrapper
                 tracker.ResetStarDisplay();
             }
             tracker_Overall.ResetStarDisplay();
+            tracker_Challenge.ResetStarDisplay();
+
             totalStars = 0;
             totalStarsTMP.text = "0";
         }
 
+        public void UpdateCoinTracker()
+        {
+            totalCoins = Events.GetUserSaveTotalCoins.Invoke();
+            totalCoinsTMP.text = $"{totalCoins}";
+        }
+
         public void OnUpdateStreakLength(long streak)
         {
-            Debug.Log("Updating streak length");
-            streakLengthTMP.text = streak.ToString();
+            //Debug.Log("Updating streak length");
+            bool active = streak > 0;
+            if(active){
+                lanternFront.color = new Color(1f, 1f, 1f);
+                fire.SetActive(true);
+            }
+            else{
+                lanternFront.color = new Color(0.3f, 0.3f, 0.3f);
+                fire.SetActive(false);
+            }
+            if (active) {
+                streakLengthTMP.text = streak.ToString();
+            }
         }
 
         // Updates the total star count on panel and main screen
         public void RecountTotal() {
+            tracker_Challenge.SetStarDisplay(Events.GetMinigameStarCount.Invoke(Game.Rewards));
             totalStars = Events.GetOverallTotalStars.Invoke();
             tracker_Overall.SetStarDisplay(totalStars);
             totalStarsTMP.text = $"{totalStars}";
@@ -116,6 +140,7 @@ namespace Wrapper
         // Toggles all tracker visibility
         public void ToggleTrackers(bool isOn) {
             trackerAnimator.SetBool("IsOn", isOn);
+            active = isOn;
         }
 
     }

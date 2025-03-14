@@ -5,6 +5,7 @@
  *   All AWS related code is marked with a comments: "// AWS"
  */
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using BeauRoutine;
 using System;
@@ -24,7 +25,8 @@ namespace Wrapper
     public class SaveManager : MonoBehaviour
     {
         [HideInInspector] public bool isUserLoggedIn = false;
-        [HideInInspector] public UserSave currentUserSave = null;
+        // [HideInInspector] public UserSave currentUserSave = null;
+        public UserSave currentUserSave = null;
         public int researchCodeLength = 6;
 
         private float networkRequestTimeout = 5f;
@@ -75,6 +77,10 @@ namespace Wrapper
             Events.UpdateUserSaveTotalStars += UpdateTotalStars;
             Events.UpdateUserSaveTotalCoins += UpdateTotalCoins;
             Events.GetUserSaveTotalCoins += GetTotalCoins;
+            Events.UpdateMinigameStarCount += UpdateMinigameStarCount;
+            Events.GetMinigameStarCount += GetMinigameStarCount;
+            Events.GetStreakLength += GetStreakLength;
+            Events.HasRewardsFromGame += NumberRewardsFromGame;
         }
 
         private void OnDisable()
@@ -94,6 +100,10 @@ namespace Wrapper
             Events.UpdateUserSaveTotalStars -= UpdateTotalStars;
             Events.UpdateUserSaveTotalCoins -= UpdateTotalCoins;
             Events.GetUserSaveTotalCoins -= GetTotalCoins;
+            Events.UpdateMinigameStarCount -= UpdateMinigameStarCount;
+            Events.GetMinigameStarCount -= GetMinigameStarCount;
+            Events.GetStreakLength -= GetStreakLength;
+            Events.HasRewardsFromGame -= NumberRewardsFromGame;
         }
 
 #if !UNITY_WEBGL
@@ -426,6 +436,11 @@ namespace Wrapper
             return currentUserSave.HasReward(rewardID);
         }
 
+        private int NumberRewardsFromGame(Game game)
+        {
+            return currentUserSave.HasRewardsFromGame(game);
+        }
+
         private string GetMinigameSaveData(Game game)
         {
             return currentUserSave.GetMinigameSave(game);
@@ -437,21 +452,48 @@ namespace Wrapper
             UpdateRemoteSave();
         }
 
+        private void UpdateMinigameStarCount(Game game, int numStars)
+        {
+            if (currentUserSave.starsPerGame.Count == 0) 
+            {
+                currentUserSave.starsPerGame = new List<int>() {0,0,0,0,0,0,0,0}; 
+            }
+            if (currentUserSave.starsPerGame[(int)game] != numStars)
+            {
+                currentUserSave.starsPerGame[(int)game] = numStars;
+                UpdateRemoteSave();
+            }
+        }
+
+        private int GetMinigameStarCount(Game game)
+        {
+            return currentUserSave.starsPerGame[(int)game];
+        }
+
         private void UpdateTotalStars(int numStars)
         {
-            currentUserSave.totalStars = numStars;
-            UpdateRemoteSave();
+            if (currentUserSave.totalStars != numStars)
+            {
+                currentUserSave.totalStars = numStars;
+                UpdateRemoteSave();
+            }
         }
 
         private void UpdateTotalCoins(int numCoins)
         {
+            Events.DisplayCoinsCollected.Invoke(numCoins);
             currentUserSave.totalCoins += numCoins;
             UpdateRemoteSave();
         }
-        
+
         private int GetTotalCoins()
         {
             return currentUserSave.totalCoins;
+        }
+
+        private int GetStreakLength()
+        {
+            return (int)currentUserSave.streak;
         }
 
         private void UpdateRemoteSave()
@@ -509,7 +551,7 @@ namespace Wrapper
         private IEnumerator UpdateRemoteSaveRoutine()
         {
             webGLUploadSuccess = false;
-            currentUserSave.UpdateStreak();
+            // currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
