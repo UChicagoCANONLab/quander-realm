@@ -26,7 +26,7 @@ namespace Wrapper
             coinNum.text = $"+{coins}";
 
             ToggleDisplay(true);
-            Events.Delay(2f);
+            yield return 2f;
             ToggleDisplay(false);
 
             while(coinNum.text == "") 
