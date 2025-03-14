@@ -72,7 +72,7 @@ namespace Wrapper
         public static Action<Game> LoadMinigameSave;
         public static Action LoadAllMinigameSaves;
 
-        /// UploadFailurePopup s/// 
+        /// UploadFailurePopups /// 
         public static Action<bool> ToggleUploadFailurePopup;
 
         /// LoginScreen OR QuantimeLoginScreen ///

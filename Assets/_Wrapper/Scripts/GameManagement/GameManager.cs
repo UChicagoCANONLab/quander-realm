@@ -25,6 +25,7 @@ namespace Wrapper
         [SerializeField] private CardPopup cardPopup;
         [SerializeField] private GamePopup gamePopup;
         [SerializeField] private AgePopup agePopup;
+        [SerializeField] private CoinPopup coinPopup;
         [SerializeField] private GameObject loadingScreenPrefab;
         [SerializeField] Button universalBackButton;
         [SerializeField] private Trackers trackers;
