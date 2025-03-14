@@ -17,6 +17,7 @@ namespace Wrapper
         public static Action<Game, int> CollectAndDisplayReward;
         public static Action<Game> UnlockAndDisplayGame;
         public static Action DisplayAgeSelector;
+        public static Action<int> DisplayCoinsCollected;
         public static Action<bool> ToggleBackButton;
         public static Action Logout;
         public static Action PlayIntroDialog;

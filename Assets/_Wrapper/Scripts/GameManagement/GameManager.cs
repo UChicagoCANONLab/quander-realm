@@ -85,6 +85,7 @@ namespace Wrapper
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
             Events.UnlockAndDisplayGame += UnlockAndDisplayGame;
             Events.DisplayAgeSelector += DisplayAgeSelector;
+            Events.DisplayCoinsCollected += DisplayCoinsCollected;
             Events.ToggleBackButton += ToggleBackButton;
             Events.Logout += Logout;
             Events.PlayIntroDialog += PlayIntroDialog;
@@ -104,6 +105,7 @@ namespace Wrapper
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
             Events.UnlockAndDisplayGame -= UnlockAndDisplayGame;
             Events.DisplayAgeSelector -= DisplayAgeSelector;
+            Events.DisplayCoinsCollected -= DisplayCoinsCollected;
             Events.ToggleBackButton -= ToggleBackButton;
             Events.Logout -= Logout;
             Events.PlayIntroDialog -= PlayIntroDialog;
@@ -177,6 +179,10 @@ namespace Wrapper
 
         private void DisplayAgeSelector() {
             Routine.Start(agePopup.DisplayAgePopup());
+        }
+
+        private void DisplayCoinsCollected(int coins) {
+            Routine.Start(coinPopup.DisplayCoins(coins));
         }
 
         private GameObject CreateCard(string rewardID, GameObject mount, DisplayType displayType)

@@ -481,11 +481,9 @@ namespace Wrapper
 
         private void UpdateTotalCoins(int numCoins)
         {
-            if (currentUserSave.totalCoins != numCoins)
-            {
-                currentUserSave.totalCoins += numCoins;
-                UpdateRemoteSave();
-            }
+            Events.DisplayCoinsCollected.Invoke(numCoins);
+            currentUserSave.totalCoins += numCoins;
+            UpdateRemoteSave();
         }
 
         private int GetTotalCoins()
