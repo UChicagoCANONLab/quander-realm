@@ -323,6 +323,7 @@ namespace Wrapper
             return currentGame;
         }
 
+        // Used to invoke a few second delay in non-IEnumerator functions
         void DelayEvent(float time)
         {
             Routine.Start(Delay(time));
