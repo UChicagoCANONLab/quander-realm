@@ -257,6 +257,7 @@ namespace Wrapper
         private GameObject CreateBadge(BadgeAsset bAsset, GameObject mount)
         {
             GameObject badgeGO = Instantiate(badgePrefab, mount.transform);
+            badgeGO.name = bAsset.name;
             badgeGO.GetComponent<Badge>().InitBadge(bAsset);
 
             return badgeGO;
