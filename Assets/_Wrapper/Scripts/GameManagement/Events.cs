@@ -46,6 +46,7 @@ namespace Wrapper
 
         /// SaveManager ///
         public static Func<string, bool> AddReward;
+        public static Func<string, bool> AddBadge;
         public static Action ClearSaveFile;
         public static Action<string> SubmitResearchCode;
         public static Func<string, bool> IsRewardUnlocked;

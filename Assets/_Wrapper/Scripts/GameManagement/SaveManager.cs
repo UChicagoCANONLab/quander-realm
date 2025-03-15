@@ -63,6 +63,7 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.AddReward += AddReward;
+            Events.AddBadge += AddBadge;
             Events.ClearSaveFile += ClearSave;
             Events.SubmitResearchCode += Login;
             Events.IsRewardUnlocked += IsRewardUnlocked;
@@ -86,6 +87,7 @@ namespace Wrapper
         private void OnDisable()
         {
             Events.AddReward -= AddReward;
+            Events.AddBadge -= AddBadge;
             Events.ClearSaveFile -= ClearSave;
             Events.SubmitResearchCode -= Login;
             Events.IsRewardUnlocked -= IsRewardUnlocked;
@@ -429,6 +431,14 @@ namespace Wrapper
             UpdateRemoteSave();
 
             return rewardAdded;
+        }
+
+        private bool AddBadge(string badgeID)
+        {
+            bool badgeAdded = currentUserSave.AddBadge(badgeID);
+            UpdateRemoteSave();
+
+            return badgeAdded;
         }
 
         private bool IsRewardUnlocked(string rewardID)

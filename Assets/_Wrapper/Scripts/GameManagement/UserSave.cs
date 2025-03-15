@@ -10,6 +10,7 @@ namespace Wrapper
         public string id = string.Empty;
         public string[] minigameSaves;
         public List<string> rewards;
+        public List<string> badges;
         public bool introDialogueSeen = false;
         public bool rewardDialogueSeen = false;
 
@@ -31,6 +32,7 @@ namespace Wrapper
         public UserSave(string idString = "", string rewardID = "")
         {
             rewards = new List<string>();
+            badges = new List<string>();
 
             // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -54,6 +56,19 @@ namespace Wrapper
 
             if (rewards.Count == 0) rewardDialogueSeen = false; // if we haven't seen the reward dialog while having a reward, reset this bool
             rewards.Add(formatted);
+            return true;
+        }
+
+        public bool AddBadge(string badgeID)
+        {
+            if (badgeID.Equals(string.Empty))
+                return false;
+
+            string formatted = FormatString(badgeID);
+            if (badges.Contains(formatted))
+                return false;
+
+            badges.Add(formatted);
             return true;
         }
 

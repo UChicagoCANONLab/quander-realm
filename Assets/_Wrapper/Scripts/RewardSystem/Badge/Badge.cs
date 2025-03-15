@@ -67,27 +67,32 @@ namespace Wrapper
 
 
         public bool CheckCriteria(Game game, CriteriaType criteriaType, int criteria)
-        {            
+        {
             switch(criteriaType)
             {
                 case CriteriaType.Level:
                     if (Events.GetMinigameMaxLevel.Invoke(game) >= criteria) {
+                        Events.AddBadge.Invoke($"{this.gameObject.name}_{criteria}");
                         return true;
                     } break;
 
                 case CriteriaType.Star:
                     if (Events.GetMinigameTotalStars.Invoke(game) >= criteria) {
+                        Events.AddBadge.Invoke($"{this.gameObject.name}_{criteria}");
                         return true;
                     } break;
 
                 case CriteriaType.Card:
                     if (Events.HasRewardsFromGame.Invoke(game) >= criteria) {
+                        Events.AddBadge.Invoke($"{this.gameObject.name}_{criteria}");
                         return true;
                     } break;
 
                 case CriteriaType.Unlocked:
-                    return Events.GetGameUnlocked.Invoke((Game)criteria);
-
+                    if (Events.GetGameUnlocked.Invoke((Game)criteria)) {
+                        Events.AddBadge.Invoke($"{this.gameObject.name}_{criteria}");
+                        return true;
+                    } break;
             }
             return false;
         }

@@ -23,6 +23,7 @@ namespace Wrapper
         [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private CardPopup cardPopup;
+        [SerializeField] private BadgePopup badgePopup;
         [SerializeField] private GamePopup gamePopup;
         [SerializeField] private AgePopup agePopup;
         [SerializeField] private CoinPopup coinPopup;
@@ -30,7 +31,7 @@ namespace Wrapper
         [SerializeField] Button universalBackButton;
         [SerializeField] private Trackers trackers;
 
-        [Header("Reward Card Prefabs")]
+        [Header("Reward Card Objects")]
         [SerializeField] private GameObject BBRewardPrefab;
         [SerializeField] private GameObject CTRewardPrefab;
         [SerializeField] private GameObject LARewardPrefab;
@@ -41,6 +42,11 @@ namespace Wrapper
         public RewardAsset[] rewardAssets;
         public Dictionary<CardType, Color> colorDict;
         public Dictionary<Game, GameObject> prefabDict;
+
+        [Header("Badge Objects")]
+        public readonly string badgePath = "_Wrapper/Incentives/Badges";
+        public BadgeAsset[] badgeAssets;
+        [SerializeField] private GameObject badgePrefab;
 
         [SerializeField, Tooltip("For the first card received in each minigame, if none keep blank")] GameCardDialogPair[] rewardDialogIDs;
         [SerializeField] MinigameTitles minigameTitles;
@@ -61,6 +67,7 @@ namespace Wrapper
             InitColorDict();
             InitPrefabDict();
             InitRewardAssetArray();
+            InitBadgeAssetArray();
             //Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?      -> moved to its own method to call after title screen
             if (debugScreen.DebugEnabled)
             {
@@ -169,8 +176,36 @@ namespace Wrapper
                     Events.StartDialogueSequence?.Invoke(rewardDialogIDs[(int)game].cardDialog);
             }
             ////todo: call a function that creates the card and displays it in the reward card panel
-            //Debug.LogFormat("Won Reward {0} in game {1} at level {2}", levelReward.rewardID, game, level);
-            //    Routine.Start(DestroyLoadingScreen()); //todo: debug, delete later
+        }
+
+        private void CollectAndDisplayBadge(Game game, int level, int stars)
+        {
+            BadgeAsset[] gameBadges = Array.FindAll(badgeAssets, (badge) => badge.game == game);
+
+            BadgeAsset badgeAwarded = null; int num = -1;
+            foreach (BadgeAsset bAsset in gameBadges)
+            {
+                if (bAsset.criteriaType == CriteriaType.Level) {
+                    if (Array.Exists(bAsset.criteria, temp => temp == level)) {
+                        badgeAwarded = bAsset;
+                        num = level;
+                        break;
+                    }
+                } else if (bAsset.criteriaType == CriteriaType.Star) {
+                    for (int i=0; i<3; i++) {
+                        if (Array.Exists(bAsset.criteria, temp => temp == stars-i)) {
+                            badgeAwarded = bAsset;
+                            num = stars - i;
+                            break;
+                        }
+                    } 
+                } // TO DO: Add other badge criterias
+            }
+            if (badgeAwarded == null || num == -1) return;
+
+            if (Events.AddBadge.Invoke($"{badgeAwarded.name}_{num}"))
+                Routine.Start(badgePopup.DisplayBadge(CreateBadge(badgeAwarded, badgePopup.GetContainerMount())));
+
         }
 
         private void UnlockAndDisplayGame(Game game) {
@@ -209,6 +244,14 @@ namespace Wrapper
             return rewardGO;
         }
 
+        private GameObject CreateBadge(BadgeAsset bAsset, GameObject mount)
+        {
+            GameObject badgeGO = Instantiate(badgePrefab, mount.transform);
+            badgeGO.GetComponent<Badge>().InitBadge(bAsset);
+
+            return badgeGO;
+        }
+
         void ToggleBackButton(bool show)
         {
             universalBackButton.gameObject.SetActive(show);
@@ -235,6 +278,11 @@ namespace Wrapper
         private void InitRewardAssetArray()
         {
             rewardAssets = Resources.LoadAll<RewardAsset>(rewardsPath);
+        }
+
+        private void InitBadgeAssetArray()
+        {
+            badgeAssets = Resources.LoadAll<BadgeAsset>(badgePath);
         }
 
         private void InitColorDict()
