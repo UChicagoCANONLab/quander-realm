@@ -90,6 +90,7 @@ namespace Wrapper
             if (debugScreen.DebugEnabled) Events.ShowCardPopup += ShowCardPopup; // Debug
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
+            Events.CollectAndDisplayBadge += CollectAndDisplayBadge;
             Events.UnlockAndDisplayGame += UnlockAndDisplayGame;
             Events.DisplayAgeSelector += DisplayAgeSelector;
             Events.DisplayCoinsCollected += DisplayCoinsCollected;
@@ -110,6 +111,7 @@ namespace Wrapper
             if (debugScreen.DebugEnabled) Events.ShowCardPopup -= ShowCardPopup; // Debug
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
+            Events.CollectAndDisplayBadge -= CollectAndDisplayBadge;
             Events.UnlockAndDisplayGame -= UnlockAndDisplayGame;
             Events.DisplayAgeSelector -= DisplayAgeSelector;
             Events.DisplayCoinsCollected -= DisplayCoinsCollected;
@@ -199,7 +201,15 @@ namespace Wrapper
                             break;
                         }
                     } 
-                } // TO DO: Add other badge criterias
+                } else if (bAsset.criteriaType == CriteriaType.Card) {
+                    int cards = Events.HasRewardsFromGame.Invoke(game);
+                    if (Array.Exists(bAsset.criteria, temp => temp == cards)) {
+                        badgeAwarded = bAsset;
+                        num = cards;
+                        break;                        
+                    }
+                }
+                // TO DO: Add other badge criterias
             }
             if (badgeAwarded == null || num == -1) return;
 
