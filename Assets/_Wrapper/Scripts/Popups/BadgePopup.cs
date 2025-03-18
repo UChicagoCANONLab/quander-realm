@@ -20,7 +20,7 @@ namespace Wrapper
         {
             Events.PlaySound?.Invoke("W_Reward");
             badgeGO.transform.SetParent(badgeContainer.transform);
-            badgeGO.GetComponent<Transform>().localScale = new Vector3(0.8f, 0.8f, 0.8f);
+            badgeGO.GetComponent<Transform>().localScale = new Vector3(0.6f, 0.6f, 0.6f);
 
             ToggleDisplay(true);
 
