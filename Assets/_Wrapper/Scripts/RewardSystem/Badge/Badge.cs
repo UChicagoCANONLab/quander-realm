@@ -13,6 +13,7 @@ namespace Wrapper
         [SerializeField] public int starLevel;
         [SerializeField] public CriteriaType type;
         [SerializeField] public int[] criteria;
+        [SerializeField] public string[] criteriaDescription;
         
         [SerializeField] public Image[] icons; // two icons; one is a shadow
         [SerializeField] public TextMeshProUGUI titleText;
@@ -21,6 +22,7 @@ namespace Wrapper
 
         private string iconPrefix = "_Wrapper/Incentives/BadgeIcons";
         private int starStatus = 0;
+        private string descriptionTemp;
         
         private bool UNLOCKED = false;
         private bool MINI = true;
@@ -32,10 +34,12 @@ namespace Wrapper
             starLevel = bAsset.starLevels;
             type = bAsset.criteriaType;
             criteria = bAsset.criteria;
+            criteriaDescription = bAsset.criteriaDescription;
 
             titleText.text = bAsset.title;
             miniTitleText.text = bAsset.title;
-            descriptionText.text = bAsset.description;
+            // descriptionText.text = bAsset.description;
+            descriptionTemp = bAsset.description;
             icons[0].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
             icons[1].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
 
@@ -63,6 +67,14 @@ namespace Wrapper
                 }
             }
             badgeAnimator.SetInteger("Star Status", starStatus);
+
+            if (starStatus == 0) {
+                // set badge to locked
+            } else {
+                if (descriptionTemp.Contains("[temp]")) {
+                    descriptionText.text = descriptionTemp.Replace("[temp]", criteriaDescription[starStatus-1]);
+                }
+            }
         }
 
 
