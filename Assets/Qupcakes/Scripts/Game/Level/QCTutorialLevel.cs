@@ -88,6 +88,9 @@ namespace Qupcakery
                 case 8:
                     Tutorial8Next();
                     break;
+                case 9:
+                    Tutorial9Next();
+                    break;
                 case 13:
                     Tutorial13Next();
                     break;
@@ -367,6 +370,45 @@ namespace Qupcakery
 
             tutorialSeq++;
 
+        }
+        #endregion
+
+        #region Level 9 (Flipping Reminder)
+        private string[] dialogueSeq9 = new string[]
+        {
+            "Don't forget that you can click on the CNOT gate to flip it!",
+            "Of course, if you need to flip it back you can click on it again."
+        };
+
+        public void Tutorial9Next()
+        {
+            if (tutorialSeq >= dialogueSeq9.Length)
+            {
+                EndTutorial();
+                return;
+            }
+
+            tutorialText.text = dialogueSeq9[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
+            switch (tutorialSeq)
+            {
+                case 0:
+                    ShowTutorial();
+                    gm.AllowGateMovement = true;
+                    gm.InTutorial = false;
+                    LastPuzzleUtils();
+                    break;
+
+                case 1:
+                    LastPuzzleUtils();
+                    break;
+
+                default:
+                    break;
+            }
+
+            tutorialSeq++;
         }
         #endregion
 
