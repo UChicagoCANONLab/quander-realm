@@ -111,11 +111,14 @@ namespace Qupcakery
         {
             levelEnded = true;
 
+
+
             /* Deactivate and reset static game objects */
             GameObjectsManagement.DeactiveAllGameObjects();
             GameObjectsManagement.ResetAllGameObjects();
 
             int starCnt = GameUtilities.CalculateLevelResult(UIProgressBar.Instance.GetCompletionRate());
+            GameManagement.Instance.lastPerformance = starCnt;
 
             if (starCnt > 0)
             {
@@ -129,8 +132,6 @@ namespace Qupcakery
                 GameUtilities.UpdateTotalEarning(UIProgressBar.Instance.GetCurrentEarning());
 
                 GameManagement.Instance.game.gameStat.SetLevelResultAndSave(GameStat.LevelResult.WIN);
-
-                
             }
             else
             {

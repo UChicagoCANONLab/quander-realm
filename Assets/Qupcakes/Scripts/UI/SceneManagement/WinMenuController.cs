@@ -13,9 +13,8 @@ namespace Qupcakery
         void Start()
         {
             int levelInd = GameManagement.Instance.GetCurrentLevelInd();
-            int starCnt = GameUtilities.GetLevelResult(levelInd);
 
-            switch (starCnt)
+            switch (GameManagement.Instance.lastPerformance)
             {
                 case 1:
                     star1.sprite = fullStar;
@@ -28,6 +27,8 @@ namespace Qupcakery
                     star1.sprite = fullStar;
                     star2.sprite = fullStar;
                     star3.sprite = fullStar;
+                    break;
+                default:
                     break;
             }
 
