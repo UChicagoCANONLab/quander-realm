@@ -48,24 +48,20 @@ namespace Wrapper
             icons[0].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
             icons[1].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
 
-            // SetAnimator();
-            // this.gameObject.onClick.AddListener(ToggleMini);
-
+            // Reload saves before checking criteria
             Events.LoadMinigameSave?.Invoke(game);
 
-            // Determine star level and set Star GameObjects
+            // Determine star level based on criteria and set Star GameObjects
             starStatus = 0;
             for (int i=0; i<starLevel; i++) 
             {
-                if (CheckCriteria(game, type, criteria[i])) {
-                    starStatus++;
-                }
+                if (CheckCriteria(game, type, criteria[i])) starStatus++;
             }
             for (int i=0; i<5; i++) {
                 stars[i].SetStar( (i <= starLevel - 1), (i <= starStatus - 1) );
             }
 
-            // Set description based on starStatus
+            // Change description based on starStatus and display
             if (starStatus == 0) {
                 descriptionText.text = "Play more to unlock reward...";
                 // set badge to locked
@@ -153,11 +149,6 @@ namespace Wrapper
             badgeAnimator.SetBool("Mini", !MINI);
             MINI = !MINI;
         }
-
-        public int GetStarStatus()
-        {
-            return starStatus;
-        }
-    
+            
     }
 }

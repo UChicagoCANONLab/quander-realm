@@ -27,28 +27,24 @@ namespace Wrapper
             // Events.PlaySound?.Invoke("W_Reward");
             // badgeGO.transform.SetParent(badgeContainer.transform);
             // badgeGO.GetComponent<Transform>().localScale = new Vector3(0.6f, 0.6f, 0.6f);
-
-            Debug.Log($"Title: {badgeGO.GetComponent<Badge>().titleText.text}");
+            // badgeGO.GetComponent<Animator>().SetBool("Mini", false);
 
             title.text = badgeGO.GetComponent<Badge>().titleText.text;
             description.text = badgeGO.GetComponent<Badge>().descriptionText.text;
-
             for(int i=0; i<5; i++) {
                 stars[i].SetStar(
                     (i <= badgeGO.GetComponent<Badge>().starLevel - 1), 
                     (i <= badgeGO.GetComponent<Badge>().starStatus - 1)
                 );
             }
-            
             badgeGO.SetActive(false);
+            
             ToggleDisplay(true);
+            yield return 5f;
+            ToggleDisplay(false);
 
             // while (!(badgeGO.activeInHierarchy))
             //     yield return null;
-            badgeGO.GetComponent<Animator>().SetBool("Mini", false);
-
-            yield return 5f;
-            ToggleDisplay(false);
         }
 
         public GameObject GetContainerMount()
