@@ -97,6 +97,9 @@ namespace Wrapper
 
             totalStars = 0;
             totalStarsTMP.text = "0";
+
+            totalCoins = 0;
+            totalCoinsTMP.text = "0";
         }
 
         public void UpdateCoinTracker()
