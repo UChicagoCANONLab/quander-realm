@@ -69,10 +69,13 @@ namespace Wrapper
             badgeAnimator.SetInteger("Star Status", starStatus);
 
             if (starStatus == 0) {
+                descriptionText.text = "Play more to unlock reward...";
                 // set badge to locked
             } else {
                 if (descriptionTemp.Contains("[temp]")) {
                     descriptionText.text = descriptionTemp.Replace("[temp]", criteriaDescription[starStatus-1]);
+                } else {
+                    descriptionText.text = descriptionTemp;
                 }
             }
         }

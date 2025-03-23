@@ -27,6 +27,9 @@ namespace Wrapper
             while (!(badgeGO.activeInHierarchy))
                 yield return null;
             badgeGO.GetComponent<Animator>().SetBool("Mini", false);
+
+            yield return 5f;
+            ToggleDisplay(false);
         }
 
         public GameObject GetContainerMount()
