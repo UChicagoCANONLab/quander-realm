@@ -24,7 +24,7 @@ namespace Trivia
         [SerializeField] private TextMeshProUGUI finalScoreNumText;
         [SerializeField] private TextMeshProUGUI finalScoreWinnerText;
 
-        private string prefix = "_Wrapper/Incentives/DailyPuzzles";
+        private string prefix = "Trivia/DailyPuzzles";
 
         private int seq = 0;
         private string[] questionSequence = {
