@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TMPro;
 
 namespace Wrapper
 {
@@ -10,6 +11,11 @@ namespace Wrapper
         [SerializeField] private QButton okButton;
         [SerializeField] private QButton backgroundButton;
 
+        [Header("Badge Display Objects")]
+        [SerializeField] private TextMeshProUGUI title;
+        [SerializeField] private TextMeshProUGUI description;
+        [SerializeField] private Star[] stars;
+
         private void Awake()
         {
             okButton.onClick.AddListener(() => ToggleDisplay(false));
@@ -18,14 +24,27 @@ namespace Wrapper
 
         public IEnumerator DisplayBadge(GameObject badgeGO)
         {
-            Events.PlaySound?.Invoke("W_Reward");
-            badgeGO.transform.SetParent(badgeContainer.transform);
-            badgeGO.GetComponent<Transform>().localScale = new Vector3(0.6f, 0.6f, 0.6f);
+            // Events.PlaySound?.Invoke("W_Reward");
+            // badgeGO.transform.SetParent(badgeContainer.transform);
+            // badgeGO.GetComponent<Transform>().localScale = new Vector3(0.6f, 0.6f, 0.6f);
 
+            Debug.Log($"Title: {badgeGO.GetComponent<Badge>().titleText.text}");
+
+            title.text = badgeGO.GetComponent<Badge>().titleText.text;
+            description.text = badgeGO.GetComponent<Badge>().descriptionText.text;
+
+            for(int i=0; i<5; i++) {
+                stars[i].SetStar(
+                    (i <= badgeGO.GetComponent<Badge>().starLevel - 1), 
+                    (i <= badgeGO.GetComponent<Badge>().starStatus - 1)
+                );
+            }
+            
+            badgeGO.SetActive(false);
             ToggleDisplay(true);
 
-            while (!(badgeGO.activeInHierarchy))
-                yield return null;
+            // while (!(badgeGO.activeInHierarchy))
+            //     yield return null;
             badgeGO.GetComponent<Animator>().SetBool("Mini", false);
 
             yield return 5f;

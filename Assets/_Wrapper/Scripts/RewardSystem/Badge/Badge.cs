@@ -11,17 +11,20 @@ namespace Wrapper
         [SerializeField] public Animator badgeAnimator;
         [SerializeField] public Game game;
         [SerializeField] public int starLevel;
+        [SerializeField] public int starStatus = 0;
         [SerializeField] public CriteriaType type;
         [SerializeField] public int[] criteria;
         [SerializeField] public string[] criteriaDescription;
         
+        [Header("Badge Display GameObjects")]
         [SerializeField] public Image[] icons; // two icons; one is a shadow
         [SerializeField] public TextMeshProUGUI titleText;
         [SerializeField] public TextMeshProUGUI miniTitleText;
         [SerializeField] public TextMeshProUGUI descriptionText;
+        [SerializeField] public Star[] stars;
 
         private string iconPrefix = "_Wrapper/Incentives/BadgeIcons";
-        private int starStatus = 0;
+        
         private string descriptionTemp;
         
         private bool UNLOCKED = false;
@@ -30,12 +33,14 @@ namespace Wrapper
 
         public void InitBadge(BadgeAsset bAsset) 
         {
+            // Set values from BadgeAsset
             game = bAsset.game;
             starLevel = bAsset.starLevels;
             type = bAsset.criteriaType;
             criteria = bAsset.criteria;
             criteriaDescription = bAsset.criteriaDescription;
 
+            // Set texts and icons
             titleText.text = bAsset.title;
             miniTitleText.text = bAsset.title;
             // descriptionText.text = bAsset.description;
@@ -45,20 +50,10 @@ namespace Wrapper
 
             // SetAnimator();
             // this.gameObject.onClick.AddListener(ToggleMini);
-        }
 
-        public void OnEnable()
-        {
-            SetAnimator();
-        }
-
-        public void SetAnimator()
-        {
             Events.LoadMinigameSave?.Invoke(game);
 
-            badgeAnimator.SetInteger("Game", (int)game);
-            badgeAnimator.SetInteger("Star Level", starLevel);
-
+            // Determine star level and set Star GameObjects
             starStatus = 0;
             for (int i=0; i<starLevel; i++) 
             {
@@ -66,8 +61,11 @@ namespace Wrapper
                     starStatus++;
                 }
             }
-            badgeAnimator.SetInteger("Star Status", starStatus);
+            for (int i=0; i<5; i++) {
+                stars[i].SetStar( (i <= starLevel - 1), (i <= starStatus - 1) );
+            }
 
+            // Set description based on starStatus
             if (starStatus == 0) {
                 descriptionText.text = "Play more to unlock reward...";
                 // set badge to locked
@@ -79,6 +77,44 @@ namespace Wrapper
                 }
             }
         }
+
+        public void OnEnable()
+        {
+            // SetAnimator();
+            badgeAnimator.SetInteger("Game", (int)game);
+        }
+
+        /* public void SetAnimator()
+        {
+            Events.LoadMinigameSave?.Invoke(game);
+
+            badgeAnimator.SetInteger("Game", (int)game);
+            // badgeAnimator.SetInteger("Star Level", starLevel);
+
+            starStatus = 0;
+            for (int i=0; i<starLevel; i++) 
+            {
+                if (CheckCriteria(game, type, criteria[i])) {
+                    starStatus++;
+                }
+            }
+            // badgeAnimator.SetInteger("Star Status", starStatus);
+
+            for (int i=0; i<5; i++) {
+                stars[i].SetStar( (i <= starLevel - 1), (i <= starStatus - 1) );
+            }
+
+            if (starStatus == 0) {
+                descriptionText.text = "Play more to unlock reward...";
+                // set badge to locked
+            } else {
+                if (descriptionTemp.Contains("[temp]")) {
+                    descriptionText.text = descriptionTemp.Replace("[temp]", criteriaDescription[starStatus-1]);
+                } else {
+                    descriptionText.text = descriptionTemp;
+                }
+            }
+        } */
 
 
         public bool CheckCriteria(Game game, CriteriaType criteriaType, int criteria)
