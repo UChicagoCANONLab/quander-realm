@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BeauRoutine;
+using TMPro;
 
 namespace Wrapper
 {
@@ -14,8 +16,9 @@ namespace Wrapper
         [SerializeField] private GameObject RewardJournalCanvas;
 
         [Header("Numerical Counters")]
-        [SerializeField] private GameObject StarTracker;
-        [SerializeField] private GameObject CoinTracker;
+        [SerializeField] private TextMeshProUGUI StarTracker;
+        [SerializeField] private TextMeshProUGUI CoinTracker;
+        [SerializeField] private TextMeshProUGUI StreakTracker;
 
 
         [Header("Animators")]
@@ -28,19 +31,29 @@ namespace Wrapper
 
         private void OnEnable()
         {
-            gameBackButton = GameObject.Find("GameManager/BackButton").GetComponent<BackButton>();
-            gameBackButton.onClick.AddListener(returnToRewardCenter);
+            Events.ReturnToRewardCenter += returnToRewardCenter;
         }
-
         private void OnDisable()
         {
-            gameBackButton.onClick.RemoveListener(returnToRewardCenter);
+            Events.ReturnToRewardCenter -= returnToRewardCenter;
+        }
+
+        private void Start()
+        {
+            Events.Delay?.Invoke(0.5f);
+            // DelayStart();
+            RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
+            BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
+
+            SetRewardCenterTrackers();
+            RewardCenterAnimator.SetBool("On", true);
         }
 
 
         public void openRewardJournal() {
             RewardCenterAnimator.SetBool("On", false);
             RewardJournalCanvas.GetComponent<Animator>().SetBool("On", true);
+            RewardJournalCanvas.GetComponent<RewardJournal>().InitFirstPage();
         }
 
         public void openBadgeBulletin() {
@@ -49,13 +62,26 @@ namespace Wrapper
             BadgeBulletinCanvas.GetComponent<BadgeManager>().DelayGetStars();
         }
 
-        public void returnToRewardCenter() {
-            if (RewardCenterAnimator.GetBool("On") == false) {
+
+        public bool returnToRewardCenter() {
+            Events.Delay?.Invoke(0.5f);
+
+            if (RewardCenterAnimator.GetBool("On") == false) 
+            {
                 RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
                 BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
 
                 RewardCenterAnimator.SetBool("On", true);
-            }
+                return true;
+            } 
+            return false;
         }
+
+        public void SetRewardCenterTrackers() {
+            StarTracker.text = $"{Events.GetOverallTotalStars.Invoke()}";
+            CoinTracker.text = $"{Events.GetUserSaveTotalCoins.Invoke()}";
+            StreakTracker.text = $"{Events.GetStreakLength.Invoke()}";
+        }
+
     }
 }

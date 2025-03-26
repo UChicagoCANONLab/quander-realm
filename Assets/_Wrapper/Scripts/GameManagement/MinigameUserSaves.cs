@@ -24,9 +24,6 @@ namespace Wrapper
             Events.GetMinigameTotalStars += GetMinigameStars;
             Events.GetOverallTotalStars += GetOverallStars;
 
-            // Events.GetMinigameTotalCoins += GetMinigameCoins;
-            // Events.GetOverallTotalCoins += GetOverallCoins;
-
             Events.GetGameUnlocked += GetMinigameUnlocked;
             Events.GetMinigameMaxLevel += GetMaxLevelUnlocked;
 
@@ -38,9 +35,6 @@ namespace Wrapper
         {
             Events.GetMinigameTotalStars -= GetMinigameStars;
             Events.GetOverallTotalStars -= GetOverallStars;
-            
-            // Events.GetMinigameTotalCoins -= GetMinigameCoins;
-            // Events.GetOverallTotalCoins -= GetOverallCoins;
 
             Events.GetGameUnlocked -= GetMinigameUnlocked;
             Events.GetMinigameMaxLevel -= GetMaxLevelUnlocked;
@@ -49,7 +43,7 @@ namespace Wrapper
             Events.LoadAllMinigameSaves -= LoadAllMinigames;
         }
 
-#region Loading UserSaves
+#region Loading UserSaves for each Minigame
 
         // Loads/Updates all local minigame saves
         public void LoadAllMinigames()
@@ -99,28 +93,31 @@ namespace Wrapper
         // Returns total stars won in minigame
         public int GetMinigameStars(Game game)
         {
+            int stars = 0;
             switch(game) {
                 case Game.Qupcakes:
                     if (data_Qupcakery != null) {
-                        return data_Qupcakery.TotalStars;
+                        stars = data_Qupcakery.TotalStars;
                     } break;
                 case Game.Labyrinth:
                     if (data_Twintanglement != null) {
-                        return data_Twintanglement.TotalStars;
+                        stars = data_Twintanglement.TotalStars;
                     } break;
                 case Game.Circuits:
                     if (data_TanglesLair != null) {
-                        return data_TanglesLair.totalStars;
+                        stars = data_TanglesLair.totalStars;
                     } break;
                 case Game.QueueBits:
                     if (data_Queuebits != null) {
-                        return data_Queuebits.totalStars;
+                        stars = data_Queuebits.totalStars;
                     } break;
                 case Game.BlackBox:
                     if (data_BuriedTreasure != null) {
-                        return data_BuriedTreasure.totalStars;
+                        stars = data_BuriedTreasure.totalStars;
                     } break;
-            } return 0;
+            } 
+            Events.UpdateMinigameStarCount?.Invoke(game, stars);
+            return stars;
         }
 
         // Returns total stars won across all games
@@ -131,55 +128,14 @@ namespace Wrapper
             {
                 tempTotal += GetMinigameStars(game);
             }
+            tempTotal += Events.GetMinigameStarCount.Invoke(Game.Rewards);
+            
             Events.UpdateUserSaveTotalStars?.Invoke(tempTotal);
             return tempTotal;
         }
 
 #endregion
 
-/* #region Coins
-
-        // Returns total coins won in minigame
-        public int GetMinigameCoins(Game game)
-        {
-            // NEED TO IMPLEMENT TOTALCOINS IN MINIGAME USERDATAS
-            switch(game) {
-                case Game.Qupcakes:
-                    if (data_Qupcakery != null) {
-                        // return data_Qupcakery.TotalStars;
-                    } break;
-                case Game.Labyrinth:
-                    if (data_Twintanglement != null) {
-                        // return data_Twintanglement.TotalStars;
-                    } break;
-                case Game.Circuits:
-                    if (data_TanglesLair != null) {
-                        // return data_TanglesLair.totalStars;
-                    } break;
-                case Game.QueueBits:
-                    if (data_Queuebits != null) {
-                        // return data_Queuebits.totalStars;
-                    } break;
-                case Game.BlackBox:
-                    if (data_BuriedTreasure != null) {
-                        // return data_BuriedTreasure.totalStars;
-                    } break;
-            } return 0;
-        }
-
-        // Returns total coins won across all games
-        public int GetOverallCoins() 
-        {
-            int tempTotal = 0;
-            foreach(Game game in gamesArray)
-            {
-                tempTotal += GetMinigameCoins(game);
-            }
-            Events.UpdateUserSaveTotalCoins?.Invoke(tempTotal);
-            return tempTotal;
-        }
-        
-#endregion */
 
 #region Unlocked (level/game)
 
@@ -253,7 +209,7 @@ namespace Wrapper
                         return true;
                     } break;
                 case Game.BlackBox: // CRITERIA: 120 total stars
-                    if (GetOverallStars() >= 50) {
+                    if (GetOverallStars() >= 120) {
                         return true;
                     } break;
 #endif
