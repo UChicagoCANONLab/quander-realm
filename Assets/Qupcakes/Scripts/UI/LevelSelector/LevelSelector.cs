@@ -34,7 +34,7 @@ namespace Qupcakery
             numberOfLevels = GameManagement.Instance.GetTotalLevelCnt();
 
 #if LITE_VERSION
-    litePanel.SetActive(true);
+            litePanel.SetActive(true);
 #endif
 
             panelDimensions = levelHolder.GetComponent<RectTransform>().rect;

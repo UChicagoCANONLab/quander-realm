@@ -39,6 +39,7 @@ namespace Qupcakery
                 if (! isUnlocked)
                     Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.Qupcakes, levelInd);
             }
+            Wrapper.Events.CollectAndDisplayBadge?.Invoke(Wrapper.Game.Qupcakes, levelInd, Data.gameData.TotalStars);
         }
     }
 }
