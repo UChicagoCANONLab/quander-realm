@@ -27,6 +27,6 @@ namespace Wrapper
         public string iconName;
         
         [SerializeField, ContentValue("Criteria Description")]
-        public string criteriaDescription;
+        public string[] criteriaDescription;
     }
 }

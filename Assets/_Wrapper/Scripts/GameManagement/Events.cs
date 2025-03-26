@@ -15,6 +15,7 @@ namespace Wrapper
         public static Action<string> ShowCardPopup;
         public static Action ToggleLoadingScreen;
         public static Action<Game, int> CollectAndDisplayReward;
+        public static Action<Game, int, int> CollectAndDisplayBadge;
         public static Action<Game> UnlockAndDisplayGame;
         public static Action DisplayAgeSelector;
         public static Action<int> DisplayCoinsCollected;
@@ -46,6 +47,7 @@ namespace Wrapper
 
         /// SaveManager ///
         public static Func<string, bool> AddReward;
+        public static Func<string, bool> AddBadge;
         public static Action ClearSaveFile;
         public static Action<string> SubmitResearchCode;
         public static Func<string, bool> IsRewardUnlocked;
