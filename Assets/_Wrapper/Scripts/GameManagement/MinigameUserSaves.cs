@@ -209,7 +209,7 @@ namespace Wrapper
                         return true;
                     } break;
                 case Game.BlackBox: // CRITERIA: 120 total stars
-                    if (GetOverallStars() >= 50) {
+                    if (GetOverallStars() >= 120) {
                         return true;
                     } break;
 #endif
