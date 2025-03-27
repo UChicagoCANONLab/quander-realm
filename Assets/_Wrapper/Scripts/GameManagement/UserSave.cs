@@ -10,6 +10,7 @@ namespace Wrapper
         public string id = string.Empty;
         public string[] minigameSaves;
         public List<string> rewards;
+        public List<string> badges;
         public bool introDialogueSeen = false;
         public bool rewardDialogueSeen = false;
 
@@ -31,6 +32,7 @@ namespace Wrapper
         public UserSave(string idString = "", string rewardID = "")
         {
             rewards = new List<string>();
+            badges = new List<string>();
 
             // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -57,6 +59,19 @@ namespace Wrapper
             return true;
         }
 
+        public bool AddBadge(string badgeID)
+        {
+            if (badgeID.Equals(string.Empty))
+                return false;
+
+            string formatted = FormatString(badgeID);
+            if (badges.Contains(formatted))
+                return false;
+
+            badges.Add(formatted);
+            return true;
+        }
+
         public bool IsNewSave()
         {
             if (HasAnyRewards()) return false;
@@ -77,6 +92,15 @@ namespace Wrapper
         {
             if (rewards == null) return false;
             else return rewards.Count > 0;
+        }
+
+        public int HasRewardsFromGame(Game game)
+        {
+            if (game == Game.Rewards) return rewards.Count;
+
+            string[] prefixes = {"bb", "ct", "la", "qb", "qu"};
+            int num = rewards.FindAll(str => str.IndexOf(prefixes[(int)game]) == 0).Count;
+            return num;
         }
 
         public void UpdateStreak()

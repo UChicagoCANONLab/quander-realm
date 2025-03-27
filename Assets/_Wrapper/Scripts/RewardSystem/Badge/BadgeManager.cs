@@ -58,8 +58,7 @@ namespace Wrapper
             {
                 foreach(Badge badge in holder.badges)
                 {
-                    stars += badge.GetStarStatus();
-                    // Debug.Log(badge.GetStarStatus());
+                    stars += badge.starStatus;
                 }
             }
             starCount.text = $"{stars}";

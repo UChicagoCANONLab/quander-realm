@@ -63,6 +63,7 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.AddReward += AddReward;
+            Events.AddBadge += AddBadge;
             Events.ClearSaveFile += ClearSave;
             Events.SubmitResearchCode += Login;
             Events.IsRewardUnlocked += IsRewardUnlocked;
@@ -79,11 +80,14 @@ namespace Wrapper
             Events.GetUserSaveTotalCoins += GetTotalCoins;
             Events.UpdateMinigameStarCount += UpdateMinigameStarCount;
             Events.GetMinigameStarCount += GetMinigameStarCount;
+            Events.GetStreakLength += GetStreakLength;
+            Events.HasRewardsFromGame += NumberRewardsFromGame;
         }
 
         private void OnDisable()
         {
             Events.AddReward -= AddReward;
+            Events.AddBadge -= AddBadge;
             Events.ClearSaveFile -= ClearSave;
             Events.SubmitResearchCode -= Login;
             Events.IsRewardUnlocked -= IsRewardUnlocked;
@@ -100,6 +104,8 @@ namespace Wrapper
             Events.GetUserSaveTotalCoins -= GetTotalCoins;
             Events.UpdateMinigameStarCount -= UpdateMinigameStarCount;
             Events.GetMinigameStarCount -= GetMinigameStarCount;
+            Events.GetStreakLength -= GetStreakLength;
+            Events.HasRewardsFromGame -= NumberRewardsFromGame;
         }
 
 #if !UNITY_WEBGL
@@ -427,9 +433,22 @@ namespace Wrapper
             return rewardAdded;
         }
 
+        private bool AddBadge(string badgeID)
+        {
+            bool badgeAdded = currentUserSave.AddBadge(badgeID);
+            UpdateRemoteSave();
+
+            return badgeAdded;
+        }
+
         private bool IsRewardUnlocked(string rewardID)
         {
             return currentUserSave.HasReward(rewardID);
+        }
+
+        private int NumberRewardsFromGame(Game game)
+        {
+            return currentUserSave.HasRewardsFromGame(game);
         }
 
         private string GetMinigameSaveData(Game game)
@@ -472,16 +491,19 @@ namespace Wrapper
 
         private void UpdateTotalCoins(int numCoins)
         {
-            if (currentUserSave.totalCoins != numCoins)
-            {
-                currentUserSave.totalCoins += numCoins;
-                UpdateRemoteSave();
-            }
+            Events.DisplayCoinsCollected.Invoke(numCoins);
+            currentUserSave.totalCoins += numCoins;
+            UpdateRemoteSave();
         }
 
         private int GetTotalCoins()
         {
             return currentUserSave.totalCoins;
+        }
+
+        private int GetStreakLength()
+        {
+            return (int)currentUserSave.streak;
         }
 
         private void UpdateRemoteSave()
