@@ -293,6 +293,13 @@ namespace QueueBits
 
 			// Manage stars awarded
 			int starsWon = starDisplay.getResults(result);
+			int origStars = GameManager.saveData.starSystem[LEVEL_NUMBER];
+
+			int coins = Math.Max(starsWon - origStars, 0) * 10
+                + Math.Min(starsWon, origStars);
+            Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
+            Wrapper.Events.DisplayCoinsCollected.Invoke(coins);
+
 			if (GameManager.saveData.starSystem[LEVEL_NUMBER] <= starsWon) {
 				GameManager.saveData.starSystem[LEVEL_NUMBER] = starsWon;
 			} // Update max level unlocked
@@ -307,6 +314,7 @@ namespace QueueBits
 
 			// Check if there's a reward card 
 			Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER);
+			Wrapper.Events.CollectAndDisplayBadge?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER, GameManager.saveData.totalStars);
 		}
 
 		// Helper to initialize myData

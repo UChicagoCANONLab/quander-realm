@@ -45,10 +45,6 @@ namespace QueueBits
                 stars = 0;
             }
             setDisplay(stars);
-            int origStars = GameManager.saveData.starSystem[GameManager.LEVEL];
-            int coins = Math.Max(stars - origStars, 0) * 10
-                + Math.Min(stars, origStars);
-            Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
         }
 
         // Returns number of stars per Result
