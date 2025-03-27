@@ -100,15 +100,16 @@ namespace Wrapper
         {
             if (IsUnlocked())
             {
-                while (!(this.gameObject.activeInHierarchy))
+                while (!(this.gameObject.activeInHierarchy)) 
                     yield return null;
-
+                
                 animator.SetBool(stateDisabled, false);
             }
         }
 
         public bool IsUnlocked()
         {
+            Debug.Log($"Checking if {id} is unlocked");
             return Events.IsRewardUnlocked?.Invoke(id) ?? false;
         }
 
