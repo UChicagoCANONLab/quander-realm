@@ -203,6 +203,10 @@ namespace BlackBox
                 backgroundAnimator.SetBool("FogActive", false);
             } else { backgroundAnimator.SetBool("FogActive", true); }
 
+            if (level.number == 2) {
+                BBEvents.ShowReminder.Invoke();
+            }
+
             totalNodes = level.nodePositions.Length;
             livesRemaining = totalLives;
 

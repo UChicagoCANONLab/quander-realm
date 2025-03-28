@@ -25,7 +25,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1867345549670385846}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -34,7 +34,7 @@ RectTransform:
   - {fileID: 2579937931114560047}
   m_Father: {fileID: 9065453031337094110}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 674.99963, y: 0}
@@ -114,7 +114,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -100, y: -100}
+  m_SizeDelta: {x: -120, y: -100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1570159976994931048
 CanvasRenderer:
@@ -144,8 +144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "You need to play more before I can give you a hint!\n\nBe careful \u2013
-    each time you use a hint, you lose a Star..."
+  m_text: Remember, if you get stuck, you can press the Hint button for a hint
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0706789a66fd7428e90be67e511d7217, type: 2}
   m_sharedMaterial: {fileID: -8796864176872457744, guid: 0706789a66fd7428e90be67e511d7217, type: 2}
@@ -172,8 +171,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
-  m_fontSizeBase: 60
+  m_fontSize: 75
+  m_fontSizeBase: 75
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -315,7 +314,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3946959849799806618}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -323,9 +322,9 @@ RectTransform:
   - {fileID: 9060722650976206783}
   m_Father: {fileID: 2266012968014864997}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 350, y: 600}
   m_Pivot: {x: 0, y: 0}
@@ -376,10 +375,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2266012968014864997}
-  - component: {fileID: 4351079921902128009}
+  - component: {fileID: 1352290770215154841}
   - component: {fileID: 3087056636691465335}
   m_Layer: 5
-  m_Name: HintPopup_View
+  m_Name: ReminderPopup_View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -398,7 +397,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9065453031337094110}
-  - {fileID: 8335122372942933632}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -407,7 +405,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4351079921902128009
+--- !u!114 &1352290770215154841
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -416,14 +414,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4781188007635849177}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acafb311fe27d493a9e6258431efb59b, type: 3}
+  m_Script: {fileID: 11500000, guid: 79f0e53623b714b2cb7da0d88aefe9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WolfieAnimator: {fileID: 3087056636691465335}
+  animator: {fileID: 3087056636691465335}
+  description: {fileID: 5144453990740046652}
+  reminderText:
+  - Remember, if you get stuck, you can press the Hint button for a hint
+  - If you want a reminder for how to play, press the Info button
   hintButton: {fileID: 0}
-  linePrefab: {fileID: 852185270043799742, guid: 7daaae6f73b59418682f2fe5e34100c3, type: 3}
-  lineContainer: {fileID: 8500178499711669658}
-  hintType: 
+  infoButton: {fileID: 0}
 --- !u!95 &3087056636691465335
 Animator:
   serializedVersion: 4
@@ -567,9 +567,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4351079921902128009}
-        m_TargetAssemblyTypeName: BlackBox.HintPopup, Assembly-CSharp
-        m_MethodName: ExitWolfiePopup
+      - m_Target: {fileID: 1352290770215154841}
+        m_TargetAssemblyTypeName: BlackBox.ReminderPopup, Assembly-CSharp
+        m_MethodName: Next
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -599,39 +599,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!1 &8500178499711669658
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8335122372942933632}
-  m_Layer: 5
-  m_Name: LineContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &8335122372942933632
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8500178499711669658}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2266012968014864997}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8, y: -55}
-  m_SizeDelta: {x: 1000, y: 1000}
-  m_Pivot: {x: 0.5, y: 0.5}

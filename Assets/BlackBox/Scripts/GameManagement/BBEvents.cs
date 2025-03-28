@@ -21,6 +21,7 @@ namespace BlackBox
         public static Action ShowInfo;
         public static Action InitiateTutorialLevel;
         public static Action EndTutorialLevel;
+        public static Action ShowReminder;
 
         /// Level Select
         public static Action<string> PlayLevel;
