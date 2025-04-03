@@ -1248,6 +1248,7 @@ GameObject:
   - component: {fileID: 501723964}
   - component: {fileID: 501723963}
   - component: {fileID: 501723966}
+  - component: {fileID: 501723967}
   m_Layer: 5
   m_Name: PauseButton
   m_TagString: Untagged
@@ -1294,7 +1295,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1383,6 +1384,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseSprite: {fileID: 21300000, guid: c788b9433b69149048a3e62c6e2f2a8c, type: 3}
   unpauseSprite: {fileID: 21300000, guid: b4dd23691ea1a47f297b5fd166c4d1f7, type: 3}
+--- !u!95 &501723967
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501723961}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3bf84a32021f64544aacd0adc472eefb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &503261400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2318,6 +2339,7 @@ GameObject:
   - component: {fileID: 1047154919}
   - component: {fileID: 1047154918}
   - component: {fileID: 1047154917}
+  - component: {fileID: 1047154921}
   m_Layer: 5
   m_Name: HelpButton
   m_TagString: Untagged
@@ -2385,7 +2407,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -2460,6 +2482,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1047154915}
   m_CullTransparentMesh: 1
+--- !u!95 &1047154921
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047154915}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3bf84a32021f64544aacd0adc472eefb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1085896201
 GameObject:
   m_ObjectHideFlags: 0
@@ -2565,6 +2607,7 @@ GameObject:
   - component: {fileID: 1220517704}
   - component: {fileID: 1220517703}
   - component: {fileID: 1220517706}
+  - component: {fileID: 1220517707}
   m_Layer: 5
   m_Name: HintButton
   m_TagString: Untagged
@@ -2611,7 +2654,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -2702,6 +2745,26 @@ MonoBehaviour:
   panel: {fileID: 1381924377}
   textObject: {fileID: 1475881629}
   tutorialText: {fileID: 1475881631}
+--- !u!95 &1220517707
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220517701}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3bf84a32021f64544aacd0adc472eefb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &1258505760 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5298928328509288443, guid: 1c3852c520c584803bfc9ebd41f55821, type: 3}
@@ -3624,6 +3687,8 @@ MonoBehaviour:
   pointer: {fileID: 850380295}
   tutorialText: {fileID: 1475881631}
   pointerAnimator: {fileID: 850380301}
+  hintButton: {fileID: 1220517701}
+  infoButton: {fileID: 1047154915}
 --- !u!222 &2036009355
 CanvasRenderer:
   m_ObjectHideFlags: 0

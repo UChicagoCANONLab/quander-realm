@@ -15,6 +15,8 @@ namespace Qupcakery
         [SerializeField] public GameObject pointer;
         [SerializeField] public Text tutorialText;
         [SerializeField] private Animator pointerAnimator;
+        [SerializeField] private GameObject hintButton;
+        [SerializeField] private GameObject infoButton;
 
         private int levelInd;
         private int tutorialSeq = 0;
@@ -172,13 +174,16 @@ namespace Qupcakery
             "Our customers won't wait forever! The bar under each customer is their " +
             "patience.",
             "The top left bar shows how long my shop will be open - see how many cupcakes " + 
-            "you can serve!"
+            "you can serve!",
+            "If you get stuck, press the Hint button to receive a hint.",
+            "If you'd like a reminder for what the gates mean, press the Info button."
         };
 
         public void Tutorial2Next()
         {
             if (tutorialSeq >= dialogueSeq2.Length)
             {
+                infoButton.GetComponent<Animator>().SetTrigger("Normal");
                 EndTutorial();
                 return;
             }
@@ -197,6 +202,17 @@ namespace Qupcakery
 
                 case 1:
                     LastPuzzleUtils();
+                    break;
+
+                case 2:
+                    LastPuzzleUtils();
+                    hintButton.GetComponent<Animator>().SetTrigger("Hint");
+                    break;
+
+                case 3:
+                    LastPuzzleUtils();
+                    hintButton.GetComponent<Animator>().SetTrigger("Normal");
+                    infoButton.GetComponent<Animator>().SetTrigger("Hint");
                     break;
 
                 default:
