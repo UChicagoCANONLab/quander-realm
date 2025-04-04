@@ -71,6 +71,9 @@ namespace BlackBox
             Invoke("ReturnBattieHelper", 0.5f);
 
             flyingCoors = null; // Clear array
+            if (BBEvents.GetLevel.Invoke().number != 1) {
+                BBEvents.ShowHint.Invoke();
+            }
         }
 
         public void ReturnBattieHelper() 

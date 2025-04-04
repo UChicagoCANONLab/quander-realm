@@ -36,6 +36,8 @@ namespace BlackBox
             new Vector3(-1, -1, 0), // 3rd
             new Vector3(1, -1, 0)   // 4th
         };
+        private int[] pointerOffsetType = {0, 0};
+        private float[] degreeOffset = {0f, 0f, 90f, 180f, 270f};
 
         private Level currLevel;
     
@@ -65,7 +67,7 @@ namespace BlackBox
             }
 
             // If not tutorial, penalize hints
-            if (currLevel.number != 1) {
+            if (currLevel.number > 6) {
                 BBEvents.LoseLife.Invoke();
                 
                 if (BBEvents.GetLivesRemaining.Invoke() == 1) {
@@ -92,6 +94,7 @@ namespace BlackBox
                 case Marker.Detour:
                     cornerOffset = offsetType[1]; // default to quad 1 offset
                     cornerOffset2 = offsetType[1];
+                    pointerOffsetType = new int[] {1, 1};
                     
                     // There are no levels with multiple detours where start.z != end.z
                     if (start.z != end.z) {
@@ -103,10 +106,13 @@ namespace BlackBox
                             // No need to change direction of icon offset
                         } else if ((start.z==2 && end.z==3) || (start.z==3 && end.z==2)) {
                             cornerOffset = offsetType[2]; 
+                            pointerOffsetType[0] = 2;
                         } else if ((start.z==3 && end.z==4) || (start.z==4 && end.z==3)) {
                             cornerOffset = offsetType[3];
+                            pointerOffsetType[0] = 3;
                         } else if ((start.z==4 && end.z==1) || (start.z==1 && end.z==4)) {
                             cornerOffset = offsetType[4];
+                            pointerOffsetType[0] = 4;
                         }
                     }
                     else { // Two detours, start.z == end.z
@@ -124,8 +130,10 @@ namespace BlackBox
                                     }
                                 } if (turn.y > turn2.y) {
                                     cornerOffset2 = offsetType[4];
+                                    pointerOffsetType[1] = 4;
                                 } else {
                                     cornerOffset = offsetType[4];
+                                    pointerOffsetType[0] = 4;
                                 }
                                 break;
                             case 2:     // Bottom
@@ -138,8 +146,10 @@ namespace BlackBox
                                     }
                                 } if (turn.x > turn2.x) {
                                     cornerOffset2 = offsetType[2];
+                                    pointerOffsetType[1] = 2;
                                 } else {
                                     cornerOffset = offsetType[2];
+                                    pointerOffsetType[0] = 2;
                                 }
                                 break;
                             case 3:     // Right
@@ -153,9 +163,11 @@ namespace BlackBox
                                 } if (turn.y > turn2.y) {
                                     cornerOffset = offsetType[2];
                                     cornerOffset2 = offsetType[3];
+                                    pointerOffsetType = new int[] {2, 3};
                                 } else {
                                     cornerOffset = offsetType[3];
                                     cornerOffset2 = offsetType[2];
+                                    pointerOffsetType = new int[] {3, 2};
                                 }
                                 break;
                             case 4:     // Top
@@ -169,9 +181,11 @@ namespace BlackBox
                                 } if (turn.x > turn2.x) {
                                     cornerOffset = offsetType[4];
                                     cornerOffset2 = offsetType[3];
+                                    pointerOffsetType = new int[] {4, 3};
                                 } else {
                                     cornerOffset = offsetType[3];
                                     cornerOffset2 = offsetType[4];
+                                    pointerOffsetType = new int[] {3, 4};
                                 }
                                 break;
                         }
@@ -338,10 +352,18 @@ namespace BlackBox
             if (cornerOn){
                 GameObject corner = currLine.transform.GetChild(0).gameObject;
                 corner.transform.localPosition += (positions[1] + (offsetPt * cornerOffset));
+                
+                GameObject pointer = corner.transform.GetChild(0).gameObject;
+                pointer.transform.localPosition += (2 * offsetPt * cornerOffset);
+                pointer.transform.rotation *= Quaternion.Euler(0, 0, degreeOffset[pointerOffsetType[0]]);
             }
             if (cornerOn2) {
                 GameObject corner2 = currLine.transform.GetChild(1).gameObject;
                 corner2.transform.localPosition += (positions[2] + (offsetPt * cornerOffset2));
+
+                GameObject pointer2 = corner2.transform.GetChild(0).gameObject;
+                pointer2.transform.localPosition += (2 * offsetPt * cornerOffset2);
+                pointer2.transform.rotation *= Quaternion.Euler(0, 0, degreeOffset[pointerOffsetType[1]]);
             }
 
             currLine.GetComponent<Animator>().SetBool("Corner", cornerOn);
