@@ -20,6 +20,8 @@ namespace BlackBox
     
         [SerializeField] private List<Vector3Int[]> hintPairs = new List<Vector3Int[]>();
         [SerializeField] private List<Marker> hintType = new List<Marker>();
+
+        [SerializeField] private HintMarks hintMarks;
         
         private GridSize size;
         private int[] gridSizeValues = new int[4] { 5, 6, 7, 4 };  // Copied from BBGameManager
@@ -62,6 +64,11 @@ namespace BlackBox
         {   
             // Don't give hints if not hints to give
             if (hintPairs.Count <= hintCounter) { 
+                if (currLevel.number <= 6) {
+                    BBEvents.DecrementEnergy.Invoke();
+                    hintMarks.UpdateGridGraphics();
+                    return;
+                }
                 WolfieAnimator.SetBool("IsOn", true);
                 return;    
             }
@@ -73,7 +80,8 @@ namespace BlackBox
                 if (BBEvents.GetLivesRemaining.Invoke() == 1) {
                     hintButton.GetComponent<Button>().interactable = false;
                 }
-                // BBEvents.DecrementEnergy.Invoke();
+            } else if (currLevel.number == 1) {
+                hintMarks.UpdateGridGraphics();
             }
 
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
@@ -383,6 +391,8 @@ namespace BlackBox
             hintType.Clear();
 
             hintButton.GetComponent<Button>().interactable = true;
+
+            hintMarks.ResetGrid();
         }
 
         public void AppendHintCoor(Vector3Int orig, Dir origDir, Vector3Int dest, Dir destDir, Marker type) {    
@@ -405,6 +415,8 @@ namespace BlackBox
             // Debug.Log(string.Join("; ", pair));
             hintPairs.Add(pair);
             hintType.Add(type);
+
+            hintMarks.UpdateHintGrid(pair[0], pair[1], type);
         }
 
         public void ExitWolfiePopup() {
