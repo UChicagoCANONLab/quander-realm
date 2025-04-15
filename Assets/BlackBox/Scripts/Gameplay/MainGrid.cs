@@ -33,6 +33,8 @@ namespace BlackBox
             BBEvents.DelayInteraction += DelayInteraction;
             BBEvents.DelayReaction += DelayReaction;
             BBEvents.LanternPlacedCount += GetLanternsOnGridCount;
+            BBEvents.GetEnergyRemaining += GetEnergyRemaining;
+            BBEvents.LoseEnergy += LoseEnergy;
         }
 
         private void OnDisable()
@@ -44,6 +46,8 @@ namespace BlackBox
             BBEvents.DelayInteraction -= DelayInteraction;
             BBEvents.DelayReaction -= DelayReaction;
             BBEvents.LanternPlacedCount -= GetLanternsOnGridCount;
+            BBEvents.GetEnergyRemaining -= GetEnergyRemaining;
+            BBEvents.LoseEnergy -= LoseEnergy;
         }
 
         public void Create(int width, int height, int numEnergyUnits)
@@ -141,7 +145,7 @@ namespace BlackBox
             }
 
             energyUnits--;
-            BBEvents.DecrementEnergy?.Invoke();
+            BBEvents.DecrementEnergyMeter?.Invoke();
             if (energyUnits <= ((int)BBEvents.GetNumEnergyUnits?.Invoke() / 3))
             {
                 BBEvents.IndicateEmptyMeter?.Invoke();
@@ -281,6 +285,17 @@ namespace BlackBox
             }
 
             return count;
+        }
+
+        public int GetEnergyRemaining()
+        {
+            return energyUnits;
+        }
+
+        public void LoseEnergy()
+        {
+            energyUnits--;
+            BBEvents.DecrementEnergyMeter.Invoke();
         }
     }
 }

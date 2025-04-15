@@ -51,10 +51,12 @@ namespace BlackBox
         public static Func<Transform> GetFrontMount;
 
         /// Energy Bar and Lives
-        public static Action DecrementEnergy;
+        public static Action DecrementEnergyMeter;
+        public static Action LoseEnergy;
         public static Action IndicateEmptyMeter;
         public static Action InitEnergyBar;
         public static Func<int> GetNumEnergyUnits;
+        public static Func<int> GetEnergyRemaining;
         public static Action<int> UpdateHUDWolfieLives;
         public static Action LoseLife;
         public static Func<int> GetLivesRemaining;

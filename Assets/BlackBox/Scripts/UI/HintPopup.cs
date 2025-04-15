@@ -60,29 +60,46 @@ namespace BlackBox
             BBEvents.GetHintsUsed -= HintsUsed;
         }
 
-        public void GiveHint() 
-        {   
-            // Don't give hints if not hints to give
-            if (hintPairs.Count <= hintCounter) { 
-                if (currLevel.number <= 6) {
-                    BBEvents.DecrementEnergy.Invoke();
-                    hintMarks.UpdateGridGraphics();
-                    return;
-                }
-                WolfieAnimator.SetBool("IsOn", true);
-                return;    
+        public bool AbleToGiveHint()
+        {
+            // If no energy, can't give hint
+            if (BBEvents.GetEnergyRemaining.Invoke() == 0) {
+                hintButton.GetComponent<Button>().interactable = false;
+                BBEvents.IndicateEmptyMeter.Invoke();
+                return false;
             }
 
-            // If not tutorial, penalize hints
-            if (currLevel.number > 6) {
-                BBEvents.LoseLife.Invoke();
-                
-                if (BBEvents.GetLivesRemaining.Invoke() == 1) {
-                    hintButton.GetComponent<Button>().interactable = false;
-                }
-            } else if (currLevel.number == 1) {
+            if (currLevel.number == 1)
+            { // No penalty, automatic lines and marks
                 hintMarks.UpdateGridGraphics();
+                if (hintPairs.Count <= hintCounter) {
+                    return false;
+                }
             }
+            else if (currLevel.number <= 6)
+            { // Automatic lines, lose energy for marks
+                if (hintPairs.Count <= hintCounter) { 
+                    BBEvents.LoseEnergy.Invoke();
+                    hintMarks.UpdateGridGraphics();
+                    return false;
+                }
+            }
+            else
+            { // Lose energy for lines, no marks (subject to change)
+                if (hintPairs.Count <= hintCounter) { 
+                    // Let player know if no hints to give
+                    WolfieAnimator.SetBool("IsOn", true);
+                    return false;
+                }
+                BBEvents.LoseEnergy.Invoke();
+                // hintMarks.UpdateGridGraphics(); // TEMPORARY
+            }
+            return true;
+        }
+
+        public void GiveHint() 
+        {   
+            if (!AbleToGiveHint()) return;
 
             Vector3 start = (Vector3)hintPairs[hintCounter][0];
             Vector3 end = (Vector3)hintPairs[hintCounter][1];
