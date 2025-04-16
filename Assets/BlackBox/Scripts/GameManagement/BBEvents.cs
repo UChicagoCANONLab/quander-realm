@@ -29,7 +29,7 @@ namespace BlackBox
         public static Action CloseLevel;
 
         /// Ray and Markers
-        public static Action<Vector3Int, Dir> FireRay;
+        public static Action<Vector3Int, Dir, bool> FireRay;
         public static Action<Marker, Dir, Vector3Int, bool> MarkUnits;
         public static Action<Dir, Vector3Int, Dir, Vector3Int, int> MarkDetourUnits;
         public static Action<string, Dir, Vector3Int> ToggleLinkedHighlight;

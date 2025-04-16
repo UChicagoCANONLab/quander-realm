@@ -136,7 +136,7 @@ namespace BlackBox
 
         #region Node and Ray Behaviour
 
-        private void FireRay(Vector3Int rayOrigin, Dir rayDirection)
+        private void FireRay(Vector3Int rayOrigin, Dir rayDirection, bool revisit)
         {
             if (energyUnits == 0)
             {
@@ -144,11 +144,13 @@ namespace BlackBox
                 return;
             }
 
-            energyUnits--;
-            BBEvents.DecrementEnergyMeter?.Invoke();
-            if (energyUnits <= ((int)BBEvents.GetNumEnergyUnits?.Invoke() / 3))
-            {
-                BBEvents.IndicateEmptyMeter?.Invoke();
+            if (!revisit) {
+                energyUnits--;
+                BBEvents.DecrementEnergyMeter?.Invoke();
+                if (energyUnits <= ((int)BBEvents.GetNumEnergyUnits?.Invoke() / 3))
+                {
+                    BBEvents.IndicateEmptyMeter?.Invoke();
+                }
             }
 
             ray = new Ray(rayOrigin, rayDirection, width, height);
@@ -158,7 +160,7 @@ namespace BlackBox
 
             BBEvents.SendMollyIn?.Invoke();
             BBEvents.DelayInteraction?.Invoke(true);
-            ray.AddMarkers();
+            ray.AddMarkers(revisit);
             if ((int)BBEvents.GetLevel?.Invoke().number <= 6) {
                 BBEvents.StartFlyingAnimation?.Invoke();
             }
