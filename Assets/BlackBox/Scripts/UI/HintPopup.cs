@@ -63,13 +63,35 @@ namespace BlackBox
         public bool AbleToGiveHint()
         {
             // If no energy, can't give hint
-            if (BBEvents.GetEnergyRemaining.Invoke() == 0) {
+            if (BBEvents.GetEnergyRemaining.Invoke() == 0) 
+            {
                 hintButton.GetComponent<Button>().interactable = false;
                 BBEvents.IndicateEmptyMeter.Invoke();
                 return false;
             }
 
-            if (currLevel.number == 1)
+            // If all hint lines are given, do XO marks
+            if (hintPairs.Count <= hintCounter) 
+            {
+                hintMarks.UpdateGridGraphics();
+                if (currLevel.number == 1) return false;
+                else {
+                    // WolfieAnimator.SetBool("IsOn", true);
+                    BBEvents.LoseEnergy.Invoke();
+                    return false;
+                }
+            }
+
+            if (currLevel.number == 1) {
+                hintMarks.UpdateGridGraphics();
+            } 
+            else if (currLevel.number > 6) {
+                BBEvents.LoseEnergy.Invoke();
+            }
+            return true;
+
+
+            /* if (currLevel.number == 1)
             { // No penalty, automatic lines and marks
                 hintMarks.UpdateGridGraphics();
                 if (hintPairs.Count <= hintCounter) {
@@ -94,7 +116,7 @@ namespace BlackBox
                 BBEvents.LoseEnergy.Invoke();
                 // hintMarks.UpdateGridGraphics(); // TEMPORARY
             }
-            return true;
+            return true; */
         }
 
         public void GiveHint() 
