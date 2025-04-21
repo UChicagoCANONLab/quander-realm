@@ -87,10 +87,10 @@ namespace Qupcakery
                 icon.transform.SetParent(parentObject.transform);
                 icon.name = "Level" + currentLevelCount;
 
-                LevelSelectorButtonManager m =
-                    icon.GetComponent<LevelSelectorButtonManager>();
+                LevelSelectorButtonManager m = icon.GetComponent<LevelSelectorButtonManager>();
+                m.InitButton(currentLevelCount);
 
-                // If player has completed this level
+                /* // If player has completed this level
                 if (currentLevelCount <= GameManagement.Instance.game.gameStat.MaxLevelCompleted)
                 {
                     int starCnt = GameManagement.Instance.game.gameStat.GetLevelPerformance(currentLevelCount);
@@ -102,11 +102,11 @@ namespace Qupcakery
                     if (currentLevelCount != 1 + GameManagement.Instance.game.gameStat.MaxLevelCompleted)
                         m.SetAvailability(false);
                 }
-                icon.GetComponentInChildren<TextMeshProUGUI>().SetText("Level " + currentLevelCount);
+                icon.GetComponentInChildren<TextMeshProUGUI>().SetText($"{currentLevelCount}");
 
                 // comment this part out if you want the originial level select icon
-                Image levelNumberObj = icon.transform.Find("Number").GetComponent<Image>();
-                levelNumberObj.sprite = levelNumbers[currentLevelCount-1];
+                // Image levelNumberObj = icon.transform.Find("Number").GetComponent<Image>();
+                // levelNumberObj.sprite = levelNumbers[currentLevelCount-1]; */
             }
 
         }

@@ -9,12 +9,14 @@ namespace Qupcakery
     {
         public Sprite pauseSprite;
         public Sprite unpauseSprite;
+        public GameObject icon;
+        public GameObject overlay;
 
-        Image image;
+        // Image image;
 
         private void Awake()
         {
-            image = GetComponent<Image>();
+            // image = GetComponent<Image>();
             SetPauseSprite();
         }
 
@@ -39,12 +41,16 @@ namespace Qupcakery
 
         public void SetPauseSprite()
         {
-            image.sprite = pauseSprite;
+            icon.GetComponent<Image>().sprite = pauseSprite;
+            overlay.SetActive(false);
+            // image.sprite = pauseSprite;
         }
 
         public void SetUnpauseSprite()
         {
-            image.sprite = unpauseSprite;
+            icon.GetComponent<Image>().sprite = unpauseSprite;
+            overlay.SetActive(true);
+            // image.sprite = unpauseSprite;
         }
     }
 }
