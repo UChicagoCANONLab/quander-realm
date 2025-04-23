@@ -9,7 +9,7 @@ namespace Wrapper
 {
     public class Reward : MonoBehaviour
     {
-        [SerializeField] private Animator animator;
+        [SerializeField] public Animator animator;
         [SerializeField] private Button button;
 
         [Header("Front")]
