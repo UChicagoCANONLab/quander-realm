@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace QueueBits {
     public class TokenSelector : MonoBehaviour
-    {        
+    {
         // GameObjects of each token icon and percentage text
         public GameObject select100;
         public GameObject select75;
@@ -58,7 +58,6 @@ namespace QueueBits {
             }
             TC.toggleButtons(false);
         }
-
 
 
     }
