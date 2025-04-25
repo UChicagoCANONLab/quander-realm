@@ -27,7 +27,9 @@ namespace Wrapper
 
             rewardGO.transform.SetParent(cardContainer.transform);
             // rewardGO.GetComponent<Transform>().localScale = new Vector3(0.8f, 0.8f, 0.8f);
+
             currCard = rewardGO.GetComponent<Reward>();
+            RewardResearchData.Instance.UpdateRewardResearchData(currCard, "Initial card popup"); // Log when first unlocked in popup
 
             ToggleDisplay(true);
 
@@ -53,7 +55,7 @@ namespace Wrapper
 
         private void NavigatePage(bool first)
         {
-            FlipCard();
+            currCard.FlipCard();
             SetNavigationButtons(first);
         }
 
@@ -67,11 +69,7 @@ namespace Wrapper
         private void ToggleDisplay(bool IsOn)
         {
             animator.SetBool("PopupOn", IsOn);
-        }
-
-        private void FlipCard()
-        {
-            currCard.animator.SetTrigger("Flip");
+            if (!IsOn) { RewardResearchData.Instance.UpdateRewardResearchData(currCard, "Exiting popup"); }
         }
 
     }

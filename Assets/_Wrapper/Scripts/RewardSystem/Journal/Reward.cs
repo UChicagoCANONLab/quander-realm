@@ -72,10 +72,11 @@ namespace Wrapper
             switch(displayType)
             {
                 case DisplayType.Featured:
-                    button.onClick.AddListener(() => animator.SetTrigger(triggerFlip));
+                    // button.onClick.AddListener(() => animator.SetTrigger(triggerFlip));
+                    button.onClick.AddListener(() => FlipCard());
                     break;
                 case DisplayType.InJournal:
-                    button.onClick.AddListener(() => Routine.Start(SelectCard()));
+                    button.onClick.AddListener(() => SelectFromJournal());
                     break;
                 case DisplayType.CardPopup:
                 default:
@@ -120,6 +121,7 @@ namespace Wrapper
             if (!IsUnlocked())
                 yield break;
 
+            // Display routine
             Events.UnselectAllCards?.Invoke();
             animator.SetBool(stateSelected, true);
             Events.FeatureCard?.Invoke(id.Trim().ToLower());
@@ -135,6 +137,18 @@ namespace Wrapper
         private string GetDisplayName(string input)
         {
             return input.Replace("_", " ");
+        }
+
+        public void FlipCard()
+        {
+            animator.SetTrigger(triggerFlip);
+            RewardResearchData.Instance.UpdateRewardResearchData(this, "From flipping");
+        }
+
+        public void SelectFromJournal()
+        {
+            Routine.Start(SelectCard());
+            RewardResearchData.Instance.UpdateRewardResearchData(this, "Manually selected in Journal");
         }
     }
 }
