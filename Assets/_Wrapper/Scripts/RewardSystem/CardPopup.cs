@@ -11,20 +11,20 @@ namespace Wrapper
         [SerializeField] private QButton nextButton;
         [SerializeField] private QButton backButton;
         [SerializeField] private QButton backgroundButton;
-        private int counter = 0;
         private Reward currCard;
 
         private void Awake()
         {
             // okButton.onClick.AddListener(() => ToggleDisplay(false));
             backgroundButton.onClick.AddListener(() => ToggleDisplay(false));
-            backButton.interactable = false;
-            nextButton.onClick.AddListener(() => FlipCard());
+            backButton.onClick.AddListener(() => NavigatePage(true));
         }
 
         public IEnumerator DisplayCard(GameObject rewardGO)
         {
+            SetNavigationButtons(true);
             Events.PlaySound?.Invoke("W_Reward");
+
             rewardGO.transform.SetParent(cardContainer.transform);
             // rewardGO.GetComponent<Transform>().localScale = new Vector3(0.8f, 0.8f, 0.8f);
             currCard = rewardGO.GetComponent<Reward>();
@@ -36,33 +36,43 @@ namespace Wrapper
             rewardGO.GetComponent<Animator>().SetBool("Disabled", false);
         }
 
+        private void SetNavigationButtons(bool first)
+        {
+            backButton.interactable = !first;
+            nextButton.onClick.RemoveAllListeners();
+
+            if (first) // if on first page
+            {
+                nextButton.onClick.AddListener(() => NavigatePage(false));
+            }
+            else // if on second page
+            {
+                nextButton.onClick.AddListener(() => ToggleDisplay(false));
+            }
+        }
+
+        private void NavigatePage(bool first)
+        {
+            FlipCard();
+            SetNavigationButtons(first);
+        }
+
+        /// Helper Methods /// 
+
         public GameObject GetContainerMount()
         {
             return cardContainer;
         }
 
-        private void ToggleDisplay(bool isOn)
+        private void ToggleDisplay(bool IsOn)
         {
-            animator.SetBool("PopupOn", isOn);
+            animator.SetBool("PopupOn", IsOn);
         }
 
         private void FlipCard()
         {
             currCard.animator.SetTrigger("Flip");
-            if (counter == 0)
-            {
-                backButton.onClick.AddListener(() => FlipCard());
-                backButton.interactable = true;
-                nextButton.onClick.AddListener(() => ToggleDisplay(false));
-                counter++;
-            } 
-            else if (counter == 1)
-            {
-                backButton.interactable = false;
-                nextButton.onClick.AddListener(() => FlipCard());
-                nextButton.onClick.RemoveListener(() => ToggleDisplay(false));
-                counter--;
-            }
         }
+
     }
 }
