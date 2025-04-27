@@ -326,6 +326,7 @@ namespace QueueBits
 			int secondBestVal = int.MinValue;
 			int secondBestMove = -1;
 			int bestMove = -1;
+			difficulty = 2;
 
 			List<int> moves = getMoves(cols);
 

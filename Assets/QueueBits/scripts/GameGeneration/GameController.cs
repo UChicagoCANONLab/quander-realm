@@ -35,6 +35,7 @@ namespace QueueBits
 		// Holder for Board and all tokens
 		public GameObject fieldObject;
 
+
 		// Prefilled Board objects and name
 		[Header("Prefilled Boards")]
 		public PrefilledBoards PB;
@@ -82,12 +83,32 @@ namespace QueueBits
 			LEVEL_NUMBER = GameManager.LEVEL;
 			DM.initDisplay(LEVEL_NUMBER);
 			tutorialStep = 0;
+			if (tutorialStepButton != null)
+			{
+				Button button = tutorialStepButton.GetComponent<Button>();
+				if (button != null)
+				{
+					button.onClick.RemoveAllListeners();
+					button.onClick.AddListener(() => {
+						if (tutorialLevels.Contains(LEVEL_NUMBER) && tutorialStep != -1)
+						{
+							tutorialStep++; // Increment tutorialStep directly here
+							updateTutorial();
+						}
+						else if (tutorialPane.activeSelf)
+						{
+							InfoNextStep();
+						}
+					});
+				}
+			}
 			if (tutorialLevels.Contains(LEVEL_NUMBER))
 			{
 				// pointer.SetActive(true);
 				tutorialPane.SetActive(true);
 				tutorialPieceCounter.SetActive(false);
-				updateTutorial();
+				updateTutorial(1);
+
 			}
 			else{
 			pointer.SetActive(false);
@@ -122,9 +143,9 @@ namespace QueueBits
 			tutorialImage.gameObject.SetActive(true);
 		}
 
-		public void updateTutorial(){
-			tutorialStep+=1;
-			Debug.Log("update Tutorial!");
+		public void updateTutorial(int i = 0){
+			Debug.Log("update Tutorial! " + i);
+			if (i == 1){tutorialStep+=1;}
 			if(LEVEL_NUMBER == 1){
 				GM1.gameObject.SetActive(true);
 				switch (tutorialStep)
@@ -170,11 +191,9 @@ namespace QueueBits
 						GM1.disconnectTutorial();
 						break;
 					case 11:
+						tutorialStep = -1;
 						tutorialPane.SetActive(false);
 						break;
-
-
-
 					default:
 						Debug.Log("TutorialFallThrough");
 						return;
@@ -206,6 +225,7 @@ namespace QueueBits
 					case 7:
 						tutorialPane.SetActive(false);
 						tutorialPieceCounter.SetActive(true);
+						tutorialStep = -1;
 						break;
 					default:
 						Debug.Log("TutorialFallThrough");
@@ -228,6 +248,7 @@ namespace QueueBits
 					case 4:
 						tutorialPane.SetActive(false);
 						tutorialPieceCounter.SetActive(true);
+						tutorialStep = -1;
 						break;
 					default:
 						Debug.Log("TutorialFallThrough");
@@ -250,6 +271,7 @@ namespace QueueBits
 					case 4:
 						tutorialPane.SetActive(false);
 						tutorialPieceCounter.SetActive(true);
+						tutorialStep = -1;
 						break;
 					default:
 						Debug.Log("TutorialFallThrough");
@@ -283,9 +305,103 @@ namespace QueueBits
 		}
 
 
+		private List<string> infoSections = new List<string>();
+		private int infoStep = 0;
+
 		public void GetInfo()
 		{
-			Debug.Log("Requested Info!");
+			Debug.Log("Showing game information");
+
+			// Cancel any existing highlights
+			CancelHighlights();
+
+			// Reset info step
+			infoStep = 0;
+
+			// Set up the information sections
+			PrepareInfoSections();
+
+			// Show the pane
+			tutorialPane.SetActive(true);
+
+			// Set the initial info text
+			if (tutorialText != null)
+			{
+				tutorialText.SetText(infoSections[infoStep]);
+			}
+
+			// Hide the tutorial image if it's showing
+			if (tutorialImage != null)
+				tutorialImage.gameObject.SetActive(false);
+
+			// Show the tutorial step button with "Next" text
+			if (tutorialStepButton != null) {
+				tutorialStepButton.SetActive(true);
+				TextMeshProUGUI buttonText = tutorialStepButton.GetComponentInChildren<TextMeshProUGUI>();
+				if (buttonText != null)
+					buttonText.text = "Next";
+			}
+		}
+
+		private void PrepareInfoSections()
+		{
+			infoSections.Clear();
+
+			// Basic game rules for all levels
+			infoSections.Add("Connect 4 tokens in a row (horizontal, vertical, or diagonal) to win before Byte does!");
+
+			// Level-specific information
+			if (LEVEL_NUMBER < 3)
+			{
+				infoSections.Add("• Click a token below to select it\n• Click a column to drop your token\n• First to connect 4 tokens wins!");
+			}
+			else if (LEVEL_NUMBER < 6)
+			{
+				infoSections.Add("• Tokens in superposition have both yellow and red states\n• When played, they instantly become either yellow or red\n• Higher probability tokens (75%, 100%) are more likely to be yellow");
+			}
+			else if (LEVEL_NUMBER < 11)
+			{
+				infoSections.Add("• Tokens stay in superposition until the board is filled\n• After the board is full, the tokens will change one by one\n• Plan ahead! Consider what might happen when tokens are measured");
+			}
+			else
+			{
+				infoSections.Add("• Tokens stay in superposition until the board is filled\n• After the board is full, YOU choose which tokens to measure and in what order\n• Choose strategically! Measure tokens that could create winning connections");
+			}
+
+			// Add token explanation for levels 3+
+			if (LEVEL_NUMBER >= 3) {
+				infoSections.Add("• 100% token: Will always be yellow\n• 75% token: Has a 75% chance of being yellow\n• 50% token: Equal chance of being yellow or red");
+			}
+
+			// Final page: Make a move to continue
+			infoSections.Add("Click the Hint button for suggestions on your next move!\n\nMake a move to continue playing");
+		}
+
+		// This function will be called when the "Next" button is clicked during info display
+		public void InfoNextStep()
+		{
+			infoStep++;
+			if (infoStep < infoSections.Count)
+			{
+				// Show next info section
+				if (tutorialText != null)
+				{
+					tutorialText.SetText(infoSections[infoStep]);
+				}
+
+				// Update button text on last page
+				if (tutorialStepButton != null && infoStep == infoSections.Count - 1)
+				{
+					TextMeshProUGUI buttonText = tutorialStepButton.GetComponentInChildren<TextMeshProUGUI>();
+					if (buttonText != null)
+						buttonText.text = "Got it!";
+				}
+			}
+			else
+			{
+				// Close the info pane when we've gone through all sections
+				tutorialPane.SetActive(false);
+			}
 		}
 		public void GetHint()
 		{
