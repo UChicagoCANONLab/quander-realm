@@ -29,7 +29,7 @@ namespace Wrapper
             // rewardGO.GetComponent<Transform>().localScale = new Vector3(0.8f, 0.8f, 0.8f);
 
             currCard = rewardGO.GetComponent<Reward>();
-            RewardResearchData.Instance.UpdateRewardResearchData(currCard, "Initial card popup"); // Log when first unlocked in popup
+            RewardData.Instance.UpdateRewardResearchData(currCard, "Initial card popup"); // Log when first unlocked in popup
 
             ToggleDisplay(true);
 
@@ -69,7 +69,7 @@ namespace Wrapper
         private void ToggleDisplay(bool IsOn)
         {
             animator.SetBool("PopupOn", IsOn);
-            if (!IsOn) { RewardResearchData.Instance.UpdateRewardResearchData(currCard, "Exiting popup"); }
+            if (!IsOn) { RewardData.Instance.UpdateRewardResearchData(currCard, "Exiting popup"); }
         }
 
     }

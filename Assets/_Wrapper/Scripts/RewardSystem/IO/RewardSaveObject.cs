@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Wrapper
 {
+    [System.Serializable]
     public class RewardSaveObject
     {
-        public string Username = Wrapper.Events.GetPlayerResearchCode?.Invoke();
-        public string RewardData = string.Empty;
+        public string Username = Events.GetPlayerResearchCode?.Invoke();
 
-        public void UpdateResearchData(RewardResearchData RRD) {
-            RewardData = RRD.RewardRDtoString();
-            Debug.Log("Research: " + RewardData);
-        }
+        public string currentCard = string.Empty;
+        public string game = string.Empty;
+        public string timeClicked = string.Empty;
+        public string displayType = string.Empty;
+        public string description = string.Empty;
         
+        public int[] cardsPerGame = new int[] { 0, 0, 0, 0, 0 };
+        public int totalCards = 0;
     }
 }
