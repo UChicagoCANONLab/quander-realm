@@ -142,13 +142,13 @@ namespace Wrapper
         public void FlipCard()
         {
             animator.SetTrigger(triggerFlip);
-            RewardData.Instance.UpdateRewardResearchData(this, "From flipping");
+            RewardSaveManager.Instance.UpdateCardData(this, "From flipping");
         }
 
         public void SelectFromJournal()
         {
             Routine.Start(SelectCard());
-            RewardData.Instance.UpdateRewardResearchData(this, "Manually selected in Journal");
+            RewardSaveManager.Instance.UpdateCardData(this, "Manually selected in Journal");
         }
     }
 }

@@ -1,10 +1,12 @@
 
-namespace Wrapper
+
+namespace Wrapper 
 {
     [System.Serializable]
-    public class RewardSaveObject
+    public class CardResearchData
     {
         public string Username = Events.GetPlayerResearchCode?.Invoke();
+        public string Header = "Reward Card Data";
 
         public string currentCard = string.Empty;
         public string game = string.Empty;
@@ -13,6 +15,6 @@ namespace Wrapper
         public string description = string.Empty;
         
         public int[] cardsPerGame = new int[] { 0, 0, 0, 0, 0 };
-        public int totalCards = 0;
+        public int totalCards = 0;        
     }
 }

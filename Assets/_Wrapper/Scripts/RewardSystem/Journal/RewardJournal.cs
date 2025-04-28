@@ -126,7 +126,7 @@ namespace Wrapper
             Events.PlaySound?.Invoke("W_CardIn");
             Routine.Start(featuredCardGO.GetComponent<Reward>().UpdateAnimationState());
             
-            RewardData.Instance.UpdateRewardResearchData(featuredCardGO.GetComponent<Reward>(), "Could be automatic from navigation");
+            RewardSaveManager.Instance.UpdateCardData(featuredCardGO.GetComponent<Reward>(), "Could be automatic from navigation");
         }
 
         #endregion
