@@ -454,11 +454,6 @@ namespace QueueBits
 			// Use the existing tutorial panel instead of creating a new one
 			if (tutorialPane != null)
 			{
-				// Store the original text to restore later
-				string originalText = "";
-				if (tutorialText != null)
-					originalText = tutorialText.text;
-
 				// Show the tutorial pane if it's not already active
 				tutorialPane.SetActive(true);
 
@@ -472,32 +467,31 @@ namespace QueueBits
 				if (tutorialImage != null)
 					tutorialImage.gameObject.SetActive(false);
 
-				// Hide the tutorial step button if it exists
+				// Show the tutorial step button with a checkmark
 				if (tutorialStepButton != null)
-					tutorialStepButton.SetActive(false);
+				{
+					tutorialStepButton.SetActive(true);
+					TextMeshProUGUI buttonText = tutorialStepButton.GetComponentInChildren<TextMeshProUGUI>();
+					if (buttonText != null)
+						buttonText.text = "✓"; // Checkmark symbol
 
-				// Start a coroutine to hide the explanation after a delay
-				StartCoroutine(HideHintExplanation(tutorialPane, 7.0f, originalText));
+					// Store current button onClick assignment
+					Button button = tutorialStepButton.GetComponent<Button>();
+					if (button != null)
+					{
+						button.onClick.RemoveAllListeners();
+						button.onClick.AddListener(() => {
+							// Just hide the hint pane when clicked
+							tutorialPane.SetActive(false);
+
+							// Note: Don't affect the arrow - it has its own timer
+						});
+					}
+				}
 			}
 			else
 			{
 				Debug.LogWarning("Tutorial pane not found. Cannot display hint explanation.");
-			}
-		}
-
-		private IEnumerator HideHintExplanation(GameObject panel, float delay, string originalText)
-		{
-			yield return new WaitForSeconds(delay);
-
-			// Restore original text if in a tutorial level
-			if (tutorialLevels.Contains(LEVEL_NUMBER) && tutorialText != null)
-			{
-				tutorialText.SetText(originalText);
-			}
-			else
-			{
-				// If not in tutorial, just hide the panel
-				panel.SetActive(false);
 			}
 		}
 
