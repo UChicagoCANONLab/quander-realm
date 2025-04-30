@@ -18,7 +18,7 @@ namespace Wrapper
         public int totalCoins = 0;
 
         // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes, Rewards, None, Trivia}
-        public List<int> starsPerGame = new List<int>(8); 
+        public List<int> starsPerGame = new List<int>(8);
 
         [NonSerialized]
         public DateTime lastLoginDate;
@@ -124,7 +124,7 @@ namespace Wrapper
 
             lastLoginDate = DateTime.Parse(loginticks);
             streak = long.Parse(streakString);
-            if (lastLoginDate.Date > DateTime.Now.AddDays(-1).Date)
+            if (lastLoginDate.Date >= DateTime.Now.AddDays(-1).Date)
             {
                 streak = long.Parse(streakString);
             }
