@@ -353,28 +353,39 @@ namespace QueueBits
 			// Level-specific information
 			if (LEVEL_NUMBER < 3)
 			{
-				infoSections.Add("• Click a token below to select it\n• Click a column to drop your token\n• First to connect 4 tokens wins!");
+				infoSections.Add("• Click a token below to select it\n
+								• Click a column to drop your token\n
+								• First to connect 4 tokens wins!");
 			}
 			else if (LEVEL_NUMBER < 6)
 			{
-				infoSections.Add("• Tokens in superposition have both yellow and red states\n• When played, they instantly become either yellow or red\n• Higher probability tokens (75%, 100%) are more likely to be yellow");
+				infoSections.Add("• Tokens in superposition have both yellow and red states\n
+								• When played, they instantly become either yellow or red\n
+								• Higher probability tokens (75%, 100%) are more likely to be yellow");
 			}
 			else if (LEVEL_NUMBER < 11)
 			{
-				infoSections.Add("• Tokens stay in superposition until the board is filled\n• After the board is full, the tokens will change one by one\n• Plan ahead! Consider what might happen when tokens are measured");
+				infoSections.Add("• Tokens stay in superposition until the board is filled\n
+								• After the board is full, the tokens will change one by one\n
+								• Plan ahead! Consider what might happen when tokens are measured");
 			}
 			else
 			{
-				infoSections.Add("• Tokens stay in superposition until the board is filled\n• After the board is full, YOU choose which tokens to measure and in what order\n• Choose strategically! Measure tokens that could create winning connections");
+				infoSections.Add("• Tokens stay in superposition until the board is filled\n
+								• After the board is full, YOU choose which tokens to measure and in what order\n
+								• Choose strategically! Measure tokens that could create winning connections");
 			}
 
 			// Add token explanation for levels 3+
 			if (LEVEL_NUMBER >= 3) {
-				infoSections.Add("• 100% token: Will always be yellow\n• 75% token: Has a 75% chance of being yellow\n• 50% token: Equal chance of being yellow or red");
+				infoSections.Add("• 100% token: Will always be yellow\n
+								• 75% token: Has a 75% chance of being yellow\n
+								• 50% token: Equal chance of being yellow or red");
 			}
 
 			// Final page: Make a move to continue
-			infoSections.Add("Click the Hint button for suggestions on your next move!\n\nMake a move to continue playing");
+			infoSections.Add("Click the Hint button for suggestions on your next move!\n\n
+								Make a move to continue playing");
 		}
 
 		// This function will be called when the "Next" button is clicked during info display
