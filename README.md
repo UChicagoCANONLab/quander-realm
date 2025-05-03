@@ -7,7 +7,8 @@
     1. [Overview](#boverview)
     2. [Summary](#bsummary)
     3. [Details](#bdetails)
-4. [Firebase Setup](#firebase)
+4. [Currently Active Branches](#activebranches)
+5. [Firebase Setup](#firebase)
 
 ## Overview <a name="overview"></a>
 The Quander Realm or **Wrapper** is a hub world that holds and manages the various minigames in this project along with all the shared functionality and assets.
@@ -28,7 +29,7 @@ This branching strategy is designed to keep each minigame and the wrapper in the
 - a **table** that details the purpose of each branch and its contents
 - a set of **diagrams** for a more visual representation of the different branches
 
-#### Summary <a name="bsummary"></a>
+### Summary <a name="bsummary"></a>
 
 - Filament devs work on the "develop" branch (or feature branches: feature/) to implement wrapper features
 - When a set of features is complete, they constitute a new version of the wrapper
@@ -38,7 +39,7 @@ This branching strategy is designed to keep each minigame and the wrapper in the
 - When a milestone is due, student devs will merge their branch into the "integration" branch
 - The entire game, now existing in the "integration" branch will be merged into "staging", and then just before launch, into "production"
 
-## Details <a name="bdetails"></a>
+### Details <a name="bdetails"></a>
 
 <table>
 <tr>
@@ -144,8 +145,64 @@ Devs _merge "staging" into this branch_ to make production builds that will go l
 
 <!-- **Note:** Rather than here in the readme, the [Wiki (accessed from the sidebar)](https://gitlab.office.filamentgames.com/client/university-of-chicago/quander-realm/-/wikis/home) will hold information such as the API Documentation, [Branching Strategy](https://gitlab.office.filamentgames.com/client/university-of-chicago/quander-realm/-/wikis/Branching-Strategy), [Technical Requirements](https://gitlab.office.filamentgames.com/client/university-of-chicago/quander-realm/-/wikis/Technical-Requirements), etc. 
  -->
+
+## Currently Active Branches <a name="activebranches"></a>
+<table>
+    <tr>
+        <th>Branch Name</th>
+        <th>Content</th>
+    </tr>
+    <tr>
+        <td>integration</td>
+        <td>Branch where all other branches that are not “q2” are merged; build of this branch is published on AWS</td>
+    </tr>
+    <tr>
+        <td>integration-q2</td>
+        <td>Branch where all branches including “q2” are merged; what will be published on AWS after incentive development is good to go</td>
+    </tr>
+    <tr>
+        <td>integration-lite</td>
+        <td>Branch where the “lite” version of the game is built and published on AWS; will become “q2” when main build is</td>
+    </tr>
+    <tr>
+        <td>wrapper</td>
+        <td>Main branch for Wrapper (map, reward interface, star tracker, back button, save system) before incentive development</td>
+    </tr>
+    <tr>
+        <td>wrapper-q2</td>
+        <td>Main branch for Wrapper after incentive development (previous + new reward system and interfaces)</td>
+    </tr>
+    <tr>
+        <td>minigame/blackbox-updates</td>
+        <td>Current Buried Treasure development</td>
+    </tr>
+    <tr>
+        <td>minigame/twintanglement2</td>
+        <td>Current TwinTanglement development</td>
+    </tr>
+    <tr>
+        <td>minigame/queuebits_new</td>
+        <td>Current Queuebits development</td>
+    </tr>
+    <tr>
+        <td>minigame/qupcakes</td>
+        <td>Current Qupcakery development</td>
+    </tr>
+    <tr>
+        <td>minigame/circuits</td>
+        <td>Current Tangle's Lair development</td>
+    </tr>
+    <tr>
+        <td>minigame/trivia</td>
+        <td>Current Tangle's Trivia development</td>
+    </tr>
+    <tr>
+        <td>minigame/trivia-demo</td>
+        <td>Branch containing first demo version of Tangle's Trivia</td>
+    </tr>
+</table>
  
-### Firebase Setup <a name="firebase"></a>
+## Firebase Setup <a name="firebase"></a>
 To build for develop:
 - Copy FirebaseConfig/develop/GoogleService-Info.plist and google-services.json to Assets/
 - Use the app id com.filamentgames.uchicago.quantumzombies
