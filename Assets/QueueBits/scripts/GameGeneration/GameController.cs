@@ -142,6 +142,29 @@ namespace QueueBits
 			tutorialImage.sprite = tutorialImages[i];
 			tutorialImage.gameObject.SetActive(true);
 		}
+		// Method called when a token is selected in tutorial
+		public void OnTutorialTokenSelected()
+		{
+			if (LEVEL_NUMBER == 1 && tutorialStep == 7)
+			{
+				tutorialStep = 8; // Move to next tutorial step when player selects a token
+				updateTutorial();
+
+				// Hide the pointer after the token is selected
+				if (pointer != null)
+				{
+					pointer.SetActive(false);
+				}
+			}
+		}
+		public void OnTutorialColumnClicked()
+		{
+			if (LEVEL_NUMBER == 1 && tutorialStep == 8)
+			{
+				tutorialStep = 9; // Move to next tutorial step when player drops a token
+				updateTutorial();
+			}
+		}
 
 		public void updateTutorial(int i = 0){
 			Debug.Log("update Tutorial! " + i);
@@ -168,29 +191,26 @@ namespace QueueBits
 					case 6:
 						tutorialToggle("It is Byte's turn first... Did you see how they just placed a red token?" );
 						GM1.gameObject.SetActive(true);
-						GM1.StartGame(this);
-						tutorialStepButton.SetActive(false);
+						GM1.StartGame();
+						tutorialStepButton.SetActive(true); // Make sure the button is active
 						break;
 					case 7:
-						tutorialStepButton.SetActive(true);
-						break;
-					case 8:
 						tutorialToggle("Now that it's our turn we first need to grab a token!");
 						tutorialStepButton.SetActive(false);
 						tutorialPieceCounter.SetActive(true);
 						pointer.SetActive(true);
 						break;
-					case 9:
+					case 8:
 						tutorialToggle("Great job!\n\nNow click where you want to place your token.");
 						tutorialStepButton.SetActive(false);
 						break;
-					case 10:
+					case 9:
 						// tutorialToggle("Amazing!\n\nLooks like you got the hang of it! If you ever need a reminder of what to do be sure to click on the hint button: \n\n\n\n\n\n\n", 3);
 						tutorialToggle("Amazing!\n\nLooks like you got the hang of it!\n\nHave fun!");
 						tutorialStepButton.SetActive(true);
 						GM1.disconnectTutorial();
 						break;
-					case 11:
+					case 10:
 						tutorialStep = -1;
 						tutorialPane.SetActive(false);
 						break;
@@ -405,10 +425,41 @@ namespace QueueBits
 		}
 		public void GetHint()
 		{
+			// Don't provide hints during tutorial
+			if (tutorialLevels.Contains(LEVEL_NUMBER) && tutorialStep != -1)
+			{
+				Debug.Log("Hints aren't available during tutorial. Please complete the tutorial first.");
+				return;
+			}
+
+			// In Level 1-2, only provide simple guidance
+			if (LEVEL_NUMBER < 3)
+			{
+				// Display a simpler hint for basic levels
+				string basicExplanation = "Try to create a line of 4 tokens in a row, column, or diagonal. Watch out for Byte's moves!";
+
+				// Just highlight a random valid column
+				List<int> validColumns = new List<int>();
+				for (int i = 0; i < numColumns; i++)
+				{
+					if (cpuAI.colPointers[i] >= 0)
+						validColumns.Add(i);
+				}
+
+				if (validColumns.Count > 0)
+				{
+					int randomColumn = validColumns[Random.Range(0, validColumns.Count)];
+					DisplayHint(100, randomColumn, basicExplanation); // Always show 100% token in basic levels
+				}
+
+				return;
+			}
+
+			// Normal hint calculation for levels 3+
 			Debug.Log("Hint provided!");
 			// Create temp AI
 			GameObject tempObject = new GameObject("TempAI");
-    		CPUBrain tempAI = tempObject.AddComponent<CPUBrain>();
+			CPUBrain tempAI = tempObject.AddComponent<CPUBrain>();
 			tempAI.state = cpuAI.state;
 			tempAI.colPointers = new int[cpuAI.colPointers.Length];
 			System.Array.Copy(cpuAI.colPointers, tempAI.colPointers, cpuAI.colPointers.Length);
@@ -419,11 +470,8 @@ namespace QueueBits
 			(int bestMove, int difference) = tempAI.findBestMoveandDifference(tempAI.colPointers, 4);
 			Destroy(tempObject);
 			(int recommendedProbability, string explanation) = CalculateRecommendedProbability(tempAI, bestMove, difference);
-			Debug.Log("Difference: " + difference);
-			// Check if there are still tokens of given probability
-			//Debug.Log("Recommended probability: " + recommendedProbability);
+
 			DisplayHint(recommendedProbability, bestMove, explanation);
-			//Debug.Log("Best move: " + bestMove);
 		}
 
 
@@ -751,7 +799,7 @@ namespace QueueBits
 
 			// Early game center columns - be more selective
 			if (currentPhase == GamePhase.Early && strategicValue >= 8) {
-				explanation = "Great spot! The central columns give you more ways to win later. A medium token could help control this important position!";
+				explanation = "The central columns give you more ways to win later. A medium token could help control this important position!";
 				// Only use 75% for the absolute center in early game
 				if (column == numColumns/2 && tokens75 > 0 && Random.Range(0, 100) < 50)
 					return (75, explanation);
@@ -1056,7 +1104,7 @@ namespace QueueBits
 			fieldObject.SetActive(false);
 			DM.GameOver(result);
 
-			// Check if there's a reward card 
+			// Check if there's a reward card
 			Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER);
 			Wrapper.Events.CollectAndDisplayBadge?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER, GameManager.saveData.totalStars);
 		}
@@ -1083,6 +1131,15 @@ namespace QueueBits
 		// New funtion to spawn piece when clicking buttons on TokenSelector
 		public void tokenSelectedByButton(int prob)
 		{
+			// Cancel any highlights when a token is selected
+			CancelHighlights();
+
+			// Handle tutorial progression
+			if (LEVEL_NUMBER == 1 && tutorialStep == 7)
+			{
+				OnTutorialTokenSelected();
+			}
+
 			if (LEVEL_NUMBER < 6)
 			{
 				GM1.tokenSelectedByButton(prob);
@@ -1096,7 +1153,6 @@ namespace QueueBits
 				GM3.tokenSelectedByButton(prob);
 			}
 		}
-
 		// Initializes array that contains Prefilled Board
 		public void initPrefilledBoard()
 		{
