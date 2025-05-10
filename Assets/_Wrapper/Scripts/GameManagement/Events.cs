@@ -105,7 +105,7 @@ namespace Wrapper
         public static Action<bool> TogglePreviousButton;
         public static Action<bool> ToggleSkipButton;
 
-        /// Within Minigame Scripts ///
+        /// Within Minigame Scripts and RewardResearchData ///
         public static Action DialogueSequenceEnded;
 
     #endregion
