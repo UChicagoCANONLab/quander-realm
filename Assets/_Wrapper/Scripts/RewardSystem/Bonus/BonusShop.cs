@@ -57,7 +57,7 @@ namespace Wrapper
         private void PopulateShop()
         {
             // iterate through all bonus assets
-            // create bonus gameobject form asset
+            // create bonus gameobject from asset
             // add gameobject to correct shop page
         }
 
