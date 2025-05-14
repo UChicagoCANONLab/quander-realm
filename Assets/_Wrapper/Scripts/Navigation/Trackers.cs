@@ -17,27 +17,18 @@ namespace Wrapper
         [SerializeField] private StarTracker[] tracker_Minigames;
         [SerializeField] private StarTracker tracker_Challenge;
 
-
         [Header("General Trackers at top of screen")]
         [SerializeField] private GeneralTrackers trackerPanel;
-        // [SerializeField] private TMP_Text totalStarsTMP;
-        // private int totalStars;
-        // [SerializeField] private TMP_Text totalCoinsTMP;
-        // private int totalCoins;
-        // [SerializeField] private TMP_Text streakLengthTMP;
-        // private int streakLength;
-        // [SerializeField] private GameObject fire;
-        // [SerializeField] private Image lanternFront;
-
 
         [Header("Animator")]
         [SerializeField] private Animator trackerAnimator;
+
 
         private bool panelVisible = false;
         private Game[] gamesArray = new Game[] {
             Game.Qupcakes, Game.Labyrinth, Game.Circuits, Game.QueueBits, Game.BlackBox
         };
-        private bool active = true;
+        public bool active = true;
 
 
 
@@ -97,25 +88,20 @@ namespace Wrapper
             tracker_Challenge.ResetStarDisplay();
 
             trackerPanel.SetStars(0);
-            // totalStars = 0;
-            // totalStarsTMP.text = "0";
-
             trackerPanel.SetCoins(0);
-            // totalCoins = 0;
-            // totalCoinsTMP.text = "0";
         }
 
         public void UpdateCoinTracker()
         {
             int totalCoins = Events.GetUserSaveTotalCoins.Invoke();
             trackerPanel.SetCoins(totalCoins);
-            // totalCoinsTMP.text = $"{totalCoins}";
         }
 
         public void OnUpdateStreakLength(long streak)
         {
             trackerPanel.SetStreak((int)streak);
             //Debug.Log("Updating streak length");
+            // MOVED TO trackerPanel
             /* bool active = streak > 0;
             if(active){
                 lanternFront.color = new Color(1f, 1f, 1f);
@@ -136,7 +122,6 @@ namespace Wrapper
             int totalStars = Events.GetOverallTotalStars.Invoke();
             tracker_Overall.SetStarDisplay(totalStars);
             trackerPanel.SetStars(totalStars);
-            // totalStarsTMP.text = $"{totalStars}";
         }
 
 

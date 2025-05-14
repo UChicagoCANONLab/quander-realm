@@ -22,14 +22,16 @@ namespace Wrapper
         [SerializeField] private DebugScreen debugScreen;
         [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
+        [SerializeField] private GameObject loadingScreenPrefab;
+        [SerializeField] Button universalBackButton;
+        [SerializeField] private Trackers trackers;
+
+        [Header("Popups")]
         [SerializeField] private CardPopup cardPopup;
         [SerializeField] private BadgePopup badgePopup;
         [SerializeField] private GamePopup gamePopup;
         [SerializeField] private AgePopup agePopup;
-        [SerializeField] private CoinPopup coinPopup;
-        [SerializeField] private GameObject loadingScreenPrefab;
-        [SerializeField] Button universalBackButton;
-        [SerializeField] private Trackers trackers;
+        [SerializeField] private CoinPopup coinPopup;        
 
         [Header("Reward Card Objects")]
         [SerializeField] private GameObject BBRewardPrefab;

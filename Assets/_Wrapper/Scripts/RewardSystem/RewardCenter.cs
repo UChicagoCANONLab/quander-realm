@@ -15,10 +15,11 @@ namespace Wrapper
         [SerializeField] private GameObject BadgeBulletinCanvas;
         [SerializeField] private GameObject RewardJournalCanvas;
 
-        [Header("Numerical Counters")]
-        [SerializeField] private TextMeshProUGUI StarTracker;
-        [SerializeField] private TextMeshProUGUI CoinTracker;
-        [SerializeField] private TextMeshProUGUI StreakTracker;
+        // [Header("Numerical Counters")]
+        // [SerializeField] private TextMeshProUGUI StarTracker;
+        // [SerializeField] private TextMeshProUGUI CoinTracker;
+        // [SerializeField] private TextMeshProUGUI StreakTracker;
+        [SerializeField] private GeneralTrackers generalTrackers;
 
 
         [Header("Animators")]
@@ -38,6 +39,11 @@ namespace Wrapper
             Events.ReturnToRewardCenter -= returnToRewardCenter;
         }
 
+        private void Awake()
+        {
+            generalTrackers.UpdateDisplay();
+        }
+
         private void Start()
         {
             Events.Delay?.Invoke(0.5f);
@@ -45,7 +51,7 @@ namespace Wrapper
             RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
             BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
 
-            SetRewardCenterTrackers();
+            // SetRewardCenterTrackers();
             RewardCenterAnimator.SetBool("On", true);
         }
 
@@ -77,11 +83,11 @@ namespace Wrapper
             return false;
         }
 
-        public void SetRewardCenterTrackers() {
-            StarTracker.text = $"{Events.GetOverallTotalStars.Invoke()}";
-            CoinTracker.text = $"{Events.GetUserSaveTotalCoins.Invoke()}";
-            StreakTracker.text = $"{Events.GetStreakLength.Invoke()}";
-        }
+        // public void SetRewardCenterTrackers() {
+        //     StarTracker.text = $"{Events.GetOverallTotalStars.Invoke()}";
+        //     CoinTracker.text = $"{Events.GetUserSaveTotalCoins.Invoke()}";
+        //     StreakTracker.text = $"{Events.GetStreakLength.Invoke()}";
+        // }
 
     }
 }
