@@ -35,7 +35,6 @@ namespace QueueBits
 		// Holder for Board and all tokens
 		public GameObject fieldObject;
 
-
 		// Prefilled Board objects and name
 		[Header("Prefilled Boards")]
 		public PrefilledBoards PB;
@@ -50,8 +49,14 @@ namespace QueueBits
 		[Header("Meter")]
 		public GameObject meter;
 
+		[Header("Token Arrow")]
+		public GameObject tokenArrow;
+
 		[Header("Tutorial")]
 		public GameObject pointer;
+
+		public GameObject hintArrow;
+
 		public GameObject tutorialPane;
 		public TextMeshProUGUI tutorialText;
 		public Image tutorialImage;
@@ -455,7 +460,6 @@ namespace QueueBits
 				return;
 			}
 
-			// Normal hint calculation for levels 3+
 			Debug.Log("Hint provided!");
 			// Create temp AI
 			GameObject tempObject = new GameObject("TempAI");
@@ -480,17 +484,18 @@ namespace QueueBits
 			Debug.Log($"Showing hint: Use {recommendedProbability}% token in column {bestMove}");
 
 			// Highlight the recommended token based on game mode
+			Debug.Log("Game Controller sending" + tokenArrow);
 			if (LEVEL_NUMBER < 6)
 			{
-				GM1.tokenCounterPlayer.HighlightToken(recommendedProbability);
+				GM1.tokenCounterPlayer.HighlightToken(recommendedProbability, tokenArrow);
 			}
 			else if (LEVEL_NUMBER < 11)
 			{
-				GM2.tokenCounterPlayer.HighlightToken(recommendedProbability);
+				GM2.tokenCounterPlayer.HighlightToken(recommendedProbability, tokenArrow);
 			}
 			else
 			{
-				GM3.tokenCounterPlayer.HighlightToken(recommendedProbability);
+				GM3.tokenCounterPlayer.HighlightToken(recommendedProbability, tokenArrow);
 			}
 			// Highlight the column where the token should be played
 			HighlightRecommendedColumn(bestMove);
@@ -554,73 +559,69 @@ namespace QueueBits
 					Destroy(activeColumnHighlight);
 			}
 
-			// Create a downward-pointing arrow
-			activeColumnHighlight = new GameObject("ColumnHighlightArrow");
-			activeColumnHighlight.transform.SetParent(fieldObject.transform);
+			// Use hintArrow instead of creating a mesh arrow
+			if (hintArrow != null)
+			{
+				hintArrow.SetActive(true);
 
-			// Calculate position based on board layout - make sure it's actually above the board
-			float columnWidth = 1.0f;
-			float startX = -((numColumns - 1) * columnWidth / 2.0f);
-			Vector3 position = new Vector3(startX + (column * columnWidth)+ 3.0f, 1.5f, -0.1f);
+				// Calculate position based on board layout
+				float columnWidth = 1.0f;
+				float startX = 1.0f;
+				// Adjust the height to be lower (was 1.5f)
+				Debug.Log(column);
+				Vector3 position = new Vector3(startX + (column * columnWidth) + 3.0f, 1.6f, -0.1f);
 
-			activeColumnHighlight.transform.position = position;
+				// Position the arrow
+				hintArrow.transform.position = position;
 
-			// Create the arrow mesh directly (simpler approach)
-			GameObject arrowObject = new GameObject("ArrowMesh");
-			arrowObject.transform.parent = activeColumnHighlight.transform;
-			arrowObject.transform.localPosition = Vector3.zero;
-
-			MeshFilter meshFilter = arrowObject.AddComponent<MeshFilter>();
-			MeshRenderer meshRenderer = arrowObject.AddComponent<MeshRenderer>();
-
-			// Define points for a down-pointing arrow (simplified)
-			Vector3[] vertices = new Vector3[7];
-			vertices[0] = new Vector3(0f, -0.5f, 0f);    // Arrow tip (down)
-			vertices[1] = new Vector3(0.3f, -0.1f, 0f);  // Bottom right corner
-			vertices[2] = new Vector3(0.15f, -0.1f, 0f); // Right inner corner
-			vertices[3] = new Vector3(0.15f, 0.5f, 0f);  // Top right corner
-			vertices[4] = new Vector3(-0.15f, 0.5f, 0f); // Top left corner
-			vertices[5] = new Vector3(-0.15f, -0.1f, 0f);// Left inner corner
-			vertices[6] = new Vector3(-0.3f, -0.1f, 0f); // Bottom left corner
-
-			// Create the mesh with triangles
-			Mesh mesh = new Mesh();
-			mesh.vertices = vertices;
-			mesh.triangles = new int[] {
-				0, 1, 2,  // Right triangle of arrowhead
-				0, 2, 5,  // Middle of arrowhead
-				0, 5, 6,  // Left triangle of arrowhead
-				2, 3, 4,  // Rectangle of shaft
-				2, 4, 5   // Rectangle of shaft
-			};
-			mesh.RecalculateNormals();
-
-			// Apply the mesh and set material
-			meshFilter.mesh = mesh;
-			meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
-			meshRenderer.material.color = new Color(0.7f, 0.3f, 1.0f); // Brighter purple
-			// Start animation coroutine
-			columnHighlightCoroutine = StartCoroutine(AnimateColumnHighlight(activeColumnHighlight));
+				// Start animation coroutine
+				columnHighlightCoroutine = StartCoroutine(AnimateColumnHighlight(activeColumnHighlight));
+			}
+			else
+			{
+				Debug.LogWarning("Hint arrow is not assigned! Using fallback mesh arrow.");
+			}
 		}
 
 		private IEnumerator AnimateColumnHighlight(GameObject highlight)
 		{
+			// Check if hintarrow is available
+			if (highlight == null && hintArrow != null && hintArrow.activeSelf)
+			{
+				// Use hintArrow as the highlight if activeColumnHighlight isn't set
+				highlight = hintArrow;
+			}
+
+			if (highlight == null)
+			{
+				Debug.LogError("No arrow to animate in AnimateColumnHighlight!");
+				yield break;
+			}
+
 			float duration = 7.0f;
 			float elapsed = 0f;
 			Vector3 originalPosition = highlight.transform.position;
-			Vector3 targetPosition = originalPosition - new Vector3(0f, 0.2f, 0f); // Move down a small amount
+			Vector3 leftPosition = originalPosition - new Vector3(0.3f, 0f, 0f); // Move left
+
+			float animationSpeed = 1.1f; //Keep it relatively slow
 
 			while (elapsed < duration)
 			{
-				// Only move up and down, no alpha pulsing
-				float t = Mathf.PingPong(elapsed, 1f);
-				highlight.transform.position = Vector3.Lerp(originalPosition, targetPosition, t);
+				// Calculate a value that goes 0->1->0 smoothly for the ping-pong effect
+				// Use a slower frequency for more gentle movement
+				float t = Mathf.PingPong(elapsed * animationSpeed, 1f);
+
+				highlight.transform.position = Vector3.Lerp(originalPosition, leftPosition, t);
 
 				elapsed += Time.deltaTime;
 				yield return null;
 			}
 
-			Destroy(highlight);
+			// Reset to original position
+			highlight.transform.position = originalPosition;
+
+			// Deactivate arrow
+			highlight.SetActive(false);
 			activeColumnHighlight = null;
 			columnHighlightCoroutine = null;
 		}
@@ -637,7 +638,7 @@ namespace QueueBits
 				columnHighlightCoroutine = null;
 			}
 
-			// Cancel token highlight if active (call method in TokenCounter)
+			// Cancel token highlight if active
 			if (LEVEL_NUMBER < 6)
 			{
 				GM1.tokenCounterPlayer.CancelHighlight();

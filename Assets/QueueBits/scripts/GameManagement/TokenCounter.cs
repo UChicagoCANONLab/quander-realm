@@ -21,6 +21,7 @@ namespace QueueBits
 
         private Coroutine highlightCoroutine;
         private GameObject activeHighlight;
+        private static GameObject hintArrowPrefab;
 
         // Number of tokens available by level
         public int[][] tokenCountsPerLevel = new int[][] { // {100%, 75%, 50%}
@@ -128,14 +129,17 @@ namespace QueueBits
                 }
             }
         }
-        public void HighlightToken(int probability)
+        public void HighlightToken(int probability, GameObject hintArrowObj = null)
         {
+            Debug.Log("hintArrowObj: " + hintArrowObj);
+
             // Cancel any existing highlight
             if (highlightCoroutine != null)
             {
                 StopCoroutine(highlightCoroutine);
+                // Don't destroy the arrow, just deactivate if needed
                 if (activeHighlight != null)
-                    Destroy(activeHighlight);
+                    activeHighlight.SetActive(false);
             }
 
             // Get the appropriate token counter GameObject based on probability
@@ -149,117 +153,77 @@ namespace QueueBits
 
             // If no valid token or no tokens of that probability left, exit
             if (targetCounter == null)
+            {
+                Debug.LogWarning($"No valid token counter found for probability {probability}");
                 return;
-
-            // Create an arrow pointing to the token
-            activeHighlight = new GameObject("TokenHighlightArrow");
-            activeHighlight.transform.SetParent(transform);
-
-            // Create a sprite renderer for the arrow
-            SpriteRenderer sr = activeHighlight.AddComponent<SpriteRenderer>();
-
-            // That won't ever work, so we create a custom arrow.
-            if (sr.sprite == null) {
-                // Create a custom arrow using line renderer
-                LineRenderer lineRenderer = activeHighlight.AddComponent<LineRenderer>();
-                lineRenderer.startWidth = 0.1f;
-                lineRenderer.endWidth = 0.1f;
-                lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                lineRenderer.startColor = new Color(0.7f, 0.3f, 1.0f);
-                lineRenderer.endColor = new Color(0.7f, 0.3f, 1.0f);
-
-                // Define points for a left-pointing arrow
-                Vector3[] arrowPoints = new Vector3[7];
-                // Define points for a right-pointing arrow
-                arrowPoints[0] = new Vector3(0.3f, 0f, 0f);      // Arrow tip (now on the right)
-                arrowPoints[1] = new Vector3(0f, 0.2f, 0f);      // Top left corner
-                arrowPoints[2] = new Vector3(0f, 0.1f, 0f);      // Left top inner
-                arrowPoints[3] = new Vector3(-0.3f, 0.1f, 0f);   // Shaft top
-                arrowPoints[4] = new Vector3(-0.3f, -0.1f, 0f);  // Shaft bottom
-                arrowPoints[5] = new Vector3(0f, -0.1f, 0f);     // Left bottom inner
-                arrowPoints[6] = new Vector3(0f, -0.2f, 0f);     // Bottom left corner
-
-                lineRenderer.positionCount = arrowPoints.Length + 1;
-
-                // Complete the arrow (connect back to the tip)
-                for (int i = 0; i < arrowPoints.Length; i++) {
-                    lineRenderer.SetPosition(i, arrowPoints[i]);
-                }
-
-                // Close the shape
-                lineRenderer.SetPosition(arrowPoints.Length, arrowPoints[0]);
-                lineRenderer.enabled = false; // Disable the line renderer to avoid drawing lines
-
-                // Create a simple arrowhead to fill in the shape
-                GameObject arrowFill = new GameObject("ArrowFill");
-                arrowFill.transform.parent = activeHighlight.transform;
-                arrowFill.transform.localPosition = Vector3.zero;
-
-                // Use a mesh to create a filled arrow
-                MeshFilter meshFilter = arrowFill.AddComponent<MeshFilter>();
-                MeshRenderer meshRenderer = arrowFill.AddComponent<MeshRenderer>();
-
-                Mesh mesh = new Mesh();
-                Vector3[] vertices = arrowPoints;
-                int[] triangles = new int[] {
-                    0, 1, 2,  // Top triangle of arrowhead
-                    0, 2, 5,  // Middle of arrowhead
-                    0, 5, 6,  // Bottom triangle of arrowhead
-                    2, 3, 4,  // Rectangle of shaft
-                    2, 4, 5   // Rectangle of shaft
-                };
-
-                mesh.vertices = vertices;
-                mesh.triangles = triangles;
-                mesh.RecalculateNormals();
-
-                meshFilter.mesh = mesh;
-                meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                meshRenderer.material.color = new Color(0.7f, 0.3f, 1.0f);
-
-                // Disable the sprite renderer since we're using line renderer and mesh
-                sr.enabled = false;
             }
 
-            // Position the arrow to the right of the target counter (so it points left)
-            activeHighlight.transform.position = targetCounter.transform.position + new Vector3(1.5f, 0f, 0.1f);
-            // Set color and initial properties
-            sr.color = new Color(0.7f, 0.3f, 1f, 0.8f); // Yellow with slight transparency
+            Debug.Log($"Creating highlight for {probability}% token at {targetCounter.name}");
 
-            // Rotate the arrow to point left (assuming the default arrow points right)
-            activeHighlight.transform.rotation = Quaternion.Euler(0, 0, 180);
+            // Update the static reference if we get a new one
+            if (hintArrowObj != null)
+            {
+                hintArrowPrefab = hintArrowObj;
+            }
 
-            // Start animation coroutine
-            highlightCoroutine = StartCoroutine(AnimateTokenHighlight(activeHighlight));
+            // Use the provided hint arrow
+            if (hintArrowPrefab != null)
+            {
+                activeHighlight = hintArrowPrefab;
+                activeHighlight.SetActive(true);
+
+                Vector3 counterPos = targetCounter.transform.position;
+                activeHighlight.transform.position = counterPos + new Vector3(4.1f, 1.6f, 0f);
+
+
+                // Start animation coroutine
+                highlightCoroutine = StartCoroutine(AnimateTokenHighlight(activeHighlight));
+            }
+            else
+            {
+                Debug.LogError("No hint arrow available to use!");
+            }
         }
 
         private IEnumerator AnimateTokenHighlight(GameObject highlight)
         {
+            // Get the sprite renderer (either directly or from children)
             SpriteRenderer sr = highlight.GetComponent<SpriteRenderer>();
             if (sr == null)
                 sr = highlight.GetComponentInChildren<SpriteRenderer>();
 
+            // Animation settings
             float duration = 7.0f;
             float elapsed = 0f;
             Vector3 originalPosition = highlight.transform.position;
-            Vector3 targetPosition = originalPosition + new Vector3(0.3f, 0f, 0); // Move right instead of left
+
+            //Start at the RIGHT side, move to the left and back
+            Vector3 rightPosition = originalPosition + new Vector3(0.3f, 0f, 0); // Start on right side
+
+            float animationSpeed = 1.1f;
+
+            // Move to starting position immediately
+            highlight.transform.position = rightPosition;
+
             while (elapsed < duration)
             {
-                // Pulse alpha
-                if (sr != null) {
-                    float alpha = Mathf.PingPong(elapsed * 2f, 0.8f) + 0.2f;
-                    sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, alpha);
-                }
+                // Calculate a value that goes 0->1->0 smoothly for the ping-pong effect
+                float t = Mathf.PingPong(elapsed * animationSpeed, 1f);
 
-                // Move left and right slightly
-                float t = Mathf.PingPong(elapsed, 1f);
-                highlight.transform.position = Vector3.Lerp(originalPosition, targetPosition, t);
+                // Move between right position and original position
+                highlight.transform.position = Vector3.Lerp(rightPosition, originalPosition, t);
 
                 elapsed += Time.deltaTime;
                 yield return null;
             }
 
-            Destroy(highlight);
+            // Reset to original position at the end
+            highlight.transform.position = originalPosition;
+
+            // Cleanup Cleanup
+            highlight.SetActive(false);
+
+
             activeHighlight = null;
             highlightCoroutine = null;
         }
