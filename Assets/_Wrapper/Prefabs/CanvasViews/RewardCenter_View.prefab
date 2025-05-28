@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6612311090308085121}
+  - component: {fileID: 3514317538552695362}
   m_Layer: 5
   m_Name: RewardInterfaces
   m_TagString: Untagged
@@ -28,10 +29,59 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 641458783915338554}
   - {fileID: 3222282236940040157}
   - {fileID: 6703425454178522476}
   m_Father: {fileID: 7494027813171573491}
-  m_RootOrder: 2
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &3514317538552695362
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440985756511406292}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!1 &2623656039747666019
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 641458783915338554}
+  m_Layer: 5
+  m_Name: BackButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &641458783915338554
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2623656039747666019}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6612311090308085121}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -73,8 +123,8 @@ RectTransform:
   m_Children:
   - {fileID: 1643311705490556555}
   - {fileID: 8268174839709522177}
-  - {fileID: 6612311090308085121}
   - {fileID: 7494027813584520067}
+  - {fileID: 6612311090308085121}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -95,8 +145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39722932a956c4a4d82914c4f5c29f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DailyQuests: {fileID: 0}
-  PuzzlesOfTheDay: {fileID: 1871371046758176244}
   BadgeBulletinCanvas: {fileID: 953498471301276604}
   RewardJournalCanvas: {fileID: 3222282236940040156}
   generalTrackers: {fileID: 1477320112129342513}
@@ -215,7 +263,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7494027813171573491}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -270,7 +318,7 @@ CanvasGroup:
   m_Enabled: 1
   m_Alpha: 0
   m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1001 &5233828270168557768
 PrefabInstance:
@@ -303,6 +351,10 @@ PrefabInstance:
       propertyPath: RewardJournalAnimator
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 137323974856616041, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 289014736550823137, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -322,6 +374,14 @@ PrefabInstance:
     - target: {fileID: 318712282869624439, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 402913392388105782, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4135850675779058310}
+    - target: {fileID: 402913392388105782, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: openRewardJournal
       objectReference: {fileID: 0}
     - target: {fileID: 1542299224560357481, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
       propertyPath: m_AnchorMax.y
@@ -643,6 +703,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7496246237338826586, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4135850675779058310}
+    - target: {fileID: 7496246237338826586, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: openBadgeBulletin
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576538099095858051, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
+      propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8740819676592602659, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -704,11 +776,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69835829e22164f9a8d43ec0ca1c09d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1871371046758176244 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5862060647704141116, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
-  m_PrefabInstance: {fileID: 5233828270168557768}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8268174839709522177 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4187290065799352777, guid: cfbc44217f44a471d8de8390708297f4, type: 3}
@@ -919,7 +986,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3821158564803210190, guid: a363f51206042423390567bc670f421a, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3821158564803210190, guid: a363f51206042423390567bc670f421a, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1763,7 +1830,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4951701229443006394, guid: fc3f7332f7f7e7644a94f2d96fefb1a0, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4951701229443006394, guid: fc3f7332f7f7e7644a94f2d96fefb1a0, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1960,6 +2027,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7494027813171573491}
     m_Modifications:
+    - target: {fileID: 9137264733065077974, guid: 3d705029717e14317b48fdd764f43e3c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 21b006d627632074db90dfc5ff63185b, type: 3}
+    - target: {fileID: 9137264733638607469, guid: 3d705029717e14317b48fdd764f43e3c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9137264734270303609, guid: 3d705029717e14317b48fdd764f43e3c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9137264734519641680, guid: 3d705029717e14317b48fdd764f43e3c, type: 3}
       propertyPath: m_Name
       value: Background
@@ -2051,6 +2130,10 @@ PrefabInstance:
     - target: {fileID: 9137264734519641683, guid: 3d705029717e14317b48fdd764f43e3c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9137264734654344509, guid: 3d705029717e14317b48fdd764f43e3c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d705029717e14317b48fdd764f43e3c, type: 3}

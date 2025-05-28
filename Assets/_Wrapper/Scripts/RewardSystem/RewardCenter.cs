@@ -14,10 +14,6 @@ namespace Wrapper
         [SerializeField] private GameObject BadgeBulletinCanvas; // right blue screen
         [SerializeField] private GameObject RewardJournalCanvas; // journal
 
-        // [Header("Numerical Counters")]
-        // [SerializeField] private TextMeshProUGUI StarTracker;
-        // [SerializeField] private TextMeshProUGUI CoinTracker;
-        // [SerializeField] private TextMeshProUGUI StreakTracker;
         [SerializeField] private GeneralTrackers generalTrackers;
 
 
@@ -47,21 +43,22 @@ namespace Wrapper
         {
             Events.Delay?.Invoke(0.5f);
             // DelayStart();
-            RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
-            BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
+            // RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
+            // BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
 
-            // SetRewardCenterTrackers();
             RewardCenterAnimator.SetBool("On", true);
         }
 
 
         public void openRewardJournal() {
+            RewardCenterAnimator.SetTrigger("Fader");
             RewardCenterAnimator.SetBool("On", false);
-            RewardJournalCanvas.GetComponent<Animator>().SetBool("On", true);
+            RewardJournalCanvas.GetComponent<RewardJournal>().ToggleRewardJournalAnim(true);
             RewardJournalCanvas.GetComponent<RewardJournal>().InitFirstPage();
         }
 
         public void openBadgeBulletin() {
+            RewardCenterAnimator.SetTrigger("Fader");
             RewardCenterAnimator.SetBool("On", false);
             BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", true);
             BadgeBulletinCanvas.GetComponent<BadgeManager>().DelayGetStars();
@@ -73,7 +70,9 @@ namespace Wrapper
 
             if (RewardCenterAnimator.GetBool("On") == false) 
             {
-                RewardJournalCanvas.GetComponent<Animator>().SetBool("On", false);
+                RewardCenterAnimator.SetTrigger("Fader");
+
+                RewardJournalCanvas.GetComponent<RewardJournal>().ToggleRewardJournalAnim(false);
                 BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
 
                 RewardCenterAnimator.SetBool("On", true);
@@ -81,12 +80,6 @@ namespace Wrapper
             } 
             return false;
         }
-
-        // public void SetRewardCenterTrackers() {
-        //     StarTracker.text = $"{Events.GetOverallTotalStars.Invoke()}";
-        //     CoinTracker.text = $"{Events.GetUserSaveTotalCoins.Invoke()}";
-        //     StreakTracker.text = $"{Events.GetStreakLength.Invoke()}";
-        // }
 
     }
 }

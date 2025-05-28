@@ -258,5 +258,11 @@ namespace Wrapper
         }
 
         #endregion
+
+        public void ToggleRewardJournalAnim(bool isOn)
+        {
+            animator.SetBool("On", isOn);
+            animator.SetBool(featuredCardParam, isOn);
+        }
     }
 }
