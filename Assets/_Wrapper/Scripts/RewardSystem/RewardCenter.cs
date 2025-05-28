@@ -10,10 +10,9 @@ namespace Wrapper
     public class RewardCenter : MonoBehaviour
     {
         [Header("Navigation Buttons")]
-        [SerializeField] private GameObject DailyQuests;
-        [SerializeField] private GameObject PuzzlesOfTheDay;
-        [SerializeField] private GameObject BadgeBulletinCanvas;
-        [SerializeField] private GameObject RewardJournalCanvas;
+        // [SerializeField] private GameObject PuzzlesOfTheDay; // left blue screen
+        [SerializeField] private GameObject BadgeBulletinCanvas; // right blue screen
+        [SerializeField] private GameObject RewardJournalCanvas; // journal
 
         // [Header("Numerical Counters")]
         // [SerializeField] private TextMeshProUGUI StarTracker;
