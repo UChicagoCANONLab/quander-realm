@@ -66,6 +66,15 @@ namespace Wrapper
             return 0;
         }
 
+        public void UseBonus(string name)
+        {
+            switch(name)
+            {
+                case "SkipLevel":
+                    SkipLevel(Events.GetCurrentGame.Invoke());
+                    break;
+            }
+        }
 
 
         public void SkipLevel(Game game)
@@ -83,6 +92,8 @@ namespace Wrapper
                 case Game.Qupcakes:
                     Qupcakery.LoadGame.Load();
                     if (SceneManager.GetActiveScene().name != "QU_LevelSelection") {
+                        GameObject.Find("MenuButton").GetComponent<Qupcakery.MenuButton>().LoadLevelSelectionMenu();
+                    } else {
                         SceneManager.LoadScene("QU_LevelSelection");
                     }
                     break;
@@ -102,6 +113,7 @@ namespace Wrapper
                     // WORK ON THIS ONE
                     break;
             }
+            return;
         }
 
     }
