@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 namespace Wrapper
@@ -63,6 +64,44 @@ namespace Wrapper
         {
             // bonus.numberUnlocked - bonus.numberUsed;
             return 0;
+        }
+
+
+
+        public void SkipLevel(Game game)
+        {
+            // Check if applicable
+            if (!Events.GetGameUnlocked.Invoke(game)) return;
+            else if (Events.GetMinigameAllLevelsUnlocked.Invoke(game)) return;
+
+            // Unlock next level in save file
+            Events.UnlockNextLevel.Invoke(game);
+
+            // Reload minigame save file
+            switch(game)
+            {
+                case Game.Qupcakes:
+                    Qupcakery.LoadGame.Load();
+                    if (SceneManager.GetActiveScene().name != "QU_LevelSelection") {
+                        SceneManager.LoadScene("QU_LevelSelection");
+                    }
+                    break;
+                case Game.Labyrinth:
+                    // Loads data at start of scene
+                    SceneManager.LoadScene("LA_LevelSelect");
+                    break;
+                case Game.Circuits:
+                    // Loads data at start of scene
+                    SceneManager.LoadScene("Circuits_Menu");
+                    break;
+                case Game.QueueBits:
+                    // Loads data at start of scene
+                    SceneManager.LoadScene("QB_LevelSelect");
+                    break;
+                case Game.BlackBox:
+                    // WORK ON THIS ONE
+                    break;
+            }
         }
 
     }
