@@ -9,12 +9,14 @@ namespace Wrapper
     public class ExitMenu : MonoBehaviour
     {
         [SerializeField] private Animator animator;
-        [SerializeField] private GeneralTrackers localTrackerPanel;
-        [SerializeField] private Trackers trackers;
+        [SerializeField] public GeneralTrackers localTrackerPanel;
+        [SerializeField] private Trackers trackers; // on map scene
+        [SerializeField] private BonusMenu bonusMenu;
 
         [Header("Buttons")]
         [SerializeField] private QButton backgroundButton;
         [SerializeField] private BackButton exitButton;
+        [SerializeField] private Button bonusButton;
 
         private bool isOn = false;
 
@@ -24,6 +26,7 @@ namespace Wrapper
         {
             backgroundButton.onClick.AddListener(() => CloseMenu());
             exitButton.onClick.AddListener(() => CloseMenu());
+            bonusButton.onClick.AddListener(() => bonusMenu.ToggleBonusMenu());
         }
 
 
