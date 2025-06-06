@@ -11,8 +11,12 @@ namespace Wrapper
     {
         [SerializeField] private Animator animator;
 
-        [SerializeField] private BadgeHolder[] badgeHolders;
+        [SerializeField] private GameObject mainBadgeHolder;
+        // [SerializeField] private BadgeHolder[] badgeHolders;
         [SerializeField] private TextMeshProUGUI starCount;
+
+        [SerializeField] public GameObject badgePrefab;
+        [SerializeField] public List<Badge> badges; 
 
         private string prefix = "_Wrapper/Incentives/Badges";
 
@@ -39,10 +43,22 @@ namespace Wrapper
 
         private void LoadBadges()
         {
-            foreach (string ID in badgeIDs2)
+            /* foreach (string ID in badgeIDs2)
             {
                 BadgeAsset bAsset = Resources.Load<BadgeAsset>($"{prefix}/{ID}");
                 badgeHolders[(int)bAsset.criteriaType].AddBadge(bAsset, ID);
+            } */
+
+            foreach (string ID in badgeIDs2)
+            {
+                BadgeAsset bAsset = Resources.Load<BadgeAsset>($"{prefix}/{ID}");
+                // badgeHolders[(int)bAsset.criteriaType].AddBadge(bAsset, ID);
+
+                GameObject bObject = Instantiate(badgePrefab, mainBadgeHolder.transform);
+                bObject.name = ID;
+                bObject.GetComponent<Badge>().InitBadge(bAsset);
+
+                badges.Add(bObject.GetComponent<Badge>());
             }
         }
 
@@ -54,12 +70,16 @@ namespace Wrapper
         public void GetBonusStars()
         {
             int stars = 0;
-            foreach(BadgeHolder holder in badgeHolders)
+            /* foreach(BadgeHolder holder in badgeHolders)
             {
                 foreach(Badge badge in holder.badges)
                 {
                     stars += badge.starStatus;
                 }
+            } */
+            foreach(Badge b in badges)
+            {
+                stars += b.starStatus;
             }
             starCount.text = $"{stars}";
             Events.UpdateMinigameStarCount(Game.Rewards, stars);

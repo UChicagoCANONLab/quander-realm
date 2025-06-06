@@ -479,6 +479,7 @@ GameObject:
   - component: {fileID: 1633822972749083756}
   - component: {fileID: 4279101048991454344}
   - component: {fileID: 6265321289007138792}
+  - component: {fileID: 1539226943747775355}
   m_Layer: 5
   m_Name: BadgeNEW
   m_TagString: Untagged
@@ -528,7 +529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82156871af1b7493eadaf68802eb5d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  badgeAnimator: {fileID: 0}
+  badgeAnimator: {fileID: 1539226943747775355}
   game: 0
   starLevel: 0
   starStatus: 0
@@ -597,6 +598,26 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &1539226943747775355
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8146298371994043963}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e1875dbaa36824b30aa5ef9f430107e4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8668404858875313236
 GameObject:
   m_ObjectHideFlags: 0

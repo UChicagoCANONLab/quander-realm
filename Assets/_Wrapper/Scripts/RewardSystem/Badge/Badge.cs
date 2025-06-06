@@ -30,8 +30,9 @@ namespace Wrapper
         // private bool UNLOCKED = false;
         // private bool MINI = true;
 
-        // BB, CT, LA. QB, QC, RW, None
-        private string[] gameHex = {"#BF90F1", "#71B0A6", "#D38B97", "#72D0DC", "#F1A7C7", "#000000", "#000000"};
+        // BB, CT, LA, QB, QC, RW, None
+        // private string[] gameHex = {"#BF90F1", "#71B0A6", "#D38B97", "#72D0DC", "#F1A7C7", "#000000", "#000000"};
+        private string[] gameHex = {"#8574B3", "#4A6E76", "#853D5A", "#417284", "#7B5677", "#000000", "#000000"};
         [SerializeField] private Sprite[] gameBadges;
 
 
