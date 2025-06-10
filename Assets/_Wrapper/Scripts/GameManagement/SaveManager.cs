@@ -64,6 +64,9 @@ namespace Wrapper
         {
             Events.AddReward += AddReward;
             Events.AddBadge += AddBadge;
+            Events.AddBonus += AddBonus;
+            Events.UseAvailableBonus += UseAvailableBonus;
+            Events.NumberBonuses += NumberAvailableBonuses;
             Events.ClearSaveFile += ClearSave;
             Events.SubmitResearchCode += Login;
             Events.IsRewardUnlocked += IsRewardUnlocked;
@@ -88,6 +91,9 @@ namespace Wrapper
         {
             Events.AddReward -= AddReward;
             Events.AddBadge -= AddBadge;
+            Events.AddBonus -= AddBonus;
+            Events.UseAvailableBonus -= UseAvailableBonus;
+            Events.NumberBonuses -= NumberAvailableBonuses;
             Events.ClearSaveFile -= ClearSave;
             Events.SubmitResearchCode -= Login;
             Events.IsRewardUnlocked -= IsRewardUnlocked;
@@ -429,7 +435,6 @@ namespace Wrapper
         {
             bool rewardAdded = currentUserSave.AddReward(rewardID);
             UpdateRemoteSave();
-
             return rewardAdded;
         }
 
@@ -437,8 +442,26 @@ namespace Wrapper
         {
             bool badgeAdded = currentUserSave.AddBadge(badgeID);
             UpdateRemoteSave();
-
             return badgeAdded;
+        }
+
+        private bool AddBonus(string bonusID)
+        {
+            bool bonusAdded = currentUserSave.AddBonus(bonusID);
+            UpdateRemoteSave();
+            return bonusAdded;
+        }
+
+        private bool UseAvailableBonus(string bonusID)
+        {
+            bool bonusAvailable = currentUserSave.UseBonus(bonusID);
+            UpdateRemoteSave();
+            return bonusAvailable;
+        }
+
+        private int NumberAvailableBonuses(string bonusID)
+        {
+            return currentUserSave.GetNumBonuses(bonusID);
         }
 
         private bool IsRewardUnlocked(string rewardID)

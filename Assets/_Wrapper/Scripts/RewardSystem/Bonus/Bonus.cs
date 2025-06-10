@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,68 +10,76 @@ namespace Wrapper
 {
     public class Bonus : MonoBehaviour
     {
-        [SerializeField] public string title;
-        [SerializeField] public Game game;
-        [SerializeField] public int cost;
-        [SerializeField] public int numUnlockable;
-        [SerializeField] public string effect;
-        [SerializeField] public string unlockCriteria;
-        [SerializeField] public CriteriaType criteria;
-        [SerializeField] public string dependency;
+        public string bonusID;
+        public string title;
+        private int maximum;
+        public int[] cost;
+        private bool inSequence;
+        public string effect;
+        private List<string> usableScenes = new List<string>();
+        private string[] unlockCriteria;
+        private string dependency;
 
-        private bool inSelector = false;
-        public int numberUsed = 0;
-        public int numberUnlocked = 0;
+        public int numberAvailable;
+        public bool currentlyUsable;
+        private GemType gemType;
 
-        [Header("Display GameObjects: General")]
-        [SerializeField] private Image gemType;
+        [Header("Display GameObjects")]
+        [SerializeField] private Image gemGraphic;
         [SerializeField] private TextMeshProUGUI titleText;
-
-        // [Header("Display GameObjects: In Shop")]
-        // [SerializeField] private TextMeshProUGUI descriptionText;
-        // [SerializeField] private TextMeshProUGUI costText;
-        // [SerializeField] private TextMeshProUGUI numAvailableText;
-
-        [Header("Display GameObjects: Usable")]
         [SerializeField] private TextMeshProUGUI numUsableText;
         [SerializeField] public GameObject counterObject;
 
+        [SerializeField] private Sprite[] gemOptions;
+        private enum GemType { SkipLevel, StreakFreeze };
 
-        public void InitBonus(BonusAsset boAsset, bool buyable)
-        {
-            // Set values from BonusAsset
-            game = boAsset.game;
+
+        public void InitBonus(BonusAsset boAsset)
+        {         
+            bonusID = boAsset.ID;   
+            title = boAsset.title;
+            maximum = boAsset.maximum;
             cost = boAsset.cost;
-            numUnlockable = boAsset.number;
+            inSequence = boAsset.inSequence;
             effect = boAsset.effect;
+            usableScenes.AddRange(boAsset.usableScenes);
             unlockCriteria = boAsset.unlockCriteria;
-            criteria = boAsset.criteriaType;
             dependency = boAsset.dependency;
 
-            // Set texts and icons
-            titleText.text = boAsset.title;
-            // descriptionText.text = effect;
-            // Determine how to assign gem color/icon here
+            numberAvailable = Events.NumberBonuses.Invoke(bonusID);
+            currentlyUsable = usableScenes.Contains(SceneManager.GetActiveScene().name);
+            gemType = (GemType)Enum.Parse(typeof(GemType), bonusID);
 
-            // If buyable, need to display cost and how many available
-            // If usable, do not need cost; do need how many you already have
-
-            // How to get NumUsableText gameObject
-            // counterObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
-
+            gemGraphic.sprite = gemOptions[(int)gemType];
+            titleText.text = $"{title}";
+            numUsableText.text = $"{numberAvailable}";
         }
 
-        public int CalculateNumberBuyable()
+        public void UpdateBonus()
         {
-            // bonus.numberUnlocked - bonus.numberUsed;
-            return 0;
+            numberAvailable = Events.NumberBonuses.Invoke(bonusID);
+            currentlyUsable = usableScenes.Contains(SceneManager.GetActiveScene().name);
+
+            numUsableText.text = $"{numberAvailable}";
         }
 
-        public void UseBonus(string name)
+
+
+        public void DisplayOnly(bool disabled)
         {
-            switch(name)
+            this.gameObject.GetComponent<Button>().interactable = disabled;
+            // counterObject.SetActive(disabled);
+        }
+
+
+
+        public void UseBonus()
+        {
+            if (!currentlyUsable) return;
+
+            switch(gemType)
             {
-                case "SkipLevel":
+                case GemType.SkipLevel:
                     SkipLevel(Events.GetCurrentGame.Invoke());
                     break;
             }

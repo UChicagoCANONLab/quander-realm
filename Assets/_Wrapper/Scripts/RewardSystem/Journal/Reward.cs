@@ -101,8 +101,11 @@ namespace Wrapper
         {
             if (IsUnlocked())
             {
-                while (!(this.gameObject.activeInHierarchy)) 
+                // Debug.Log($"UPDATED ANIM: {displayType}, {titleFront.text}");
+                while (!this.gameObject)
                     yield return null;
+                // while (!(this.gameObject.activeInHierarchy)) 
+                //     yield return null;
                 
                 animator.SetBool(stateDisabled, false);
             }

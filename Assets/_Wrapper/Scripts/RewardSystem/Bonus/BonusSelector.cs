@@ -34,15 +34,15 @@ namespace Wrapper
 
         public void InitSelector(Bonus bonus)
         {
-            this.bonus = bonus;
+            // this.bonus = bonus;
 
-            descriptionText.text = bonus.unlockCriteria;
-            costText.text = $"{bonus.cost}";
+            // descriptionText.text = bonus.unlockCriteria;
+            // costText.text = $"{bonus.cost}";
 
-            numberBuyable = bonus.CalculateNumberBuyable();
-            numAvailableText.text = $"{numberBuyable}";
+            // numberBuyable = bonus.CalculateNumberBuyable();
+            // numAvailableText.text = $"{numberBuyable}";
 
-            bonus.counterObject.SetActive(false);
+            // bonus.counterObject.SetActive(false);
 
         }
 

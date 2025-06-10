@@ -233,6 +233,7 @@ namespace Wrapper
 
         public void InitFirstPage()
         {
+            Debug.Log("Init first page");
             currentPage = journal.First().Value.pages.First();
             currentPage.ClickNavDot();
         }
@@ -263,6 +264,12 @@ namespace Wrapper
         {
             animator.SetBool("On", isOn);
             animator.SetBool(featuredCardParam, isOn);
+
+            /* if (!isOn) 
+            {
+                foreach (Transform transform in featuredCardMount.transform)
+                    Destroy(transform.gameObject);
+            } */
         }
     }
 }

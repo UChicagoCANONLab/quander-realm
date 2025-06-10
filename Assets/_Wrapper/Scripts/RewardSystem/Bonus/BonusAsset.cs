@@ -5,26 +5,29 @@ namespace Wrapper
 {
     public class BonusAsset : ContentAsset
     {
+        [SerializeField, ContentValue("ID")]
+        public string ID;
+        
         [SerializeField, ContentValue("Title")]
         public string title;
 
-        [SerializeField, ContentValue("Game")]
-        public Game game;
-
+        [SerializeField, ContentValue("Maximum")]
+        public int maximum;
+        
         [SerializeField, ContentValue("Cost")]
-        public int cost;
+        public int[] cost;
 
-        [SerializeField, ContentValue("Number")]
-        public int number;
+        [SerializeField, ContentValue("Sequential")]
+        public bool inSequence;
 
         [SerializeField, ContentValue("Effect")]
         public string effect;
 
-        [SerializeField, ContentValue("Unlock Criteria")]
-        public string unlockCriteria;
+        [SerializeField, ContentValue("Usable Scenes")]
+        public string[] usableScenes;
 
-        [SerializeField, ContentValue("Criteria Type")]
-        public CriteriaType criteriaType;
+        [SerializeField, ContentValue("Unlock Criteria")]
+        public string[] unlockCriteria;
         
         [SerializeField, ContentValue("Dependency")]
         public string dependency;

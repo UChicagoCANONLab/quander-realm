@@ -40,17 +40,22 @@ namespace Wrapper
         [SerializeField] private GameObject QBRewardPrefab;
         [SerializeField] private GameObject QURewardPrefab;
 
+        [Header("Asset Management")]
         public readonly string rewardsPath = "_Wrapper/Rewards/RewardAssets/";
         public RewardAsset[] rewardAssets;
         public Dictionary<CardType, Color> colorDict;
         public Dictionary<Game, GameObject> prefabDict;
+        [SerializeField, Tooltip("For the first card received in each minigame, if none keep blank")] GameCardDialogPair[] rewardDialogIDs;
 
-        [Header("Badge Objects")]
         public readonly string badgePath = "_Wrapper/Incentives/Badges";
         public BadgeAsset[] badgeAssets;
         [SerializeField] private GameObject badgePrefab;
 
-        [SerializeField, Tooltip("For the first card received in each minigame, if none keep blank")] GameCardDialogPair[] rewardDialogIDs;
+        public readonly string bonusPath = "_Wrapper/Incentives/Bonuses";
+        public BonusAsset[] bonusAssets;
+        [SerializeField] private GameObject bonusPrefab;
+
+        [Header("Minigame Information")]
         [SerializeField] MinigameTitles minigameTitles;
         Game currentGame = Game.None;
 
@@ -70,7 +75,9 @@ namespace Wrapper
             InitPrefabDict();
             InitRewardAssetArray();
             InitBadgeAssetArray();
+            InitBonusAssetArray();
             //Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?      -> moved to its own method to call after title screen
+            
             if (debugScreen.DebugEnabled)
             {
                 debugButton.gameObject.SetActive(true);
@@ -89,6 +96,7 @@ namespace Wrapper
         {
             Events.OpenMinigame += OpenMinigame;
             Events.CreatRewardCard += CreateCard;
+            Events.CreateBonus += CreateBonus;
             if (debugScreen.DebugEnabled) Events.ShowCardPopup += ShowCardPopup; // Debug
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
@@ -110,6 +118,7 @@ namespace Wrapper
         {
             Events.OpenMinigame -= OpenMinigame;
             Events.CreatRewardCard -= CreateCard;
+            Events.CreateBonus -= CreateBonus;
             if (debugScreen.DebugEnabled) Events.ShowCardPopup -= ShowCardPopup; // Debug
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
@@ -265,6 +274,15 @@ namespace Wrapper
             return badgeGO;
         }
 
+        private GameObject CreateBonus(BonusAsset boAsset, GameObject mount)
+        {
+            GameObject bonusGO = Instantiate(bonusPrefab, mount.transform);
+            bonusGO.name = boAsset.ID;
+            bonusGO.GetComponent<Bonus>().InitBonus(boAsset);
+
+            return bonusGO;
+        }
+
         void ToggleBackButton(bool show)
         {
             universalBackButton.gameObject.SetActive(show);
@@ -292,10 +310,13 @@ namespace Wrapper
         {
             rewardAssets = Resources.LoadAll<RewardAsset>(rewardsPath);
         }
-
         private void InitBadgeAssetArray()
         {
             badgeAssets = Resources.LoadAll<BadgeAsset>(badgePath);
+        }
+        private void InitBonusAssetArray()
+        {
+            bonusAssets = Resources.LoadAll<BonusAsset>(bonusPath);
         }
 
         private void InitColorDict()

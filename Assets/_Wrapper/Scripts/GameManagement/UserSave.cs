@@ -9,8 +9,11 @@ namespace Wrapper
     {
         public string id = string.Empty;
         public string[] minigameSaves;
+        
         public List<string> rewards;
         public List<string> badges;
+        public List<string> bonuses;
+
         public bool introDialogueSeen = false;
         public bool rewardDialogueSeen = false;
 
@@ -33,6 +36,7 @@ namespace Wrapper
         {
             rewards = new List<string>();
             badges = new List<string>();
+            bonuses = new List<string>();
 
             // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -70,6 +74,42 @@ namespace Wrapper
 
             badges.Add(formatted);
             return true;
+        }
+
+        public bool AddBonus(string bonusID)
+        {
+            if (bonusID.Equals(string.Empty))
+                return false;
+
+            string formatted = FormatString(bonusID);
+            // Don't need to check if already there -- can have multiple
+            bonuses.Add(formatted);
+            return true;
+        }
+
+        public bool UseBonus(string bonusID)
+        {
+            if (bonusID.Equals(string.Empty))
+                return false;
+            
+            string formatted = FormatString(bonusID);
+            if (bonuses.Contains(formatted))
+            {
+                bonuses.Remove(formatted);
+                return true;
+            }
+            return false;
+        }
+
+        public int GetNumBonuses(string bonusID)
+        {
+            int i = 0;
+            string formatted = FormatString(bonusID);
+            foreach (string b in bonuses)
+            {
+                if (b == formatted) i++;
+            }
+            return i;
         }
 
         public bool IsNewSave()

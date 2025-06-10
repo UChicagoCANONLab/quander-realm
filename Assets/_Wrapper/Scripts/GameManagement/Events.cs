@@ -12,6 +12,7 @@ namespace Wrapper
         /// GameManager ///
         public static Action<Minigame> OpenMinigame;
         public static Func<RewardAsset, GameObject, DisplayType, GameObject> CreatRewardCard;
+        public static Func<BonusAsset, GameObject, GameObject> CreateBonus;
         public static Action<string> ShowCardPopup;
         public static Action ToggleLoadingScreen;
         public static Action<Game, int> CollectAndDisplayReward;
@@ -48,6 +49,9 @@ namespace Wrapper
         /// SaveManager ///
         public static Func<string, bool> AddReward;
         public static Func<string, bool> AddBadge;
+        public static Func<string, bool> AddBonus;
+        public static Func<string, bool> UseAvailableBonus;
+        public static Func<string, int> NumberBonuses;
         public static Action ClearSaveFile;
         public static Action<string> SubmitResearchCode;
         public static Func<string, bool> IsRewardUnlocked;
