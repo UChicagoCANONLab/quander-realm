@@ -1,12 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 namespace Labyrinth {
     public class InfoPopup : MonoBehaviour
     {
-        public GameObject[] infoPopups;
-        public Animator animator;
+        // public GameObject[] infoPopups;
+        public Animator InfoAnimator;
+        public TMP_Text title;
+        public TMP_Text description;
+
+        private Dictionary<int,string> infoText = new Dictionary<int,string> {
+            {0,     "Fran and Ken move the same way"},
+            {180,    "Fran and Ken move in opposite directions"},
+            {90,   "Fran and Ken move one rotation apart (e.g. Fran goes up, Ken goes left)"}
+        };
 
 
         private void OnEnable() 
@@ -19,33 +29,20 @@ namespace Labyrinth {
         }
         
 
+        void Start() {
+            int degree = SaveData.Instance.Degree;
+            title.text = $"{degree}° Rotation:";
+            description.text = infoText[degree];
+            InfoAnimator.SetInteger("Degree", degree);
+        }
+
         public void showInfoMessage() {
-            animator.SetBool("IsOn", true);
-            int deg = SaveData.Instance.Degree;
-            switch(deg) {
-                case 0:
-                    infoPopups[0].SetActive(true);
-                    break;
-                case 180:
-                    infoPopups[1].SetActive(true);
-                    break;
-                case 90:
-                    infoPopups[2].SetActive(true);
-                    break;
-                default:
-                    break;
-            }
+            InfoAnimator.SetBool("IsOn", true);
         }
 
         public void closeInfoMessage() {
-            animator.SetBool("IsOn", false);
-            Invoke("helperExit", 2f);
+            InfoAnimator.SetBool("IsOn", false);
         }
 
-        public void helperExit() {
-            foreach (GameObject obj in infoPopups) {
-                obj.SetActive(false);
-            }
-        }
     }
 }

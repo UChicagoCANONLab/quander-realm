@@ -71,7 +71,8 @@ namespace Wrapper
         Character,
         Computer_Part,
         Visual,
-        Concept
+        Concept,
+        Hint
     };
 
     public enum DisplayType
@@ -82,9 +83,20 @@ namespace Wrapper
     };
 
     /// Audio ///
+
     public enum AudioType
     {
         Music,
         SFX
+    };
+
+    /// Badges ///
+
+    public enum CriteriaType
+    {
+        Level,
+        Star,
+        Card,
+        Unlocked
     };
 }

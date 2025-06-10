@@ -23,14 +23,16 @@ namespace QueueBits
 		[Header("CPU Pieces")]
 		public TokenCounter tokenCounterCPU;
 		public GameObject pieceCPU100;
-		public GameObject pieceCPU75; 
-		public GameObject pieceCPU50; 
+		public GameObject pieceCPU75;
+		public GameObject pieceCPU50;
+		public GameObject pieceCPU00;
 
 		[Header("Player Pieces")]
 		public TokenCounter tokenCounterPlayer;
 		public GameObject piecePlayer100;
 		public GameObject piecePlayer75;
 		public GameObject piecePlayer50;
+		public GameObject piecePlayer00;
 
 		// Dictionaries for token counts
 		private Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
@@ -40,7 +42,7 @@ namespace QueueBits
 		private List<(Piece, int, int, int)> prefilledBoard = new List<(Piece piece, int col, int row, int prob)>();
 		// Dictionary of each piece's probability and location
 		private Dictionary<int, (int, (int, int))> probDict = new Dictionary<int, (int, (int, int))>();
-		
+
 		// temporary gameobject, holds the piece at mouse position until the mouse has clicked
 		private GameObject gameObjectTurn;
 
@@ -49,7 +51,7 @@ namespace QueueBits
 		public int[,] probField;
 		private (int, int)[] dropOrder = new (int, int)[42];
 		private GameObject[] pieces = new GameObject[42];
-		
+
 		// Counters for game management
 		private int numSuperpositionPieces = 0;
 		private int probCounter = 0;
@@ -67,11 +69,11 @@ namespace QueueBits
 		public void Start()
 		{
 			GC.StartGame();
-			
+
 			// Sync with GameController
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
 			prefilledBoard = GC.prefilledBoard;
-			
+
 			// Set AI difficulty
 			GC.cpuAI.difficulty = 2;
 
@@ -109,7 +111,7 @@ namespace QueueBits
 			for (int i = 0; i < prefilledBoard.Count; i++)
             {
 				probCounter++;
-				if (prefilledBoard[i].Item4 == 100) 
+				if (prefilledBoard[i].Item4 == 100)
 				{
 					field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
 					if (prefilledBoard[i].Item1 == Piece.Player) {
@@ -125,18 +127,20 @@ namespace QueueBits
 					GameObject obj;
 					if (prefilledBoard[i].Item1 == Piece.Player)
 					{
+						field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 3;
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75)
                         {
 							obj = Instantiate(piecePlayer75, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 						}
-						else 
+						else
                         {
 							obj = Instantiate(piecePlayer50, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 						}
 					}
 					else
 					{
+						field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 4;
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 100 - prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75)
 						{
@@ -190,7 +194,7 @@ namespace QueueBits
 			{
 				if (gameObjectTurn == null)
 				{
-					(gameObjectTurn, probability) = SpawnPiece(-1); 
+					(gameObjectTurn, probability) = SpawnPiece(-1);
 				}
 				else
 				{
@@ -209,7 +213,7 @@ namespace QueueBits
 			(gameObjectTurn, probability) = SpawnPiece(prob);
 		}
 
-		
+
 		// Spawns a piece at mouse position above the first row
 		public (GameObject, int) SpawnPiece(int prob)
 		{
@@ -297,6 +301,7 @@ namespace QueueBits
 		// This method searches for a empty cell and lets the object fall down into this cell
 		public IEnumerator dropPiece(GameObject gObject, int probability)
 		{
+			GC.CancelHighlights();
 			isDropping = true;
 			Vector3 startPosition = gObject.transform.position;
 			Vector3 endPosition = new Vector3();
@@ -338,7 +343,7 @@ namespace QueueBits
 							GC.myData.outcome[index] = 2;
 							field[x, i] = 2;
 						} else {
-							field[x, i] = 3;
+							field[x, i] = 4;
 						}
 					}
 
@@ -360,7 +365,7 @@ namespace QueueBits
 				if (probability != 100) {
 					Color c = g.GetComponent<MeshRenderer>().material.color;
 					c.a = 0.5f;
-					g.GetComponent<MeshRenderer>().material.color = c; 
+					g.GetComponent<MeshRenderer>().material.color = c;
 				}
 
 				float distance = Vector3.Distance(startPosition, endPosition);
@@ -402,7 +407,7 @@ namespace QueueBits
 				if (probCounter == 42) {
 					revealingProbs = true;
 					StartCoroutine(revealProbabilities());
-				} 
+				}
 
 				isPlayersTurn = !isPlayersTurn;
 				GC.DM.SwitchPlayer(isPlayersTurn);
@@ -432,9 +437,16 @@ namespace QueueBits
 				{
 					if (pieces[i] != null)
 					{
+						GameObject tempPieceType;
+						if (field[x,y] == 3) { // placed by player
+							tempPieceType = piecePlayer100;
+						} else { //if (field[x,y] == 4) { // placed by CPU
+							tempPieceType = pieceCPU00;
+						}
+
 						Vector3 pos = pieces[i].transform.position;
 						finalColor = Instantiate(
-							piecePlayer100,
+							tempPieceType,
 							new Vector3(pos.x, pos.y, 0),
 							Quaternion.identity, GC.fieldObject.transform) as GameObject;
 						DestroyImmediate(pieces[i]);
@@ -448,13 +460,20 @@ namespace QueueBits
 				{
 					if (pieces[i] != null)
 					{
+						GameObject tempPieceType;
+						if (field[x,y] == 3) { // placed by player
+							tempPieceType = piecePlayer00;
+						} else { //if (field[x,y] == 4) { // placed by CPU
+							tempPieceType = pieceCPU100;
+						}
+
 						Vector3 pos = pieces[i].transform.position;
 						finalColor = Instantiate(
-							pieceCPU100,
+							tempPieceType,
 							new Vector3(pos.x, pos.y, 0),
 							Quaternion.identity, GC.fieldObject.transform) as GameObject;
 						DestroyImmediate(pieces[i]);
-						
+
 						//Data Collection
 						GC.myData.outcome[index] = 2;
 						field[x, y] = 2;
@@ -489,7 +508,7 @@ namespace QueueBits
 				{
 					//if somebody won, gameOver = true;
 					int color = field[x, y];
-					if (color != 0 && color != 3)
+					if (color == 1 || color == 2)
 					{
 						//check up
 						if (y >= 3 && field[x, y - 1] == color && field[x, y - 2] == color && field[x, y - 3] == color)

@@ -17,16 +17,26 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.InitializeMap += InitMap;
+            Events.ResetMap += ResetMap;
         }
         private void OnDisable() 
         {
             Events.InitializeMap -= InitMap;
+            Events.ResetMap -= ResetMap;
         }
 
-        public void InitMap() {            
+        public void InitMap() 
+        {            
             TL.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.Circuits);
             QB.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.QueueBits);
             BT.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.BlackBox);
+        }
+
+        public void ResetMap()
+        {
+            TL.GetComponent<MinigameButton>().interactable = false;
+            QB.GetComponent<MinigameButton>().interactable = false;
+            BT.GetComponent<MinigameButton>().interactable = false;
         }
         
     }

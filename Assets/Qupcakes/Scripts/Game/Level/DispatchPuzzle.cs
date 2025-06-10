@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Costume = Qupcakery.AssetCostumeUtilities;
 
@@ -11,9 +10,12 @@ namespace Qupcakery
     public static class DispatchPuzzle
     {
         // Dispatch a puzzle batch
-        public static void Dispatch(Puzzle puzzle, GameObject[] customers,
+        public static void Dispatch(Puzzle puzzle,
+            Tuple<int[], bool> solution,
+            GameObject[] customers,
             GameObject[] cakeBoxes)
         {
+            // Set cake boxes and customers
             for (int i = puzzle.Size - 1; i >= 0; i--)
             {
                 int cakeSpec, orderSpec;
@@ -21,6 +23,10 @@ namespace Qupcakery
                 SetCakeBox(cakeSpec, puzzle.Size, i, GameObjectsManagement.CakeBoxes[i]);
                 SetCustomer(orderSpec, puzzle.Size, i, GameObjectsManagement.Customers[i]);
             }
+            // update solution
+            Solution solutionHolder = GameObject.FindObjectOfType<LevelManager>().solution;
+            solutionHolder.UpdateSolution(puzzle.Size, solution); // CHANGE TO PUZZLE.SIZE
+
         }
 
         /* Set cakebox to the target type and place it at the beginning of the conveyor belt */

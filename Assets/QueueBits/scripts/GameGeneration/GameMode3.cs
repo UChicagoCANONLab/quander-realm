@@ -24,14 +24,16 @@ namespace QueueBits
 		[Header("CPU Pieces")]
 		public TokenCounter tokenCounterCPU;
 		public GameObject pieceCPU100;
-		public GameObject pieceCPU75; 
-		public GameObject pieceCPU50; 
+		public GameObject pieceCPU75;
+		public GameObject pieceCPU50;
+		public GameObject pieceCPU00;
 
 		[Header("Player Pieces")]
 		public TokenCounter tokenCounterPlayer;
 		public GameObject piecePlayer100;
 		public GameObject piecePlayer75;
 		public GameObject piecePlayer50;
+		public GameObject piecePlayer00;
 
 		// Dictionaries for token counts
 		private Dictionary<int, int> CPUProbs = new Dictionary<int, int>();
@@ -69,11 +71,11 @@ namespace QueueBits
 		public void Start()
 		{
 			GC.StartGame();
-			
+
 			// Sync with GameController
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
 			prefilledBoard = GC.prefilledBoard;
-			
+
 			// Setting CPU difficulty
 			GC.cpuAI.difficulty = 2;
 
@@ -111,7 +113,7 @@ namespace QueueBits
 			for (int i = 0; i < prefilledBoard.Count; i++)
             {
 				probCounter++;
-				if (prefilledBoard[i].Item4 == 100) 
+				if (prefilledBoard[i].Item4 == 100)
 				{
 					field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = (int)prefilledBoard[i].Item1;
 					if (prefilledBoard[i].Item1 == Piece.Player) {
@@ -127,18 +129,20 @@ namespace QueueBits
 					GameObject obj;
 					if (prefilledBoard[i].Item1 == Piece.Player)
 					{
+						field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 3;
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75)
                         {
 							obj = Instantiate(piecePlayer75, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 						}
-						else 
+						else
                         {
 							obj = Instantiate(piecePlayer50, new Vector3(prefilledBoard[i].Item2, -prefilledBoard[i].Item3, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 						}
 					}
 					else
 					{
+						field[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 4;
 						probField[prefilledBoard[i].Item2, prefilledBoard[i].Item3] = 100 - prefilledBoard[i].Item4;
 						if (prefilledBoard[i].Item4 == 75)
 						{
@@ -152,7 +156,7 @@ namespace QueueBits
 					(int, int) tempLocation = (prefilledBoard[i].Item2, prefilledBoard[i].Item3);
 					(float, float) piecePos = (obj.transform.position.x, obj.transform.position.y);
 					probDict.Add(obj.transform.GetInstanceID(), (probability, tempLocation, piecePos, obj));
-					
+
 					Color c = obj.GetComponent<MeshRenderer>().material.color;
 					c.a = 0.5f;
 					obj.GetComponent<MeshRenderer>().material.color = c;
@@ -197,7 +201,7 @@ namespace QueueBits
 			{
 				if (gameObjectTurn == null)
 				{
-					(gameObjectTurn, probability) = SpawnPiece(-1); 
+					(gameObjectTurn, probability) = SpawnPiece(-1);
 				}
 				else
 				{
@@ -216,7 +220,7 @@ namespace QueueBits
 			(gameObjectTurn, probability) = SpawnPiece(prob);
 		}
 
-		
+
 		// Spawns a piece at mouse position above the first row
 		public (GameObject, int) SpawnPiece(int prob)
 		{
@@ -304,6 +308,7 @@ namespace QueueBits
 		// This method searches for a empty cell and lets the object fall down into this cell
 		public IEnumerator dropPiece(GameObject gObject, int probability)
 		{
+			GC.CancelHighlights();
 			isDropping = true;
 			Vector3 startPosition = gObject.transform.position;
 			Vector3 endPosition = new Vector3();
@@ -345,7 +350,7 @@ namespace QueueBits
 							GC.myData.outcome[index] = 2;
 							field[x, i] = 2;
 						} else {
-							field[x, i] = 3;
+							field[x, i] = 4;
 						}
 					}
 
@@ -367,7 +372,7 @@ namespace QueueBits
 				if (probability != 100) {
 					Color c = g.GetComponent<MeshRenderer>().material.color;
 					c.a = 0.5f;
-					g.GetComponent<MeshRenderer>().material.color = c; 
+					g.GetComponent<MeshRenderer>().material.color = c;
 				}
 
 				float distance = Vector3.Distance(startPosition, endPosition);
@@ -382,7 +387,7 @@ namespace QueueBits
 				}
 
 				g.transform.parent = GC.fieldObject.transform;
-				
+
 				if (probability != 100) {
 					(float, float) piecePos = (g.transform.position.x, g.transform.position.y);
 					if (isPlayersTurn) {
@@ -409,7 +414,7 @@ namespace QueueBits
 				if (probCounter == 42) {
 					revealingProbs = true;
 					StartCoroutine(revealProbabilitiesThroughClick());
-				} 
+				}
 
 				isPlayersTurn = !isPlayersTurn;
 				GC.DM.SwitchPlayer(isPlayersTurn);
@@ -440,9 +445,16 @@ namespace QueueBits
 							int p = Random.Range(1, 101);
 							if (p < probability)
 							{
+								GameObject tempPieceType;
+								if (field[coord_x,coord_y] == 3) { // placed by player
+									tempPieceType = piecePlayer100;
+								} else { //if (field[coord_x,coord_y] == 4) { // placed by CPU
+									tempPieceType = pieceCPU00;
+								}
+
 								Vector3 pos = piece.transform.position;
 								finalColor = Instantiate(
-									piecePlayer100,
+									tempPieceType,
 									new Vector3(pos.x, pos.y, 0),
 									Quaternion.identity, GC.fieldObject.transform) as GameObject;
 								DestroyImmediate(piece);
@@ -455,9 +467,16 @@ namespace QueueBits
 							}
 							else
 							{
+								GameObject tempPieceType;
+								if (field[coord_x,coord_y] == 3) { // placed by player
+									tempPieceType = piecePlayer00;
+								} else { //if (field[coord_x,coord_y] == 4) { // placed by CPU
+									tempPieceType = pieceCPU100;
+								}
+
 								Vector3 pos = piece.transform.position;
 								finalColor = Instantiate(
-									pieceCPU100,
+									tempPieceType,
 									new Vector3(pos.x, pos.y, 0),
 									Quaternion.identity, GC.fieldObject.transform) as GameObject;
 								DestroyImmediate(piece);
@@ -480,11 +499,18 @@ namespace QueueBits
 				Thread.Sleep(1000);
 				int chosenObjectID = probDict.ElementAt(Random.Range(0, probDict.Count)).Key;
 				(int probability, (int coord_x, int coord_y), (float x, float y), GameObject token) = probDict[chosenObjectID];
-				
+
 				int p = Random.Range(1, 101);
 				if (p < probability)
 				{
-					finalColor = Instantiate(piecePlayer100, new Vector3(x, y, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
+					GameObject tempPieceType;
+					if (field[coord_x,coord_y] == 3) { // placed by player
+						tempPieceType = piecePlayer100;
+					} else { //if (field[coord_x,coord_y] == 4) { // placed by CPU
+						tempPieceType = pieceCPU00;
+					}
+
+					finalColor = Instantiate(tempPieceType, new Vector3(x, y, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 					DestroyImmediate(token);
 					//Data Collection
 					int index = coord_y * GC.numColumns + coord_x;
@@ -495,7 +521,14 @@ namespace QueueBits
 				}
 				else
 				{
-					finalColor = Instantiate(pieceCPU100, new Vector3(x, y, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
+					GameObject tempPieceType;
+					if (field[coord_x,coord_y] == 3) { // placed by player
+						tempPieceType = piecePlayer00;
+					} else { //if (field[coord_x,coord_y] == 4) { // placed by CPU
+						tempPieceType = pieceCPU100;
+					}
+
+					finalColor = Instantiate(tempPieceType, new Vector3(x, y, 0), Quaternion.identity, GC.fieldObject.transform) as GameObject;
 					DestroyImmediate(token);
 					//Data Collection
 					int index = coord_y * GC.numColumns + coord_x;
@@ -510,7 +543,7 @@ namespace QueueBits
 
 				StartCoroutine(Won());
 			}
-			
+
 			GC.DM.SwitchPlayer(isPlayersTurn);
 			if (gameOver) {
 				revealingProbs = false;
@@ -532,7 +565,7 @@ namespace QueueBits
 				{
 					//if somebody won, gameOver = true;
 					int color = field[x, y];
-					if (color != 0 && color != 3)
+					if (color == 1 || color == 2)
 					{
 						//check up
 						if (y >= 3 && field[x, y - 1] == color && field[x, y - 2] == color && field[x, y - 3] == color)

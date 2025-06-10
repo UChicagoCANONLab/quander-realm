@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using QueueBits;
 
-namespace QueueBits 
+namespace QueueBits
 {
 	// AI for CPU actions, minimax algorithm predominantly
     public class CPUBrain : MonoBehaviour
     {
-        // Origninally copied from Level3.cs, compared to other levels 
+        // Origninally copied from Level3.cs, compared to other levels
 
         public int difficulty = 0;
         // Difficulty 0: Level 1, 2, 3
@@ -166,7 +166,7 @@ namespace QueueBits
 			return score;
 		}
 
-        bool isWin(int r, int c, string color)
+        public bool isWin(int r, int c, string color)
 		{
 			int i = index(r, c);
 			// look right
@@ -320,7 +320,64 @@ namespace QueueBits
 
 		}
 
-		public int findBestMove(int[] cols)
+		public (int, int)findBestMoveandDifference(int[] cols, int depth = 3)
+		{
+			int bestVal = int.MinValue;
+			int secondBestVal = int.MinValue;
+			int secondBestMove = -1;
+			int bestMove = -1;
+			difficulty = 2;
+
+			List<int> moves = getMoves(cols);
+
+			if (difficulty > 1) { //checking for all 100% yellow win
+				foreach (int column in moves)
+				{
+					playMove(column, "1");
+					if (isWin(colPointers[column] + 1, column, "1"))
+					{
+						reverseMove(column);
+						return (column, 1000); // Large difference indicates critical move
+					}
+					reverseMove(column);
+				}
+			}
+
+			foreach (int column in moves)
+			{
+				playMove(column, "2");
+
+				if (difficulty > 0) {
+					if (isWin(colPointers[column] + 1, column, "2"))
+					{
+						reverseMove(column);
+						return (column, 1000); // Large difference indicates critical move
+					}
+				}
+
+				int value = minimax(0, depth, false);
+
+				reverseMove(column);
+
+				if (value > bestVal)
+				{
+					secondBestVal = bestVal;
+					secondBestMove = bestMove;
+					bestVal = value;
+					bestMove = column;
+				}
+				else if (value > secondBestVal)
+				{
+					secondBestVal = value;
+					secondBestMove = column;
+				}
+			}
+
+			int difference = bestVal - secondBestVal;
+			return (bestMove, difference);
+		}
+
+		public int findBestMove(int[] cols, int depth = 3)
 		{
 			int bestVal = int.MinValue;
 			int bestMove = -1;
@@ -352,7 +409,7 @@ namespace QueueBits
                     }
                 }
 
-				int value = minimax(0, 3, false);
+				int value = minimax(0, depth, false);
 
 				if (value > bestVal)
 				{
