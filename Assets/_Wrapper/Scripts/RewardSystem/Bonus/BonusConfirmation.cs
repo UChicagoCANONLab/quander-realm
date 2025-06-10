@@ -21,9 +21,9 @@ namespace Wrapper
         [SerializeField] private TextMeshProUGUI bonusCost;
 
         private string[] message = {
-            "Would you like to use this bonus?",
-            "Purchase and use this bonus?",
-            "You cannot use this bonus here. Purchase for later?"
+            "Purchase or use this bonus",
+            "You cannot use this bonus here",
+            "Buy a bonus to use it"
         };
 
         /* 

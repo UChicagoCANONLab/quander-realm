@@ -34,6 +34,11 @@ namespace Wrapper
         private enum GemType { SkipLevel, StreakFreeze };
 
 
+        void OnEnable()
+        {
+            UpdateBonus();
+        }
+
         public void InitBonus(BonusAsset boAsset)
         {         
             bonusID = boAsset.ID;   
