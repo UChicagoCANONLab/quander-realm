@@ -115,7 +115,7 @@ namespace Wrapper
     #region Reward System
 
         /// RewardCenter ///
-        public static Func<bool> ReturnToRewardCenter;
+        // public static Func<bool> ReturnToRewardCenter;
 
         /// Reward ///
         public static Action UnselectAllCards;

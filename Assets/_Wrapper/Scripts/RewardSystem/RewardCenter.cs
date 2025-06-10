@@ -25,14 +25,14 @@ namespace Wrapper
 
 
 
-        private void OnEnable()
+        /* private void OnEnable()
         {
             Events.ReturnToRewardCenter += returnToRewardCenter;
         }
         private void OnDisable()
         {
             Events.ReturnToRewardCenter -= returnToRewardCenter;
-        }
+        } */
 
         private void Awake()
         {
@@ -65,7 +65,22 @@ namespace Wrapper
         }
 
 
-        public bool returnToRewardCenter() {
+        public void returnToRewardCenter() {
+            Events.Delay?.Invoke(0.5f);
+
+            if (RewardCenterAnimator.GetBool("On") == false) 
+            {
+                RewardCenterAnimator.SetTrigger("Fader");
+
+                RewardJournalCanvas.GetComponent<RewardJournal>().ToggleRewardJournalAnim(false);
+                BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
+
+                RewardCenterAnimator.SetBool("On", true);
+            } 
+        }
+
+        // original -- used by BackButton.cs
+        /* public bool returnToRewardCenter() {
             Events.Delay?.Invoke(0.5f);
 
             if (RewardCenterAnimator.GetBool("On") == false) 
@@ -79,7 +94,7 @@ namespace Wrapper
                 return true;
             } 
             return false;
-        }
+        } */
 
     }
 }
