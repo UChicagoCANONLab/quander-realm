@@ -8,40 +8,30 @@ namespace Wrapper
     public class TitleScreen : MonoBehaviour
     {
         [Header("Main Components"), SerializeField]
-        GameObject mainContainer;
-        [SerializeField]
-        Button playButton;
-        [SerializeField]
-        Button continueButton;
-        [SerializeField]
-        Button newButton;
-        [SerializeField]
-        Button logoutButton;
-        [SerializeField]
-        ConfirmationPopup newGameConfirm;
-        [SerializeField]
-        LoadingPopup loadingPanel;
+        private GameObject mainContainer;
+        [SerializeField] private Button playButton;
+        [SerializeField] private Button continueButton;
+        [SerializeField] private Button newButton;
+        [SerializeField] private Button logoutButton;
+        [SerializeField] private ConfirmationPopup newGameConfirm;
+        [SerializeField] private LoadingPopup loadingPanel;
 
         [Space, SerializeField]
-        Animator titleAnim;
-        [SerializeField]
-        Animator mapAnim;
+        private Animator titleAnim;
+        [SerializeField] private Animator mapAnim;
 
         [Space, SerializeField]
-        Button creditsButton;
-        [SerializeField]
-        CreditsFiller creditsPanel;
-        [SerializeField]
-        Credits creditsData;
+        private Button creditsButton;
+        [SerializeField] private CreditsFiller creditsPanel;
+        [SerializeField] private Credits creditsData;
 
         [Space, SerializeField]
-        Button learnMoreButton;
-        [SerializeField]
-        ConfirmationPopup learnMoreConfirm;
+        private Button learnMoreButton;
+        [SerializeField] private ConfirmationPopup learnMoreConfirm;
         [SerializeField, Header("More Info URL")]
-        string moreInfoURL = "https://www.epiqc.cs.uchicago.edu/zines";
+        private string moreInfoURL = "https://www.epiqc.cs.uchicago.edu/zines";
 
-        bool newPlayer = true;
+        private bool newPlayer = true;
 
         private void Awake()
         {
