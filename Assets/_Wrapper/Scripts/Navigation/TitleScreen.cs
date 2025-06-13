@@ -20,16 +20,16 @@ namespace Wrapper
         private Animator titleAnim;
         [SerializeField] private Animator mapAnim;
 
-        [Space, SerializeField]
-        private Button creditsButton;
-        [SerializeField] private CreditsFiller creditsPanel;
-        [SerializeField] private Credits creditsData;
+        // [Space, SerializeField]
+        // private Button creditsButton;
+        // [SerializeField] private CreditsFiller creditsPanel;
+        // [SerializeField] private Credits creditsData;
 
-        [Space, SerializeField]
-        private Button learnMoreButton;
-        [SerializeField] private ConfirmationPopup learnMoreConfirm;
-        [SerializeField, Header("More Info URL")]
-        private string moreInfoURL = "https://www.epiqc.cs.uchicago.edu/zines";
+        // [Space, SerializeField]
+        // private Button learnMoreButton;
+        // [SerializeField] private ConfirmationPopup learnMoreConfirm;
+        // [SerializeField, Header("More Info URL")]
+        // private string moreInfoURL = "https://www.epiqc.cs.uchicago.edu/zines";
 
         private bool newPlayer = true;
 
@@ -44,9 +44,9 @@ namespace Wrapper
             playButton.onClick.AddListener(PlayGame);
             continueButton.onClick.AddListener(PlayGame);
             newButton.onClick.AddListener(OpenNewConfirm);
-            logoutButton.onClick.AddListener(LogOut);
-            creditsButton.onClick.AddListener(OpenCredits);
-            learnMoreButton.onClick.AddListener(OpenLearnConfirm);
+            logoutButton.onClick.AddListener(() => Events.Logout?.Invoke());
+            // creditsButton.onClick.AddListener(OpenCredits);
+            // learnMoreButton.onClick.AddListener(OpenLearnConfirm);
 
             ToggleTitleScreen(false);
         }
@@ -61,17 +61,17 @@ namespace Wrapper
             playButton.onClick.RemoveListener(PlayGame);
             continueButton.onClick.RemoveListener(PlayGame);
             newButton.onClick.RemoveListener(OpenNewConfirm);
-            logoutButton.onClick.RemoveListener(LogOut);
-            creditsButton.onClick.RemoveListener(OpenCredits);
-            learnMoreButton.onClick.RemoveListener(OpenLearnConfirm);
+            logoutButton.onClick.RemoveListener(() => Events.Logout?.Invoke());
+            // creditsButton.onClick.RemoveListener(OpenCredits);
+            // learnMoreButton.onClick.RemoveListener(OpenLearnConfirm);
         }
 
         void ToggleTitleScreen(bool enable)
         {
             mainContainer.SetActive(true);
-            creditsPanel.gameObject.SetActive(false);
+            // creditsPanel.gameObject.SetActive(false);
             newGameConfirm.ForceCloseConfirmation();
-            learnMoreConfirm.ForceCloseConfirmation();
+            // learnMoreConfirm.ForceCloseConfirmation();
             loadingPanel.ForceCloseConfirmation();
             mapAnim.SetTrigger(enable ? "Map_Fly_Out" : "MapFly_In");
             titleAnim.SetTrigger(enable ? "MainMenu_Fade_In" : "MainMenu_Fade_Out");
@@ -130,30 +130,30 @@ namespace Wrapper
             Events.PlayIntroDialog?.Invoke();
         }
 
-        void LogOut()
-        {
-            Events.Logout?.Invoke();
-        }
+        // void LogOut()
+        // {
+        //     Events.Logout?.Invoke();
+        // }
 
-        void OpenCredits()
-        {
-            Events.ScreenFadeMidAction?.Invoke(() =>
-            {
-                creditsPanel.LoadCredits(creditsData);
-                creditsPanel.gameObject.SetActive(true);
-            }, 0.1F);
-        }
+        // void OpenCredits()
+        // {
+        //     Events.ScreenFadeMidAction?.Invoke(() =>
+        //     {
+        //         creditsPanel.LoadCredits(creditsData);
+        //         creditsPanel.gameObject.SetActive(true);
+        //     }, 0.1F);
+        // }
 
-        void OpenLearnConfirm()
-        {
-            learnMoreConfirm.SetConfirmationData(OpenLearnMore, null);
-            learnMoreConfirm.OpenConfirmation();
-        }
+        // void OpenLearnConfirm()
+        // {
+        //     learnMoreConfirm.SetConfirmationData(OpenLearnMore, null);
+        //     learnMoreConfirm.OpenConfirmation();
+        // }
 
-        void OpenLearnMore()
-        {
-            Debug.Log("OPEN URL: " + moreInfoURL);
-            Application.OpenURL(moreInfoURL);
-        }
+        // void OpenLearnMore()
+        // {
+        //     Debug.Log("OPEN URL: " + moreInfoURL);
+        //     Application.OpenURL(moreInfoURL);
+        // }
     }
 }

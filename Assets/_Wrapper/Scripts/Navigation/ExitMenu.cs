@@ -76,7 +76,7 @@ namespace Wrapper
                 trackers.ToggleTrackers(isOn);
             }             
             exitButton.interactable = !main;
-            creditsButton.interactable = main;
+            // creditsButton.interactable = main;
             newGameButton.interactable = main;
             logoutButton.interactable = main;
             
@@ -145,8 +145,8 @@ namespace Wrapper
         {
             Events.ScreenFadeMidAction?.Invoke(() =>
             {
-                creditsPanel.LoadCredits(creditsData);
                 creditsPanel.gameObject.SetActive(true);
+                creditsPanel.LoadCredits(creditsData);
             }, 0.1F);
         }
 
