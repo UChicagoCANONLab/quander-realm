@@ -47,7 +47,7 @@ namespace Wrapper
             bonusButton.onClick.AddListener(() => bonusMenu.ToggleBonusMenu());
 
             newGameButton.onClick.AddListener(OpenNewConfirm);
-            logoutButton.onClick.AddListener(() => Events.Logout?.Invoke());
+            logoutButton.onClick.AddListener(Logout);
             creditsButton.onClick.AddListener(OpenCredits);
             moreInfoButton.onClick.AddListener(OpenLearnConfirm);
         }
@@ -59,7 +59,7 @@ namespace Wrapper
             bonusButton.onClick.RemoveListener(() => bonusMenu.ToggleBonusMenu());
 
             newGameButton.onClick.RemoveListener(OpenNewConfirm);
-            logoutButton.onClick.RemoveListener(() => Events.Logout?.Invoke());
+            logoutButton.onClick.RemoveListener(Logout);
             creditsButton.onClick.RemoveListener(OpenCredits);
             moreInfoButton.onClick.RemoveListener(OpenLearnConfirm);
         }
@@ -76,6 +76,7 @@ namespace Wrapper
                 trackers.ToggleTrackers(isOn);
             }             
             exitButton.interactable = !main;
+            creditsButton.interactable = main;
             newGameButton.interactable = main;
             logoutButton.interactable = main;
             
@@ -127,8 +128,17 @@ namespace Wrapper
 
             Events.ResetStarCounts?.Invoke();
             Events.ResetMap?.Invoke();
-            // loading screen will cover this when completed
             //Events.SetNewPlayerStatus?.Invoke(true);
+            
+            CloseMenu();
+            // Events.Delay.Invoke(2f);
+            // Events.ToggleTitleScreen.Invoke(true);
+        }
+
+        public void Logout()
+        {
+            Events.Logout?.Invoke();
+            CloseMenu();
         }
 
         public void OpenCredits()

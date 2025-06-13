@@ -13,12 +13,9 @@ namespace Wrapper
     {
         bool inUse = false;
 
-        [SerializeField]
-        GameObject container;
-        [SerializeField]
-        Animator anim;
-        [SerializeField]
-        Image fillBar;
+        [SerializeField] private GameObject container;
+        [SerializeField] private Animator anim;
+        [SerializeField] private Image fillBar;
 
         public void OpenPopup()
         {
@@ -45,6 +42,8 @@ namespace Wrapper
             anim.SetTrigger("AreYouSure_Off");
             inUse = true;
             Routine.Start(DelayClose());
+            
+            Events.ToggleTitleScreen.Invoke(true);
         }
 
         public void ForceCloseConfirmation()
