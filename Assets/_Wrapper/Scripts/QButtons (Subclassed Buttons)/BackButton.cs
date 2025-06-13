@@ -23,7 +23,8 @@ namespace Wrapper
 
             if (SceneManager.GetActiveScene().buildIndex == 0) 
             {
-                Events.ToggleTitleScreen?.Invoke(true);
+                // Events.ToggleTitleScreen?.Invoke(true);
+                return;
             }
             else
             {

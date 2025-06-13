@@ -70,10 +70,12 @@ namespace Wrapper
         {
             mainContainer.SetActive(true);
             // creditsPanel.gameObject.SetActive(false);
+
             newGameConfirm.ForceCloseConfirmation();
             // learnMoreConfirm.ForceCloseConfirmation();
             loadingPanel.ForceCloseConfirmation();
-            mapAnim.SetTrigger(enable ? "Map_Fly_Out" : "MapFly_In");
+
+            mapAnim.SetTrigger(enable ? "Map_Fly_Out" : "Map_Fly_In");
             titleAnim.SetTrigger(enable ? "MainMenu_Fade_In" : "MainMenu_Fade_Out");
             if (!enable) BeauRoutine.Routine.Start(DelayTitleClose());
         }

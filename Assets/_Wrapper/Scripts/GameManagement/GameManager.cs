@@ -151,7 +151,7 @@ namespace Wrapper
             else
             {
                 Events.CloseLoginScreen?.Invoke();
-                Events.ToggleTitleScreen?.Invoke(false);
+                Events.ToggleTitleScreen?.Invoke(false); // map animated here
                 
                 Events.InitializeStarTracker?.Invoke();
                 trackers.ToggleTrackers(true);
