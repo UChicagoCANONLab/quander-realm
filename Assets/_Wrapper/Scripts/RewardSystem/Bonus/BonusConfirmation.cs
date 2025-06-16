@@ -8,6 +8,8 @@ namespace Wrapper
 {
     public class BonusConfirmation : MonoBehaviour
     {
+        [SerializeField] private BonusMenu parentMenu;
+
         [Header("Bonus Information")]
         [SerializeField] private Bonus currBonus;
         [SerializeField] private GameObject bonusHolder;
@@ -36,28 +38,45 @@ namespace Wrapper
 
         public void InitConfirmation(Bonus bonus)
         {
-            foreach (Transform child in bonusHolder.transform)
-                Destroy(child.gameObject);
-
-            currBonus = bonus;
+            currBonus = Instantiate(bonus.gameObject, bonusHolder.transform).GetComponent<Bonus>();
             currBonus.DisplayOnly(true);
-
-            Instantiate(bonus.gameObject, bonusHolder.transform);
 
             bonusName.text = $"{currBonus.title}";
             bonusDescription.text = $"{currBonus.effect}";
             bonusCost.text = $"{currBonus.cost[0]}";
 
-            if (bonus.numberAvailable > 0) useButton.interactable = true;
-            if (bonus.currentlyUsable) useButton.interactable = true;
+            if ((bonus.numberAvailable > 0) && bonus.currentlyUsable) useButton.interactable = true;
+            // else if (bonus.currentlyUsable) useButton.interactable = true;
         }
 
         public void UpdateConfirmation()
         {
             currBonus.UpdateBonus();
 
-            if (currBonus.numberAvailable > 0) useButton.interactable = true;
-            if (currBonus.currentlyUsable) useButton.interactable = true;
+            if ((currBonus.numberAvailable > 0) && currBonus.currentlyUsable) useButton.interactable = true;
+            // else if (currBonus.currentlyUsable) useButton.interactable = true;
+        }
+
+
+        public void CloseConfirmationButton()
+        {
+            parentMenu.ToggleConfirmation();
+            currBonus = null;
+            foreach (Transform child in bonusHolder.transform)
+                Destroy(child.gameObject);
+        }
+
+        public void BuyBonusButton()
+        {
+            currBonus.UpdateBonus();
+            parentMenu.BuyBonusUpdate();
+            UpdateConfirmation();
+        }
+
+        public void UseBonusButton()
+        {
+            bool used = currBonus.UseBonus();
+            if (used) parentMenu.UseBonusUpdate();
         }
     }
 }

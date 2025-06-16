@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BeauRoutine;
 
 namespace Wrapper
 {
@@ -23,19 +24,12 @@ namespace Wrapper
 
         void Awake()
         {
-            backgroundButton.onClick.AddListener(() => CloseBonusMenu());
+            // backgroundButton.onClick.AddListener(() => CloseBonusMenu());
         }
 
         void Start()
         {
             InitBonusMenu();
-        }
-
-        public void SelectBonus(Bonus b)
-        {
-            selectedBonus = b;
-            confirmationPopup.InitConfirmation(b);
-            ToggleConfirmation();
         }
 
         public void InitBonusMenu()
@@ -48,23 +42,40 @@ namespace Wrapper
             }
         }
 
+        public void SelectBonus(Bonus b)
+        {
+            selectedBonus = b;
+            confirmationPopup.InitConfirmation(b);
+            ToggleConfirmation();
+        }
 
-        public void MakePurchase()
+        // Called from BuyBonus in BonusConfirmation
+        public void BuyBonusUpdate()
         {
             if (!Events.AddBonus(selectedBonus.bonusID)) return;
-            // must be negative to work properly
-            Events.UpdateUserSaveTotalCoins.Invoke(-1*selectedBonus.cost[0]);
+            Events.UpdateUserSaveTotalCoins.Invoke(-1*selectedBonus.cost[0]); // must be negative
             
             parentMenu.localTrackerPanel.UpdateDisplay();
-            confirmationPopup.UpdateConfirmation();
             selectedBonus.UpdateBonus();
         }
 
-        public void UseBonus()
+        // Called from UseBonus in BonusConfirmation
+        public void UseBonusUpdate()
         {
-            selectedBonus.UseBonus();
-            animator.SetTrigger("UseBonus");
+            // selectedBonus.UseBonus(); // Called from BonusConfirmation instead
+            /* animator.SetTrigger("BonusUsed");
             CloseBonusMenu();
+            parentMenu.CloseMenu(); */
+
+            Routine.Start(UseBonusRoutine());
+        }
+
+        public IEnumerator UseBonusRoutine()
+        {
+            animator.SetTrigger("BonusUsed");
+            yield return 3f;
+            CloseBonusMenu();
+            parentMenu.CloseMenu();
         }
 
 
@@ -74,6 +85,8 @@ namespace Wrapper
         {
             isOn = !isOn;
             animator.SetBool("IsOn", isOn);
+            if (isOn) parentMenu.backgroundButton.onClick.AddListener(CloseBonusMenu);
+            else parentMenu.backgroundButton.onClick.RemoveListener(CloseBonusMenu);
         }
         
         public void ToggleConfirmation()
@@ -85,13 +98,18 @@ namespace Wrapper
             {
                 bo.GetComponent<Button>().interactable = !confirmationOn;
             }
+            if (!confirmationOn) selectedBonus = null;
         }
 
         public void CloseBonusMenu()
         {
-            animator.SetBool("IsOn", false);
-            animator.SetBool("ConfirmationOn", false);
-            isOn = false; confirmationOn = false;
+            // if (isOn) parentMenu.backgroundButton.onClick.RemoveListener(CloseBonusMenu);
+            // animator.SetBool("IsOn", false);
+            // animator.SetBool("ConfirmationOn", false);
+            // isOn = false; confirmationOn = false;
+
+            if (isOn) ToggleBonusMenu();
+            if (confirmationOn) ToggleConfirmation();
         }
     }
 }

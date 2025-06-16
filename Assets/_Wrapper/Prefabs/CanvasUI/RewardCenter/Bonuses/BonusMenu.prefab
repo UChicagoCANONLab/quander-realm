@@ -1294,6 +1294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db21e08993544836b19154ddc29305f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentMenu: {fileID: 8661189008495572252}
   currBonus: {fileID: 0}
   bonusHolder: {fileID: 4309028005126025177}
   bonusName: {fileID: 7172758566030387797}
@@ -3290,6 +3291,7 @@ MonoBehaviour:
   title: 
   cost: 
   effect: 
+  usableScenes: []
   numberAvailable: 0
   currentlyUsable: 0
   gemGraphic: {fileID: 0}
@@ -6187,9 +6189,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8661189008495572252}
-        m_TargetAssemblyTypeName: Wrapper.BonusMenu, Assembly-CSharp
-        m_MethodName: MakePurchase
+      - m_Target: {fileID: 7153110209942450277}
+        m_TargetAssemblyTypeName: Wrapper.BonusConfirmation, Assembly-CSharp
+        m_MethodName: BuyBonusButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8758,7 +8760,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8936570330052861329}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5199c6fd9a0c6a46a9216da59e1a6db, type: 3}
   m_Name: 
@@ -9049,18 +9051,18 @@ PrefabInstance:
     - target: {fileID: 7295029634334561049, guid: 9189412d948f38847ac8bda11a1a359c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 8661189008495572252}
+      objectReference: {fileID: 7153110209942450277}
     - target: {fileID: 7295029634334561049, guid: 9189412d948f38847ac8bda11a1a359c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7295029634334561049, guid: 9189412d948f38847ac8bda11a1a359c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ToggleConfirmation
+      value: CloseConfirmationButton
       objectReference: {fileID: 0}
     - target: {fileID: 7295029634334561049, guid: 9189412d948f38847ac8bda11a1a359c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Wrapper.BonusMenu, Assembly-CSharp
+      value: Wrapper.BonusConfirmation, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7295029634334561049, guid: 9189412d948f38847ac8bda11a1a359c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -9094,11 +9096,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_RootOrder
@@ -9106,19 +9108,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_SizeDelta.x
@@ -9196,11 +9198,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9057248561521573787, guid: 58b1eafa6048c4c7e9e2723a91664b30, type: 3}
       propertyPath: m_RootOrder
@@ -9307,18 +9309,18 @@ PrefabInstance:
     - target: {fileID: 2134610879393328505, guid: c26eb0c4a2ebbfc4389dac3c2ff482dd, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 8661189008495572252}
+      objectReference: {fileID: 7153110209942450277}
     - target: {fileID: 2134610879393328505, guid: c26eb0c4a2ebbfc4389dac3c2ff482dd, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2134610879393328505, guid: c26eb0c4a2ebbfc4389dac3c2ff482dd, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: UseBonus
+      value: UseBonusButton
       objectReference: {fileID: 0}
     - target: {fileID: 2134610879393328505, guid: c26eb0c4a2ebbfc4389dac3c2ff482dd, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Wrapper.BonusMenu, Assembly-CSharp
+      value: Wrapper.BonusConfirmation, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 2134610879393328505, guid: c26eb0c4a2ebbfc4389dac3c2ff482dd, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

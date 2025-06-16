@@ -16,7 +16,7 @@ namespace Wrapper
         public int[] cost;
         private bool inSequence;
         public string effect;
-        private List<string> usableScenes = new List<string>();
+        [SerializeField] private List<string> usableScenes = new List<string>();
         private string[] unlockCriteria;
         private string dependency;
 
@@ -78,9 +78,14 @@ namespace Wrapper
 
 
 
-        public void UseBonus()
+        public bool UseBonus()
         {
-            if (!currentlyUsable) return;
+            if (!currentlyUsable) {
+                Debug.Log("NOT AVAILABLE IN THIS SCENE");
+                return false; }
+            if (!Events.UseAvailableBonus.Invoke(bonusID)) {
+                Debug.Log("NOT FOUND IN LIST OF OWNED BONUSES");
+                return false; }
 
             switch(gemType)
             {
@@ -88,6 +93,9 @@ namespace Wrapper
                     SkipLevel(Events.GetCurrentGame.Invoke());
                     break;
             }
+
+            UpdateBonus();
+            return true; 
         }
 
 

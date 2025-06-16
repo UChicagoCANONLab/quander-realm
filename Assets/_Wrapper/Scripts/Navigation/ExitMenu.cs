@@ -15,7 +15,7 @@ namespace Wrapper
 
         [Header("Display Objects")]
         [SerializeField] private Trackers trackers; // on map scene
-        [SerializeField] private QButton backgroundButton;
+        [SerializeField] public QButton backgroundButton;
         [SerializeField] private BackButton exitButton;
         [SerializeField] private LoadingPopup loadingPanel;
 
@@ -105,11 +105,8 @@ namespace Wrapper
             }
             animator.SetBool("IsOn", false);
             isOn = false;
-        }
 
-        public void DEBUG()
-        {
-            Debug.Log("CLICKED BUTTON");
+            bonusMenu.CloseBonusMenu();
         }
 
         // Button Functions
