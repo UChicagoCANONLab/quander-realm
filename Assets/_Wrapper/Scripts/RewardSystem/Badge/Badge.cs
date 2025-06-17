@@ -31,8 +31,9 @@ namespace Wrapper
         // private bool MINI = true;
 
         // BB, CT, LA, QB, QC, RW, None
-        // private string[] gameHex = {"#BF90F1", "#71B0A6", "#D38B97", "#72D0DC", "#F1A7C7", "#000000", "#000000"};
-        private string[] gameHex = {"#8574B3", "#4A6E76", "#853D5A", "#417284", "#7B5677", "#000000", "#000000"};
+        // private string[] gameHexOrig = {"#BF90F1", "#71B0A6", "#D38B97", "#72D0DC", "#F1A7C7", "#000000", "#000000"};
+        private string[] gameHexText = {"#8574B3", "#4A6E76", "#853D5A", "#417284", "#7B5677", "#000000", "#000000"};
+        // private string[] gameHexPanel = {"#8574B3", "#71B0A6", "#C75675", "#72D0DC", "#A87FA9", "#000000", "#000000"};
         [SerializeField] private Sprite[] gameBadges;
 
 
@@ -66,8 +67,9 @@ namespace Wrapper
 
             // Change description based on starStatus and display
             if (starStatus == 0) {
-                descriptionText.text = "Play more to unlock reward...";
-                // set badge to locked
+                // descriptionText.text = "Play more to unlock reward...";
+                titleText.text = "???";
+                this.gameObject.GetComponent<Button>().interactable = false;
             } else {
                 if (descriptionTemp.Contains("[temp]")) {
                     descriptionText.text = descriptionTemp.Replace("[temp]", criteriaDescription[starStatus-1]);
@@ -78,7 +80,7 @@ namespace Wrapper
 
             // Set badge graphic and text colors based on game
             badgeGraphic.sprite = gameBadges[(int)game];
-            ColorUtility.TryParseHtmlString(gameHex[(int)game], out Color tempColor);
+            ColorUtility.TryParseHtmlString(gameHexText[(int)game], out Color tempColor);
             titleText.color = tempColor;
             descriptionText.color = tempColor;
         }
