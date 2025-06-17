@@ -19,6 +19,7 @@ namespace Wrapper
         [Header("Badge Display GameObjects")]
         [SerializeField] public Image icons;
         [SerializeField] private Image badgeGraphic;
+        [SerializeField] private Image panelBackground;
         [SerializeField] public TextMeshProUGUI titleText;
         [SerializeField] public TextMeshProUGUI descriptionText;
         [SerializeField] public Star[] stars;
@@ -32,8 +33,8 @@ namespace Wrapper
 
         // BB, CT, LA, QB, QC, RW, None
         // private string[] gameHexOrig = {"#BF90F1", "#71B0A6", "#D38B97", "#72D0DC", "#F1A7C7", "#000000", "#000000"};
-        private string[] gameHexText = {"#8574B3", "#4A6E76", "#853D5A", "#417284", "#7B5677", "#000000", "#000000"};
-        // private string[] gameHexPanel = {"#8574B3", "#71B0A6", "#C75675", "#72D0DC", "#A87FA9", "#000000", "#000000"};
+        // private string[] gameHexText = {"#8574B3", "#4A6E76", "#853D5A", "#417284", "#7B5677", "#000000", "#000000"};
+        private string[] gameHexPanel = {"#8574B3", "#71B0A6", "#C75675", "#72D0DC", "#A87FA9", "#000000", "#000000"};
         [SerializeField] private Sprite[] gameBadges;
 
 
@@ -80,9 +81,10 @@ namespace Wrapper
 
             // Set badge graphic and text colors based on game
             badgeGraphic.sprite = gameBadges[(int)game];
-            ColorUtility.TryParseHtmlString(gameHexText[(int)game], out Color tempColor);
-            titleText.color = tempColor;
-            descriptionText.color = tempColor;
+            ColorUtility.TryParseHtmlString(gameHexPanel[(int)game], out Color tempColor);
+            panelBackground.color = tempColor;
+            // titleText.color = tempColor;
+            // descriptionText.color = tempColor;
         }
 
         public void OnEnable()
