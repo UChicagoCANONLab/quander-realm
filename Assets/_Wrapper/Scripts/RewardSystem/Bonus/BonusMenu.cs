@@ -85,8 +85,8 @@ namespace Wrapper
         {
             isOn = !isOn;
             animator.SetBool("IsOn", isOn);
-            if (isOn) parentMenu.backgroundButton.onClick.AddListener(CloseBonusMenu);
-            else parentMenu.backgroundButton.onClick.RemoveListener(CloseBonusMenu);
+            // if (isOn) parentMenu.backgroundButton.onClick.AddListener(CloseBonusMenu);
+            // else parentMenu.backgroundButton.onClick.RemoveListener(CloseBonusMenu);
         }
         
         public void ToggleConfirmation()

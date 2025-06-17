@@ -43,6 +43,8 @@ namespace Wrapper
         private void Awake()
         {
             backgroundButton.onClick.AddListener(CloseMenu);
+            // backgroundButton.onClick.AddListener(() => bonusMenu.CloseBonusMenu());
+            
             exitButton.onClick.AddListener(CloseMenu);
             bonusButton.onClick.AddListener(() => bonusMenu.ToggleBonusMenu());
 
@@ -55,6 +57,8 @@ namespace Wrapper
         private void OnDestroy()
         {
             backgroundButton.onClick.RemoveListener(CloseMenu);
+            // backgroundButton.onClick.RemoveListener(() => bonusMenu.CloseBonusMenu());
+            
             exitButton.onClick.RemoveListener(CloseMenu);
             bonusButton.onClick.RemoveListener(() => bonusMenu.ToggleBonusMenu());
 
@@ -95,6 +99,8 @@ namespace Wrapper
             UpdateMenu();
             animator.SetBool("IsOn", !isOn);
             isOn = !isOn;
+
+            if (!isOn) bonusMenu.CloseBonusMenu();
         }
 
         public void CloseMenu()
@@ -105,7 +111,6 @@ namespace Wrapper
             }
             animator.SetBool("IsOn", false);
             isOn = false;
-
             bonusMenu.CloseBonusMenu();
         }
 
