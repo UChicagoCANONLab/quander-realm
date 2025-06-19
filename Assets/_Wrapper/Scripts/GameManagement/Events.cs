@@ -31,7 +31,6 @@ namespace Wrapper
 
         /// Trackers ///
         public static Action InitializeStarTracker;
-        public static Action<long> UpdateStreakLength;
         public static Action ResetStarCounts;
 
         /// MapManager ///
@@ -68,6 +67,7 @@ namespace Wrapper
         public static Func<int> GetUserSaveTotalCoins;
         public static Action<Game, int> UpdateMinigameStarCount;
         public static Func<Game, int> GetMinigameStarCount;
+        // public static Action UpdateStreakLength;
         public static Func<int> GetStreakLength;
         public static Func<Game, int> HasRewardsFromGame;
 

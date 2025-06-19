@@ -25,19 +25,26 @@ namespace Wrapper
             SetStreak(Events.GetStreakLength.Invoke());
         }
 
-        public void SetStars(int num)
+        public void ResetDisplay()
+        {
+            SetStars(0);
+            SetCoins(0);
+            SetStreak(0);
+        }
+
+        private void SetStars(int num)
         {
             totalStars = num;
             totalStarsTMP.text = $"{totalStars}";
         }
 
-        public void SetCoins(int num)
+        private void SetCoins(int num)
         {
             totalCoins = num;
             totalCoinsTMP.text = $"{totalCoins}";
         }
 
-        public void SetStreak(int num)
+        private void SetStreak(int num)
         {
             streakLength = num;
             streakLengthTMP.text = $"{streakLength}";

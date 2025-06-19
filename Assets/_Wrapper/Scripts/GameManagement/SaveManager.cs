@@ -83,6 +83,7 @@ namespace Wrapper
             Events.GetUserSaveTotalCoins += GetTotalCoins;
             Events.UpdateMinigameStarCount += UpdateMinigameStarCount;
             Events.GetMinigameStarCount += GetMinigameStarCount;
+            // Events.UpdateStreakLength += UpdateStreakLength;
             Events.GetStreakLength += GetStreakLength;
             Events.HasRewardsFromGame += NumberRewardsFromGame;
         }
@@ -110,6 +111,7 @@ namespace Wrapper
             Events.GetUserSaveTotalCoins -= GetTotalCoins;
             Events.UpdateMinigameStarCount -= UpdateMinigameStarCount;
             Events.GetMinigameStarCount -= GetMinigameStarCount;
+            // Events.UpdateStreakLength -= UpdateStreakLength;
             Events.GetStreakLength -= GetStreakLength;
             Events.HasRewardsFromGame -= NumberRewardsFromGame;
         }
@@ -240,7 +242,7 @@ namespace Wrapper
             Debug.Log("Saving: " + json);
 
             currentUserSave.ResetStreak();
-            Events.UpdateStreakLength?.Invoke(currentUserSave.streak);
+            // Events.UpdateStreakLength?.Invoke(currentUserSave.streak);
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
 
@@ -338,7 +340,7 @@ namespace Wrapper
 
             currentUserSave = JsonUtility.FromJson<UserSave>(loadDataJson);
             currentUserSave.ResetStreak();
-            Events.UpdateStreakLength?.Invoke(currentUserSave.streak);
+            // Events.UpdateStreakLength?.Invoke(currentUserSave.streak);
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
@@ -524,6 +526,11 @@ namespace Wrapper
             return currentUserSave.totalCoins;
         }
 
+        /* private void UpdateStreakLength()
+        {
+            currentUserSave.UpdateStreak();
+        } */
+
         private int GetStreakLength()
         {
             return (int)currentUserSave.streak;
@@ -584,7 +591,8 @@ namespace Wrapper
         private IEnumerator UpdateRemoteSaveRoutine()
         {
             webGLUploadSuccess = false;
-            // currentUserSave.UpdateStreak();
+
+            currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {

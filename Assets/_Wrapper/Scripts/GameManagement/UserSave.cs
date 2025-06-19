@@ -23,13 +23,14 @@ namespace Wrapper
         // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes, Rewards, None, Trivia}
         public List<int> starsPerGame = new List<int>(8);
 
-        [NonSerialized]
-        public DateTime lastLoginDate;
-        [NonSerialized]
-        public long streak = 0;
-        // public string streakString = string.Empty;
-        public string streakString = "0";
-        public string loginticks = string.Empty;
+        // [NonSerialized] public DateTime lastLoginDate;
+        // [NonSerialized] public int streak = 0;
+        // public string streakString = "0";
+        // public string loginticks = string.Empty;
+
+        public string lastLogin = string.Empty; // parsed as DateTime
+        public int streak = 0;
+        public int streakBuffer = 0; // Number of buffer days awarded by streak freeze
 
 
         public UserSave(string idString = "", string rewardID = "")
@@ -46,7 +47,7 @@ namespace Wrapper
                 id = idString.Trim();
 
             AddReward(rewardID);
-            loginticks = "5";
+            // loginticks = "5";
         }
 
         public bool AddReward(string rewardID)
@@ -145,34 +146,70 @@ namespace Wrapper
 
         public void UpdateStreak()
         {
-            if (lastLoginDate.Date == DateTime.Now.AddDays(-1).Date || streak == 0)
-            {
-                streak = streak + 1;
-                streakString = streak.ToString();
-            }
-            lastLoginDate = DateTime.Now;
-            loginticks = lastLoginDate.ToString();
-            Events.UpdateStreakLength?.Invoke(streak);
+            // if last login was yesterday or if the streak is still 0
+            // if (lastLoginDate.Date == DateTime.Now.AddDays(-1).Date || streak == 0)
+            if (streak == 0) streak += 1;
+            // {
+            //     streak = streak + 1;
+            //     // streakString = streak.ToString();
+            // }
+            // lastLoginDate = DateTime.Now;
+            // loginticks = lastLoginDate.ToString();
+            // Events.UpdateStreakLength?.Invoke(streak);
+            lastLogin = DateTime.Now.ToString();
         }
 
         public void ResetStreak()
         {
+            // If loginticks is null, never logged in before; reset
+            if (lastLogin == string.Empty)
+            {
+                lastLogin = DateTime.Now.ToString();
+                streak = 0;
+                return;
+            }
+            Debug.Log($"Last login: {lastLogin}");
+            Debug.Log($"Current Streak: {streak}");
+
+            // Get currently stored streak; if 0, should stay 0 until they do something
+            if (streak == 0) return;
+            else if (streak > 0)
+            {
+                // if it is currently the same date as the last login, do not increase
+                if (DateTime.Compare(DateTime.Parse(lastLogin).Date, DateTime.Now.Date) == 0) return;
+                else 
+                {
+                    // If last login was yesterday or within the streak freeze buffer, add to streak and reset buffer
+                    for (int i=0; i <= streakBuffer; i++)
+                    {
+                        if (DateTime.Parse(lastLogin).Date == DateTime.Now.AddDays(-1 - streakBuffer))
+                        {
+                            streak += 1; streakBuffer = 0;
+                            return;
+                        }
+                    }
+                    streak = 0;
+                }
+            }
+            
+            /* // If never logged in before, set to 0
             if (loginticks == null) {
                 loginticks = DateTime.Now.ToString();
-                streakString = "0";
+                // streakString = "0";
+                streak = 0;
             }
-
+            
             lastLoginDate = DateTime.Parse(loginticks);
-            streak = long.Parse(streakString);
+            streak = int.Parse(streakString);
             if (lastLoginDate.Date >= DateTime.Now.AddDays(-1).Date)
             {
-                streak = long.Parse(streakString);
+                streak = int.Parse(streakString);
             }
             else
             {
                 streak = 0;
                 streakString = "0";
-            }
+            } */
         }
 
         public bool FirstRewardFromGame(string gamePrefix)

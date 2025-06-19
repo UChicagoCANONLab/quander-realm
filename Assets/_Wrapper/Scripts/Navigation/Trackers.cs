@@ -35,14 +35,14 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.InitializeStarTracker += DelayInitTrackers;
-            Events.UpdateStreakLength += OnUpdateStreakLength;
+            // Events.UpdateStreakLength += OnUpdateStreakLength;
             Events.ResetStarCounts += ResetStarCounts;
         }
 
         private void OnDisable()
         {
             Events.InitializeStarTracker -= DelayInitTrackers;
-            Events.UpdateStreakLength -= OnUpdateStreakLength;
+            // Events.UpdateStreakLength -= OnUpdateStreakLength;
             Events.ResetStarCounts -= ResetStarCounts;
         }
 
@@ -62,8 +62,9 @@ namespace Wrapper
             foreach (Game minigame in gamesArray) {
                 initMinigameStarDisplay(minigame);
             }
+            trackerPanel.UpdateDisplay();
             RecountTotal();
-            UpdateCoinTracker();
+            // UpdateCoinTracker();
 #endif
             Events.InitializeMap?.Invoke();
         }
@@ -87,41 +88,40 @@ namespace Wrapper
             tracker_Overall.ResetStarDisplay();
             tracker_Challenge.ResetStarDisplay();
 
-            trackerPanel.SetStars(0);
-            trackerPanel.SetCoins(0);
+            trackerPanel.ResetDisplay();
         }
 
-        public void UpdateCoinTracker()
+        /* public void UpdateCoinTracker()
         {
             int totalCoins = Events.GetUserSaveTotalCoins.Invoke();
             trackerPanel.SetCoins(totalCoins);
-        }
+        } */
 
-        public void OnUpdateStreakLength(long streak)
+        /* public void OnUpdateStreakLength(long streak)
         {
             trackerPanel.SetStreak((int)streak);
             //Debug.Log("Updating streak length");
             // MOVED TO trackerPanel
-            /* bool active = streak > 0;
-            if(active){
-                lanternFront.color = new Color(1f, 1f, 1f);
-                fire.SetActive(true);
-            }
-            else{
-                lanternFront.color = new Color(0.3f, 0.3f, 0.3f);
-                fire.SetActive(false);
-            }
-            if (active) {
-                streakLengthTMP.text = streak.ToString();
-            } */
-        }
+            // bool active = streak > 0;
+            // if(active){
+            //     lanternFront.color = new Color(1f, 1f, 1f);
+            //     fire.SetActive(true);
+            // }
+            // else{
+            //     lanternFront.color = new Color(0.3f, 0.3f, 0.3f);
+            //     fire.SetActive(false);
+            // }
+            // if (active) {
+            //     streakLengthTMP.text = streak.ToString();
+            // }
+        } */
 
         // Updates the total star count on panel and main screen
         public void RecountTotal() {
             tracker_Challenge.SetStarDisplay(Events.GetMinigameStarCount.Invoke(Game.Rewards));
             int totalStars = Events.GetOverallTotalStars.Invoke();
             tracker_Overall.SetStarDisplay(totalStars);
-            trackerPanel.SetStars(totalStars);
+            // trackerPanel.SetStars(totalStars); 
         }
 
 

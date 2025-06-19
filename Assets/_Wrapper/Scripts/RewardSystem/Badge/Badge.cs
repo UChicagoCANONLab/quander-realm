@@ -71,7 +71,10 @@ namespace Wrapper
                 // descriptionText.text = "Play more to unlock reward...";
                 titleText.text = "???";
                 this.gameObject.GetComponent<Button>().interactable = false;
-            } else {
+                if (descriptionTemp.Contains("[temp]"))
+                    descriptionText.text = descriptionTemp.Replace("[temp]", criteriaDescription[0]);
+            } 
+            else {
                 if (descriptionTemp.Contains("[temp]")) {
                     descriptionText.text = descriptionTemp.Replace("[temp]", criteriaDescription[starStatus-1]);
                 } else {
