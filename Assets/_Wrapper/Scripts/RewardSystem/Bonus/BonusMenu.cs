@@ -17,9 +17,8 @@ namespace Wrapper
         private bool isOn = false;
         private bool confirmationOn = false;
 
-        private Bonus selectedBonus = null;
-        private List<GameObject> usableBonuses = new List<GameObject>();
-        private List<GameObject> inactiveBonuses;
+        [SerializeField] private Bonus selectedBonus = null;
+        private List<GameObject> bonusHolder = new List<GameObject>();
 
 
         void Start()
@@ -32,7 +31,7 @@ namespace Wrapper
             foreach (BonusAsset boAsset in GameManager.Instance.bonusAssets)
             {
                 GameObject bonusGO = Events.CreateBonus?.Invoke(boAsset, quickSelectHolder);
-                usableBonuses.Add(bonusGO);
+                bonusHolder.Add(bonusGO);
                 bonusGO.GetComponent<Button>().onClick.AddListener(() => SelectBonus(bonusGO.GetComponent<Bonus>()));
             }
         }
@@ -83,26 +82,22 @@ namespace Wrapper
             confirmationOn = !confirmationOn;
             animator.SetBool("ConfirmationOn", confirmationOn);
 
-            /* foreach(GameObject bo in usableBonuses)
+            /* foreach(GameObject bo in bonusHolder)
             {
                 bo.GetComponent<Button>().interactable = !confirmationOn;
             } */
             if (!confirmationOn) 
             {
-                selectedBonus = null;
+                // selectedBonus = null;
                 confirmationPopup.ResetCurrentBonus();
             }
         }
 
         public void CloseBonusMenu()
         {
-            // if (isOn) parentMenu.backgroundButton.onClick.RemoveListener(CloseBonusMenu);
-            // animator.SetBool("IsOn", false);
-            // animator.SetBool("ConfirmationOn", false);
-            // isOn = false; confirmationOn = false;
-
             if (isOn) ToggleBonusMenu();
             if (confirmationOn) ToggleConfirmation();
+            selectedBonus = null;
         }
     }
 }

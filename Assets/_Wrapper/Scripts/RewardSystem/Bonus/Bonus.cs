@@ -22,7 +22,7 @@ namespace Wrapper
 
         public int numberAvailable;
         public bool currentlyUsable;
-        private GemType gemType;
+        [SerializeField] private GemType gemType;
 
         [Header("Display GameObjects")]
         [SerializeField] private Image gemGraphic;
@@ -72,8 +72,8 @@ namespace Wrapper
 
         public void DisplayOnly(bool disabled)
         {
-            this.gameObject.GetComponent<Button>().interactable = disabled;
-            // counterObject.SetActive(disabled);
+            this.gameObject.GetComponent<Button>().interactable = !disabled;
+            counterObject.SetActive(!disabled);
         }
 
 

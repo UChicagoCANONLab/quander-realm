@@ -22,6 +22,9 @@ namespace Wrapper
         [SerializeField] private Button buyButton;
         [SerializeField] private TextMeshProUGUI bonusCost;
 
+        [Header("Final Popup")]
+        [SerializeField] private GameObject finalPopupBonusHolder;
+
         private bool buyable = true;
         private bool available = true;
         private bool usable = true;
@@ -36,6 +39,7 @@ namespace Wrapper
             }
             currBonus = Instantiate(bonus.gameObject, bonusHolder.transform).GetComponent<Bonus>();
             currBonus.DisplayOnly(true);
+            Instantiate(currBonus.gameObject, finalPopupBonusHolder.transform);
 
             bonusName.text = $"{currBonus.title}";
             bonusDescription.text = $"{currBonus.effect}";
@@ -85,6 +89,7 @@ namespace Wrapper
         public void ResetCurrentBonus()
         {
             currBonus = null;
+            Destroy(finalPopupBonusHolder.transform.GetChild(0).gameObject);
             foreach (Transform child in bonusHolder.transform)
                 Destroy(child.gameObject);
         }
