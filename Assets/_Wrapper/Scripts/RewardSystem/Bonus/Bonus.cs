@@ -31,7 +31,7 @@ namespace Wrapper
         [SerializeField] public GameObject counterObject;
 
         [SerializeField] private Sprite[] gemOptions;
-        private enum GemType { SkipLevel, StreakFreeze };
+        private enum GemType { SkipLevel, StreakFreeze1, StreakFreeze5 };
 
 
         void OnEnable()
@@ -92,6 +92,18 @@ namespace Wrapper
                 case GemType.SkipLevel:
                     SkipLevel(Events.GetCurrentGame.Invoke());
                     break;
+
+                case GemType.StreakFreeze1:
+                    Debug.Log("Setting streak freeze x1");
+                    Events.SetStreakFreeze.Invoke(1);
+                    break;
+                
+                case GemType.StreakFreeze5:
+                    Debug.Log("Setting streak freeze x5");
+                    Events.SetStreakFreeze.Invoke(5);
+                    break;
+
+                default: return false;
             }
 
             UpdateBonus();

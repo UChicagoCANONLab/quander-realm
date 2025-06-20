@@ -14,7 +14,7 @@ namespace Wrapper
         [SerializeField] private TMP_Text researchCodeText;
 
         [Header("Display Objects")]
-        [SerializeField] private Trackers trackers; // on map scene
+        [SerializeField] private Trackers parentTrackers; // on map scene
         [SerializeField] public QButton backgroundButton;
         [SerializeField] private BackButton exitButton;
         [SerializeField] private LoadingPopup loadingPanel;
@@ -77,7 +77,7 @@ namespace Wrapper
             if (SceneManager.GetActiveScene().name == "W_Main")
             {
                 main = true;
-                trackers.ToggleTrackers(isOn);
+                parentTrackers.ToggleTrackers(isOn);
             }             
             exitButton.interactable = !main;
             // creditsButton.interactable = main;
@@ -93,7 +93,7 @@ namespace Wrapper
         {
             /* if (SceneManager.GetActiveScene().name == "W_Main")
             {
-                trackers.ToggleTrackers(isOn);
+                parentTrackers.ToggleTrackers(isOn);
             }
             localTrackerPanel.UpdateDisplay(); */
             UpdateMenu();
@@ -107,7 +107,7 @@ namespace Wrapper
         {
             if (SceneManager.GetActiveScene().name == "W_Main")
             {
-                trackers.ToggleTrackers(true);
+                parentTrackers.ToggleTrackers(true);
             }
             animator.SetBool("IsOn", false);
             isOn = false;

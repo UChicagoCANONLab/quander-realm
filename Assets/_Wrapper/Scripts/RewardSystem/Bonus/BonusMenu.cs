@@ -22,11 +22,6 @@ namespace Wrapper
         private List<GameObject> inactiveBonuses;
 
 
-        void Awake()
-        {
-            // backgroundButton.onClick.AddListener(() => CloseBonusMenu());
-        }
-
         void Start()
         {
             InitBonusMenu();
@@ -62,14 +57,8 @@ namespace Wrapper
         // Called from UseBonus in BonusConfirmation
         public void UseBonusUpdate()
         {
-            // selectedBonus.UseBonus(); // Called from BonusConfirmation instead
-            /* animator.SetTrigger("BonusUsed");
-            CloseBonusMenu();
-            parentMenu.CloseMenu(); */
-
             Routine.Start(UseBonusRoutine());
         }
-
         public IEnumerator UseBonusRoutine()
         {
             animator.SetTrigger("BonusUsed");
@@ -98,7 +87,11 @@ namespace Wrapper
             {
                 bo.GetComponent<Button>().interactable = !confirmationOn;
             }
-            if (!confirmationOn) selectedBonus = null;
+            if (!confirmationOn) 
+            {
+                selectedBonus = null;
+                confirmationPopup.ResetCurrentBonus();
+            }
         }
 
         public void CloseBonusMenu()

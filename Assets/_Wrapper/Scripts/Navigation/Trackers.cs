@@ -69,6 +69,17 @@ namespace Wrapper
             Events.InitializeMap?.Invoke();
         }
 
+        public void UpdateTrackers()
+        {
+            Events.LoadAllMinigameSaves?.Invoke();
+
+            foreach (Game minigame in gamesArray) {
+                initMinigameStarDisplay(minigame);
+            }
+            trackerPanel.UpdateDisplay();
+            RecountTotal();
+        }
+
 
         private void initMinigameStarDisplay(Game game)
         {
@@ -133,6 +144,7 @@ namespace Wrapper
 
         // Toggles all tracker visibility
         public void ToggleTrackers(bool isOn) {
+            if (isOn) UpdateTrackers();
             trackerAnimator.SetBool("IsOn", isOn);
             active = isOn;
         }

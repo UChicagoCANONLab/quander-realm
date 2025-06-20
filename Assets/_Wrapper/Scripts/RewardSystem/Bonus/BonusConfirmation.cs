@@ -57,13 +57,18 @@ namespace Wrapper
             // else if (currBonus.currentlyUsable) useButton.interactable = true;
         }
 
+        public void ResetCurrentBonus()
+        {
+            currBonus = null;
+            foreach (Transform child in bonusHolder.transform)
+                Destroy(child.gameObject);
+        }
+
 
         public void CloseConfirmationButton()
         {
             parentMenu.ToggleConfirmation();
-            currBonus = null;
-            foreach (Transform child in bonusHolder.transform)
-                Destroy(child.gameObject);
+            ResetCurrentBonus();
         }
 
         public void BuyBonusButton()

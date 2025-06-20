@@ -176,19 +176,19 @@ namespace Wrapper
             else if (streak > 0)
             {
                 // if it is currently the same date as the last login, do not increase
-                if (DateTime.Compare(DateTime.Parse(lastLogin).Date, DateTime.Now.Date) == 0) return;
+                if (DateTime.Parse(lastLogin).Date == DateTime.Now.Date) return;
                 else 
                 {
                     // If last login was yesterday or within the streak freeze buffer, add to streak and reset buffer
                     for (int i=0; i <= streakBuffer; i++)
                     {
-                        if (DateTime.Parse(lastLogin).Date == DateTime.Now.AddDays(-1 - streakBuffer))
+                        if (DateTime.Parse(lastLogin).Date == DateTime.Now.AddDays(-1 - i).Date)
                         {
-                            streak += 1; streakBuffer = 0;
+                            streak += 1; streakBuffer -= i;
                             return;
                         }
                     }
-                    streak = 0;
+                    streak = 0; streakBuffer = 0;
                 }
             }
             

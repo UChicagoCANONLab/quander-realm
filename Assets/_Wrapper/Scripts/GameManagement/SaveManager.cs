@@ -85,6 +85,8 @@ namespace Wrapper
             Events.GetMinigameStarCount += GetMinigameStarCount;
             // Events.UpdateStreakLength += UpdateStreakLength;
             Events.GetStreakLength += GetStreakLength;
+            Events.GetStreakFreeze += GetStreakFreeze;
+            Events.SetStreakFreeze += SetStreakFreeze;
             Events.HasRewardsFromGame += NumberRewardsFromGame;
         }
 
@@ -113,6 +115,8 @@ namespace Wrapper
             Events.GetMinigameStarCount -= GetMinigameStarCount;
             // Events.UpdateStreakLength -= UpdateStreakLength;
             Events.GetStreakLength -= GetStreakLength;
+            Events.GetStreakFreeze -= GetStreakFreeze;
+            Events.SetStreakFreeze -= SetStreakFreeze;
             Events.HasRewardsFromGame -= NumberRewardsFromGame;
         }
 
@@ -435,6 +439,7 @@ namespace Wrapper
 
         private bool AddReward(string rewardID)
         {
+            if (currentUserSave == null) return false;
             bool rewardAdded = currentUserSave.AddReward(rewardID);
             UpdateRemoteSave();
             return rewardAdded;
@@ -442,6 +447,7 @@ namespace Wrapper
 
         private bool AddBadge(string badgeID)
         {
+            if (currentUserSave == null) return false;
             bool badgeAdded = currentUserSave.AddBadge(badgeID);
             UpdateRemoteSave();
             return badgeAdded;
@@ -449,6 +455,7 @@ namespace Wrapper
 
         private bool AddBonus(string bonusID)
         {
+            if (currentUserSave == null) return false;
             bool bonusAdded = currentUserSave.AddBonus(bonusID);
             UpdateRemoteSave();
             return bonusAdded;
@@ -456,6 +463,7 @@ namespace Wrapper
 
         private bool UseAvailableBonus(string bonusID)
         {
+            if (currentUserSave == null) return false;
             bool bonusAvailable = currentUserSave.UseBonus(bonusID);
             UpdateRemoteSave();
             return bonusAvailable;
@@ -463,32 +471,38 @@ namespace Wrapper
 
         private int NumberAvailableBonuses(string bonusID)
         {
+            if (currentUserSave == null) return -1;
             return currentUserSave.GetNumBonuses(bonusID);
         }
 
         private bool IsRewardUnlocked(string rewardID)
         {
+            if (currentUserSave == null) return false;
             return currentUserSave.HasReward(rewardID);
         }
 
         private int NumberRewardsFromGame(Game game)
         {
+            if (currentUserSave == null) return -1;
             return currentUserSave.HasRewardsFromGame(game);
         }
 
         private string GetMinigameSaveData(Game game)
         {
+            if (currentUserSave == null) return String.Empty;
             return currentUserSave.GetMinigameSave(game);
         }
 
         private void UpdateMinigameSaveData(Game game, object minigameSave)
         {
+            if (currentUserSave == null) return;
             currentUserSave.UpdateMinigameSave(game, minigameSave);
             UpdateRemoteSave();
         }
 
         private void UpdateMinigameStarCount(Game game, int numStars)
         {
+            if (currentUserSave == null) return;
             if (currentUserSave.starsPerGame.Count == 0) 
             {
                 currentUserSave.starsPerGame = new List<int>() {0,0,0,0,0,0,0,0}; 
@@ -502,11 +516,13 @@ namespace Wrapper
 
         private int GetMinigameStarCount(Game game)
         {
+            if (currentUserSave == null) return -1;
             return currentUserSave.starsPerGame[(int)game];
         }
 
         private void UpdateTotalStars(int numStars)
         {
+            if (currentUserSave == null) return;
             if (currentUserSave.totalStars != numStars)
             {
                 currentUserSave.totalStars = numStars;
@@ -516,6 +532,7 @@ namespace Wrapper
 
         private void UpdateTotalCoins(int numCoins)
         {
+            if (currentUserSave == null) return;
             Events.DisplayCoinsCollected.Invoke(numCoins);
             currentUserSave.totalCoins += numCoins;
             UpdateRemoteSave();
@@ -523,6 +540,7 @@ namespace Wrapper
 
         private int GetTotalCoins()
         {
+            if (currentUserSave == null) return -1;
             return currentUserSave.totalCoins;
         }
 
@@ -533,7 +551,24 @@ namespace Wrapper
 
         private int GetStreakLength()
         {
-            return (int)currentUserSave.streak;
+            if (currentUserSave == null) return -1;
+            return currentUserSave.streak;
+        }
+
+        private int GetStreakFreeze()
+        {
+            if (currentUserSave == null) return -1;
+            return currentUserSave.streakBuffer;
+        }
+
+        private void SetStreakFreeze(int days)
+        {
+            if (currentUserSave == null) return;
+            currentUserSave.streakBuffer += days;
+            Debug.Log($"Added {days} days to buffer");
+            Debug.Log($"Streak buffer: {currentUserSave.streakBuffer}");
+            UpdateRemoteSave();
+            Debug.Log($"Streak buffer (after remote save): {currentUserSave.streakBuffer}");
         }
 
         private void UpdateRemoteSave()
@@ -655,6 +690,7 @@ namespace Wrapper
         //todo: merge intro dialogue methods or make it a property with get/set
         public bool HasPlayerSeenIntroDialogue()
         {
+            if (currentUserSave == null) return false;
             return currentUserSave.introDialogueSeen;
         }
 
@@ -666,6 +702,7 @@ namespace Wrapper
 
         private string GetResearchCode()
         {
+            if (currentUserSave == null) return String.Empty;
             return currentUserSave.id;
         }
 
