@@ -22,22 +22,18 @@ namespace Wrapper
         [SerializeField] private Button buyButton;
         [SerializeField] private TextMeshProUGUI bonusCost;
 
-        private string[] message = {
-            "Purchase or use this bonus",
-            "You cannot use this bonus here",
-            "Buy a bonus to use it"
-        };
+        private bool buyable = true;
+        private bool available = true;
+        private bool usable = true;
 
-        /* 
-        OPTIONS:
-            Use pre-bought bonus
-            Purchase without using
-            Purchase and use immediately 
-        */
 
 
         public void InitConfirmation(Bonus bonus)
         {
+            if (currBonus != null)
+            {
+                CloseConfirmationButton();
+            }
             currBonus = Instantiate(bonus.gameObject, bonusHolder.transform).GetComponent<Bonus>();
             currBonus.DisplayOnly(true);
 
@@ -45,16 +41,45 @@ namespace Wrapper
             bonusDescription.text = $"{currBonus.effect}";
             bonusCost.text = $"{currBonus.cost[0]}";
 
-            if ((bonus.numberAvailable > 0) && bonus.currentlyUsable) useButton.interactable = true;
-            // else if (bonus.currentlyUsable) useButton.interactable = true;
+            // if ((bonus.numberAvailable > 0) && bonus.currentlyUsable) useButton.interactable = true;
+            currBonus.UpdateBonus();
+            SetConfirmationType();
+        }
+
+        public void SetConfirmationType()
+        {
+            available = true; usable = true; buyable = true;
+
+            // Check if bonus available
+            if (currBonus.numberAvailable == 0) available = false;
+            // Check if able to use bonus
+            if (!currBonus.currentlyUsable) usable = false;
+            // Check if able to buy bonus
+            if (Events.GetUserSaveTotalCoins.Invoke() < currBonus.cost[0]) buyable = false;
+
+            // Set confirmation message
+            if (usable == true) {
+                if (buyable == true) {
+                    if (available == true) {
+                        confirmationMessage.text = "Buy or use a bonus!";
+                    }
+                    else confirmationMessage.text = "Buy this bonus to use it";
+                }
+                else confirmationMessage.text = "Get more coins to buy this bonus";
+            }
+            else confirmationMessage.text = "You cannot use this bonus here";
+
+            // Set button interactability
+            useButton.interactable = (available && usable);
+            buyButton.interactable = buyable;
         }
 
         public void UpdateConfirmation()
         {
             currBonus.UpdateBonus();
 
-            if ((currBonus.numberAvailable > 0) && currBonus.currentlyUsable) useButton.interactable = true;
-            // else if (currBonus.currentlyUsable) useButton.interactable = true;
+            // if ((currBonus.numberAvailable > 0) && currBonus.currentlyUsable) useButton.interactable = true;
+            SetConfirmationType();
         }
 
         public void ResetCurrentBonus()

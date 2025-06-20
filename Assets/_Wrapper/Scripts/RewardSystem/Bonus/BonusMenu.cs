@@ -83,10 +83,10 @@ namespace Wrapper
             confirmationOn = !confirmationOn;
             animator.SetBool("ConfirmationOn", confirmationOn);
 
-            foreach(GameObject bo in usableBonuses)
+            /* foreach(GameObject bo in usableBonuses)
             {
                 bo.GetComponent<Button>().interactable = !confirmationOn;
-            }
+            } */
             if (!confirmationOn) 
             {
                 selectedBonus = null;
