@@ -5,7 +5,6 @@ namespace Wrapper
     [System.Serializable]
     public class CardResearchData
     {
-        public string Username = Events.GetPlayerResearchCode?.Invoke();
         public string Header = "Reward Card Data";
 
         public string currentCard = string.Empty;
@@ -14,7 +13,8 @@ namespace Wrapper
         public string displayType = string.Empty;
         public string description = string.Empty;
         
-        public int[] cardsPerGame = new int[] { 0, 0, 0, 0, 0 };
+        // Doesn't update all games, so total and array total can be different
+        // public int[] cardsPerGame = new int[] { 0, 0, 0, 0, 0 };
         public int totalCards = 0;        
     }
 }

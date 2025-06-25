@@ -565,10 +565,10 @@ namespace Wrapper
         {
             if (currentUserSave == null) return;
             currentUserSave.streakBuffer += days;
-            Debug.Log($"Added {days} days to buffer");
-            Debug.Log($"Streak buffer: {currentUserSave.streakBuffer}");
+            // Debug.Log($"Added {days} days to buffer");
+            // Debug.Log($"Streak buffer: {currentUserSave.streakBuffer}");
             UpdateRemoteSave();
-            Debug.Log($"Streak buffer (after remote save): {currentUserSave.streakBuffer}");
+            // Debug.Log($"Streak buffer (after remote save): {currentUserSave.streakBuffer}");
         }
 
         private void UpdateRemoteSave()
@@ -651,7 +651,7 @@ namespace Wrapper
 #endif
 
             // AWS
-            private void SaveMinigameResearchData(Game game, object minigameSave)
+        private void SaveMinigameResearchData(Game game, object minigameSave)
         {
 #if !LITE_VERSION
             StartCoroutine(SendResearchDataToRemote(game, minigameSave));
@@ -665,6 +665,9 @@ namespace Wrapper
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(dataJson);
 
             string url = awsURL + "/" + gameSaveURLs[(int)game] + "_save";
+
+            // Debug.Log($"dataJson: {dataJson}");
+            // Debug.Log($"jsonToSend: {jsonToSend}");
 
             using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
             {

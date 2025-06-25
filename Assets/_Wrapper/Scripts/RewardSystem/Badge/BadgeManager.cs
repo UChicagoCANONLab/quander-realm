@@ -22,7 +22,7 @@ namespace Wrapper
 
         private string[] badgeIDs = {
             "Leveler_QU", "Leveler_QB", "Leveler_BB", "Leveler_CT", "Leveler_LA", 
-            "Reward_all", "Reward_first", "Unlocked",
+            // "Reward_all", "Reward_first", "Unlocked",
             "Reward_QU", "Reward_QB", "Reward_BB", "Reward_CT", "Reward_LA", 
             "Stars_QU", "Stars_QB", "Stars_BB", "Stars_CT", "Stars_LA"
         };
@@ -32,8 +32,8 @@ namespace Wrapper
             "Leveler_QB", "Reward_QB", "Stars_QB",
             "Leveler_BB", "Reward_BB", "Stars_BB",
             "Leveler_CT", "Reward_CT", "Stars_CT",
-            "Leveler_LA", "Reward_LA", "Stars_LA",
-            "Reward_all", "Reward_first", "Unlocked"
+            "Leveler_LA", "Reward_LA", "Stars_LA"
+            // "Reward_all", "Reward_first", "Unlocked"
         };
 
         void Start()

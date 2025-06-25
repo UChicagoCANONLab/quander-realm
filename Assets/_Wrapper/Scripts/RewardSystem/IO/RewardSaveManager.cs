@@ -11,6 +11,8 @@ namespace Wrapper
         public CardResearchData CardData;
         public BadgeResearchData BadgeData;
 
+        public RewardData RewardData;
+
         public static RewardSaveManager Instance;
 
         // This data structure is established so that no loadable SaveData is used.
@@ -27,33 +29,38 @@ namespace Wrapper
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            CardData = new CardResearchData();
-            BadgeData = new BadgeResearchData();
+            // RewardData = new RewardData();
         }
 
-        public void SaveRewardData(object researchData)
+        public void SaveRewardData()
         {
-            Events.SaveMinigameResearchData?.Invoke(Game.Rewards, researchData);
+            Events.SaveMinigameResearchData?.Invoke(Game.Rewards, RewardData);
         }
 
         public void UpdateCardData(Reward currCard, string desc)
         {
+            CardData = new CardResearchData();
+
             CardData.currentCard = currCard.titleFront.text;
             CardData.game = currCard.game.ToString();
             CardData.timeClicked = DateTime.Now.ToString("HH:mm:ss tt");
             CardData.displayType = currCard.displayType.ToString();
             CardData.description = desc;
 
-            CardData.cardsPerGame[(int)currCard.game] = Events.HasRewardsFromGame.Invoke(currCard.game);
+            // CardData.cardsPerGame[(int)currCard.game] = Events.HasRewardsFromGame.Invoke(currCard.game);
             CardData.totalCards = Events.HasRewardsFromGame.Invoke(Game.Rewards);
 
-            SaveRewardData(CardData);
+            RewardData.UpdateRewardData(CardData);
+            SaveRewardData();
         }
 
         public void UpdateBadgeData()
         {
+            BadgeData = new BadgeResearchData();
+
             // Update as Badge Research data is determined
-            SaveRewardData(BadgeData);
+            RewardData.UpdateRewardData(BadgeData);
+            SaveRewardData();
         }
 
     }

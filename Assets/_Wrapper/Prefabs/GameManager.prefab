@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 1050479140797615369}
   - component: {fileID: 1050479140797615368}
   - component: {fileID: 8027595469734611974}
+  - component: {fileID: 4449635664150424106}
   - component: {fileID: 188778457950739530}
   m_Layer: 0
   m_Name: SaveManager
@@ -278,8 +279,9 @@ MonoBehaviour:
     totalStars: 0
     totalCoins: 0
     starsPerGame: 
-    streakString: 
-    loginticks: 
+    lastLogin: 
+    streak: 0
+    streakBuffer: 0
   researchCodeLength: 6
 --- !u!114 &8027595469734611974
 MonoBehaviour:
@@ -294,18 +296,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CardData:
-    Username: 
     Header: Reward Card Data
     currentCard: 
     game: 
     timeClicked: 
     displayType: 
     description: 
-    cardsPerGame: 0000000000000000000000000000000000000000
     totalCards: 0
   BadgeData:
     Username: 
     Header: Badge Data
+  RewardData: {fileID: 4449635664150424106}
+--- !u!114 &4449635664150424106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050479140797615375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34321b6f42e514f3c843c79b006d185d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Username: 
+  RewardResearchData: 
 --- !u!114 &188778457950739530
 MonoBehaviour:
   m_ObjectHideFlags: 0
