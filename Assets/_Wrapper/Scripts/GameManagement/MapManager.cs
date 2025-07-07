@@ -7,14 +7,8 @@ namespace Wrapper
 {
     public class MapManager : MonoBehaviour 
     {
-        // public GameObject QC;
-        // public GameObject TT;
-        // public GameObject TL;
-        // public GameObject QB;
-        // public GameObject BT;
-
         // BB, CT, LA, QB, QC, Rewards, None, Trivia
-        [SerializeField] private MinigameButton[] minigameButtons;
+        [SerializeField] private MinigameMapIcon[] minigameIcons;
         [SerializeField] private Animator mapAnimator;
 
 
@@ -35,23 +29,16 @@ namespace Wrapper
 
         public void InitMap() 
         {
-            minigameButtons[(int)Game.Circuits].interactable = Events.GetGameUnlocked.Invoke(Game.Circuits);
-            minigameButtons[(int)Game.QueueBits].interactable = Events.GetGameUnlocked.Invoke(Game.QueueBits);
-            minigameButtons[(int)Game.BlackBox].interactable = Events.GetGameUnlocked.Invoke(Game.BlackBox);
-
-            // TL.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.Circuits);
-            // QB.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.QueueBits);
-            // BT.GetComponent<MinigameButton>().interactable = Events.GetGameUnlocked.Invoke(Game.BlackBox);
+            minigameIcons[(int)Game.Circuits].SetInteractable(Events.GetGameUnlocked.Invoke(Game.Circuits));
+            minigameIcons[(int)Game.QueueBits].SetInteractable(Events.GetGameUnlocked.Invoke(Game.QueueBits));
+            minigameIcons[(int)Game.BlackBox].SetInteractable(Events.GetGameUnlocked.Invoke(Game.BlackBox));
         }
 
         public void ResetMap()
         {
-            // TL.GetComponent<MinigameButton>().interactable = false;
-            // QB.GetComponent<MinigameButton>().interactable = false;
-            // BT.GetComponent<MinigameButton>().interactable = false;
-            minigameButtons[(int)Game.Circuits].interactable = false;
-            minigameButtons[(int)Game.QueueBits].interactable = false;
-            minigameButtons[(int)Game.BlackBox].interactable = false;
+            minigameIcons[(int)Game.Circuits].SetInteractable(false);
+            minigameIcons[(int)Game.QueueBits].SetInteractable(false);
+            minigameIcons[(int)Game.BlackBox].SetInteractable(false);
         }
 
         public void TriggerMapAnimation(bool enable)
