@@ -20,15 +20,11 @@ namespace Wrapper
         {
             // If clicking reward card, then save card info
             // Doing this here even though it would be better in Reward.cs becauses idk how to do it there
-            if (eventData.pointerCurrentRaycast.gameObject.name == "Hitbox" && SceneManager.GetActiveScene().name == "RewardCollection") {
-                // Debug.Log(eventData.pointerPress);
+            /* if (eventData.pointerCurrentRaycast.gameObject.name == "Hitbox" && SceneManager.GetActiveScene().name == "RewardCollection") 
+            {
                 Reward currCard = eventData.pointerPress.GetComponent<Reward>();
-
-                RewardResearchData.Instance.currentCard = currCard.titleFront.text; //name of card
-                RewardResearchData.Instance.timeClicked = DateTime.Now.ToString("HH:mm:ss tt"); //when they clicked it
-                RewardResearchData.Instance.displayType = currCard.displayType.ToString(); //InJournal=select new, Featured=flip
-                RewardSave.Instance.SaveRewardResearchData();
-            }
+                RewardResearchData.Instance.UpdateRewardResearchData(currCard);
+            } */
 
             base.OnPointerClick(eventData);
         }

@@ -39,6 +39,9 @@ namespace Wrapper
         private JournalPage currentPage;
         Routine pageFlip;
 
+        const string rewardIntroNew = "RW_Intro_0";
+        const string rewardIntroCards = "RW_Intro_1";
+
         #endregion
 
         #region Unity Functions
@@ -48,6 +51,17 @@ namespace Wrapper
             //Events.ToggleLoadingScreen?.Invoke();
             InitJournal();
             InitPrevNextButtons();
+
+            Events.PlayMusic?.Invoke("W_RewardMusic");
+
+            // determine if we have been here before
+            var rewardStats = Events.GetRewardDialogStats.Invoke();
+            if (rewardStats.Item1) return;
+            else
+            {
+                if (rewardStats.Item2) Events.StartDialogueSequence?.Invoke(rewardIntroCards);
+                else Events.StartDialogueSequence?.Invoke(rewardIntroNew);
+            }
         }
 
         private void Start()
@@ -63,6 +77,7 @@ namespace Wrapper
             Events.GetNavDot += GetNavDot;
             Events.SwitchPage += SwitchCardsOnPage;
             Events.FeatureCard += StartFeaturedCardSwap;
+            Events.DialogueSequenceEnded += SetTextSeen;
         }
 
         private void OnDisable()
@@ -70,6 +85,7 @@ namespace Wrapper
             Events.GetNavDot -= GetNavDot;
             Events.SwitchPage -= SwitchCardsOnPage;
             Events.FeatureCard -= StartFeaturedCardSwap;
+            Events.DialogueSequenceEnded -= SetTextSeen;
         }
 
         #endregion
@@ -109,6 +125,8 @@ namespace Wrapper
             animator.SetBool(featuredCardParam, true);
             Events.PlaySound?.Invoke("W_CardIn");
             Routine.Start(featuredCardGO.GetComponent<Reward>().UpdateAnimationState());
+            
+            RewardSaveManager.Instance.UpdateCardData(featuredCardGO.GetComponent<Reward>(), "Could be automatic from navigation");
         }
 
         #endregion
@@ -215,6 +233,7 @@ namespace Wrapper
 
         public void InitFirstPage()
         {
+            Debug.Log("Init first page");
             currentPage = journal.First().Value.pages.First();
             currentPage.ClickNavDot();
         }
@@ -234,6 +253,23 @@ namespace Wrapper
             }
         }
 
+        void SetTextSeen()
+        {
+            Events.SetRewardTextSeen?.Invoke(true);
+        }
+
         #endregion
+
+        public void ToggleRewardJournalAnim(bool isOn)
+        {
+            animator.SetBool("On", isOn);
+            animator.SetBool(featuredCardParam, isOn);
+
+            /* if (!isOn) 
+            {
+                foreach (Transform transform in featuredCardMount.transform)
+                    Destroy(transform.gameObject);
+            } */
+        }
     }
 }
