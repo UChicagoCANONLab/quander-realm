@@ -9,14 +9,10 @@ namespace Wrapper
     {
         bool closing = false;
 
-        [SerializeField]
-        GameObject confirmation;
-        [SerializeField]
-        Animator anim;
-        [SerializeField]
-        Button yesButton;
-        [SerializeField]
-        Button noButton;
+        [SerializeField] private GameObject confirmation;
+        [SerializeField] private Animator anim;
+        [SerializeField] private Button yesButton;
+        [SerializeField] private Button noButton;
 
         public void SetConfirmationData(System.Action yesAction, System.Action noAction)
         {
