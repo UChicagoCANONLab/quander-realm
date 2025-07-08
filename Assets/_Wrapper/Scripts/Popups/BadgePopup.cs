@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 namespace Wrapper
@@ -25,9 +26,9 @@ namespace Wrapper
         public IEnumerator DisplayBadge(GameObject badgeGO)
         {
             // Events.PlaySound?.Invoke("W_Reward");
-            // badgeGO.transform.SetParent(badgeContainer.transform);
+            badgeGO.transform.SetParent(badgeContainer.transform);
+            badgeGO.GetComponent<Button>().interactable = false;
             // badgeGO.GetComponent<Transform>().localScale = new Vector3(0.6f, 0.6f, 0.6f);
-            // badgeGO.GetComponent<Animator>().SetBool("Mini", false);
 
             title.text = badgeGO.GetComponent<Badge>().titleText.text;
             description.text = badgeGO.GetComponent<Badge>().descriptionText.text;

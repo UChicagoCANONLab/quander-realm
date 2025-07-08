@@ -25,9 +25,9 @@ namespace QueueBits
 		[Header("CPU Pieces")]
 		public TokenCounter tokenCounterCPU;
 		public GameObject pieceCPU100;
-		public GameObject pieceCPU75; 
-		public GameObject pieceCPU50; 
-		public GameObject pieceCPU00; 
+		public GameObject pieceCPU75;
+		public GameObject pieceCPU50;
+		public GameObject pieceCPU00;
 
 		[Header("Player Pieces")]
 		public TokenCounter tokenCounterPlayer;
@@ -83,11 +83,11 @@ namespace QueueBits
 		public void StartGame()
 		{
 			GC.StartGame();
-			
+
 			// Sync with GameController
 			LEVEL_NUMBER = GC.LEVEL_NUMBER;
 			prefilledBoard = GC.prefilledBoard;
-			
+
 			// Set AI difficulty
 			if (LEVEL_NUMBER < 4) {
 				GC.cpuAI.difficulty = 0;
@@ -172,7 +172,7 @@ namespace QueueBits
 			{
 				if (gameObjectTurn == null)
 				{
-					(gameObjectTurn, probability) = SpawnPiece(-1); 
+					(gameObjectTurn, probability) = SpawnPiece(-1);
 				}
 				else
 				{
@@ -191,7 +191,7 @@ namespace QueueBits
 			(gameObjectTurn, probability) = SpawnPiece(prob);
 		}
 
-		
+
 		// Spawns a piece at mouse position above the first row
 		public (GameObject, int) SpawnPiece(int prob)
 		{
@@ -283,6 +283,7 @@ namespace QueueBits
 		// This method searches for a empty cell and lets the object fall down into this cell
 		public IEnumerator dropPiece(GameObject gObject, int probability)
 		{
+			GC.CancelHighlights();
 			isDropping = true;
 			Vector3 startPosition = gObject.transform.position;
 			Vector3 endPosition = new Vector3();
@@ -314,7 +315,7 @@ namespace QueueBits
 								meter.UpdateMeter(true);
 							}
 							pieceColorObject = piecePlayer100;
-							
+
 						} else{
 							pieceColorObject = pieceCPU00;
 						}
@@ -342,7 +343,7 @@ namespace QueueBits
 					//Shivani Puli data collection
 					int r = GC.cpuAI.colPointers[x];
 					int index = r * GC.numColumns + x;
-					
+
 					// Update myData here
 					turnCounter++;
 					GC.myData.placement_order[index] = turnCounter;

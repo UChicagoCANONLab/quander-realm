@@ -12,6 +12,7 @@ namespace Wrapper
         /// GameManager ///
         public static Action<Minigame> OpenMinigame;
         public static Func<RewardAsset, GameObject, DisplayType, GameObject> CreatRewardCard;
+        public static Func<BonusAsset, GameObject, GameObject> CreateBonus;
         public static Action<string> ShowCardPopup;
         public static Action ToggleLoadingScreen;
         public static Action<Game, int> CollectAndDisplayReward;
@@ -30,7 +31,6 @@ namespace Wrapper
 
         /// Trackers ///
         public static Action InitializeStarTracker;
-        public static Action<long> UpdateStreakLength;
         public static Action ResetStarCounts;
 
         /// MapManager ///
@@ -48,6 +48,9 @@ namespace Wrapper
         /// SaveManager ///
         public static Func<string, bool> AddReward;
         public static Func<string, bool> AddBadge;
+        public static Func<string, bool> AddBonus;
+        public static Func<string, bool> UseAvailableBonus;
+        public static Func<string, int> NumberBonuses;
         public static Action ClearSaveFile;
         public static Action<string> SubmitResearchCode;
         public static Func<string, bool> IsRewardUnlocked;
@@ -64,7 +67,10 @@ namespace Wrapper
         public static Func<int> GetUserSaveTotalCoins;
         public static Action<Game, int> UpdateMinigameStarCount;
         public static Func<Game, int> GetMinigameStarCount;
+        // public static Action UpdateStreakLength;
         public static Func<int> GetStreakLength;
+        public static Func<int> GetStreakFreeze;
+        public static Action<int> SetStreakFreeze;
         public static Func<Game, int> HasRewardsFromGame;
 
         /// MinigameUserSaves ///
@@ -72,8 +78,10 @@ namespace Wrapper
         public static Func<int> GetOverallTotalStars;
         public static Func<Game, bool> GetGameUnlocked;
         public static Func<Game, int> GetMinigameMaxLevel;
+        public static Func<Game, bool> GetMinigameAllLevelsUnlocked;
         public static Action<Game> LoadMinigameSave;
         public static Action LoadAllMinigameSaves;
+        public static Action<Game> UnlockNextLevel;
 
         /// UploadFailurePopups /// 
         public static Action<bool> ToggleUploadFailurePopup;
@@ -105,7 +113,7 @@ namespace Wrapper
         public static Action<bool> TogglePreviousButton;
         public static Action<bool> ToggleSkipButton;
 
-        /// Within Minigame Scripts ///
+        /// Within Minigame Scripts and RewardResearchData ///
         public static Action DialogueSequenceEnded;
 
     #endregion
@@ -113,7 +121,7 @@ namespace Wrapper
     #region Reward System
 
         /// RewardCenter ///
-        public static Func<bool> ReturnToRewardCenter;
+        // public static Func<bool> ReturnToRewardCenter;
 
         /// Reward ///
         public static Action UnselectAllCards;

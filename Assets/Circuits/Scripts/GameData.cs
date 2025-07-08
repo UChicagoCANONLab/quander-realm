@@ -24,8 +24,8 @@ namespace Circuits
 
         public static void InitCircuitsSaveData()
         {
-            if (!dataLoaded)
-            {
+            // if (!dataLoaded)
+            // {
                 // Debug.Log("Loading Data!");
                 try
                 {
@@ -42,8 +42,8 @@ namespace Circuits
                 {
                     saveData = new Circuits_SaveData();
                 }
-                dataLoaded = true;
-            }
+                // dataLoaded = true;
+            // }
             researchData = new Circuits_ResearchData();
             researchData.Username = Wrapper.Events.GetPlayerResearchCode?.Invoke();
         }

@@ -15,15 +15,16 @@ namespace Wrapper
             {
                 Time.timeScale = 1;
             }
-            else if (SceneManager.GetActiveScene().name == "RewardCenter")
+            /* else if (SceneManager.GetActiveScene().name == "RewardCenter")
             {
                 bool stop = Events.ReturnToRewardCenter.Invoke();
                 if (stop) return;
-            }
+            } */
 
             if (SceneManager.GetActiveScene().buildIndex == 0) 
             {
-                Events.ToggleTitleScreen?.Invoke(true);
+                // Events.ToggleTitleScreen?.Invoke(true);
+                return;
             }
             else
             {

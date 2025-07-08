@@ -9,7 +9,7 @@ namespace Wrapper
 {
     public class Reward : MonoBehaviour
     {
-        [SerializeField] private Animator animator;
+        [SerializeField] public Animator animator;
         [SerializeField] private Button button;
 
         [Header("Front")]
@@ -72,10 +72,11 @@ namespace Wrapper
             switch(displayType)
             {
                 case DisplayType.Featured:
-                    button.onClick.AddListener(() => animator.SetTrigger(triggerFlip));
+                    // button.onClick.AddListener(() => animator.SetTrigger(triggerFlip));
+                    button.onClick.AddListener(() => FlipCard());
                     break;
                 case DisplayType.InJournal:
-                    button.onClick.AddListener(() => Routine.Start(SelectCard()));
+                    button.onClick.AddListener(() => SelectFromJournal());
                     break;
                 case DisplayType.CardPopup:
                 default:
@@ -100,8 +101,11 @@ namespace Wrapper
         {
             if (IsUnlocked())
             {
-                while (!(this.gameObject.activeInHierarchy)) 
+                // Debug.Log($"UPDATED ANIM: {displayType}, {titleFront.text}");
+                while (!this.gameObject)
                     yield return null;
+                // while (!(this.gameObject.activeInHierarchy)) 
+                //     yield return null;
                 
                 animator.SetBool(stateDisabled, false);
             }
@@ -120,6 +124,7 @@ namespace Wrapper
             if (!IsUnlocked())
                 yield break;
 
+            // Display routine
             Events.UnselectAllCards?.Invoke();
             animator.SetBool(stateSelected, true);
             Events.FeatureCard?.Invoke(id.Trim().ToLower());
@@ -135,6 +140,18 @@ namespace Wrapper
         private string GetDisplayName(string input)
         {
             return input.Replace("_", " ");
+        }
+
+        public void FlipCard()
+        {
+            animator.SetTrigger(triggerFlip);
+            RewardSaveManager.Instance.UpdateCardData(this, "From flipping");
+        }
+
+        public void SelectFromJournal()
+        {
+            Routine.Start(SelectCard());
+            RewardSaveManager.Instance.UpdateCardData(this, "Manually selected in Journal");
         }
     }
 }

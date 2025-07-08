@@ -1,23 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Wrapper
 {
     public class RewardData : MonoBehaviour
     {
-        public RewardSaveObject RewardSaveObj = new RewardSaveObject();
+        public string Username = Events.GetPlayerResearchCode?.Invoke();
+        public string RewardResearchData = string.Empty;
 
-        public static RewardData Instance;
-
-        private void Awake() {
-            if (Instance != null) {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+        public void UpdateRewardData(System.Object data)
+        {
+            Username = Events.GetPlayerResearchCode?.Invoke();
+            RewardResearchData = JsonUtility.ToJson(data);
         }
-
     }
 }
