@@ -27,7 +27,7 @@ namespace Wrapper
         {
             // Events.PlaySound?.Invoke("W_Reward");
             badgeGO.transform.SetParent(badgeContainer.transform);
-            badgeGO.GetComponent<Button>().interactable = false;
+            // badgeGO.GetComponent<Button>().interactable = false;
             // badgeGO.GetComponent<Transform>().localScale = new Vector3(0.6f, 0.6f, 0.6f);
 
             title.text = badgeGO.GetComponent<Badge>().titleText.text;
@@ -38,7 +38,8 @@ namespace Wrapper
                     (i <= badgeGO.GetComponent<Badge>().starStatus - 1)
                 );
             }
-            badgeGO.SetActive(false);
+            // badgeGO.SetActive(false);
+            badgeGO.SetActive(true);
             
             ToggleDisplay(true);
             yield return 5f;
