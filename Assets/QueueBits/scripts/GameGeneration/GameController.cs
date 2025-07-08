@@ -35,7 +35,6 @@ namespace QueueBits
 		// Holder for Board and all tokens
 		public GameObject fieldObject;
 
-
 		// Prefilled Board objects and name
 		[Header("Prefilled Boards")]
 		public PrefilledBoards PB;
@@ -50,8 +49,14 @@ namespace QueueBits
 		[Header("Meter")]
 		public GameObject meter;
 
+		[Header("Token Arrow")]
+		public GameObject tokenArrow;
+
 		[Header("Tutorial")]
 		public GameObject pointer;
+
+		public GameObject hintArrow;
+
 		public GameObject tutorialPane;
 		public TextMeshProUGUI tutorialText;
 		public Image tutorialImage;
@@ -142,6 +147,29 @@ namespace QueueBits
 			tutorialImage.sprite = tutorialImages[i];
 			tutorialImage.gameObject.SetActive(true);
 		}
+		// Method called when a token is selected in tutorial
+		public void OnTutorialTokenSelected()
+		{
+			if (LEVEL_NUMBER == 1 && tutorialStep == 7)
+			{
+				tutorialStep = 8; // Move to next tutorial step when player selects a token
+				updateTutorial();
+
+				// Hide the pointer after the token is selected
+				if (pointer != null)
+				{
+					pointer.SetActive(false);
+				}
+			}
+		}
+		public void OnTutorialColumnClicked()
+		{
+			if (LEVEL_NUMBER == 1 && tutorialStep == 8)
+			{
+				tutorialStep = 9; // Move to next tutorial step when player drops a token
+				updateTutorial();
+			}
+		}
 
 		public void updateTutorial(int i = 0){
 			Debug.Log("update Tutorial! " + i);
@@ -168,29 +196,26 @@ namespace QueueBits
 					case 6:
 						tutorialToggle("It is Byte's turn first... Did you see how they just placed a red token?" );
 						GM1.gameObject.SetActive(true);
-						GM1.StartGame(this);
-						tutorialStepButton.SetActive(false);
+						GM1.StartGame();
+						tutorialStepButton.SetActive(true); // Make sure the button is active
 						break;
 					case 7:
-						tutorialStepButton.SetActive(true);
-						break;
-					case 8:
 						tutorialToggle("Now that it's our turn we first need to grab a token!");
 						tutorialStepButton.SetActive(false);
 						tutorialPieceCounter.SetActive(true);
 						pointer.SetActive(true);
 						break;
-					case 9:
+					case 8:
 						tutorialToggle("Great job!\n\nNow click where you want to place your token.");
 						tutorialStepButton.SetActive(false);
 						break;
-					case 10:
+					case 9:
 						// tutorialToggle("Amazing!\n\nLooks like you got the hang of it! If you ever need a reminder of what to do be sure to click on the hint button: \n\n\n\n\n\n\n", 3);
 						tutorialToggle("Amazing!\n\nLooks like you got the hang of it!\n\nHave fun!");
 						tutorialStepButton.SetActive(true);
 						GM1.disconnectTutorial();
 						break;
-					case 11:
+					case 10:
 						tutorialStep = -1;
 						tutorialPane.SetActive(false);
 						break;
@@ -405,10 +430,40 @@ namespace QueueBits
 		}
 		public void GetHint()
 		{
+			// Don't provide hints during tutorial
+			if (tutorialLevels.Contains(LEVEL_NUMBER) && tutorialStep != -1)
+			{
+				Debug.Log("Hints aren't available during tutorial. Please complete the tutorial first.");
+				return;
+			}
+
+			// In Level 1-2, only provide simple guidance
+			if (LEVEL_NUMBER < 3)
+			{
+				// Display a simpler hint for basic levels
+				string basicExplanation = "Try to create a line of 4 tokens in a row, column, or diagonal. Watch out for Byte's moves!";
+
+				// Just highlight a random valid column
+				List<int> validColumns = new List<int>();
+				for (int i = 0; i < numColumns; i++)
+				{
+					if (cpuAI.colPointers[i] >= 0)
+						validColumns.Add(i);
+				}
+
+				if (validColumns.Count > 0)
+				{
+					int randomColumn = validColumns[Random.Range(0, validColumns.Count)];
+					DisplayHint(100, randomColumn, basicExplanation); // Always show 100% token in basic levels
+				}
+
+				return;
+			}
+
 			Debug.Log("Hint provided!");
 			// Create temp AI
 			GameObject tempObject = new GameObject("TempAI");
-    		CPUBrain tempAI = tempObject.AddComponent<CPUBrain>();
+			CPUBrain tempAI = tempObject.AddComponent<CPUBrain>();
 			tempAI.state = cpuAI.state;
 			tempAI.colPointers = new int[cpuAI.colPointers.Length];
 			System.Array.Copy(cpuAI.colPointers, tempAI.colPointers, cpuAI.colPointers.Length);
@@ -419,11 +474,8 @@ namespace QueueBits
 			(int bestMove, int difference) = tempAI.findBestMoveandDifference(tempAI.colPointers, 4);
 			Destroy(tempObject);
 			(int recommendedProbability, string explanation) = CalculateRecommendedProbability(tempAI, bestMove, difference);
-			Debug.Log("Difference: " + difference);
-			// Check if there are still tokens of given probability
-			//Debug.Log("Recommended probability: " + recommendedProbability);
+
 			DisplayHint(recommendedProbability, bestMove, explanation);
-			//Debug.Log("Best move: " + bestMove);
 		}
 
 
@@ -432,17 +484,18 @@ namespace QueueBits
 			Debug.Log($"Showing hint: Use {recommendedProbability}% token in column {bestMove}");
 
 			// Highlight the recommended token based on game mode
+			Debug.Log("Game Controller sending" + tokenArrow);
 			if (LEVEL_NUMBER < 6)
 			{
-				GM1.tokenCounterPlayer.HighlightToken(recommendedProbability);
+				GM1.tokenCounterPlayer.HighlightToken(recommendedProbability, tokenArrow);
 			}
 			else if (LEVEL_NUMBER < 11)
 			{
-				GM2.tokenCounterPlayer.HighlightToken(recommendedProbability);
+				GM2.tokenCounterPlayer.HighlightToken(recommendedProbability, tokenArrow);
 			}
 			else
 			{
-				GM3.tokenCounterPlayer.HighlightToken(recommendedProbability);
+				GM3.tokenCounterPlayer.HighlightToken(recommendedProbability, tokenArrow);
 			}
 			// Highlight the column where the token should be played
 			HighlightRecommendedColumn(bestMove);
@@ -506,73 +559,69 @@ namespace QueueBits
 					Destroy(activeColumnHighlight);
 			}
 
-			// Create a downward-pointing arrow
-			activeColumnHighlight = new GameObject("ColumnHighlightArrow");
-			activeColumnHighlight.transform.SetParent(fieldObject.transform);
+			// Use hintArrow instead of creating a mesh arrow
+			if (hintArrow != null)
+			{
+				hintArrow.SetActive(true);
 
-			// Calculate position based on board layout - make sure it's actually above the board
-			float columnWidth = 1.0f;
-			float startX = -((numColumns - 1) * columnWidth / 2.0f);
-			Vector3 position = new Vector3(startX + (column * columnWidth)+ 3.0f, 1.5f, -0.1f);
+				// Calculate position based on board layout
+				float columnWidth = 1.0f;
+				float startX = 1.0f;
+				// Adjust the height to be lower (was 1.5f)
+				Debug.Log(column);
+				Vector3 position = new Vector3(startX + (column * columnWidth) + 3.0f, 1.6f, -0.1f);
 
-			activeColumnHighlight.transform.position = position;
+				// Position the arrow
+				hintArrow.transform.position = position;
 
-			// Create the arrow mesh directly (simpler approach)
-			GameObject arrowObject = new GameObject("ArrowMesh");
-			arrowObject.transform.parent = activeColumnHighlight.transform;
-			arrowObject.transform.localPosition = Vector3.zero;
-
-			MeshFilter meshFilter = arrowObject.AddComponent<MeshFilter>();
-			MeshRenderer meshRenderer = arrowObject.AddComponent<MeshRenderer>();
-
-			// Define points for a down-pointing arrow (simplified)
-			Vector3[] vertices = new Vector3[7];
-			vertices[0] = new Vector3(0f, -0.5f, 0f);    // Arrow tip (down)
-			vertices[1] = new Vector3(0.3f, -0.1f, 0f);  // Bottom right corner
-			vertices[2] = new Vector3(0.15f, -0.1f, 0f); // Right inner corner
-			vertices[3] = new Vector3(0.15f, 0.5f, 0f);  // Top right corner
-			vertices[4] = new Vector3(-0.15f, 0.5f, 0f); // Top left corner
-			vertices[5] = new Vector3(-0.15f, -0.1f, 0f);// Left inner corner
-			vertices[6] = new Vector3(-0.3f, -0.1f, 0f); // Bottom left corner
-
-			// Create the mesh with triangles
-			Mesh mesh = new Mesh();
-			mesh.vertices = vertices;
-			mesh.triangles = new int[] {
-				0, 1, 2,  // Right triangle of arrowhead
-				0, 2, 5,  // Middle of arrowhead
-				0, 5, 6,  // Left triangle of arrowhead
-				2, 3, 4,  // Rectangle of shaft
-				2, 4, 5   // Rectangle of shaft
-			};
-			mesh.RecalculateNormals();
-
-			// Apply the mesh and set material
-			meshFilter.mesh = mesh;
-			meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
-			meshRenderer.material.color = new Color(0.7f, 0.3f, 1.0f); // Brighter purple
-			// Start animation coroutine
-			columnHighlightCoroutine = StartCoroutine(AnimateColumnHighlight(activeColumnHighlight));
+				// Start animation coroutine
+				columnHighlightCoroutine = StartCoroutine(AnimateColumnHighlight(activeColumnHighlight));
+			}
+			else
+			{
+				Debug.LogWarning("Hint arrow is not assigned! Using fallback mesh arrow.");
+			}
 		}
 
 		private IEnumerator AnimateColumnHighlight(GameObject highlight)
 		{
+			// Check if hintarrow is available
+			if (highlight == null && hintArrow != null && hintArrow.activeSelf)
+			{
+				// Use hintArrow as the highlight if activeColumnHighlight isn't set
+				highlight = hintArrow;
+			}
+
+			if (highlight == null)
+			{
+				Debug.LogError("No arrow to animate in AnimateColumnHighlight!");
+				yield break;
+			}
+
 			float duration = 7.0f;
 			float elapsed = 0f;
 			Vector3 originalPosition = highlight.transform.position;
-			Vector3 targetPosition = originalPosition - new Vector3(0f, 0.2f, 0f); // Move down a small amount
+			Vector3 leftPosition = originalPosition - new Vector3(0.3f, 0f, 0f); // Move left
+
+			float animationSpeed = 1.1f; //Keep it relatively slow
 
 			while (elapsed < duration)
 			{
-				// Only move up and down, no alpha pulsing
-				float t = Mathf.PingPong(elapsed, 1f);
-				highlight.transform.position = Vector3.Lerp(originalPosition, targetPosition, t);
+				// Calculate a value that goes 0->1->0 smoothly for the ping-pong effect
+				// Use a slower frequency for more gentle movement
+				float t = Mathf.PingPong(elapsed * animationSpeed, 1f);
+
+				highlight.transform.position = Vector3.Lerp(originalPosition, leftPosition, t);
 
 				elapsed += Time.deltaTime;
 				yield return null;
 			}
 
-			Destroy(highlight);
+			// Reset to original position
+			highlight.transform.position = originalPosition;
+
+			// Deactivate arrow
+			highlight.SetActive(false);
 			activeColumnHighlight = null;
 			columnHighlightCoroutine = null;
 		}
@@ -589,7 +638,7 @@ namespace QueueBits
 				columnHighlightCoroutine = null;
 			}
 
-			// Cancel token highlight if active (call method in TokenCounter)
+			// Cancel token highlight if active
 			if (LEVEL_NUMBER < 6)
 			{
 				GM1.tokenCounterPlayer.CancelHighlight();
@@ -751,7 +800,7 @@ namespace QueueBits
 
 			// Early game center columns - be more selective
 			if (currentPhase == GamePhase.Early && strategicValue >= 8) {
-				explanation = "Great spot! The central columns give you more ways to win later. A medium token could help control this important position!";
+				explanation = "The central columns give you more ways to win later. A medium token could help control this important position!";
 				// Only use 75% for the absolute center in early game
 				if (column == numColumns/2 && tokens75 > 0 && Random.Range(0, 100) < 50)
 					return (75, explanation);
@@ -1037,6 +1086,13 @@ namespace QueueBits
 
 			// Manage stars awarded
 			int starsWon = starDisplay.getResults(result);
+			int origStars = GameManager.saveData.starSystem[LEVEL_NUMBER];
+
+			int coins = Math.Max(starsWon - origStars, 0) * 10
+                + Math.Min(starsWon, origStars);
+            Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
+            Wrapper.Events.DisplayCoinsCollected.Invoke(coins);
+
 			if (GameManager.saveData.starSystem[LEVEL_NUMBER] <= starsWon) {
 				GameManager.saveData.starSystem[LEVEL_NUMBER] = starsWon;
 			} // Update max level unlocked
@@ -1049,8 +1105,9 @@ namespace QueueBits
 			fieldObject.SetActive(false);
 			DM.GameOver(result);
 
-			// Check if there's a reward card 
+			// Check if there's a reward card
 			Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER);
+			Wrapper.Events.CollectAndDisplayBadge?.Invoke(Wrapper.Game.QueueBits, LEVEL_NUMBER, GameManager.saveData.totalStars);
 		}
 
 		// Helper to initialize myData
@@ -1075,6 +1132,15 @@ namespace QueueBits
 		// New funtion to spawn piece when clicking buttons on TokenSelector
 		public void tokenSelectedByButton(int prob)
 		{
+			// Cancel any highlights when a token is selected
+			CancelHighlights();
+
+			// Handle tutorial progression
+			if (LEVEL_NUMBER == 1 && tutorialStep == 7)
+			{
+				OnTutorialTokenSelected();
+			}
+
 			if (LEVEL_NUMBER < 6)
 			{
 				GM1.tokenSelectedByButton(prob);
@@ -1088,7 +1154,6 @@ namespace QueueBits
 				GM3.tokenSelectedByButton(prob);
 			}
 		}
-
 		// Initializes array that contains Prefilled Board
 		public void initPrefilledBoard()
 		{
