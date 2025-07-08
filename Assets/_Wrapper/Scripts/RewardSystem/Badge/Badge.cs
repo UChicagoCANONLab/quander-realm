@@ -17,9 +17,10 @@ namespace Wrapper
         [SerializeField] public string[] criteriaDescription;
         
         [Header("Badge Display GameObjects")]
-        [SerializeField] public Image[] icons; // two icons; one is a shadow
+        [SerializeField] public Image icons;
+        [SerializeField] private Image badgeGraphic;
+        [SerializeField] private Image panelBackground;
         [SerializeField] public TextMeshProUGUI titleText;
-        [SerializeField] public TextMeshProUGUI miniTitleText;
         [SerializeField] public TextMeshProUGUI descriptionText;
         [SerializeField] public Star[] stars;
 
@@ -27,8 +28,14 @@ namespace Wrapper
         
         private string descriptionTemp;
         
-        private bool UNLOCKED = false;
-        private bool MINI = true;
+        // private bool UNLOCKED = false;
+        // private bool MINI = true;
+
+        // BB, CT, LA, QB, QC, RW, None
+        // private string[] gameHexOrig = {"#BF90F1", "#71B0A6", "#D38B97", "#72D0DC", "#F1A7C7", "#000000", "#000000"};
+        // private string[] gameHexText = {"#8574B3", "#4A6E76", "#853D5A", "#417284", "#7B5677", "#000000", "#000000"};
+        private string[] gameHexPanel = {"#8574B3", "#71B0A6", "#C75675", "#72D0DC", "#A87FA9", "#000000", "#000000"};
+        [SerializeField] private Sprite[] gameBadges;
 
 
         public void InitBadge(BadgeAsset bAsset) 
@@ -42,11 +49,9 @@ namespace Wrapper
 
             // Set texts and icons
             titleText.text = bAsset.title;
-            miniTitleText.text = bAsset.title;
             // descriptionText.text = bAsset.description;
             descriptionTemp = bAsset.description;
-            icons[0].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
-            icons[1].sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
+            icons.sprite = Resources.Load<Sprite>($"{iconPrefix}/{bAsset.iconName}");
 
             // Reload saves before checking criteria
             Events.LoadMinigameSave?.Invoke(game);
@@ -63,15 +68,26 @@ namespace Wrapper
 
             // Change description based on starStatus and display
             if (starStatus == 0) {
-                descriptionText.text = "Play more to unlock reward...";
-                // set badge to locked
-            } else {
+                // descriptionText.text = "Play more to unlock reward...";
+                titleText.text = "???";
+                this.gameObject.GetComponent<Button>().interactable = false;
+                if (descriptionTemp.Contains("[temp]"))
+                    descriptionText.text = descriptionTemp.Replace("[temp]", criteriaDescription[0]);
+            } 
+            else {
                 if (descriptionTemp.Contains("[temp]")) {
                     descriptionText.text = descriptionTemp.Replace("[temp]", criteriaDescription[starStatus-1]);
                 } else {
                     descriptionText.text = descriptionTemp;
                 }
             }
+
+            // Set badge graphic and text colors based on game
+            badgeGraphic.sprite = gameBadges[(int)game];
+            ColorUtility.TryParseHtmlString(gameHexPanel[(int)game], out Color tempColor);
+            panelBackground.color = tempColor;
+            // titleText.color = tempColor;
+            // descriptionText.color = tempColor;
         }
 
         public void OnEnable()
@@ -79,38 +95,6 @@ namespace Wrapper
             // SetAnimator();
             badgeAnimator.SetInteger("Game", (int)game);
         }
-
-        /* public void SetAnimator()
-        {
-            Events.LoadMinigameSave?.Invoke(game);
-
-            badgeAnimator.SetInteger("Game", (int)game);
-            // badgeAnimator.SetInteger("Star Level", starLevel);
-
-            starStatus = 0;
-            for (int i=0; i<starLevel; i++) 
-            {
-                if (CheckCriteria(game, type, criteria[i])) {
-                    starStatus++;
-                }
-            }
-            // badgeAnimator.SetInteger("Star Status", starStatus);
-
-            for (int i=0; i<5; i++) {
-                stars[i].SetStar( (i <= starLevel - 1), (i <= starStatus - 1) );
-            }
-
-            if (starStatus == 0) {
-                descriptionText.text = "Play more to unlock reward...";
-                // set badge to locked
-            } else {
-                if (descriptionTemp.Contains("[temp]")) {
-                    descriptionText.text = descriptionTemp.Replace("[temp]", criteriaDescription[starStatus-1]);
-                } else {
-                    descriptionText.text = descriptionTemp;
-                }
-            }
-        } */
 
 
         public bool CheckCriteria(Game game, CriteriaType criteriaType, int criteria)
@@ -142,13 +126,6 @@ namespace Wrapper
                     } break;
             }
             return false;
-        }
-
-        public void ToggleMini()
-        {
-            badgeAnimator.SetBool("Mini", !MINI);
-            MINI = !MINI;
-        }
-            
+        }            
     }
 }

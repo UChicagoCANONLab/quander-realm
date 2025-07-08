@@ -11,7 +11,8 @@ namespace Wrapper
 
         private Game game;
         private int pageNumber = 0;
-        public List<GameObject> bonusList;
+        public List<BonusAsset> bAssetList;
+        public List<GameObject> bGameObjectList;
 
 
 
@@ -22,7 +23,7 @@ namespace Wrapper
 
         public void AddBonus(GameObject bonusGO)
         {
-            bonusList.Add(bonusGO);
+            bGameObjectList.Add(bonusGO);
         }
     }
 }

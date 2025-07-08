@@ -16,7 +16,8 @@ namespace Wrapper
         [SerializeField] private TMP_Text streakLengthTMP;
         private int streakLength;
         [SerializeField] private GameObject fire;
-        [SerializeField] private Image lanternFront;
+        [SerializeField] private GameObject blueFire;
+        // [SerializeField] private Image lanternFront;
 
         public void UpdateDisplay()
         {
@@ -25,32 +26,47 @@ namespace Wrapper
             SetStreak(Events.GetStreakLength.Invoke());
         }
 
-        public void SetStars(int num)
+        public void ResetDisplay()
+        {
+            SetStars(0);
+            SetCoins(0);
+            SetStreak(0);
+        }
+
+        private void SetStars(int num)
         {
             totalStars = num;
             totalStarsTMP.text = $"{totalStars}";
         }
 
-        public void SetCoins(int num)
+        private void SetCoins(int num)
         {
             totalCoins = num;
             totalCoinsTMP.text = $"{totalCoins}";
         }
 
-        public void SetStreak(int num)
+        private void SetStreak(int num)
         {
             streakLength = num;
             streakLengthTMP.text = $"{streakLength}";
 
-            if (streakLength > 0)
+            if (Events.GetStreakFreeze.Invoke() > 0)
             {
-                lanternFront.color = new Color(1f, 1f, 1f);
+                fire.SetActive(false);
+                blueFire.SetActive(true);
+                blueFire.transform.GetChild(1).GetComponent<TMP_Text>().text = $"+{Events.GetStreakFreeze.Invoke()}";
+            }
+            else if (streakLength > 0)
+            {
+                // lanternFront.color = new Color(1f, 1f, 1f);
                 fire.SetActive(true);
+                blueFire.SetActive(false);
             }
             else 
             {
-                lanternFront.color = new Color(0.3f, 0.3f, 0.3f);
+                // lanternFront.color = new Color(0.3f, 0.3f, 0.3f);
                 fire.SetActive(false);
+                blueFire.SetActive(false);
             }
         }
     }

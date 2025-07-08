@@ -10,7 +10,7 @@ namespace Wrapper
         [SerializeField] private Animator animator;
 
         [Header("Shop Interface")]
-        [SerializeField] public GameObject bonusBuyerContainer;
+        [SerializeField] public GameObject selectorContainer;
         [SerializeField] public GameObject confirmationContainer;
 
         [Header("Section Tabs")]
@@ -26,6 +26,7 @@ namespace Wrapper
 
         [Header("Bonus GameObjects")]
         [SerializeField] private GameObject bonusPrefab;
+        [SerializeField] private GameObject bonusSelectorPrefab;
         private GameObject featuredBonus;
 
         
@@ -57,7 +58,7 @@ namespace Wrapper
         private void PopulateShop()
         {
             // iterate through all bonus assets
-            // create bonus gameobject form asset
+            // create bonus gameobject from asset
             // add gameobject to correct shop page
         }
 

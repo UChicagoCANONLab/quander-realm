@@ -26,9 +26,12 @@ namespace Wrapper
 
             Events.GetGameUnlocked += GetMinigameUnlocked;
             Events.GetMinigameMaxLevel += GetMaxLevelUnlocked;
+            Events.GetMinigameAllLevelsUnlocked += GetAllLevelsUnlocked;
 
             Events.LoadMinigameSave += LoadMinigameSave;
             Events.LoadAllMinigameSaves += LoadAllMinigames;
+
+            Events.UnlockNextLevel += UnlockNextLevel;
         }
 
         private void OnDisable()
@@ -38,9 +41,12 @@ namespace Wrapper
 
             Events.GetGameUnlocked -= GetMinigameUnlocked;
             Events.GetMinigameMaxLevel -= GetMaxLevelUnlocked;
+            Events.GetMinigameAllLevelsUnlocked -= GetAllLevelsUnlocked;
 
             Events.LoadMinigameSave -= LoadMinigameSave;
             Events.LoadAllMinigameSaves -= LoadAllMinigames;
+
+            Events.UnlockNextLevel -= UnlockNextLevel;
         }
 
 #region Loading UserSaves for each Minigame
@@ -178,6 +184,35 @@ namespace Wrapper
             return 0;
         }
 
+        // Returns if player has unlocked all levels in the game
+        public bool GetAllLevelsUnlocked(Game game)
+        {
+            switch(game) {
+                case Game.Qupcakes:
+                    if (data_Qupcakery != null) {
+                        return (data_Qupcakery.MaxLevelCompleted == 27);
+                    } break;
+                case Game.Labyrinth:
+                     if (data_Twintanglement != null) {
+                        return (data_Twintanglement.MaxLevelUnlocked == 16);
+                    } break;
+                case Game.Circuits:
+                    if (data_TanglesLair != null) {
+                        return (data_TanglesLair.maxLevel == 25);
+                    } break;
+
+                case Game.QueueBits:
+                    if (data_Queuebits != null) {
+                        return (data_Queuebits.maxLevelUnlocked == 16);
+                    } break;
+                case Game.BlackBox:
+                    if (data_BuriedTreasure != null) {
+                        return data_BuriedTreasure.completed;
+                    } break;
+            }
+            return false;
+        }
+
 
         // Returns if game is unlocked based on criteria; different for lite/full
         public bool GetMinigameUnlocked(Game game)
@@ -216,6 +251,37 @@ namespace Wrapper
             } return false;
         }
 #endregion
+
+        public void UnlockNextLevel(Game game)
+        {
+            switch(game){
+                case Game.Qupcakes:
+                    if (data_Qupcakery != null) {
+                        data_Qupcakery.MaxLevelCompleted++;
+                        Events.UpdateMinigameSaveData.Invoke(Game.Qupcakes, data_Qupcakery);
+                    } break;
+                case Game.Labyrinth:
+                     if (data_Twintanglement != null) {
+                        data_Twintanglement.MaxLevelUnlocked++;
+                        Events.UpdateMinigameSaveData.Invoke(Game.Labyrinth, data_Twintanglement);
+                    } break;
+                case Game.Circuits:
+                    if (data_TanglesLair != null) {
+                        data_TanglesLair.maxLevel++;
+                        Events.UpdateMinigameSaveData.Invoke(Game.Circuits, data_TanglesLair);
+                    } break;
+
+                case Game.QueueBits:
+                    if (data_Queuebits != null) {
+                        data_Queuebits.maxLevelUnlocked++;
+                        Events.UpdateMinigameSaveData.Invoke(Game.QueueBits, data_Queuebits);
+                    } break;
+                case Game.BlackBox:
+                    if (data_BuriedTreasure != null) {
+                        // WORK ON THIS ONE
+                    } break;
+            } return;
+        }
 
     }
 }

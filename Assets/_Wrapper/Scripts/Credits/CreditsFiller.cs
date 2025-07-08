@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 namespace Wrapper
@@ -9,21 +10,15 @@ namespace Wrapper
     {
         bool loaded = false;
 
-        [SerializeField]
-        TextMeshProUGUI[] creditsContainers; // container itself is the tmp object, it contains the line credits
-        [SerializeField]
-        CreditsLineItem[] creditsLineItems;
+        [SerializeField] private TextMeshProUGUI[] creditsContainers; // container itself is the tmp object, it contains the line credits
+        [SerializeField] private CreditsLineItem[] creditsLineItems;
+        [SerializeField] private Button backButton;
 
-        //[SerializeField]
-        //TextMeshProUGUI filaContainer;
-        //[SerializeField]
-        //CreditsLineItem filaLine;
-        //[SerializeField]
-        //TextMeshProUGUI clientContainer;
-        //[SerializeField]
-        //CreditsLineItem clientLine;
-        [SerializeField]
-        UnityEngine.UI.Button backButton;
+        //[SerializeField] TextMeshProUGUI filaContainer;
+        //[SerializeField] CreditsLineItem filaLine;
+        //[SerializeField] TextMeshProUGUI clientContainer;
+        //[SerializeField] CreditsLineItem clientLine;
+        
 
         private void OnEnable()
         {
