@@ -22,14 +22,16 @@ namespace Wrapper
         [SerializeField] private DebugScreen debugScreen;
         [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
+        [SerializeField] private GameObject loadingScreenPrefab;
+        [SerializeField] Button universalBackButton;
+        [SerializeField] private Trackers trackers;
+
+        [Header("Popups")]
         [SerializeField] private CardPopup cardPopup;
         [SerializeField] private BadgePopup badgePopup;
         [SerializeField] private GamePopup gamePopup;
         [SerializeField] private AgePopup agePopup;
-        [SerializeField] private CoinPopup coinPopup;
-        [SerializeField] private GameObject loadingScreenPrefab;
-        [SerializeField] Button universalBackButton;
-        [SerializeField] private Trackers trackers;
+        [SerializeField] private CoinPopup coinPopup;        
 
         [Header("Reward Card Objects")]
         [SerializeField] private GameObject BBRewardPrefab;
@@ -38,17 +40,22 @@ namespace Wrapper
         [SerializeField] private GameObject QBRewardPrefab;
         [SerializeField] private GameObject QURewardPrefab;
 
+        [Header("Asset Management")]
         public readonly string rewardsPath = "_Wrapper/Rewards/RewardAssets/";
         public RewardAsset[] rewardAssets;
         public Dictionary<CardType, Color> colorDict;
         public Dictionary<Game, GameObject> prefabDict;
+        [SerializeField, Tooltip("For the first card received in each minigame, if none keep blank")] GameCardDialogPair[] rewardDialogIDs;
 
-        [Header("Badge Objects")]
         public readonly string badgePath = "_Wrapper/Incentives/Badges";
         public BadgeAsset[] badgeAssets;
         [SerializeField] private GameObject badgePrefab;
 
-        [SerializeField, Tooltip("For the first card received in each minigame, if none keep blank")] GameCardDialogPair[] rewardDialogIDs;
+        public readonly string bonusPath = "_Wrapper/Incentives/Bonuses";
+        public BonusAsset[] bonusAssets;
+        [SerializeField] private GameObject bonusPrefab;
+
+        [Header("Minigame Information")]
         [SerializeField] MinigameTitles minigameTitles;
         Game currentGame = Game.None;
 
@@ -68,7 +75,9 @@ namespace Wrapper
             InitPrefabDict();
             InitRewardAssetArray();
             InitBadgeAssetArray();
+            InitBonusAssetArray();
             //Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?      -> moved to its own method to call after title screen
+            
             if (debugScreen.DebugEnabled)
             {
                 debugButton.gameObject.SetActive(true);
@@ -87,6 +96,7 @@ namespace Wrapper
         {
             Events.OpenMinigame += OpenMinigame;
             Events.CreatRewardCard += CreateCard;
+            Events.CreateBonus += CreateBonus;
             if (debugScreen.DebugEnabled) Events.ShowCardPopup += ShowCardPopup; // Debug
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
@@ -108,6 +118,7 @@ namespace Wrapper
         {
             Events.OpenMinigame -= OpenMinigame;
             Events.CreatRewardCard -= CreateCard;
+            Events.CreateBonus -= CreateBonus;
             if (debugScreen.DebugEnabled) Events.ShowCardPopup -= ShowCardPopup; // Debug
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
@@ -140,7 +151,7 @@ namespace Wrapper
             else
             {
                 Events.CloseLoginScreen?.Invoke();
-                Events.ToggleTitleScreen?.Invoke(false);
+                Events.ToggleTitleScreen?.Invoke(false); // map animated here
                 
                 Events.InitializeStarTracker?.Invoke();
                 trackers.ToggleTrackers(true);
@@ -170,8 +181,8 @@ namespace Wrapper
 
             if (rewardAdded)
             {
-                // Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
-                Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
+                Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+                // Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
 
                 // if this is the first reward from this game, display the reward dialog 
                 if (Events.GetFirstRewardBool(levelReward.rewardID.Substring(0, 2).ToLower()))
@@ -263,6 +274,15 @@ namespace Wrapper
             return badgeGO;
         }
 
+        private GameObject CreateBonus(BonusAsset boAsset, GameObject mount)
+        {
+            GameObject bonusGO = Instantiate(bonusPrefab, mount.transform);
+            bonusGO.name = boAsset.ID;
+            bonusGO.GetComponent<Bonus>().InitBonus(boAsset);
+
+            return bonusGO;
+        }
+
         void ToggleBackButton(bool show)
         {
             universalBackButton.gameObject.SetActive(show);
@@ -290,10 +310,13 @@ namespace Wrapper
         {
             rewardAssets = Resources.LoadAll<RewardAsset>(rewardsPath);
         }
-
         private void InitBadgeAssetArray()
         {
             badgeAssets = Resources.LoadAll<BadgeAsset>(badgePath);
+        }
+        private void InitBonusAssetArray()
+        {
+            bonusAssets = Resources.LoadAll<BonusAsset>(bonusPath);
         }
 
         private void InitColorDict()
@@ -361,8 +384,8 @@ namespace Wrapper
                 return;
             }
 
-            // Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
-            Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
+            Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+            // Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
         }
 
         //todo: Utils class?

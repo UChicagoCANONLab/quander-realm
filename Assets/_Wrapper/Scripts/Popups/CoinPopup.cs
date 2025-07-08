@@ -23,7 +23,13 @@ namespace Wrapper
         {
             Events.PlaySound?.Invoke("W_Reward");
 
-            coinNum.text = $"+{coins}";
+            if (coins < 0) {
+                coinNum.text = $"{coins}";
+            } 
+            else {
+                coinNum.text = $"+{coins}";
+            }
+            
 
             ToggleDisplay(true);
             yield return 2f;
