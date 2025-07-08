@@ -203,6 +203,10 @@ namespace BlackBox
                 backgroundAnimator.SetBool("FogActive", false);
             } else { backgroundAnimator.SetBool("FogActive", true); }
 
+            if (level.number == 2) {
+                BBEvents.ShowReminder.Invoke();
+            }
+
             totalNodes = level.nodePositions.Length;
             livesRemaining = totalLives;
 
@@ -295,7 +299,8 @@ namespace BlackBox
 
                 // Earn coins for level completion
                 int coins = Math.Max(livesRemaining - origStars, 0) * 10 + Math.Min(livesRemaining, origStars);
-
+                Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
+                Wrapper.Events.DisplayCoinsCollected.Invoke(coins);
 
                 // PLAY END OF LEVEL DIALOGUE IF APPLICABLE
                 TrySetNewLevelSave();
@@ -345,6 +350,7 @@ namespace BlackBox
             { 
                 yield return rewardPopupDelay;
                 Events.CollectAndDisplayReward?.Invoke(Game.BlackBox, level.number);
+                Events.CollectAndDisplayBadge?.Invoke(Game.BlackBox, level.number, SM.saveData.totalStars);
             }
         }
 

@@ -29,9 +29,11 @@ namespace BlackBox
             {
                 BBEvents.DisableMolly?.Invoke();
                 EnableMolly();
+                return;
             }
-            else if (!isMarked)
-                BBEvents.FireRay?.Invoke(gridPosition, direction);
+            // else if (!isMarked)
+                // BBEvents.FireRay?.Invoke(gridPosition, direction);
+            BBEvents.FireRay?.Invoke(gridPosition, direction, isMarked);
         }
 
         public void SetDelayedValue(Marker marker)

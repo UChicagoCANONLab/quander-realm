@@ -26,7 +26,7 @@ namespace BlackBox
         {
             if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers += InitEnergyBar; // Debug
             BBEvents.InitEnergyBar += InitEnergyBar;
-            BBEvents.DecrementEnergy += DecrementEnergy;
+            BBEvents.DecrementEnergyMeter += DecrementEnergy;
             BBEvents.IndicateEmptyMeter += IndicateEmpty;
             BBEvents.ToggleWolfieButton += ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives += UpdateWolfieLives;
@@ -39,7 +39,7 @@ namespace BlackBox
             if (Wrapper.Events.IsDebugEnabled.Invoke()) BBEvents.ClearMarkers -= InitEnergyBar; // Debug
             BBEvents.InitEnergyBar -= InitEnergyBar;
             BBEvents.IndicateEmptyMeter -= IndicateEmpty;
-            BBEvents.DecrementEnergy -= DecrementEnergy;
+            BBEvents.DecrementEnergyMeter -= DecrementEnergy;
             BBEvents.ToggleWolfieButton -= ToggleWolfieButton;
             BBEvents.UpdateHUDWolfieLives -= UpdateWolfieLives;
             BBEvents.CloseLevel -= CloseLevel;
