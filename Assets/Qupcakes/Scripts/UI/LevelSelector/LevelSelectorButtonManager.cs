@@ -62,7 +62,7 @@ namespace Qupcakery
                 Color imageColor = iconImage.color;
                 iconImage.color = new Color(imageColor.r, imageColor.g, imageColor.b, 0.4f);
 
-                TextMeshProUGUI text = gameObject.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI text = gameObject.transform.Find("NumberText").gameObject.GetComponent<TextMeshProUGUI>();
                 Color32 textColor = text.color;
                 text.color = new Color(textColor.r, textColor.g, textColor.b, 0.4f);
 
