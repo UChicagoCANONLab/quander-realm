@@ -9,14 +9,14 @@ namespace Circuits
     {
         public GameObject[] gatePictures;
         private Vector2[] imageSize = { 
-            new Vector2(325,250),
-            new Vector2(325,250), // one image
-            new Vector2(260,200),
-            new Vector2(175,135),
-            new Vector2(200,125),
-            new Vector2(165,125),
-            new Vector2(165,125),
-            new Vector2(130,100) // all 7 images
+            new Vector2(975,750),
+            new Vector2(975,750), // one image
+            new Vector2(780,600),
+            new Vector2(525,405),
+            new Vector2(600,375),
+            new Vector2(495,375),
+            new Vector2(495,375),
+            new Vector2(390,300) // all 7 images
         };
         public GridLayoutGroup gl;
 
