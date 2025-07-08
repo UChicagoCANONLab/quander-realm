@@ -13,7 +13,25 @@ namespace Qupcakery
         [SerializeField]
         private Sprite[] stars = new Sprite[4];
         private bool levelAvailable = true; 
+        private int level;
         public GameObject lockIcon;
+
+
+        public void InitButton(int level)
+        {
+            this.level = level;
+            // If player has completed this level
+            if (level <= GameManagement.Instance.game.gameStat.MaxLevelCompleted)
+            {
+                int starCnt = GameManagement.Instance.game.gameStat.GetLevelPerformance(level);
+                SetStar(starCnt);
+            } else // If player has not completed this level
+            {
+                if (level != GameManagement.Instance.game.gameStat.MaxLevelCompleted + 1)
+                    SetAvailability(false);
+            }
+           this.gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText($"{level}");
+        }
 
         // On-click load target level
         public void LoadLevel()
@@ -21,13 +39,9 @@ namespace Qupcakery
             if (levelAvailable)
             {
                 string iconName = GetComponentInChildren<TextMeshProUGUI>().text;
-                int levelNum = System.Convert.ToInt32(iconName.Split(' ')[1]);
-                GameManagement.Instance.SetCurrentLevel(levelNum);
-
-                //if (GameManagement.Instance.gameMode == GameManagement.GameMode.Regular)
+                // int levelNum = System.Convert.ToInt32(iconName.Split(' ')[1]);
+                GameManagement.Instance.SetCurrentLevel(level);
                 SceneManagementUtilities.LoadGameScene();
-                //else
-                //    SceneManagementUtilities.LoadExperimentMode();
             }                   
         }
 

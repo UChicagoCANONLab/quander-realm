@@ -20,6 +20,11 @@ namespace Qupcakery
         public bool InTutorial { get; set; } = false;
         public bool AllowGateMovement { get; set; } = true;
 
+        public bool CheckingInProgress { get; set; } = false;
+
+        // Number of stars won in last level, to tell WinMenu in case it is
+        // less than the player's best.
+        public int lastPerformance { get; set; } = 0;
 
         public Game game { get; set; }
 
