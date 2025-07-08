@@ -29,6 +29,7 @@ namespace Wrapper
         {
             currentLineNumber = 0;
             Events.TogglePreviousButton?.Invoke(false); //disable if first line
+            Events.ToggleSkipButton?.Invoke(false);
             return nodes[currentLineNumber];
         }
 
@@ -45,6 +46,7 @@ namespace Wrapper
         {
             currentLineNumber += step;
             Events.TogglePreviousButton?.Invoke(currentLineNumber != 0); //disable if first line
+            Events.ToggleSkipButton?.Invoke(currentLineNumber != 0); //disable if first line
             Events.SwitchNextButton?.Invoke(currentLineNumber == nodes.Count - 1); // switch to "dismiss" button if last line
         }
 

@@ -1,55 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 namespace Wrapper 
 {
     public class MapManager : MonoBehaviour 
     {
-        public GameObject QC;
-        public GameObject TT;
-        public GameObject TL;
-        public GameObject QB;
-        public GameObject BT;
+        // BB, CT, LA, QB, QC, Rewards, None, Trivia
+        [SerializeField] private MinigameMapIcon[] minigameIcons;
+        [SerializeField] private Animator mapAnimator;
 
-        private string prefix = "MapCanvas/MapPanel";
 
-        /* 
-        Functions to initialize map and unlock games
+        private void OnEnable()
+        {
+            Events.InitializeMap += InitMap;
+            Events.ResetMap += ResetMap;
 
-        */
-        public void InitMap() {
-            // StarTracker.ST.PrintDict();
-            // Lock(BT); // UNLOCKED FOR PLAYTESTING
-            Lock(QB);
-            Lock(TL);
-            TryUnlockGames();
+            mapAnimator.SetTrigger("Map_Fly_In");
         }
-        public void TryUnlockGames() {
-            if (StarTracker.ST.CheckUnlocked(Game.Circuits)) {
-                Unlock(TL); // Unlock Tangle's Lair (Circuits)
-            }
-            if (StarTracker.ST.CheckUnlocked(Game.QueueBits)) {
-                Unlock(QB); // Unlock QueueBits
-            }
-            if (StarTracker.ST.CheckUnlocked(Game.BlackBox)) {
-                Unlock(BT); // Unlock Buried Treasure
-            }
-            // StarTracker.ST.PrintDict();
+        private void OnDisable() 
+        {
+            Events.InitializeMap -= InitMap;
+            Events.ResetMap -= ResetMap;
+
+            // mapAnimator.SetTrigger("Map_Fly_Out");
         }
 
-        /* 
-        Functions to lock and unlock games 
-        */
-
-        public void Unlock(GameObject game) {
-            game.GetComponent<MinigameButton>().enabled = true;
-            GameObject.Find($"{prefix}/{game.name}/Locked").SetActive(false);
+        public void InitMap() 
+        {
+            minigameIcons[(int)Game.Circuits].SetInteractable(Events.GetGameUnlocked.Invoke(Game.Circuits));
+            minigameIcons[(int)Game.QueueBits].SetInteractable(Events.GetGameUnlocked.Invoke(Game.QueueBits));
+            minigameIcons[(int)Game.BlackBox].SetInteractable(Events.GetGameUnlocked.Invoke(Game.BlackBox));
         }
 
-        public void Lock(GameObject game) {
-            game.GetComponent<MinigameButton>().enabled = false;
-            GameObject.Find($"{prefix}/{game.name}/Locked").SetActive(true);
+        public void ResetMap()
+        {
+            minigameIcons[(int)Game.Circuits].SetInteractable(false);
+            minigameIcons[(int)Game.QueueBits].SetInteractable(false);
+            minigameIcons[(int)Game.BlackBox].SetInteractable(false);
         }
+
+        public void TriggerMapAnimation(bool enable)
+        {
+            // if (enable) mapAnimator.SetTrigger("Map_Fly_In");
+            // else mapAnimator.SetTrigger("Map_Fly_Out");
+            // mapAnimator.SetTrigger(enable ? "Map_Fly_Out" : "Map_Fly_In");
+        }
+        
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BeauRoutine;
@@ -21,25 +22,40 @@ namespace Wrapper
         [SerializeField] private DebugScreen debugScreen;
         [SerializeField] private Button debugButton;
         [SerializeField] private SaveManager saveManager;
-        [SerializeField] private CardPopup cardPopup;
-        [SerializeField] private GamePopup gamePopup;
-        [SerializeField] private AgePopup agePopup;
         [SerializeField] private GameObject loadingScreenPrefab;
         [SerializeField] Button universalBackButton;
+        [SerializeField] private Trackers trackers;
 
-        [Header("Reward Card Prefabs")]
+        [Header("Popups")]
+        [SerializeField] private CardPopup cardPopup;
+        [SerializeField] private BadgePopup badgePopup;
+        [SerializeField] private GamePopup gamePopup;
+        [SerializeField] private AgePopup agePopup;
+        [SerializeField] private CoinPopup coinPopup;        
+
+        [Header("Reward Card Objects")]
         [SerializeField] private GameObject BBRewardPrefab;
         [SerializeField] private GameObject CTRewardPrefab;
         [SerializeField] private GameObject LARewardPrefab;
         [SerializeField] private GameObject QBRewardPrefab;
         [SerializeField] private GameObject QURewardPrefab;
 
+        [Header("Asset Management")]
         public readonly string rewardsPath = "_Wrapper/Rewards/RewardAssets/";
         public RewardAsset[] rewardAssets;
         public Dictionary<CardType, Color> colorDict;
         public Dictionary<Game, GameObject> prefabDict;
-
         [SerializeField, Tooltip("For the first card received in each minigame, if none keep blank")] GameCardDialogPair[] rewardDialogIDs;
+
+        public readonly string badgePath = "_Wrapper/Incentives/Badges";
+        public BadgeAsset[] badgeAssets;
+        [SerializeField] private GameObject badgePrefab;
+
+        public readonly string bonusPath = "_Wrapper/Incentives/Bonuses";
+        public BonusAsset[] bonusAssets;
+        [SerializeField] private GameObject bonusPrefab;
+
+        [Header("Minigame Information")]
         [SerializeField] MinigameTitles minigameTitles;
         Game currentGame = Game.None;
 
@@ -58,7 +74,10 @@ namespace Wrapper
             InitColorDict();
             InitPrefabDict();
             InitRewardAssetArray();
+            InitBadgeAssetArray();
+            InitBonusAssetArray();
             //Routine.Start(IntroDialogueRoutine()); //todo: also wait for loadingScreenGO to be null?      -> moved to its own method to call after title screen
+            
             if (debugScreen.DebugEnabled)
             {
                 debugButton.gameObject.SetActive(true);
@@ -77,11 +96,14 @@ namespace Wrapper
         {
             Events.OpenMinigame += OpenMinigame;
             Events.CreatRewardCard += CreateCard;
+            Events.CreateBonus += CreateBonus;
             if (debugScreen.DebugEnabled) Events.ShowCardPopup += ShowCardPopup; // Debug
             Events.ToggleLoadingScreen += ToggleLoadingScreen;
             Events.CollectAndDisplayReward += CollectAndDisplayReward;
+            Events.CollectAndDisplayBadge += CollectAndDisplayBadge;
             Events.UnlockAndDisplayGame += UnlockAndDisplayGame;
             Events.DisplayAgeSelector += DisplayAgeSelector;
+            Events.DisplayCoinsCollected += DisplayCoinsCollected;
             Events.ToggleBackButton += ToggleBackButton;
             Events.Logout += Logout;
             Events.PlayIntroDialog += PlayIntroDialog;
@@ -89,17 +111,21 @@ namespace Wrapper
             Events.GetMinigameTitle += GetGameTitle;
             Events.GetCurrentGame += GetCurrentGame;
             Events.IsDebugEnabled += () => debugScreen.DebugEnabled;
+            Events.Delay += DelayEvent;
         }
 
         private void OnDisable()
         {
             Events.OpenMinigame -= OpenMinigame;
             Events.CreatRewardCard -= CreateCard;
+            Events.CreateBonus -= CreateBonus;
             if (debugScreen.DebugEnabled) Events.ShowCardPopup -= ShowCardPopup; // Debug
             Events.ToggleLoadingScreen -= ToggleLoadingScreen;
             Events.CollectAndDisplayReward -= CollectAndDisplayReward;
+            Events.CollectAndDisplayBadge -= CollectAndDisplayBadge;
             Events.UnlockAndDisplayGame -= UnlockAndDisplayGame;
             Events.DisplayAgeSelector -= DisplayAgeSelector;
+            Events.DisplayCoinsCollected -= DisplayCoinsCollected;
             Events.ToggleBackButton -= ToggleBackButton;
             Events.Logout -= Logout;
             Events.PlayIntroDialog -= PlayIntroDialog;
@@ -107,6 +133,7 @@ namespace Wrapper
             Events.GetMinigameTitle -= GetGameTitle;
             Events.GetCurrentGame -= GetCurrentGame;
             Events.IsDebugEnabled -= () => debugScreen.DebugEnabled;
+            Events.Delay -= DelayEvent;
         }
 
         #endregion
@@ -115,7 +142,7 @@ namespace Wrapper
         {
             SceneManager.LoadScene(minigame.StartScene);
             currentGame = minigame.gameValue;
-            StarTracker.ST.gameObject.SetActive(false);
+            trackers.ToggleTrackers(false);
         }
 
         void BackToMain()
@@ -124,12 +151,13 @@ namespace Wrapper
             else
             {
                 Events.CloseLoginScreen?.Invoke();
-                Events.ToggleTitleScreen?.Invoke(false);
-                StarTracker.ST.Invoke("InitStarTracker", 0.2f);
+                Events.ToggleTitleScreen?.Invoke(false); // map animated here
+                
+                Events.InitializeStarTracker?.Invoke();
+                trackers.ToggleTrackers(true);
             }
             Events.PlayMusic?.Invoke("W_Music");
             currentGame = Game.None;
-            StarTracker.ST.gameObject.SetActive(true);
         }
 
         private void ToggleLoadingScreen()
@@ -153,16 +181,52 @@ namespace Wrapper
 
             if (rewardAdded)
             {
-                // Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
-                Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
+                Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+                // Routine.Start(cardPopup.DisplayCard(CreateCard(levelReward.rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
 
                 // if this is the first reward from this game, display the reward dialog 
                 if (Events.GetFirstRewardBool(levelReward.rewardID.Substring(0, 2).ToLower()))
                     Events.StartDialogueSequence?.Invoke(rewardDialogIDs[(int)game].cardDialog);
             }
             ////todo: call a function that creates the card and displays it in the reward card panel
-            //Debug.LogFormat("Won Reward {0} in game {1} at level {2}", levelReward.rewardID, game, level);
-            //    Routine.Start(DestroyLoadingScreen()); //todo: debug, delete later
+        }
+
+        private void CollectAndDisplayBadge(Game game, int level, int stars)
+        {
+            BadgeAsset[] gameBadges = Array.FindAll(badgeAssets, (badge) => badge.game == game);
+
+            BadgeAsset badgeAwarded = null; int num = -1;
+            foreach (BadgeAsset bAsset in gameBadges)
+            {
+                if (bAsset.criteriaType == CriteriaType.Level) {
+                    if (Array.Exists(bAsset.criteria, temp => temp == level)) {
+                        badgeAwarded = bAsset;
+                        num = level;
+                        break;
+                    }
+                } else if (bAsset.criteriaType == CriteriaType.Star) {
+                    for (int i=0; i<3; i++) {
+                        if (Array.Exists(bAsset.criteria, temp => temp == stars-i)) {
+                            badgeAwarded = bAsset;
+                            num = stars - i;
+                            break;
+                        }
+                    } 
+                } else if (bAsset.criteriaType == CriteriaType.Card) {
+                    int cards = Events.HasRewardsFromGame.Invoke(game);
+                    if (Array.Exists(bAsset.criteria, temp => temp == cards)) {
+                        badgeAwarded = bAsset;
+                        num = cards;
+                        break;                        
+                    }
+                }
+                // TO DO: Add other badge criterias
+            }
+            if (badgeAwarded == null || num == -1) return;
+
+            if (Events.AddBadge.Invoke($"{badgeAwarded.name}_{num}"))
+                Routine.Start(badgePopup.DisplayBadge(CreateBadge(badgeAwarded, badgePopup.GetContainerMount())));
+
         }
 
         private void UnlockAndDisplayGame(Game game) {
@@ -171,6 +235,10 @@ namespace Wrapper
 
         private void DisplayAgeSelector() {
             Routine.Start(agePopup.DisplayAgePopup());
+        }
+
+        private void DisplayCoinsCollected(int coins) {
+            Routine.Start(coinPopup.DisplayCoins(coins));
         }
 
         private GameObject CreateCard(string rewardID, GameObject mount, DisplayType displayType)
@@ -195,6 +263,24 @@ namespace Wrapper
             rewardGO.GetComponent<Reward>().SetContent(rAsset, colorDict[rAsset.cardType], displayType);
 
             return rewardGO;
+        }
+
+        private GameObject CreateBadge(BadgeAsset bAsset, GameObject mount)
+        {
+            GameObject badgeGO = Instantiate(badgePrefab, mount.transform);
+            badgeGO.name = bAsset.name;
+            badgeGO.GetComponent<Badge>().InitBadge(bAsset);
+
+            return badgeGO;
+        }
+
+        private GameObject CreateBonus(BonusAsset boAsset, GameObject mount)
+        {
+            GameObject bonusGO = Instantiate(bonusPrefab, mount.transform);
+            bonusGO.name = boAsset.ID;
+            bonusGO.GetComponent<Bonus>().InitBonus(boAsset);
+
+            return bonusGO;
         }
 
         void ToggleBackButton(bool show)
@@ -223,6 +309,14 @@ namespace Wrapper
         private void InitRewardAssetArray()
         {
             rewardAssets = Resources.LoadAll<RewardAsset>(rewardsPath);
+        }
+        private void InitBadgeAssetArray()
+        {
+            badgeAssets = Resources.LoadAll<BadgeAsset>(badgePath);
+        }
+        private void InitBonusAssetArray()
+        {
+            bonusAssets = Resources.LoadAll<BonusAsset>(bonusPath);
         }
 
         private void InitColorDict()
@@ -290,8 +384,8 @@ namespace Wrapper
                 return;
             }
 
-            // Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
-            Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
+            Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.CardPopup)));
+            // Routine.Start(cardPopup.DisplayCard(CreateCard(rewardID, cardPopup.GetContainerMount(), DisplayType.Featured)));
         }
 
         //todo: Utils class?
@@ -309,6 +403,16 @@ namespace Wrapper
         Game GetCurrentGame()
         {
             return currentGame;
+        }
+
+        // Used to invoke a few second delay in non-IEnumerator functions
+        void DelayEvent(float time)
+        {
+            Routine.Start(Delay(time));
+        }
+        IEnumerator Delay(float time) 
+        {
+            yield return time;
         }
 
         #endregion

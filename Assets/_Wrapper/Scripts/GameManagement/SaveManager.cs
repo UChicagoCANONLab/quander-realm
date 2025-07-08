@@ -1,10 +1,11 @@
 /* Code by Srivathsan Prakash (Filament), Rob Frank (Filament), Tianle Liu (UChicago)
- * 
+ *
  * This class uploads/downloads players' save data by communicating with a firebase app
  * It also sends analytics data to an AWS server hosted by UChicago (Implemented by Tianle)
  *   All AWS related code is marked with a comments: "// AWS"
  */
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using BeauRoutine;
 using System;
@@ -24,7 +25,8 @@ namespace Wrapper
     public class SaveManager : MonoBehaviour
     {
         [HideInInspector] public bool isUserLoggedIn = false;
-        [HideInInspector] public UserSave currentUserSave = null;
+        // [HideInInspector] public UserSave currentUserSave = null;
+        public UserSave currentUserSave = null;
         public int researchCodeLength = 6;
 
         private float networkRequestTimeout = 5f;
@@ -61,6 +63,10 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.AddReward += AddReward;
+            Events.AddBadge += AddBadge;
+            Events.AddBonus += AddBonus;
+            Events.UseAvailableBonus += UseAvailableBonus;
+            Events.NumberBonuses += NumberAvailableBonuses;
             Events.ClearSaveFile += ClearSave;
             Events.SubmitResearchCode += Login;
             Events.IsRewardUnlocked += IsRewardUnlocked;
@@ -72,11 +78,25 @@ namespace Wrapper
             Events.GetRewardDialogStats += GetRewardStatsForDialog;
             Events.SetRewardTextSeen += ToggleRewardDialogueSeen;
             Events.GetFirstRewardBool += GetHasFirstReward;
+            Events.UpdateUserSaveTotalStars += UpdateTotalStars;
+            Events.UpdateUserSaveTotalCoins += UpdateTotalCoins;
+            Events.GetUserSaveTotalCoins += GetTotalCoins;
+            Events.UpdateMinigameStarCount += UpdateMinigameStarCount;
+            Events.GetMinigameStarCount += GetMinigameStarCount;
+            // Events.UpdateStreakLength += UpdateStreakLength;
+            Events.GetStreakLength += GetStreakLength;
+            Events.GetStreakFreeze += GetStreakFreeze;
+            Events.SetStreakFreeze += SetStreakFreeze;
+            Events.HasRewardsFromGame += NumberRewardsFromGame;
         }
 
         private void OnDisable()
         {
             Events.AddReward -= AddReward;
+            Events.AddBadge -= AddBadge;
+            Events.AddBonus -= AddBonus;
+            Events.UseAvailableBonus -= UseAvailableBonus;
+            Events.NumberBonuses -= NumberAvailableBonuses;
             Events.ClearSaveFile -= ClearSave;
             Events.SubmitResearchCode -= Login;
             Events.IsRewardUnlocked -= IsRewardUnlocked;
@@ -88,6 +108,16 @@ namespace Wrapper
             Events.GetRewardDialogStats -= GetRewardStatsForDialog;
             Events.SetRewardTextSeen -= ToggleRewardDialogueSeen;
             Events.GetFirstRewardBool -= GetHasFirstReward;
+            Events.UpdateUserSaveTotalStars -= UpdateTotalStars;
+            Events.UpdateUserSaveTotalCoins -= UpdateTotalCoins;
+            Events.GetUserSaveTotalCoins -= GetTotalCoins;
+            Events.UpdateMinigameStarCount -= UpdateMinigameStarCount;
+            Events.GetMinigameStarCount -= GetMinigameStarCount;
+            // Events.UpdateStreakLength -= UpdateStreakLength;
+            Events.GetStreakLength -= GetStreakLength;
+            Events.GetStreakFreeze -= GetStreakFreeze;
+            Events.SetStreakFreeze -= SetStreakFreeze;
+            Events.HasRewardsFromGame -= NumberRewardsFromGame;
         }
 
 #if !UNITY_WEBGL
@@ -140,10 +170,12 @@ namespace Wrapper
 #if LITE_VERSION
         private IEnumerator LoginRoutine(string researchCode)
         {
-            currentUserSave.id = "GUEST"; 
+            currentUserSave.id = "GUEST";
 	        Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             isUserLoggedIn = true;
-            StarTracker.ST.Invoke("InitStarTracker_Lite", 0.2f);
+
+            Events.ResetStarCounts?.Invoke();
+            Events.InitializeStarTracker?.Invoke();
             return null;
 	    }
 
@@ -187,14 +219,14 @@ namespace Wrapper
             }
 
             // Check if user's save data exists, create new save file if not
-            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);  
+            bool isUserDataPresent = databaseSnapshot.Child("userData").HasChild(formattedCode);
             if (!isUserDataPresent)
             {
                 currentUserSave.id = formattedCode;
 
-                UpdateRemoteSave(); 
+                UpdateRemoteSave();
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => uploadSuccess == true), 
+                    Routine.WaitCondition(() => uploadSuccess == true),
                     Routine.WaitSeconds(networkRequestTimeout));
 
                 //yield return Routine.Race(
@@ -209,8 +241,15 @@ namespace Wrapper
             currentUserSave = JsonUtility.FromJson<UserSave>(
                 databaseSnapshot.Child("userData").Child(formattedCode).GetRawJsonValue());
 
+            //Delete these two lines
+            string json = JsonUtility.ToJson(currentUserSave);
+            Debug.Log("Saving: " + json);
+
+            currentUserSave.ResetStreak();
+            // Events.UpdateStreakLength?.Invoke(currentUserSave.streak);
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
+
             isUserLoggedIn = true;
 
             // Checking if age is set in database
@@ -218,7 +257,7 @@ namespace Wrapper
             byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(usernameJson);
 
             string url = awsURL + "/check_research_code";
-            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST"))
             {
                 www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
                 www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
@@ -234,8 +273,8 @@ namespace Wrapper
                     }
                 }
             }
-
-            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
+            Events.ResetStarCounts?.Invoke();
+            Events.InitializeStarTracker?.Invoke();
         }
 #else
         private IEnumerator LoginRoutine(string researchCode)
@@ -292,9 +331,9 @@ namespace Wrapper
             {
                 currentUserSave.id = formattedCode;
 
-                UpdateRemoteSave(); 
+                UpdateRemoteSave();
                 yield return Routine.Race(
-                    Routine.WaitCondition(() => webGLUploadSuccess == true), 
+                    Routine.WaitCondition(() => webGLUploadSuccess == true),
                     Routine.WaitSeconds(networkRequestTimeout));
 
                 loadDataJson = "";
@@ -304,16 +343,19 @@ namespace Wrapper
             }
 
             currentUserSave = JsonUtility.FromJson<UserSave>(loadDataJson);
+            currentUserSave.ResetStreak();
+            // Events.UpdateStreakLength?.Invoke(currentUserSave.streak);
             Events.UpdateLoginStatus?.Invoke(LoginStatus.Success);
             Events.SetNewPlayerStatus?.Invoke(currentUserSave.IsNewSave());
             isUserLoggedIn = true;
+
 
             // Checking if age is set in database
             string usernameJson = JsonUtility.ToJson(new UserCode(researchCode));
             byte[] researchCodeBytes = new System.Text.UTF8Encoding().GetBytes(usernameJson);
 
             string url = awsURL + "/check_research_code";
-            using (UnityWebRequest www = new UnityWebRequest (url, "POST")) 
+            using (UnityWebRequest www = new UnityWebRequest (url, "POST"))
             {
                 www.uploadHandler = (UploadHandler)new UploadHandlerRaw(researchCodeBytes);
                 www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
@@ -329,8 +371,8 @@ namespace Wrapper
                     }
                 }
             }
-
-            StarTracker.ST.Invoke("InitStarTracker", 0.2f);
+            Events.ResetStarCounts?.Invoke();
+            Events.InitializeStarTracker?.Invoke();
         }
 #endif
 
@@ -397,26 +439,136 @@ namespace Wrapper
 
         private bool AddReward(string rewardID)
         {
+            if (currentUserSave == null) return false;
             bool rewardAdded = currentUserSave.AddReward(rewardID);
             UpdateRemoteSave();
-
             return rewardAdded;
+        }
+
+        private bool AddBadge(string badgeID)
+        {
+            if (currentUserSave == null) return false;
+            bool badgeAdded = currentUserSave.AddBadge(badgeID);
+            UpdateRemoteSave();
+            return badgeAdded;
+        }
+
+        private bool AddBonus(string bonusID)
+        {
+            if (currentUserSave == null) return false;
+            bool bonusAdded = currentUserSave.AddBonus(bonusID);
+            UpdateRemoteSave();
+            return bonusAdded;
+        }
+
+        private bool UseAvailableBonus(string bonusID)
+        {
+            if (currentUserSave == null) return false;
+            bool bonusAvailable = currentUserSave.UseBonus(bonusID);
+            UpdateRemoteSave();
+            return bonusAvailable;
+        }
+
+        private int NumberAvailableBonuses(string bonusID)
+        {
+            if (currentUserSave == null) return -1;
+            return currentUserSave.GetNumBonuses(bonusID);
         }
 
         private bool IsRewardUnlocked(string rewardID)
         {
+            if (currentUserSave == null) return false;
             return currentUserSave.HasReward(rewardID);
+        }
+
+        private int NumberRewardsFromGame(Game game)
+        {
+            if (currentUserSave == null) return -1;
+            return currentUserSave.HasRewardsFromGame(game);
         }
 
         private string GetMinigameSaveData(Game game)
         {
+            if (currentUserSave == null) return String.Empty;
             return currentUserSave.GetMinigameSave(game);
         }
 
         private void UpdateMinigameSaveData(Game game, object minigameSave)
         {
+            if (currentUserSave == null) return;
             currentUserSave.UpdateMinigameSave(game, minigameSave);
             UpdateRemoteSave();
+        }
+
+        private void UpdateMinigameStarCount(Game game, int numStars)
+        {
+            if (currentUserSave == null) return;
+            if (currentUserSave.starsPerGame.Count == 0) 
+            {
+                currentUserSave.starsPerGame = new List<int>() {0,0,0,0,0,0,0,0}; 
+            }
+            if (currentUserSave.starsPerGame[(int)game] != numStars)
+            {
+                currentUserSave.starsPerGame[(int)game] = numStars;
+                UpdateRemoteSave();
+            }
+        }
+
+        private int GetMinigameStarCount(Game game)
+        {
+            if (currentUserSave == null) return -1;
+            return currentUserSave.starsPerGame[(int)game];
+        }
+
+        private void UpdateTotalStars(int numStars)
+        {
+            if (currentUserSave == null) return;
+            if (currentUserSave.totalStars != numStars)
+            {
+                currentUserSave.totalStars = numStars;
+                UpdateRemoteSave();
+            }
+        }
+
+        private void UpdateTotalCoins(int numCoins)
+        {
+            if (currentUserSave == null) return;
+            Events.DisplayCoinsCollected.Invoke(numCoins);
+            currentUserSave.totalCoins += numCoins;
+            UpdateRemoteSave();
+        }
+
+        private int GetTotalCoins()
+        {
+            if (currentUserSave == null) return -1;
+            return currentUserSave.totalCoins;
+        }
+
+        /* private void UpdateStreakLength()
+        {
+            currentUserSave.UpdateStreak();
+        } */
+
+        private int GetStreakLength()
+        {
+            if (currentUserSave == null) return -1;
+            return currentUserSave.streak;
+        }
+
+        private int GetStreakFreeze()
+        {
+            if (currentUserSave == null) return -1;
+            return currentUserSave.streakBuffer;
+        }
+
+        private void SetStreakFreeze(int days)
+        {
+            if (currentUserSave == null) return;
+            currentUserSave.streakBuffer += days;
+            // Debug.Log($"Added {days} days to buffer");
+            // Debug.Log($"Streak buffer: {currentUserSave.streakBuffer}");
+            UpdateRemoteSave();
+            // Debug.Log($"Streak buffer (after remote save): {currentUserSave.streakBuffer}");
         }
 
         private void UpdateRemoteSave()
@@ -447,7 +599,9 @@ namespace Wrapper
                 yield break;
             }
 
+            currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
+
             if (json.Equals(string.Empty))
             {
                 Debug.LogError("Empty UserSave");
@@ -472,6 +626,8 @@ namespace Wrapper
         private IEnumerator UpdateRemoteSaveRoutine()
         {
             webGLUploadSuccess = false;
+
+            currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
             if (json.Equals(string.Empty))
             {
@@ -482,7 +638,7 @@ namespace Wrapper
             // Call the JS SaveData function
             SaveData(currentUserSave.id, json);
 
-            // Wait for whichever completes first: the SaveData callback function or the network timeout 
+            // Wait for whichever completes first: the SaveData callback function or the network timeout
             yield return Routine.Race(
                 Routine.WaitCondition(() => webGLUploadSuccess == true),
                 Routine.WaitSeconds(networkRequestTimeout));
@@ -495,7 +651,7 @@ namespace Wrapper
 #endif
 
             // AWS
-            private void SaveMinigameResearchData(Game game, object minigameSave)
+        private void SaveMinigameResearchData(Game game, object minigameSave)
         {
 #if !LITE_VERSION
             StartCoroutine(SendResearchDataToRemote(game, minigameSave));
@@ -509,6 +665,9 @@ namespace Wrapper
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(dataJson);
 
             string url = awsURL + "/" + gameSaveURLs[(int)game] + "_save";
+
+            // Debug.Log($"dataJson: {dataJson}");
+            // Debug.Log($"jsonToSend: {jsonToSend}");
 
             using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
             {
@@ -534,6 +693,7 @@ namespace Wrapper
         //todo: merge intro dialogue methods or make it a property with get/set
         public bool HasPlayerSeenIntroDialogue()
         {
+            if (currentUserSave == null) return false;
             return currentUserSave.introDialogueSeen;
         }
 
@@ -545,6 +705,7 @@ namespace Wrapper
 
         private string GetResearchCode()
         {
+            if (currentUserSave == null) return String.Empty;
             return currentUserSave.id;
         }
 
