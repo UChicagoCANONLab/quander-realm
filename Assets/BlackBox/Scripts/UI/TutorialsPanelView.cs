@@ -55,7 +55,7 @@ namespace BlackBox
                 BBSaveData data = new BBSaveData
                 {
                     gameID = saveData.gameID,
-                    currentLevelID = saveData.currentLevelID
+                    // currentLevelID = saveData.currentLevelID
                 };
 
                 saveData = data;

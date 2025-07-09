@@ -173,12 +173,13 @@ namespace Wrapper
                 case Game.BlackBox:
                     if (data_BuriedTreasure != null) {
                         if (data_BuriedTreasure.completed) return 25;
-                        int maxLevel = 0;
-                        for(int i=0; i<24; i++) {
-                            if (data_BuriedTreasure.starsPerLevel[i] > 0) {
-                                maxLevel = i+1;
-                            }
-                        } return maxLevel;                        
+                        return data_BuriedTreasure.maxLevelUnlocked;
+                        // int maxLevel = 0;
+                        // for(int i=0; i<24; i++) {
+                        //     if (data_BuriedTreasure.starsPerLevel[i] > 0) {
+                        //         maxLevel = i+1;
+                        //     }
+                        // } return maxLevel;                        
                     } break;
             }
             return 0;
@@ -278,7 +279,8 @@ namespace Wrapper
                     } break;
                 case Game.BlackBox:
                     if (data_BuriedTreasure != null) {
-                        // WORK ON THIS ONE
+                        data_BuriedTreasure.maxLevelUnlocked++;
+                        Events.UpdateMinigameSaveData.Invoke(Game.BlackBox, data_BuriedTreasure);
                     } break;
             } return;
         }
