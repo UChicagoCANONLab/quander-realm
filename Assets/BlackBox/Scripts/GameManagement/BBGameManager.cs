@@ -23,7 +23,7 @@ namespace BlackBox
         [SerializeField] GameObject levelSelect;
         [SerializeField] GameObject levelSelectLitePanel;
         [SerializeField] LevelButton[] levelButtons;
-        [SerializeField] QButton gameBackButton;
+        // [SerializeField] QButton gameBackButton;
         [SerializeField] Animator backgroundAnimator;
 
         [Header("Grid Containers")]
@@ -117,7 +117,7 @@ namespace BlackBox
             BBEvents.ReturnLanternHome += ReturnLanternHome;
             BBEvents.CompleteBlackBox += PlayEndDialog;
             BBEvents.PlayLevel += SetAndPlayLevel;
-            gameBackButton.onClick.AddListener(() => BBEvents.CloseLevel?.Invoke());
+            // gameBackButton.onClick.AddListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect += ShowLevelSelect;
             BBEvents.GetLevel += GetLevelObject;
         }
@@ -142,7 +142,7 @@ namespace BlackBox
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
             BBEvents.CompleteBlackBox -= PlayEndDialog;
             BBEvents.PlayLevel -= SetAndPlayLevel;
-            gameBackButton.onClick.RemoveListener(() => BBEvents.CloseLevel?.Invoke());
+            // gameBackButton.onClick.RemoveListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect -= ShowLevelSelect;
             BBEvents.GetLevel -= GetLevelObject;
         }
@@ -175,7 +175,8 @@ namespace BlackBox
 
         private void InitLevel()
         {
-            string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
+            // string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
+            string levelID = ParseLevelID(SM.saveData.maxLevelUnlocked);
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
 
             if (levelID == firstLevelID) {
@@ -188,7 +189,7 @@ namespace BlackBox
         private void StartLevel()
         {
             ShowLevelSelect(false);
-            Events.ToggleBackButton?.Invoke(false);
+            // Events.ToggleBackButton?.Invoke(false);
 
             BBEvents.UpdateHUDLevelNumber?.Invoke(level.number);
             BBEvents.ShowTutorial?.Invoke(SM.saveData, level);
@@ -277,7 +278,7 @@ namespace BlackBox
         private void Quit()
         {
             SceneManager.LoadScene(0);
-            Events.ToggleBackButton?.Invoke(true);
+            // Events.ToggleBackButton?.Invoke(true);
             Events.MinigameClosed?.Invoke();
         }
 
@@ -321,9 +322,11 @@ namespace BlackBox
 
         void TrySetNewLevelSave()
         {
-            if (SM.saveData.currentLevelID == string.Empty || ParseLevelID(SM.saveData.currentLevelID) < ParseLevelID(level.nextLevelID))
+            // if (SM.saveData.currentLevelID == string.Empty || ParseLevelID(SM.saveData.currentLevelID) < ParseLevelID(level.nextLevelID))
+            if (SM.saveData.maxLevelUnlocked == level.number)
             {
-                SM.saveData.currentLevelID = level.nextLevelID;
+                SM.saveData.maxLevelUnlocked++;
+                // SM.saveData.currentLevelID = level.nextLevelID;
                 // Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
             }
             // else Debug.Log("Player has completed a higher level; save data not updated.");
@@ -365,7 +368,7 @@ namespace BlackBox
                 BBSaveData data = new BBSaveData
                 {
                     gameID = SM.saveData.gameID,
-                    currentLevelID = SM.saveData.currentLevelID,
+                    // currentLevelID = SM.saveData.currentLevelID,
                     tutorialsSeen = SM.saveData.tutorialsSeen,
                     completed = false
                 };
@@ -412,14 +415,16 @@ namespace BlackBox
 
         void InitLevelSelect()
         {
-            Events.ToggleBackButton(true);
+            // Events.ToggleBackButton(true);
 
-            if (level.levelID != SM.saveData.currentLevelID)
+            // if (level.levelID != SM.saveData.currentLevelID)
+            if (level.number != SM.saveData.maxLevelUnlocked)
             {
                 // if (saveData.currentLevelID[0] == 'L') {
                 //     level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
                 // } else {
-                    string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
+                    // string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
+                    string levelID = ParseLevelID(SM.saveData.maxLevelUnlocked);
                     level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
                 // }
             }
@@ -433,7 +438,7 @@ namespace BlackBox
                 BBSaveData data = new BBSaveData
                 {
                     gameID = SM.saveData.gameID,
-                    currentLevelID = SM.saveData.currentLevelID,
+                    // currentLevelID = SM.saveData.currentLevelID,
                     tutorialsSeen = SM.saveData.tutorialsSeen,
                     completed = false
                 };
@@ -444,11 +449,14 @@ namespace BlackBox
             }
             finally
             {
-                int levelNum = ParseLevelID(level.levelID) + (SM.saveData.completed ? 1 : 0);
-                if (levelNum > 0)
+                int maxLevel = SM.saveData.maxLevelUnlocked;
+                // int levelNum = ParseLevelID(level.levelID) + (SM.saveData.completed ? 1 : 0);
+                // if (levelNum > 0)
+                if (maxLevel > 0)
                 {
                     for (int i = 0; i < levelButtons.Length; i++) {
-                        levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+                        // levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+                        levelButtons[i].SetButtonState(maxLevel, GetLevelStars(i));
 
 #if LITE_VERSION
                         if (i >= NUM_LEVELS) {

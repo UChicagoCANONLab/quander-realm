@@ -13,12 +13,12 @@ namespace BlackBox
         [SerializeField]
         Animator buttonAnim;
 
-        public void SetButtonState(int currentLevel, int numStars)
+        public void SetButtonState(int maxLevel, int numStars)
         {
-            if (currentLevel >= levelID)
+            if (maxLevel >= levelID)
             {
                 interactable = true;
-                if (currentLevel > levelID) {
+                if (maxLevel > levelID) {
                     buttonAnim.SetBool("LevelCompleted", true);
                     buttonAnim.SetInteger("StarsWon", numStars);
                 }
