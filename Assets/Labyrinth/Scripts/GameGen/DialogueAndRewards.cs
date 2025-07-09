@@ -17,7 +17,8 @@ namespace Labyrinth
 
         public Dictionary<int, string> levelRewards = new Dictionary<int, string>()
             { {5, "LA_01"}, {15, "LA_02"}, {4, "LA_03"}, {14, "LA_04"}, 
-            {9, "LA_05"}, {10, "LA_06"}, {8, "LA_07"}, {3, "LA_08"} };
+            {9, "LA_05"}, {10, "LA_06"}, {8, "LA_07"}, {3, "LA_08"},
+            {1, "LA_09"}, {6, "LA_10"} };
 
 
         private void Awake() {

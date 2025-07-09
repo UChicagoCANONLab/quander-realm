@@ -9,7 +9,7 @@ namespace Labyrinth
 { 
     public class GameBehavior : MonoBehaviour
     {
-        private bool winner = false;
+        // private bool winner = false;
         public int hintsUsed = 0;
         public int numStars = 3;
 
@@ -92,7 +92,7 @@ namespace Labyrinth
             checkNumStars();
 
             TTEvents.ClearGoal?.Invoke();
-            winner = true;
+            SaveData.Instance.winner = true;
 
             endTime = Time.time;
             timePlayed = endTime - initTime;
@@ -103,6 +103,9 @@ namespace Labyrinth
                 DialogueAndRewards.Instance.doDialogue(SaveData.Instance.CurrentLevel);
             }
             DialogueAndRewards.Instance.giveReward(SaveData.Instance.CurrentLevel);
+            if (SaveData.Instance.CurrentLevel > 0) {
+                Wrapper.Events.CollectAndDisplayBadge.Invoke(Wrapper.Game.Labyrinth, SaveData.Instance.CurrentLevel, numStars);
+            }
 
             steps = 0;
         }
@@ -158,10 +161,10 @@ namespace Labyrinth
             // Resetting level
             initTime = Time.time;
 
-            if (winner == true) {
-                winner = false;
+            // if (winner == true) {
+            //     winner = false;
                 TTEvents.ResetUI?.Invoke();
-            }
+            // }
 
             TTEvents.ReturnPlayers?.Invoke();
 
