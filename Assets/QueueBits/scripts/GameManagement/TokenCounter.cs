@@ -232,8 +232,11 @@ namespace QueueBits
             if (highlightCoroutine != null)
             {
                 StopCoroutine(highlightCoroutine);
+
                 if (activeHighlight != null)
-                    Destroy(activeHighlight);
+                    activeHighlight.SetActive(false);
+                    // Destroy(activeHighlight);
+                
                 activeHighlight = null;
                 highlightCoroutine = null;
             }

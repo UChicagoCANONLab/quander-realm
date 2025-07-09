@@ -56,6 +56,7 @@ namespace QueueBits
 		public GameObject pointer;
 
 		public GameObject hintArrow;
+		public int hintCounter = 0;
 
 		public GameObject tutorialPane;
 		public TextMeshProUGUI tutorialText;
@@ -481,6 +482,7 @@ namespace QueueBits
 
 		private void DisplayHint(int recommendedProbability, int bestMove, string explanation)
 		{
+			hintCounter++;
 			Debug.Log($"Showing hint: Use {recommendedProbability}% token in column {bestMove}");
 
 			// Highlight the recommended token based on game mode
@@ -632,8 +634,11 @@ namespace QueueBits
 			if (columnHighlightCoroutine != null)
 			{
 				StopCoroutine(columnHighlightCoroutine);
+				hintArrow.SetActive(false);
+
 				if (activeColumnHighlight != null)
 					Destroy(activeColumnHighlight);
+
 				activeColumnHighlight = null;
 				columnHighlightCoroutine = null;
 			}
@@ -1082,6 +1087,7 @@ namespace QueueBits
 		{
 			// Save data
 			myData.winner = (int)result;
+			myData.hintsUsed = hintCounter;
 			saveData.Save(myData);
 
 			// Manage stars awarded
@@ -1114,6 +1120,7 @@ namespace QueueBits
 		public void initMyData()
 		{
 			myData.level = LEVEL_NUMBER;
+			myData.hintsUsed = 0;
 			myData.userID = Wrapper.Events.GetPlayerResearchCode?.Invoke();
 			myData.placement_order = new int[numColumns * numRows];
 			myData.superposition = new int[numColumns * numRows];
