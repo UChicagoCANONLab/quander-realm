@@ -177,6 +177,8 @@ namespace BlackBox
         {
             // string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
             string levelID = ParseLevelID(SM.saveData.maxLevelUnlocked);
+            if (SM.saveData.completed) levelID = ParseLevelID(NUM_LEVELS);
+            
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
 
             if (levelID == firstLevelID) {
