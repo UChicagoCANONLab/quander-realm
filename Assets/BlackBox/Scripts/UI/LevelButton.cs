@@ -18,6 +18,7 @@ namespace BlackBox
             if (maxLevel >= levelID)
             {
                 interactable = true;
+                buttonAnim.SetBool("LevelLocked", false);
                 if (maxLevel > levelID) {
                     buttonAnim.SetBool("LevelCompleted", true);
                     buttonAnim.SetInteger("StarsWon", numStars);

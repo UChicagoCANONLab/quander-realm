@@ -402,6 +402,8 @@ namespace BlackBox
 
         void ShowLevelSelect(bool show)
         {
+            SM.LoadGame();
+
             levelSelect.SetActive(show);
             gameBoard.SetActive(!show);
             gameUI.SetActive(!show);
