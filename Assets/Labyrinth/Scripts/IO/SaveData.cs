@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 namespace Labyrinth 
 { 
@@ -41,9 +42,16 @@ namespace Labyrinth
         public void updateSave(GameBehavior GB) {
             if (CurrentLevel == 0) { return; }
 
-            if (GB.numStars > starsPerLevel[CurrentLevel - 1]) {
-                totalStars += (GB.numStars - starsPerLevel[CurrentLevel-1]);
-                starsPerLevel[CurrentLevel - 1] = GB.numStars;
+            if (winner == true) {
+                int coins = Math.Max(GB.numStars - starsPerLevel[CurrentLevel - 1], 0) * 10
+                    + Math.Min(GB.numStars, starsPerLevel[CurrentLevel - 1]);
+                Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
+                Wrapper.Events.DisplayCoinsCollected.Invoke(coins);
+
+                if (GB.numStars > starsPerLevel[CurrentLevel - 1]) {
+                    totalStars += (GB.numStars - starsPerLevel[CurrentLevel-1]);
+                    starsPerLevel[CurrentLevel - 1] = GB.numStars;
+                }
             }
 
             int i=0;
@@ -58,6 +66,7 @@ namespace Labyrinth
             time = GB.timePlayed;
             hintsUsed = GB.hintsUsed;
         }
+        
 
         public string SDtoString() {
             string jsonData = JsonUtility.ToJson(this);
