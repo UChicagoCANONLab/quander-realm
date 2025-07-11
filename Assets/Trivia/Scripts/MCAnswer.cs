@@ -20,7 +20,29 @@ namespace Trivia
 
             // imageName already includes prefix from DailyPuzzleManager
             if (imageName != "") {
-                answerImage.sprite = Resources.LoadAll<Sprite>(imageName)[i];
+                Sprite sprite = Resources.LoadAll<Sprite>(imageName)[i];
+                // Set your max dimensions
+                float maxWidth = 450f;
+                float maxHeight = 340f;
+
+                // Assign the sprite first
+                answerImage.sprite = sprite;
+
+                // Get the original size of the sprite (in Unity units)
+                float spriteWidth = sprite.rect.width / sprite.pixelsPerUnit;
+                float spriteHeight = sprite.rect.height / sprite.pixelsPerUnit;
+
+                // Calculate scale factors for width and height
+                float scaleWidth = maxWidth / spriteWidth;
+                float scaleHeight = maxHeight / spriteHeight;
+
+                // Choose the smaller scale to ensure both width and height fit
+                float scale = Mathf.Min(scaleWidth, scaleHeight);
+
+                // Apply scaled size to RectTransform
+                RectTransform rt = answerImage.GetComponent<RectTransform>();
+                rt.sizeDelta = new Vector2(spriteWidth * scale, spriteHeight * scale);
+
                 answerImage.enabled = true;
                 answerText.enabled = false;
             } else {

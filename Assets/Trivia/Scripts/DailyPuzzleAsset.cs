@@ -30,6 +30,15 @@ namespace Trivia
         [SerializeField, ContentValue("Question Image Name")]
         public string questionImageName;
 
+        [SerializeField, ContentValue("Card")]
+        public string questionCard;        
+
+        [SerializeField, ContentValue("Side Image")]
+        public bool sideImage;       
+
+        [SerializeField, ContentValue("Image Answers")]
+        public bool imageAnswers;
+
         [SerializeField, ContentValue("Answers")]
         public string[] answers;
 
