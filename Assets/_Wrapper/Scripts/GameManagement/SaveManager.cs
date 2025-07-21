@@ -497,6 +497,7 @@ namespace Wrapper
         {
             if (currentUserSave == null) return;
             currentUserSave.UpdateMinigameSave(game, minigameSave);
+            Events.LoadMinigameSave.Invoke(game);
             UpdateRemoteSave();
         }
 
