@@ -92,7 +92,8 @@ namespace Labyrinth
                     // SaveData.Instance.Degree = 0;
                     currScene = "LA_Tutorial";
                     break;
-                case < 3:
+                case 1:
+                // case < 3:
                     // DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 0;
                     if (!DialogueAndRewards.Instance.tutorialSeen[0]) {
@@ -102,6 +103,11 @@ namespace Labyrinth
                     }
                     currScene = "LA_4x4";
                     break;
+                case 2:
+                    SaveData.Instance.Degree = 0;
+                    currScene = "LA_4x4";
+                    break;
+
                 case < 5:
                     SaveData.Instance.Degree = 0;
                     currScene = "LA_5x5";
@@ -112,7 +118,8 @@ namespace Labyrinth
                     break;
 
                 // 180 Degree Levels
-                case < 8:
+                case 6:
+                // case < 8:
                     // DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 180;
                     if (!DialogueAndRewards.Instance.tutorialSeen[1]) {
@@ -122,6 +129,11 @@ namespace Labyrinth
                     }
                     currScene = "LA_4x4";
                     break;
+                case 7:
+                    SaveData.Instance.Degree = 180;
+                    currScene = "LA_4x4";
+                    break;
+
                 case < 10:
                     SaveData.Instance.Degree = 180;
                     currScene = "LA_5x5";
@@ -132,7 +144,8 @@ namespace Labyrinth
                     break;
 
                 // 90 Degree Levels
-                case < 13:
+                case 11:
+                // case < 13:
                     // DialogueAndRewards.Instance.doDialogue(sel);
                     SaveData.Instance.Degree = 90;
                     if (!DialogueAndRewards.Instance.tutorialSeen[2]) {
@@ -142,6 +155,11 @@ namespace Labyrinth
                     }
                     currScene = "LA_4x4";
                     break;
+                case 12:
+                    SaveData.Instance.Degree = 90;
+                    currScene = "LA_4x4";
+                    break;
+                    
                 case < 15:
                     SaveData.Instance.Degree = 90;
                     currScene = "LA_5x5";
