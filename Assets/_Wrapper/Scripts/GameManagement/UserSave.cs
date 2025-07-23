@@ -22,6 +22,7 @@ namespace Wrapper
 
         // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes, Rewards, None, Trivia}
         public List<int> starsPerGame = new List<int>(8);
+        public List<int> iconPerGame = new List<int>(5);
 
         // [NonSerialized] public DateTime lastLoginDate;
         // [NonSerialized] public int streak = 0;
@@ -42,6 +43,7 @@ namespace Wrapper
             // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
             starsPerGame = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+            starsPerGame = new List<int>() { 0, 0, 0, 0, 0 };
 
             if (!(idString.Equals(string.Empty)))
                 id = idString.Trim();
@@ -220,6 +222,11 @@ namespace Wrapper
                 if (reward.Contains(gamePrefix)) counter++;
 
             return counter == 1;
+        }
+
+        public void UpgradeGameIcon(Game game)
+        {
+            iconPerGame[(int)game]++;
         }
 
         public void UpdateMinigameSave(Game game, object data)

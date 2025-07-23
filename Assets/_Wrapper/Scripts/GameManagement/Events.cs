@@ -72,6 +72,8 @@ namespace Wrapper
         public static Func<int> GetStreakFreeze;
         public static Action<int> SetStreakFreeze;
         public static Func<Game, int> HasRewardsFromGame;
+        public static Func<Game, int> GetMinigameMapIcon;
+        public static Action<Game, int> UpgradeMinigameMapIcon;
 
         /// MinigameUserSaves ///
         public static Func<Game, int> GetMinigameTotalStars;

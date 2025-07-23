@@ -88,6 +88,9 @@ namespace Wrapper
             Events.GetStreakFreeze += GetStreakFreeze;
             Events.SetStreakFreeze += SetStreakFreeze;
             Events.HasRewardsFromGame += NumberRewardsFromGame;
+            Events.GetMinigameMapIcon += GetMinigameMapIcon;
+            Events.UpgradeMinigameMapIcon += UpgradeMinigameMapIcon;
+
         }
 
         private void OnDisable()
@@ -118,6 +121,8 @@ namespace Wrapper
             Events.GetStreakFreeze -= GetStreakFreeze;
             Events.SetStreakFreeze -= SetStreakFreeze;
             Events.HasRewardsFromGame -= NumberRewardsFromGame;
+            Events.GetMinigameMapIcon -= GetMinigameMapIcon;
+            Events.UpgradeMinigameMapIcon -= UpgradeMinigameMapIcon;
         }
 
 #if !UNITY_WEBGL
@@ -572,6 +577,7 @@ namespace Wrapper
             // Debug.Log($"Streak buffer (after remote save): {currentUserSave.streakBuffer}");
         }
 
+
         private void UpdateRemoteSave()
         {
             Routine.Start(UpdateRemoteSaveRoutine());
@@ -724,6 +730,19 @@ namespace Wrapper
         bool GetHasFirstReward(string gamePrefix)
         {
             return currentUserSave.FirstRewardFromGame(gamePrefix);
+        }
+
+        private int GetMinigameMapIcon(Game game)
+        {
+            if (currentUserSave == null) return -1;
+            return currentUserSave.iconPerGame[(int)game];
+        }
+
+        private void UpgradeMinigameMapIcon(Game game, int cost)
+        {
+            if (currentUserSave.iconPerGame[(int)game] > 1) return;
+            currentUserSave.UpgradeGameIcon(game);
+            UpdateTotalCoins(cost);
         }
 
 #endregion
