@@ -735,6 +735,10 @@ namespace Wrapper
         private int GetMinigameMapIcon(Game game)
         {
             if (currentUserSave == null) return -1;
+            if (currentUserSave.iconPerGame.Count == 0) 
+            {
+                currentUserSave.iconPerGame = new List<int>() { 0, 0, 0, 0, 0 };
+            }
             return currentUserSave.iconPerGame[(int)game];
         }
 

@@ -43,7 +43,7 @@ namespace Wrapper
             // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
             starsPerGame = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
-            starsPerGame = new List<int>() { 0, 0, 0, 0, 0 };
+            iconPerGame = new List<int>() { 0, 0, 0, 0, 0 };
 
             if (!(idString.Equals(string.Empty)))
                 id = idString.Trim();

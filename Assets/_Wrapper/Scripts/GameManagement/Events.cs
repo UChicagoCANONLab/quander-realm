@@ -36,6 +36,7 @@ namespace Wrapper
         /// MapManager ///
         public static Action InitializeMap;
         public static Action ResetMap;
+        public static Action<bool> ToggleUpgradable;
 
         /// TitleScreen ///
         public static Action<bool> SetNewPlayerStatus;
