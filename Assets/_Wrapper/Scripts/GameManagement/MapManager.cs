@@ -69,6 +69,12 @@ namespace Wrapper
             {
                 minigameIcons[i].ToggleIconUpgradable(enabled);
             }
+            mapAnimator.SetBool("UpgradableOn", enabled);
+            // if (!enabled) Events.ToggleTrackers.Invoke(true);
+            if (!enabled) {
+                GameObject.Find("GameManager/Trackers").GetComponent<Trackers>().ToggleTrackers(true);
+            }
+            
         }
         
     }

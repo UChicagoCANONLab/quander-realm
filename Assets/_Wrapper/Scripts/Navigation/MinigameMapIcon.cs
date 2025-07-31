@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using BeauRoutine;
+
 
 namespace Wrapper
 {
@@ -40,16 +42,20 @@ namespace Wrapper
         public void UpgradeIcon()
         {
             if (iconStatus == 2) return;
+            Routine.Start(UpgradeIconRoutine());
+        }
 
+        public IEnumerator UpgradeIconRoutine()
+        {
             this.GetComponent<Animator>().SetTrigger("FadeOut");
 
             // Events.UpgradeMinigameMapIcon.Invoke(game, upgradeCost[Events.GetMinigameMapIcon.Invoke(game)]);
             Events.UpgradeMinigameMapIcon.Invoke(game, -1 * upgradeCost[iconStatus]);
             SetMapIcon(Events.GetMinigameMapIcon.Invoke(game));
-
+            
             this.GetComponent<Animator>().SetTrigger("FadeIn");
             Events.ToggleUpgradable.Invoke(false);
-            this.GetComponent<Animator>().SetTrigger("Normal");
+            yield return 0f;
         }
 
 

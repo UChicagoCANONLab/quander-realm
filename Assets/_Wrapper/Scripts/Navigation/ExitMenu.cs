@@ -42,10 +42,10 @@ namespace Wrapper
 
         private void Awake()
         {
-            backgroundButton.onClick.AddListener(CloseMenu);
+            backgroundButton.onClick.AddListener(() => CloseMenu(true));
             // backgroundButton.onClick.AddListener(() => bonusMenu.CloseBonusMenu());
             
-            exitButton.onClick.AddListener(CloseMenu);
+            exitButton.onClick.AddListener(() => CloseMenu(true));
             bonusButton.onClick.AddListener(() => bonusMenu.ToggleBonusMenu());
 
             newGameButton.onClick.AddListener(OpenNewConfirm);
@@ -56,10 +56,10 @@ namespace Wrapper
 
         private void OnDestroy()
         {
-            backgroundButton.onClick.RemoveListener(CloseMenu);
+            backgroundButton.onClick.RemoveListener(() => CloseMenu(true));
             // backgroundButton.onClick.RemoveListener(() => bonusMenu.CloseBonusMenu());
             
-            exitButton.onClick.RemoveListener(CloseMenu);
+            exitButton.onClick.RemoveListener(() => CloseMenu(true));
             bonusButton.onClick.RemoveListener(() => bonusMenu.ToggleBonusMenu());
 
             newGameButton.onClick.RemoveListener(OpenNewConfirm);
@@ -103,9 +103,9 @@ namespace Wrapper
             if (!isOn) bonusMenu.CloseBonusMenu();
         }
 
-        public void CloseMenu()
+        public void CloseMenu(bool trackerOn)
         {
-            if (SceneManager.GetActiveScene().name == "W_Main")
+            if (SceneManager.GetActiveScene().name == "W_Main" && trackerOn)
             {
                 parentTrackers.ToggleTrackers(true);
             }
@@ -132,7 +132,7 @@ namespace Wrapper
             Events.ResetMap?.Invoke();
             //Events.SetNewPlayerStatus?.Invoke(true);
             
-            CloseMenu();
+            CloseMenu(true);
             // Events.Delay.Invoke(2f);
             // Events.ToggleTitleScreen.Invoke(true);
         }
@@ -140,7 +140,7 @@ namespace Wrapper
         public void Logout()
         {
             Events.Logout?.Invoke();
-            CloseMenu();
+            CloseMenu(true);
         }
 
         public void OpenCredits()
