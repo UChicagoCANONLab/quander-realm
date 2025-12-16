@@ -13,13 +13,17 @@ namespace Trivia
         [SerializeField] public Image answerImage;
         [SerializeField] public TextMeshProUGUI answerText;
         [SerializeField] public bool correctAnswer;
+        [SerializeField] public string answerID;
 
-        public void SetMCAnswer(string imageName, int i, string text, bool correct) 
-        {  
+        public void SetMCAnswer(string imageName, int i, string text, bool correct)
+        {
             toggle.isOn = false;
 
+            Debug.Log(imageName);
+
             // imageName already includes prefix from DailyPuzzleManager
-            if (imageName != "") {
+            if (imageName != "")
+            {
                 Sprite sprite = Resources.LoadAll<Sprite>(imageName)[i];
                 // Set your max dimensions
                 float maxWidth = 450f;
@@ -45,10 +49,15 @@ namespace Trivia
 
                 answerImage.enabled = true;
                 answerText.enabled = false;
-            } else {
+
+                answerID = i.ToString();
+            }
+            else
+            {
                 answerImage.enabled = false;
                 answerText.text = text;
                 answerText.enabled = true;
+                answerID = text;
             }
             correctAnswer = correct;
         }
