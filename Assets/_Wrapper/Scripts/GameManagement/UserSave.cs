@@ -14,13 +14,16 @@ namespace Wrapper
         public List<string> badges;
         public List<string> bonuses;
 
+        public List<string> trivia;
+
         public bool introDialogueSeen = false;
         public bool rewardDialogueSeen = false;
 
         public int totalStars = 0;
         public int totalCoins = 0;
 
-        // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes, Rewards, None, Trivia}
+
+        // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes, Rewards, None,}
         public List<int> starsPerGame = new List<int>(8);
         public List<int> iconPerGame = new List<int>(5);
 
@@ -39,6 +42,7 @@ namespace Wrapper
             rewards = new List<string>();
             badges = new List<string>();
             bonuses = new List<string>();
+            trivia = new List<string>();
 
             // In order: {Blackbox, Circuits, Labyrinth, Queuebits, Qupcakes}
             minigameSaves = new string[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -63,6 +67,17 @@ namespace Wrapper
 
             if (rewards.Count == 0) rewardDialogueSeen = false; // if we haven't seen the reward dialog while having a reward, reset this bool
             rewards.Add(formatted);
+            return true;
+        }
+
+        public bool AddTriviaAnswer(string triviaID, bool answerCorrect, long ut)
+        {
+            if (triviaID.Equals(string.Empty))
+                return false;
+
+
+            string log = $"{triviaID}-{(answerCorrect ? 1 : 0)}-{ut}";
+            trivia.Add(log);
             return true;
         }
 

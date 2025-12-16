@@ -12,6 +12,9 @@ namespace Wrapper
         [SerializeField] private Animator mapAnimator;
 
 
+    
+        [SerializeField] private GameObject triviaButton;
+
         private void OnEnable()
         {
             Events.InitializeMap += InitMap;
@@ -29,11 +32,12 @@ namespace Wrapper
             // mapAnimator.SetTrigger("Map_Fly_Out");
         }
 
-        public void InitMap() 
+        public void InitMap()
         {
             minigameIcons[(int)Game.Circuits].SetInteractable(Events.GetGameUnlocked.Invoke(Game.Circuits));
             minigameIcons[(int)Game.QueueBits].SetInteractable(Events.GetGameUnlocked.Invoke(Game.QueueBits));
             minigameIcons[(int)Game.BlackBox].SetInteractable(Events.GetGameUnlocked.Invoke(Game.BlackBox));
+
 
             // Can't be all the minigameIcons because not all of them have icons
             for (int i=0; i<5; i++)

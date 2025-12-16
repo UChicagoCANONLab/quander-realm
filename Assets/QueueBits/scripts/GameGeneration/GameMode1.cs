@@ -401,6 +401,9 @@ namespace QueueBits
 					tutorialController.updateTutorial();
 				}
 				GC.DM.SwitchPlayer(isPlayersTurn);
+				GC.OnTutorialColumnClicked();
+
+
 			}
 			isDropping = false;
 			yield return 0;

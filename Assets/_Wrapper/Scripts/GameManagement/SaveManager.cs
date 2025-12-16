@@ -32,7 +32,7 @@ namespace Wrapper
         private float networkRequestTimeout = 5f;
         private bool isDatabaseReady = false;
         // private string[] gameSaveURLs = new string[5] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery"}; // AWS
-        private string[] gameSaveURLs = new string[6] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery", "rewards"}; // AWS
+        private string[] gameSaveURLs = new string[8] { "blackbox", "circuits", "twintanglement", "queuebits", "qupcakery", "rewards", "None", "trivia"}; // AWS
         public readonly string awsURL = "https://backend-quantime.link/"; // AWS
         private bool isConnectedToInternet = false;
 
@@ -63,6 +63,8 @@ namespace Wrapper
         private void OnEnable()
         {
             Events.AddReward += AddReward;
+            Events.AddTriviaAnswer += AddTriviaAnswer;
+            Events.GetTriviaLog += GetTriviaLog;
             Events.AddBadge += AddBadge;
             Events.AddBonus += AddBonus;
             Events.UseAvailableBonus += UseAvailableBonus;
@@ -96,6 +98,8 @@ namespace Wrapper
         private void OnDisable()
         {
             Events.AddReward -= AddReward;
+            Events.AddTriviaAnswer -= AddTriviaAnswer;
+            Events.GetTriviaLog -= GetTriviaLog;
             Events.AddBadge -= AddBadge;
             Events.AddBonus -= AddBonus;
             Events.UseAvailableBonus -= UseAvailableBonus;
@@ -169,6 +173,8 @@ namespace Wrapper
         {
             isUserLoggedIn = false;
             currentUserSave = new UserSave();
+            string json = JsonUtility.ToJson(currentUserSave);
+            Debug.Log("PostLogin: " + json);
             Routine.Start(LoginRoutine(researchCode));
         }
 
@@ -450,6 +456,24 @@ namespace Wrapper
             return rewardAdded;
         }
 
+        private bool AddTriviaAnswer(string questionID, bool answerCorrect)
+        {
+            if (currentUserSave == null) return false;
+            Debug.Log("Adding Answer!");
+            long ut = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            Debug.Log(ut);
+            bool triviaAdded = currentUserSave.AddTriviaAnswer(questionID, answerCorrect, ut);
+
+            UpdateRemoteSave();
+            return triviaAdded;
+            
+        }
+
+        private List<string> GetTriviaLog()
+        {
+            return currentUserSave.trivia;
+        }
+
         private bool AddBadge(string badgeID)
         {
             if (currentUserSave == null) return false;
@@ -608,6 +632,9 @@ namespace Wrapper
 
             currentUserSave.UpdateStreak();
             string json = JsonUtility.ToJson(currentUserSave);
+
+            Debug.Log("SAVING!");
+            Debug.Log(json);
 
             if (json.Equals(string.Empty))
             {

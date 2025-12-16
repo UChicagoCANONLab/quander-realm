@@ -173,13 +173,12 @@ namespace Wrapper
                 case Game.BlackBox:
                     if (data_BuriedTreasure != null) {
                         if (data_BuriedTreasure.completed) return 25;
-                        return data_BuriedTreasure.maxLevelUnlocked;
-                        // int maxLevel = 0;
-                        // for(int i=0; i<24; i++) {
-                        //     if (data_BuriedTreasure.starsPerLevel[i] > 0) {
-                        //         maxLevel = i+1;
-                        //     }
-                        // } return maxLevel;                        
+                        int maxLevel = 0;
+                        for(int i=0; i<24; i++) {
+                            if (data_BuriedTreasure.starsPerLevel[i] > 0) {
+                                maxLevel = i+1;
+                            }
+                        } return maxLevel;                        
                     } break;
             }
             return 0;
@@ -222,30 +221,34 @@ namespace Wrapper
                 case Game.Qupcakes: // CRITERIA: unlocked
                     return true; break;
                 case Game.Labyrinth: // CRITERIA: unlocked
-                    return true; break;
+                    // return true; 
+                    break;
+                case Game.Trivia:
+                    return GetMinigameStars(Game.Qupcakes) >= 27;
+                    break;
 #if LITE_VERSION
                 case Game.Circuits: // CRITERIA: 12 QC stars
                     if (GetMinigameStars(Game.Qupcakes) >= 12) {
                         return true;
                     } break;
                 case Game.QueueBits: // CRITERIA: unlocked
-                    return true; break;
+                    return true; 
+                    break;
                 case Game.BlackBox: // CRITERIA: 50 total stars
                     if (GetOverallStars() >= 50) {
                         return true;
                     } break;
 #else
                 case Game.Circuits: // CRITERIA: 27 QC stars
-                    if (GetMinigameStars(Game.Qupcakes) >= 27) {
+                    if (GetMinigameStars(Game.Qupcakes) >= 33)
+                    {
                         return true;
                     } break;
                 case Game.QueueBits: // CRITERIA: 10 QC && 10 TT stars
-                    if (GetMinigameStars(Game.Qupcakes) >= 10
-                    && GetMinigameStars(Game.Labyrinth) >= 10) {
-                        return true;
-                    } break;
+                    return GetMinigameStars(Game.Qupcakes) >= 15;
                 case Game.BlackBox: // CRITERIA: 120 total stars
-                    if (GetOverallStars() >= 120) {
+                    if (GetOverallStars() >= 120)
+                    {
                         return true;
                     } break;
 #endif
@@ -279,8 +282,7 @@ namespace Wrapper
                     } break;
                 case Game.BlackBox:
                     if (data_BuriedTreasure != null) {
-                        data_BuriedTreasure.maxLevelUnlocked++;
-                        Events.UpdateMinigameSaveData.Invoke(Game.BlackBox, data_BuriedTreasure);
+                        // WORK ON THIS ONE
                     } break;
             } return;
         }

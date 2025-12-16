@@ -46,7 +46,7 @@ namespace Labyrinth
 
 
         void Update() {
-            Debug.Log(p1.getPloc);
+            // Debug.Log(p1.getPloc);
 
             if (pointerSeq == 0 && p1.getPloc == new Vector3(0,1,0)) {
                 pointerAnimator.SetBool("UpOn", false);

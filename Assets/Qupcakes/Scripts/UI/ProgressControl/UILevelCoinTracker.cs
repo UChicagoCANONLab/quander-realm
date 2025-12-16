@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 
 namespace Qupcakery
 {
     public class UILevelCoinTracker : MonoBehaviour
     {
-        public Text text;
+        // public Text text;
         public static UILevelCoinTracker instance { get; private set; }
+        public TextMeshProUGUI count;
 
         // Start is called before the first frame update
         void Awake()
@@ -21,7 +22,8 @@ namespace Qupcakery
         public void UpdateCoinAmount(int amount)
         {
             PlayerPrefs.SetInt("LevelEarning", amount);
-            text.text = System.Convert.ToString(amount);
+            // text.text = System.Convert.ToString(amount);
+            count.text = $"{amount}";
         }
     }
 }

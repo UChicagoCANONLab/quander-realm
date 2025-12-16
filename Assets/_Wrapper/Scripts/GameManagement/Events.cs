@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Wrapper
 {
@@ -48,6 +49,8 @@ namespace Wrapper
 
         /// SaveManager ///
         public static Func<string, bool> AddReward;
+        public static Func<string, bool, bool> AddTriviaAnswer;
+        public static Func<List<string>> GetTriviaLog;
         public static Func<string, bool> AddBadge;
         public static Func<string, bool> AddBonus;
         public static Func<string, bool> UseAvailableBonus;
