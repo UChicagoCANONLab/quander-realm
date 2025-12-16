@@ -182,33 +182,48 @@ namespace Wrapper
             if (lastLogin == string.Empty)
             {
                 lastLogin = DateTime.Now.ToString();
+                Debug.Log("No last login detected, Welcome animation explaining streaks");
                 streak = 0;
                 return;
             }
             Debug.Log($"Last login: {lastLogin}");
-            Debug.Log($"Current Streak: {streak}");
+            // Debug.Log($"Current Streak: {streak}");
 
             // Get currently stored streak; if 0, should stay 0 until they do something
-            if (streak == 0) return;
-            else if (streak > 0)
+            var previousStreak = streak;
+            // if it is currently the same date as the last login, do not increase
+            if (DateTime.Parse(lastLogin).Date == DateTime.Now.Date)
             {
-                // if it is currently the same date as the last login, do not increase
-                if (DateTime.Parse(lastLogin).Date == DateTime.Now.Date) return;
-                else 
+                Debug.Log("Same day login detected, streak unchanged");
+                return;
+            }
+
+            
+            else 
+            {
+                Debug.Log("Different day login detected, checking streak");
+                // If last login was yesterday or within the streak freeze buffer, add to streak and reset buffer
+                for (int i=0; i <= streakBuffer; i++)
                 {
-                    // If last login was yesterday or within the streak freeze buffer, add to streak and reset buffer
-                    for (int i=0; i <= streakBuffer; i++)
+                    if (DateTime.Parse(lastLogin).Date == DateTime.Now.AddDays(-1 - i).Date)
                     {
-                        if (DateTime.Parse(lastLogin).Date == DateTime.Now.AddDays(-1 - i).Date)
+                        streak += 1; streakBuffer -= i;
+
+                        if (streak == 1)
                         {
-                            streak += 1; streakBuffer -= i;
-                            return;
+                            Debug.Log("New streak detected");
                         }
+                        return;
                     }
-                    streak = 0; streakBuffer = 0;
+                }
+                streak = 0; streakBuffer = 0;
+                if (previousStreak > 0)
+                {
+                    Debug.Log("Streak broken");
                 }
             }
-            
+        
+        
             /* // If never logged in before, set to 0
             if (loginticks == null) {
                 loginticks = DateTime.Now.ToString();
