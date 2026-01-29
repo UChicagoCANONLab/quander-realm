@@ -221,9 +221,10 @@ namespace Wrapper
                 case Game.Qupcakes: // CRITERIA: unlocked
                     return true; break;
                 case Game.Labyrinth: // CRITERIA: unlocked
-                    // return true; 
+                    return false; 
                     break;
                 case Game.Trivia:
+                    return false;
                     return GetMinigameStars(Game.Qupcakes) >= 27;
                     break;
 #if LITE_VERSION
@@ -240,17 +241,20 @@ namespace Wrapper
                     } break;
 #else
                 case Game.Circuits: // CRITERIA: 27 QC stars
-                    if (GetMinigameStars(Game.Qupcakes) >= 33)
-                    {
-                        return true;
-                    } break;
+                    return false;
+                    // if (GetMinigameStars(Game.Qupcakes) >= 33)
+                    // {
+                    //     return true;
+                    // } break;
                 case Game.QueueBits: // CRITERIA: 10 QC && 10 TT stars
-                    return GetMinigameStars(Game.Qupcakes) >= 15;
+                    return false;
+                    // return GetMinigameStars(Game.Qupcakes) >= 15;
                 case Game.BlackBox: // CRITERIA: 120 total stars
-                    if (GetOverallStars() >= 120)
-                    {
-                        return true;
-                    } break;
+                    return false;
+                    // if (GetOverallStars() >= 120)
+                    // {
+                    //     return true;
+                    // } break;
 #endif
             } return false;
         }

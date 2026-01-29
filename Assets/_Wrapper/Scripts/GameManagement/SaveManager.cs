@@ -47,13 +47,15 @@ namespace Wrapper
         private bool webGLUploadSuccess = false;
 #endif
 
-// #if PRODUCTION_FB
-        public static readonly string firebaseURL = "https://quander-production-default-rtdb.firebaseio.com/";
-        public readonly string testConnectionURL = "https://console.firebase.google.com/project/quander-production/database/quander-production-default-rtdb/data";
-// #else
-//         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
-//         public readonly string testConnectionURL = "https://console.firebase.google.com/project/filament-zombies/database/filament-zombies-default-rtdb/data";
-// #endif
+#if PRODUCTION_FB
+        // public static readonly string firebaseURL = "https://quander-production-default-rtdb.firebaseio.com/";
+         public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
+        public readonly string testConnectionURL = "https://console.firebase.google.com/project/filament-zombies/database/filament-zombies-default-rtdb/data";
+       // public readonly string testConnectionURL = "https://console.firebase.google.com/project/quander-production/database/quander-production-default-rtdb/data";
+#else
+        public static readonly string firebaseURL = "https://filament-zombies-default-rtdb.firebaseio.com/";
+        public readonly string testConnectionURL = "https://console.firebase.google.com/project/filament-zombies/database/filament-zombies-default-rtdb/data";
+#endif
 
         private void Awake()
         {
