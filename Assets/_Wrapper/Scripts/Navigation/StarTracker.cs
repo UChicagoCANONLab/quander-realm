@@ -56,10 +56,18 @@ namespace Wrapper
                 if (gameUnlocked == isGameUnlocked) {
                     return;
                 } else {
+                    bool wasLocked = !gameUnlocked; // Track if it was previously locked
                     gameUnlocked = isGameUnlocked;
-                    Events.UnlockAndDisplayGame?.Invoke(minigame);
+                    // Only fire event if game was locked and is now unlocked (actual unlock event)
+                    if (wasLocked && isGameUnlocked) {
+                        Events.UnlockAndDisplayGame?.Invoke(minigame);
+                    }
                 }
             }
+        }
+        public bool IsGameUnlocked() 
+        {
+            return gameUnlocked;
         }
 
     }

@@ -42,6 +42,11 @@ namespace Wrapper
         /// TitleScreen ///
         public static Action<bool> SetNewPlayerStatus;
         public static Action<bool> ToggleTitleScreen;
+        /// Streak System ///
+        public static Action ShowWelcomeStreakMessage;
+        public static Action ShowStreakBrokenMessage;
+        public static Action ShowStreakRestartedMessage;
+        public static Action ShowStreakElements;
 
     #endregion
 

@@ -17,6 +17,7 @@ namespace Wrapper
         private static GameManager _instance;
         private GameObject loadingScreenGO = null;
         private const string introSequenceID = "W_Intro";
+        private string storedStreakMessage = "";
 
         [SerializeField] private float loadingToggleDelay = 0.5f;
         [SerializeField] private DebugScreen debugScreen;
@@ -31,7 +32,13 @@ namespace Wrapper
         [SerializeField] private BadgePopup badgePopup;
         [SerializeField] private GamePopup gamePopup;
         [SerializeField] private AgePopup agePopup;
-        [SerializeField] private CoinPopup coinPopup;        
+        [SerializeField] private CoinPopup coinPopup;  
+
+        [Header("Streak Elements")]
+        [SerializeField] private GameObject streakArrow;
+        [SerializeField] private GameObject streakMessagePanel; 
+        [SerializeField] private TMPro.TMP_Text streakMessageText; 
+        [SerializeField] private Button streakCloseButton;
 
         [Header("Reward Card Objects")]
         [SerializeField] private GameObject BBRewardPrefab;
@@ -112,6 +119,14 @@ namespace Wrapper
             Events.GetCurrentGame += GetCurrentGame;
             Events.IsDebugEnabled += () => debugScreen.DebugEnabled;
             Events.Delay += DelayEvent;
+            Events.ShowStreakElements += HandleShowStreakElements;
+            Events.ShowWelcomeStreakMessage += ShowWelcomeStreakMessage;
+            Events.ShowStreakBrokenMessage += ShowStreakBrokenMessage;
+            Events.ShowStreakRestartedMessage += ShowStreakRestartedMessage;
+            if (streakCloseButton != null)
+            {
+                streakCloseButton.onClick.AddListener(HideStreakElements);
+            }
         }
 
         private void OnDisable()
@@ -134,6 +149,14 @@ namespace Wrapper
             Events.GetCurrentGame -= GetCurrentGame;
             Events.IsDebugEnabled -= () => debugScreen.DebugEnabled;
             Events.Delay -= DelayEvent;
+            Events.ShowStreakElements -= HandleShowStreakElements;
+            Events.ShowWelcomeStreakMessage -= ShowWelcomeStreakMessage;
+            Events.ShowStreakBrokenMessage -= ShowStreakBrokenMessage;
+            Events.ShowStreakRestartedMessage -= ShowStreakRestartedMessage;
+            if (streakCloseButton != null)
+            {
+                streakCloseButton.onClick.RemoveListener(HideStreakElements);
+            }
         }
 
         #endregion
@@ -293,8 +316,65 @@ namespace Wrapper
             saveManager.Logout();
             BackToMain();
         }
+        private void ShowWelcomeStreakMessage()
+        {
+            storedStreakMessage = "Welcome! Play everyday to build a streak and keep the lamp glowing!";
+        }
+
+        private void ShowStreakBrokenMessage()
+        {
+            storedStreakMessage = "Your streak was broken! Don't worry, start fresh by logging in daily.";
+        }
+
+        private void ShowStreakRestartedMessage()
+        {
+            storedStreakMessage = "Great! You've restarted your streak. Keep it up!";
+        }
+
+       private void HandleShowStreakElements()
+        {
+            // Only show the streak tutorial if we have a stored message from one of three user cases
+            if (!string.IsNullOrEmpty(storedStreakMessage))
+            {
+                streakArrow.SetActive(true);
+                Routine.Start(ShowStreakMessageAfterDelay(storedStreakMessage, 0.6f)); 
+                
+                // Clear the stored message after showing it
+                storedStreakMessage = "";
+            }
+        }
 
         #region Helpers
+                private IEnumerator ShowStreakMessageAfterDelay(string message, float delay)
+        {
+            Debug.Log($"Waiting {delay} seconds before showing message");
+            yield return new WaitForSeconds(delay);
+            
+            Debug.Log("Now showing streak message");
+            ShowStreakMessage(message);
+        }
+
+        private void ShowStreakMessage(string message)
+        {
+            if (streakMessagePanel != null && streakMessageText != null)
+            {
+                streakMessageText.text = message;
+                streakMessagePanel.SetActive(true);
+            }
+        }
+
+        private void HideStreakElements()
+        {
+            if (streakArrow != null)
+            {
+                streakArrow.SetActive(false);
+            }
+            
+            if (streakMessagePanel != null)
+            {
+                streakMessagePanel.SetActive(false);
+            }
+        }
 
         private void InitSingleton()
         {

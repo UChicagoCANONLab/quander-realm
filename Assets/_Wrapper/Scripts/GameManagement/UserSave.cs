@@ -184,6 +184,9 @@ namespace Wrapper
                 lastLogin = DateTime.Now.ToString();
                 Debug.Log("No last login detected, Welcome animation explaining streaks");
                 streak = 0;
+
+                // fire event: First time ever!
+                Events.ShowWelcomeStreakMessage?.Invoke();
                 return;
             }
             Debug.Log($"Last login: {lastLogin}");
@@ -211,15 +214,19 @@ namespace Wrapper
 
                         if (streak == 1)
                         {
-                            Debug.Log("New streak detected");
+                            // fire event: Streak restarted!
+                            Events.ShowStreakRestartedMessage?.Invoke();
                         }
+                        lastLogin = DateTime.Now.ToString();
                         return;
                     }
                 }
                 streak = 0; streakBuffer = 0;
+                lastLogin = DateTime.Now.ToString();
                 if (previousStreak > 0)
                 {
-                    Debug.Log("Streak broken");
+                    // fire event: Streak broken!
+                    Events.ShowStreakBrokenMessage?.Invoke();
                 }
             }
         

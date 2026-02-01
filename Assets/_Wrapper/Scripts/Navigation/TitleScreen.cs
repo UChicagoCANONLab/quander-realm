@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BeauRoutine;
 
 namespace Wrapper
 {
@@ -130,6 +131,16 @@ namespace Wrapper
             // same as continue with new save data
             Events.ToggleTitleScreen?.Invoke(false);
             Events.PlayIntroDialog?.Invoke();
+            // Show streak elements after title screen closes
+            Routine.Start(ShowStreakAfterDelay());
+        }
+        private IEnumerator ShowStreakAfterDelay()
+        {
+            // Wait for title screen to fully close (DelayTitleClose waits 0.5f)
+            yield return new WaitForSeconds(0.6f);
+            
+            // Trigger streak elements to show
+            Events.ShowStreakElements?.Invoke();
         }
 
         // void LogOut()
