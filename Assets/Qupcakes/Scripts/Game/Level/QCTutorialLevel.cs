@@ -87,17 +87,14 @@ namespace Qupcakery
                 case 3:
                     Tutorial3Next();
                     break;
-                case 8:
-                    Tutorial8Next();
-                    break;
-                case 9:
-                    Tutorial9Next();
-                    break;
-                case 13:
+                case 6:
                     Tutorial13Next();
                     break;
-                case 16:
+                case 9:
                     Tutorial16Next();
+                    break;
+                case 13:
+                    Tutorial8Next();
                     break;
                 case 23:
                     Tutorial23Next();

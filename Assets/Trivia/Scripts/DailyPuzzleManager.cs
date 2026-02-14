@@ -55,24 +55,27 @@ namespace Trivia
 
         private string[] questionSequence = { };
         private string[] questionBank = {
-            "BK1",
-            "V1b",
-            "V1b_2",
-            "C1",
             "A1",
-            "BK2a",
-            // "BK2a_2",
-            "BK2a_3",
-            // "BK2a_4",
-            "BK3",
-            "BK3_2",
-            "C2",
-            "A2",
             "A2_2",
-            "V2b",
-            "C3",
+            "A2",
+            "A3_2",
             "A3",
-            "A3_2"
+            "BK1",
+            "BK2a_2",
+            "BK2a_3",
+            "BK2a_4",
+            "BK2a",
+            "BK2b_2",
+            "BK2b",
+            "BK3_2",
+            "BK3",
+            "C1",
+            "C2",
+            "C3",
+            "V1b_2",
+            "V1b",
+            "V2b"
+
 
         };
         private string[] questionFiller = {"LR_20",
@@ -417,7 +420,7 @@ namespace Trivia
             triviaLogged = Events.AddTriviaAnswer?.Invoke(questionSequence[seq], true) ?? false;
             animator.SetBool("AnswerCorrect", true);
             animator.SetBool("FeedbackOn", true);
-            Events.UpdateUserSaveTotalCoins.Invoke(5);
+            Events.UpdateUserSaveTotalCoins.Invoke(20);
         }
 
         public void NextQuestion()
@@ -451,8 +454,8 @@ namespace Trivia
                 finalScoreNumText.text = $"{numCorrect}";
                 finalScoreWinnerText.text = "Correct:";
 
-                Events.UpdateUserSaveTotalCoins.Invoke(2 * numCorrect);
-                Events.UpdateUserSaveTotalCoins.Invoke(2 * numCorrect);
+                Events.UpdateUserSaveTotalCoins.Invoke(5 * numCorrect);
+                // Events.UpdateUserSaveTotalCoins.Invoke(5 * numCorrect);
                 // Events.CollectAndDisplayBadge?.Invoke(Game.Trivia, 1, 0);
             }
 

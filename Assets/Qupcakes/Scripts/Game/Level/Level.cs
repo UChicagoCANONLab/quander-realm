@@ -78,40 +78,40 @@ namespace Qupcakery
                     SetLevel5();
                     break;
                 case 6:
-                    SetLevel6();
-                    break;
-                case 7:
-                    SetLevel7();
-                    break;
-                case 8:
-                    SetLevel8();
-                    break;
-                case 9:
-                    SetLevel9();
-                    break;
-                case 10:
-                    SetLevel10();
-                    break;
-                case 11:
-                    SetLevel11();
-                    break;
-                case 12:
-                    SetLevel12();
-                    break;
-                case 13:
                     SetLevel13();
                     break;
-                case 14:
+                case 7:
                     SetLevel14();
                     break;
-                case 15:
+                case 8:
                     SetLevel15();
                     break;
-                case 16:
+                case 9:
                     SetLevel16();
                     break;
-                case 17:
+                case 10:
                     SetLevel17();
+                    break;
+                case 11:
+                    SetLevel6();
+                    break;
+                case 12:
+                    SetLevel7();
+                    break;
+                case 13:
+                    SetLevel8();
+                    break;
+                case 14:
+                    SetLevel9();
+                    break;
+                case 15:
+                    SetLevel10();
+                    break;
+                case 16:
+                    SetLevel11();
+                    break;
+                case 17:
+                    SetLevel12();
                     break;
                 case 18:
                     SetLevel18();

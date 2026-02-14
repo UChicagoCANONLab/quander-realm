@@ -59,6 +59,8 @@ namespace Wrapper
         [SerializeField] MinigameTitles minigameTitles;
         Game currentGame = Game.None;
 
+        // [SerializeField] EventPanelManager eventPanelManager;
+
         [System.Serializable]
         struct GameCardDialogPair
         {
@@ -155,6 +157,9 @@ namespace Wrapper
                 
                 Events.InitializeStarTracker?.Invoke();
                 trackers.ToggleTrackers(true);
+
+                // Debug.Log("MenuLoaded");
+                // eventPanelManager.checkProgress();
             }
             Events.PlayMusic?.Invoke("W_Music");
             currentGame = Game.None;
