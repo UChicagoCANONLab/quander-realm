@@ -140,7 +140,7 @@ namespace Qupcakery
                     }
             }
 
-            return CakeType.Unkown;
+            return CakeType.Unknown;
         }
 
         /* Get a state based on state probabilities */

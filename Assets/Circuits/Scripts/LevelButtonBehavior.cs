@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Circuits 
 {
     public class LevelButtonBehavior : MonoBehaviour
     {
-        public Text buttonText;
+        // public Text buttonText;
         //public Image star;
 
         // public Sprite starSprite;
@@ -19,7 +20,8 @@ namespace Circuits
         private LevelSelectorBehavior owner;
         private int level;
 
-        public Sprite[] numberSprites;
+        // public Sprite[] numberSprites;
+        public TextMeshProUGUI levelNumber;
 
 
         public void onClick()
@@ -31,10 +33,11 @@ namespace Circuits
         {
             owner = o;
             level = l;
-            buttonText.text = $"{level}";
+            // buttonText.text = $"{level}";
+            levelNumber.text = $"{level}";
 
-            Image numberObject = panel.transform.Find("LevelNumber").GetComponent<Image>();
-            numberObject.sprite = numberSprites[level];
+            // Image numberObject = panel.transform.Find("LevelNumber").GetComponent<Image>();
+            // numberObject.sprite = numberSprites[level];
             
             GetComponent<Button>().interactable = true;
 
