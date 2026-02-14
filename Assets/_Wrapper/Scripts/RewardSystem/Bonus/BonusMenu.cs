@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using BeauRoutine;
 
 namespace Wrapper
@@ -13,6 +14,7 @@ namespace Wrapper
         [SerializeField] private BonusConfirmation confirmationPopup;
         [SerializeField] private QButton backgroundButton;
         [SerializeField] private Animator animator;
+        [SerializeField] private GameObject mapUpgradeSelector;
 
         private bool isOn = false;
         private bool confirmationOn = false;
@@ -63,10 +65,16 @@ namespace Wrapper
             animator.SetTrigger("BonusUsed");
             yield return 3f;
             CloseBonusMenu();
-            parentMenu.CloseMenu();
+            parentMenu.CloseMenu(true);
         }
 
 
+        public void EnableMapUpgrade()
+        {
+            Events.ToggleUpgradable.Invoke(true);
+            CloseBonusMenu();
+            parentMenu.CloseMenu(false);
+        }
 
 
         public void ToggleBonusMenu()
@@ -75,6 +83,7 @@ namespace Wrapper
             animator.SetBool("IsOn", isOn);
             // if (isOn) parentMenu.backgroundButton.onClick.AddListener(CloseBonusMenu);
             // else parentMenu.backgroundButton.onClick.RemoveListener(CloseBonusMenu);
+            mapUpgradeSelector.SetActive(SceneManager.GetActiveScene().name == "W_Main");
         }
         
         public void ToggleConfirmation()
