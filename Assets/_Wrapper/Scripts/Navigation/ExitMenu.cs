@@ -35,6 +35,7 @@ namespace Wrapper
         [SerializeField] private ConfirmationPopup newGameConfirm;
         [SerializeField] private QButton newGameButton;
         [SerializeField] private QButton logoutButton;
+        [SerializeField] private EventPanelManager epm;
 
         private bool isOn = false;
 
@@ -45,7 +46,7 @@ namespace Wrapper
             backgroundButton.onClick.AddListener(() => CloseMenu(true));
             // backgroundButton.onClick.AddListener(() => bonusMenu.CloseBonusMenu());
             
-            exitButton.onClick.AddListener(() => CloseMenu(true));
+            exitButton.onClick.AddListener(Exit);
             bonusButton.onClick.AddListener(() => bonusMenu.ToggleBonusMenu());
 
             newGameButton.onClick.AddListener(OpenNewConfirm);
@@ -59,7 +60,7 @@ namespace Wrapper
             backgroundButton.onClick.RemoveListener(() => CloseMenu(true));
             // backgroundButton.onClick.RemoveListener(() => bonusMenu.CloseBonusMenu());
             
-            exitButton.onClick.RemoveListener(() => CloseMenu(true));
+            exitButton.onClick.RemoveListener(Exit);
             bonusButton.onClick.RemoveListener(() => bonusMenu.ToggleBonusMenu());
 
             newGameButton.onClick.RemoveListener(OpenNewConfirm);
@@ -139,8 +140,16 @@ namespace Wrapper
 
         public void Logout()
         {
+            epm.ResetEventProgress();
             Events.Logout?.Invoke();
             CloseMenu(true);
+        }
+
+        public void Exit()
+        {
+            CloseMenu(true);
+            epm.Show();
+            
         }
 
         public void OpenCredits()

@@ -50,7 +50,7 @@ namespace Trivia
         private GameObject cardGO;
         private int seq = 0;
         private int FLIP_COST = 100;
-        private int BANK_SIZE = 10;
+        private int BANK_SIZE = 15;
 
 
         private string[] questionSequence = { };
@@ -61,10 +61,7 @@ namespace Trivia
             "A3_2",
             "A3",
             "BK1",
-            "BK2a_2",
             "BK2a_3",
-            "BK2a_4",
-            "BK2a",
             "BK2b_2",
             "BK2b",
             "BK3_2",

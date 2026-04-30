@@ -13,6 +13,7 @@ namespace Wrapper
         [SerializeField] private Button continueButton;
         [SerializeField] private Button newButton;
         [SerializeField] private Button logoutButton;
+        [SerializeField] private EventPanelManager epm;
         [SerializeField] private ConfirmationPopup newGameConfirm;
         [SerializeField] private LoadingPopup loadingPanel;
 
@@ -44,7 +45,8 @@ namespace Wrapper
             playButton.onClick.AddListener(PlayGame);
             continueButton.onClick.AddListener(PlayGame);
             newButton.onClick.AddListener(OpenNewConfirm);
-            logoutButton.onClick.AddListener(() => Events.Logout?.Invoke());
+            logoutButton.onClick.AddListener(LogOut);
+            // logoutButton.onClick.AddListener(epm.ResetEventProgress);
             // creditsButton.onClick.AddListener(OpenCredits);
             // learnMoreButton.onClick.AddListener(OpenLearnConfirm);
 
@@ -61,7 +63,8 @@ namespace Wrapper
             playButton.onClick.RemoveListener(PlayGame);
             continueButton.onClick.RemoveListener(PlayGame);
             newButton.onClick.RemoveListener(OpenNewConfirm);
-            logoutButton.onClick.RemoveListener(() => Events.Logout?.Invoke());
+            logoutButton.onClick.RemoveListener(LogOut);
+            // logoutButton.onClick.RemoveListener(epm.ResetEventProgress);
             // creditsButton.onClick.RemoveListener(OpenCredits);
             // learnMoreButton.onClick.RemoveListener(OpenLearnConfirm);
         }
@@ -132,10 +135,11 @@ namespace Wrapper
             Events.PlayIntroDialog?.Invoke();
         }
 
-        // void LogOut()
-        // {
-        //     Events.Logout?.Invoke();
-        // }
+        void LogOut()
+        {
+            epm.ResetEventProgress();
+            Events.Logout?.Invoke();
+        }
 
         // void OpenCredits()
         // {
