@@ -15,6 +15,12 @@ namespace Wrapper
         [SerializeField] private GameObject RewardJournalCanvas; // journal
         [SerializeField] private GameObject ComputerMinigameCanvas; // Left monitor
 
+        [SerializeField] private GameObject SuperconductingPanel;
+
+        [SerializeField] private GameObject ComputerCardsPanel;
+        [SerializeField] private GameObject TitlePanel;
+
+
         [SerializeField] private GeneralTrackers generalTrackers;
 
 
@@ -65,20 +71,50 @@ namespace Wrapper
             BadgeBulletinCanvas.GetComponent<BadgeManager>().DelayGetStars();
         }
 
+        // Track if dialogue has been shown already
+        private bool cmIntroSeen = false;
+
         //Called by ComputerMinigame OnClick
         //Fades out the lab and opens the computer minigame landing page
         public void openComputerMinigame() {
             RewardCenterAnimator.SetTrigger("Fader");// fade transition
             RewardCenterAnimator.SetBool("On", false);//hide lab
-            // TODO: ComputerMinigameCanvas.GetComponent<Animator>().SetBool("On", true);
-            ComputerMinigameCanvas.SetActive(true);
-            Events.StartDialogueSequence?.Invoke("CM_Intro");
-            Debug.Log("Computer Minigame opened"); // temporary test
+            ComputerMinigameCanvas.SetActive(true);// show computer minigame canvas
+            SuperconductingPanel.SetActive(false);
+            ComputerCardsPanel.SetActive(true); 
+            TitlePanel.SetActive(true);
+
+            // Only play intro dialogue on first visit
+            if (!cmIntroSeen)
+            {
+                Events.StartDialogueSequence?.Invoke("CM_Intro");
+                cmIntroSeen = true;
+            }
+            Debug.Log("Computer Minigame opened"); 
         }
+
+        // Called by BackButton inside SuperconductingPanel
+        // Returns to the computer landing page without replaying dialogue
+        public void showComputerLanding() {
+            SuperconductingPanel.SetActive(false);
+            ComputerCardsPanel.SetActive(true);
+            TitlePanel.SetActive(true);
+            // landing page elements are already visible inside ComputerMinigame_View
+            Debug.Log("Returned to computer landing");
+        }
+
         // Called by SuperconductingCard OnClick
         // Opens the Superconducting assembly panel
         public void openSuperconducting() {
+            
+            ComputerCardsPanel.SetActive(false);
+            TitlePanel.SetActive(false);
+
+            // Show assembly panel
+            SuperconductingPanel.SetActive(true);
             Debug.Log("Superconducting selected");
+
+
         }
 
         // Called by NeutralAtomCard OnClick
@@ -96,11 +132,10 @@ namespace Wrapper
 
                 RewardJournalCanvas.GetComponent<RewardJournal>().ToggleRewardJournalAnim(false);
                 BadgeBulletinCanvas.GetComponent<Animator>().SetBool("On", false);
+                ComputerMinigameCanvas.SetActive(false);
 
                 RewardCenterAnimator.SetBool("On", true);
-
-                // TODO: close ComputerMinigameCanvas here once canvas exists
-            } 
+            }
         }
 
         // original -- used by BackButton.cs
