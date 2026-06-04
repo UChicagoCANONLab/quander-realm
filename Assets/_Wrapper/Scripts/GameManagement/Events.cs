@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Wrapper
 {
@@ -36,6 +37,7 @@ namespace Wrapper
         /// MapManager ///
         public static Action InitializeMap;
         public static Action ResetMap;
+        public static Action<bool> ToggleUpgradable;
 
         /// TitleScreen ///
         public static Action<bool> SetNewPlayerStatus;
@@ -47,6 +49,8 @@ namespace Wrapper
 
         /// SaveManager ///
         public static Func<string, bool> AddReward;
+        public static Func<string, bool, bool> AddTriviaAnswer;
+        public static Func<List<string>> GetTriviaLog;
         public static Func<string, bool> AddBadge;
         public static Func<string, bool> AddBonus;
         public static Func<string, bool> UseAvailableBonus;
@@ -72,6 +76,8 @@ namespace Wrapper
         public static Func<int> GetStreakFreeze;
         public static Action<int> SetStreakFreeze;
         public static Func<Game, int> HasRewardsFromGame;
+        public static Func<Game, int> GetMinigameMapIcon;
+        public static Action<Game, int> UpgradeMinigameMapIcon;
 
         /// MinigameUserSaves ///
         public static Func<Game, int> GetMinigameTotalStars;
