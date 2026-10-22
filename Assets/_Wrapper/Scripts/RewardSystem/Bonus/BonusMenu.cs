@@ -102,6 +102,13 @@ namespace Wrapper
             }
         }
 
+        // Called from the CloseButton in QuickSelect
+        public void CloseAll()
+        {
+            CloseBonusMenu();
+            parentMenu.CloseMenu(true);
+        }
+
         public void CloseBonusMenu()
         {
             if (isOn) ToggleBonusMenu();
