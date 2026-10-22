@@ -31,8 +31,15 @@ namespace Circuits
 
         public GameObject linePrefab;
 
-
         public Transform linesTransform;
+
+        public Animator earthquakeAnimator;
+
+        public Animator flamesAnimator;
+
+        public ReminderPopup reminder;
+
+        public Animator flareAnimator;
         //private HashSet<LinkedListNode<GateData>> selection = new HashSet<LinkedListNode<GateData>>();
 
         private float timeToNextLevel = float.MaxValue;
@@ -63,13 +70,207 @@ namespace Circuits
         // public bool titleScene = false;
         public Sprite[] numberSprites;
 
-        public TutorialManager tutorialManager;
-
         // public GameObject book;
         public InfoPopup info;
         public GameObject gates;
         public GameObject grid;
 
+        private int completedSubstitutions = 0;
+        private bool fullyOptimized = false;
+        private int expectedSubstitutions = 0;
+
+        [Range(0f, 1f)] public float sparkDensity = 0.14f;
+        public float sparkTickInterval = 0.08f;
+        [Range(0f, 0.5f)] public float sparkTravelVariation = 0.25f;
+        [Range(0f, 1f)] public float sparkEarlyFizzleChance = 0.12f;
+        [Range(0f, 0.2f)] public float sparkMinTravelRatio = 0.02f;
+        public float sparkSpawnJitter = 0.15f;
+
+        private float sparkTickTimer = 0f;
+        private System.Random sparkRng = new System.Random();
+
+        private const float NEXT_LEVEL_DELAY = 5f;
+        private const float DISASTER_MIN_DELAY = 10f;
+        private const float DISASTER_MAX_DELAY = 30f;
+        private const float DISASTER_WARNING_LEAD = 5f;
+
+        private const string EARTHQUAKE_TRIGGER = "Earthquake";
+
+        private const string FLAMES_TRIGGER = "Flames";
+
+        private const string FLARE_TRIGGER = "Flare";
+
+        private float secondsUntilDisaster = float.MaxValue;
+        private bool disasterWarningIssued = false;
+
+        private bool reminderIsListeningToSub = false;
+
+        public HashSet<int> tutorialLevels;
+
+        private bool HasRemainingReductions()
+        {
+            if (circuit == null)
+            {
+                return false;
+            }
+
+            for (int y = 0; y < circuit.Count; y++)
+            {
+                for (int x = 0; x < circuit[y].Count; x++)
+                {
+                    string currGate = circuit[y][x];
+                    if (currGate != null && currGate[currGate.Length - 1] == '0')
+                    {
+                        var reductions = LevelGenerator.checkGateReduction(x, y, circuit);
+                        if (reductions.Count > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool EvaluateOptimizationState()
+        {
+            fullyOptimized = !HasRemainingReductions();
+            simplified = fullyOptimized;
+            return fullyOptimized;
+        }
+
+        private float GetEstimatedOptimizationRatio()
+        {
+            if (expectedSubstitutions <= 0)
+            {
+                return fullyOptimized ? 1f : 0f;
+            }
+
+            return Mathf.Clamp01((float)completedSubstitutions / expectedSubstitutions);
+        }
+
+        private float GetAmbientSparkDistance(float circuitLen)
+        {
+            if (fullyOptimized)
+            {
+                return circuitLen * 1.5f;
+            }
+
+            float visualRatio = Mathf.Clamp(GetEstimatedOptimizationRatio(), 0f, 0.8f);
+
+            float variation = ((float)sparkRng.NextDouble() * 2f - 1f) * sparkTravelVariation;
+            float sampledRatio = Mathf.Clamp01(visualRatio + variation);
+
+            float normalizedVisualRatio = visualRatio / 0.8f;
+            float currentEarlyFizzleChance = sparkEarlyFizzleChance * (1f - normalizedVisualRatio);
+
+            if (sparkRng.NextDouble() < currentEarlyFizzleChance)
+            {
+                sampledRatio *= (float)sparkRng.NextDouble() * 0.35f;
+            }
+
+            sampledRatio = Mathf.Max(sparkMinTravelRatio, sampledRatio) * .7f;
+            return sampledRatio * circuitLen;
+        }
+
+        private void SpawnAmbientSparkOnWire(int wireIndex)
+        {
+            if (circuit == null || sparkPrefab == null || camera == null)
+            {
+                return;
+            }
+
+            int nLines = circuit.Count;
+            float yCord = (nLines - wireIndex) * CTConstants.gridResolution_h * sceneScale;
+            Vector3 offset = new Vector3(0f, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h) * sceneScale;
+
+            float xJitter = (((float)sparkRng.NextDouble() * 2f) - 1f) * sparkSpawnJitter * sceneScale;
+
+            GameObject spark = Instantiate(sparkPrefab);
+            spark.transform.localScale = Vector3.one * sceneScale;
+
+            float circuitLen = 4f * camera.orthographicSize;
+            spark.transform.position = new Vector3(-20f + xJitter, yCord) + offset;
+
+            float distance = GetAmbientSparkDistance(circuitLen);
+            spark.GetComponent<SparkBehavior>().runSpark(circuitLen / 5f, distance, GetComponent<TimerManager>());
+        }
+
+        private void ProcessAmbientSparkTick()
+        {
+            if (circuit == null)
+            {
+                return;
+            }
+
+            for (int wireIndex = 0; wireIndex < circuit.Count; wireIndex++)
+            {
+                if (sparkRng.NextDouble() < sparkDensity)
+                {
+                    SpawnAmbientSparkOnWire(wireIndex);
+                }
+            }
+        }
+
+        private void ScheduleNextDisaster()
+        {
+            secondsUntilDisaster = Mathf.Lerp(
+                DISASTER_MIN_DELAY,
+                DISASTER_MAX_DELAY,
+                (float)sparkRng.NextDouble()
+            );
+            disasterWarningIssued = false;
+        }
+
+        private void warnUser()
+        {
+            Debug.Log("Warning!");
+        }
+
+        private void triggerDisaster(string mode)
+        {
+            switch (mode)
+            {
+                case "HEAT":
+                    flamesAnimator.SetTrigger(FLAMES_TRIGGER);
+                    break;
+                case "EARTHQUAKE":
+                    earthquakeAnimator.SetTrigger(EARTHQUAKE_TRIGGER);
+                    break;
+
+                case "FLARE":
+                    flareAnimator.SetTrigger(FLARE_TRIGGER);
+                    break;
+                
+                default:
+                    break;
+            }
+
+
+            SparkBehavior.RequestKillAllSparks();
+            ScheduleNextDisaster();
+
+
+        }
+
+        private void triggerDisaster()
+        {
+            if(tutorialLevels.Contains(GameData.getCurrLevel()))
+            {
+                return;
+            }
+
+            Debug.Log("Disaster!");
+
+            if (earthquakeAnimator != null)
+            {
+                earthquakeAnimator.SetTrigger(EARTHQUAKE_TRIGGER);
+            }
+
+            SparkBehavior.RequestKillAllSparks();
+            ScheduleNextDisaster();
+        }
 
         protected void renderCircuit(List<List<String>> newCircuit)
         {
@@ -77,19 +278,20 @@ namespace Circuits
             {
                 Destroy(child.gameObject);
             }
+
             gatesObject.transform.localScale = Vector3.one;
             selection = new HashSet<BaseGateBehavior>();
             circuit = newCircuit;
+
             int circuitSize = circuit[0].Count;
             int nLines = circuit.Count;
             int nCols = circuit[0].Count;
-            //camera.orthographicSize = Math.Max(circuitSize * 2.5f, 25);
-
 
             string prefix = "Circuits/Prefabs/";
             var loadedGate = Resources.Load($"{prefix}H_Gate");
             gateObjects = new BaseGateBehavior[circuit.Count, circuit[0].Count];
             Vector3 offset = new Vector3((-nCols / 2) * CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h);
+
             for (int i = 0; i < circuit.Count; i++)
             {
                 string row = "";
@@ -99,6 +301,7 @@ namespace Circuits
                     String gateSelected = circuit[i][j];
                     if (circuit[i][j] == null) { gateSelected = ""; }
                     gateSelected = gateSelected.ToUpper();
+
                     switch (gateSelected)
                     {
                         case "H-0":
@@ -120,35 +323,46 @@ namespace Circuits
                             instantiateGate($"{prefix}SWAP_Gate", j, i, nLines, circuit[i].Count);
                             break;
                         default:
-                            //Debug.Log("No Match for: " + gateSelected);
                             break;
                     }
                 }
             }
+
             gatesObject.transform.localScale = Vector3.one * sceneScale;
         }
 
         protected void Start()
         {
             GameData.levelStart();
+            completedSubstitutions = 0;
+            expectedSubstitutions = 0;
+            reminderIsListeningToSub = false;
+
+            timeToNextLevel = float.MaxValue;
+            fullyOptimized = false;
+            simplified = false;
             selection = new HashSet<BaseGateBehavior>();
+
             String[] gatesToSample;
             String[] allowedSubstitutions;
             int nLines = 1;
             int nGates;
             int nExpansions;
 
-            HashSet<int> tutorialLevels = new HashSet<int>();
+            tutorialLevels = new HashSet<int>();
+            tutorialLevels.Add(0);
+            tutorialLevels.Add(1);
+            tutorialLevels.Add(2);
+            tutorialLevels.Add(3);
+            tutorialLevels.Add(5);
+            tutorialLevels.Add(7);
             tutorialLevels.Add(14);
             tutorialLevels.Add(15);
             tutorialLevels.Add(22);
 
-
-
             List<List<String>> tempCircuit = null;
-            if(tutorialManager){
-                tutorialManager.load(GameData.getCurrLevel());
-            }
+            LevelGenerator.LevelBuildResult buildResult = null;
+
             try
             {
                 Wrapper.Events.CollectAndDisplayReward?.Invoke(Wrapper.Game.Circuits, GameData.getCurrLevel());
@@ -158,19 +372,16 @@ namespace Circuits
                 Debug.LogError(ex.Message);
             }
 
-            /* Image numberObject = GameObject.Find("Canvas/LevelNumber/Number").GetComponent<Image>();
-            if (GameData.getCurrLevel() < CTConstants.N_LEVELS) {
-                numberObject.sprite = numberSprites[GameData.getCurrLevel()];
-            } */
             TextMeshProUGUI levelNumber = GameObject.Find("Canvas/LevelNumber/Text").GetComponent<TextMeshProUGUI>();
-            if (GameData.getCurrLevel() < CTConstants.N_LEVELS) {
+            if (GameData.getCurrLevel() < CTConstants.N_LEVELS)
+            {
                 levelNumber.text = $"{GameData.getCurrLevel()}";
             }
 
             if (GameData.getCurrLevel() >= CTConstants.N_LEVELS)
             {
                 SceneManager.LoadScene("Circuits_Menu");
-                return; // sorry david :/
+                return;
             }
             else if (GameData.getCurrLevel() <= 9 || tutorialLevels.Contains(GameData.getCurrLevel()))
             {
@@ -179,6 +390,7 @@ namespace Circuits
                 tempCircuit = new List<List<string>>(3);
                 tempCircuit.Add(new List<String>(startingSize));
                 List<String> row = tempCircuit[0];
+
                 const string H = "H-0";
                 const string X = "X-0";
                 const string Z = "Z-0";
@@ -186,17 +398,17 @@ namespace Circuits
                 const string CX2 = "CX-1";
                 const string CZ1 = "CZ-0";
                 const string CZ2 = "CZ-1";
+
                 switch (GameData.getCurrLevel())
                 {
                     case 0:
                         row.Add(H);
                         row.Add(H);
-                        
                         break;
                     case 1:
                         row.Add(H);
                         row.Add(H);
-                        row.Add(H);
+                        row.Add(X);
                         break;
                     case 2:
                         row.Add(Z);
@@ -262,7 +474,6 @@ namespace Circuits
                         row.Add(H);
                         row.Add(Z);
                         row.Add(X);
-
                         break;
                     case 9:
                         row.Add(H);
@@ -279,7 +490,6 @@ namespace Circuits
                         row.Add(H);
                         row.Add(X);
                         break;
-
                     case 14:
                         row.Add(null);
                         row.Add(CX1);
@@ -314,13 +524,10 @@ namespace Circuits
                         row = new List<string>();
                         tempCircuit.Add(row);
                         break;
-
                     default:
                         break;
                 }
 
-                // Since we are building these circuits by hand we need to make sure that 
-                // all rows are the same length
                 int circuitLen = 0;
                 foreach (var currRow in tempCircuit)
                 {
@@ -343,7 +550,9 @@ namespace Circuits
                 gatesToSample = new string[] { "X", "Z" };
                 allowedSubstitutions = new string[] { "X", "Z" };
                 nExpansions = 3 + rng.Next(4);
-                tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
+                buildResult = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
+                tempCircuit = buildResult.circuit;
+                expectedSubstitutions = buildResult.expectedSubstitutions;
             }
             else if (GameData.getCurrLevel() < 19)
             {
@@ -353,7 +562,9 @@ namespace Circuits
                 gatesToSample = new string[] { "X", "Z", "CZ" };
                 allowedSubstitutions = new string[] { "X", "Z", "CZ" };
                 nExpansions = 4 + rng.Next(4);
-                tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
+                buildResult = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
+                tempCircuit = buildResult.circuit;
+                expectedSubstitutions = buildResult.expectedSubstitutions;
             }
             else if (GameData.getCurrLevel() < 23)
             {
@@ -363,7 +574,9 @@ namespace Circuits
                 gatesToSample = new string[] { "X", "Z", "CZ", "CX" };
                 allowedSubstitutions = new string[] { "X", "Z", "CZ", "CX" };
                 nExpansions = 5 + rng.Next(4);
-                tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
+                buildResult = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
+                tempCircuit = buildResult.circuit;
+                expectedSubstitutions = buildResult.expectedSubstitutions;
             }
             else
             {
@@ -373,16 +586,21 @@ namespace Circuits
                 gatesToSample = new string[] { "X", "Z", "CZ", "CX" };
                 allowedSubstitutions = new string[] { "X", "Z", "CZ", "CX", "CX2" };
                 nExpansions = 5 + rng.Next(4);
-                tempCircuit = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
-
-
+                buildResult = LevelGenerator.GenerateLevel(nLines, nGates, gatesToSample, nExpansions, allowedSubstitutions);
+                tempCircuit = buildResult.circuit;
+                expectedSubstitutions = buildResult.expectedSubstitutions;
             }
+
             sceneScale = Math.Min(Math.Min(1f, 6.5f / tempCircuit[0].Count), 3.5f / nLines);
             renderCircuit(tempCircuit);
+            sparkTickTimer = 0f;
+            EvaluateOptimizationState();
+            ScheduleNextDisaster();
 
             int nCols = circuit[0].Count;
             nLines = circuit.Count;
             Vector3 offset = new Vector3((-nCols / 2) * CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h * sceneScale);
+
             for (int i = 0; i < circuit.Count; i++)
             {
                 var currLine = Instantiate(linePrefab);
@@ -412,12 +630,32 @@ namespace Circuits
 
         public void goToLevel(int l)
         {
-            //GameData.currLevel = l;
-            //levelGen = GetComponent<LevelGenerator>();
-            //levelGen.genLevel(currLevel);
+        }
 
-            //mainGUI.SetActive(false);
-
+        public void getMessageFromReminder(string m)
+        {
+            switch (m)
+            {
+                case "SUBSTITUTE_MODE":
+                    reminderIsListeningToSub = true;
+                    break;
+                
+                case "HEAT":
+                    triggerDisaster("HEAT");
+                    break;
+                
+                case "EARTHQUAKE":
+                    triggerDisaster("EARTHQUAKE");
+                    break;
+                
+                case "FLARE":
+                    triggerDisaster("FLARE");
+                    break;
+                
+                default:
+                    return;
+            }
+            
         }
 
         public int getScore(int i)
@@ -427,13 +665,10 @@ namespace Circuits
 
         public void onMenuClicked()
         {
-            //selection = new HashSet<LinkedListNode<GateData>>();
-            //mainGUI.SetActive(true);
         }
 
         public void toggleGate(BaseGateBehavior gate)
         {
-            // Debug.Log("Test");
             if (gate.selected)
             {
                 selection.Add(gate);
@@ -442,13 +677,7 @@ namespace Circuits
             {
                 selection.Remove(gate);
             }
-
-            if(tutorialManager){
-                tutorialManager.gatesSelected(selection);
-            }
         }
-
-
 
         public void checkSubstitution()
         {
@@ -457,63 +686,47 @@ namespace Circuits
             {
                 return;
             }
+
             List<string> subString = new List<string>();
             foreach (var gate in selection)
             {
                 Tuple<int, int> cords = new Tuple<int, int>(gate.x, gate.y);
                 selectedCords.Add(cords);
                 subString.Add(string.Format("({0}:{1},{2})", circuit[gate.y][gate.x], gate.x, gate.y));
-
             }
+
             GameData.checkingSub(String.Join("_", subString));
             var simplifiedCircuit = LevelGenerator.checkSubstitution(selectedCords, circuit);
+
             if (simplifiedCircuit != null)
             {
-
+                if (reminderIsListeningToSub)
+                {
+                    reminder.SubstituteNext();
+                    reminderIsListeningToSub = false;
+                }
                 GameData.correctSub();
+                completedSubstitutions++;
                 renderCircuit(simplifiedCircuit);
-                // Debug.Log("!Valid Substiution!");
+                EvaluateOptimizationState();
+
+                if (fullyOptimized && timeToNextLevel == float.MaxValue)
+                {
+                    timeToNextLevel = NEXT_LEVEL_DELAY;
+                }
             }
             else
             {
                 StarDisplay.SD.AddPenalty();
                 GameData.incorrectSub();
+                EvaluateOptimizationState();
             }
-
-
-            if(tutorialManager){
-                simplified = true;
-                for (int y = 0; y < circuit.Count; y++)
-                {
-                    for (int x = 0; x < circuit[y].Count; x++)
-                    {
-                        string currGate = circuit[y][x];
-                        if (currGate != null && currGate[currGate.Length - 1] == '0')
-                        {
-                            var reductions = LevelGenerator.checkGateReduction(x, y, circuit);
-                            if (reductions.Count > 0)
-                            {
-                                simplified = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (!simplified)
-                    {
-                        break;
-                    }
-                }
-                tutorialManager.substitution(simplified);
-            }
-            
         }
 
-
-        public void tryRun()
+        private bool RefreshSimplifiedState()
         {
-            GameData.levelRun();
-            System.Random rng = new System.Random();
             simplified = true;
+
             for (int y = 0; y < circuit.Count; y++)
             {
                 for (int x = 0; x < circuit[y].Count; x++)
@@ -525,44 +738,54 @@ namespace Circuits
                         if (reductions.Count > 0)
                         {
                             simplified = false;
-                            break;
+                            return simplified;
                         }
                     }
                 }
-                if (!simplified)
-                {
-                    break;
-                }
             }
 
-            float sparkSeparation = CTConstants.gridResolution_w;
+            return simplified;
+        }
+
+        private float GetCurrentRunSparkDistance(float circuitLen, System.Random rng)
+        {
+            return simplified
+                ? circuitLen * 1.5f
+                : ((float)rng.NextDouble() * .5f + .15f) * (circuitLen / 2);
+        }
+
+        private void EmitRunSparks()
+        {
+            System.Random rng = new System.Random();
 
             int nLines = circuit.Count;
-            int nCols = circuit[0].Count;
             int sparksToSend = 4;
 
             for (int nSpark = 0; nSpark < sparksToSend; nSpark++)
             {
+                Vector3 offset = new Vector3(
+                    -nSpark * CTConstants.gridResolution_w,
+                    ((-nLines / 2) - .5f) * CTConstants.gridResolution_h
+                ) * sceneScale;
 
-
-                Vector3 offset = new Vector3(-nSpark * CTConstants.gridResolution_w, ((-nLines / 2) - .5f) * CTConstants.gridResolution_h) * sceneScale;
                 for (int i = 0; i < circuit.Count; i++)
                 {
                     float sparkOffset = 0;
                     float yCord = (nLines - i) * CTConstants.gridResolution_h * sceneScale;
                     GameObject spark = Instantiate(sparkPrefab);
                     spark.transform.localScale = Vector3.one * sceneScale;
+
                     float circuitLen = 4f * camera.orthographicSize;
                     spark.transform.position = new Vector3(-20f, yCord) + offset + new Vector3(sparkOffset, 0);
 
-                    float speed = circuitLen / 4f;
-                    float distance = simplified ? circuitLen * 1.5f : ((float)rng.NextDouble() * .5f + .15f) * (circuitLen / 2);
+                    float distance = GetCurrentRunSparkDistance(circuitLen, rng);
                     spark.GetComponent<SparkBehavior>().runSpark(circuitLen / 3f, distance, GetComponent<TimerManager>());
-
-
                 }
-
             }
+        }
+
+        private void HandleSolvedRun()
+        {
             if (simplified)
             {
                 GTimer nextLevel = GetComponent<GTimer>();
@@ -570,8 +793,11 @@ namespace Circuits
             }
         }
 
-
-
+        public void tryRun()
+        {
+            // SparkBehavior.RequestKillAllSparks();
+            // flareAnimator.SetTrigger(FLARE_TRIGGER);
+        }
 
         private void updateSelection(BaseGateBehavior gate)
         {
@@ -580,7 +806,6 @@ namespace Circuits
 
         public void flashHint()
         {
-            // StarDisplay.SD.LoseStar();
             StarDisplay.SD.AddPenalty();
 
             for (int y = 0; y < circuit.Count; y++)
@@ -593,16 +818,6 @@ namespace Circuits
                         var reductions = LevelGenerator.checkGateReduction(x, y, circuit);
                         if (reductions.Count > 0)
                         {
-                            //if (stars[0].active)
-                            //{
-                            //    stars[0].active = false;
-                            //}
-                            //else
-                            //{
-                            //    stars[1].active = false;
-                            //}/star
-
-
                             GameData.hintRequested();
                             var reduction = reductions[0];
                             foreach (var keyvalue in reduction)
@@ -617,23 +832,22 @@ namespace Circuits
             }
         }
 
-
         public void toMenu()
         {
             SceneManager.LoadScene("Circuits_Menu");
         }
 
-        public void showInfo(){
-            // book.SetActive(true);
+        public void showInfo()
+        {
             info.SetInfo(GameData.getCurrLevel());
             info.gameObject.SetActive(true);
             gates.SetActive(false);
             grid.SetActive(false);
         }
 
-        public void hideInfo(){
+        public void hideInfo()
+        {
             Debug.Log("Hide");
-            // book.SetActive(false);
             info.gameObject.SetActive(false);
             gates.SetActive(true);
             grid.SetActive(true);
@@ -650,17 +864,55 @@ namespace Circuits
             SceneManager.LoadScene(GameData.getNextScene());
 
             StarDisplay.SD.ResetStars();
-        }        
+        }
 
         public void restartLevel()
         {
-            // GameData.levelPassed();
             SceneManager.LoadScene(GameData.getNextScene());
 
             StarDisplay.SD.ResetStars();
         }
+
         private void Update()
         {
+            if (timeToNextLevel != float.MaxValue)
+            {
+                timeToNextLevel -= Time.deltaTime;
+                if (timeToNextLevel <= 0f)
+                {
+                    timeToNextLevel = float.MaxValue;
+                    loadNextLevel();
+                    return;
+                }
+            }
+
+            if (secondsUntilDisaster != float.MaxValue)
+            {
+                secondsUntilDisaster -= Time.deltaTime;
+
+                if (!disasterWarningIssued && secondsUntilDisaster <= DISASTER_WARNING_LEAD)
+                {
+                    disasterWarningIssued = true;
+                    warnUser();
+                }
+
+                if (secondsUntilDisaster <= 0f)
+                {
+                    triggerDisaster();
+                }
+            }
+
+            if (sparkTickInterval > 0f)
+            {
+                sparkTickTimer += Time.deltaTime;
+
+                while (sparkTickTimer >= sparkTickInterval)
+                {
+                    sparkTickTimer -= sparkTickInterval;
+                    ProcessAmbientSparkTick();
+                }
+            }
+
             if (Input.GetMouseButtonDown(0))
             {
                 RaycastHit2D hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));

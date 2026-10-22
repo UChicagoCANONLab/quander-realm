@@ -6,11 +6,25 @@ using UnityEngine;
 
 namespace Circuits 
 {
+
     public class LevelGenerator
     {
         static String[] doubleGates = { "CX", "CZ", "SWAP"};
         static String[] tripleGates = { "CXL" };
         static int initialCols = 2;
+
+        public class LevelBuildResult
+        {
+            public List<List<String>> circuit;
+            public int expectedSubstitutions;
+
+            public LevelBuildResult(List<List<String>> circuit, int expectedSubstitutions)
+            {
+                this.circuit = circuit;
+                this.expectedSubstitutions = expectedSubstitutions;
+            }
+        }
+
 
         private static List<List<String>> reduceCircuit(List<List<String>> oldCircuit, Dictionary<Tuple<int, int>, String> substiution) {
             var circuit = cloneCircuit(oldCircuit);
@@ -354,162 +368,179 @@ namespace Circuits
             return surroundWithGate(x, y, circuit, "H");
         }
 
-        public static List<List<String>> GenerateLevel(int nLines, int nGates, string[] gatesToSample, int nExpansions, String[] allowedSubstitutions) {
-            System.Random rng = new System.Random();
-            List<List<String>> circuit = new List<List<string>>(nLines);
 
-            List<Tuple<int, int>> availableSlots = new List<Tuple<int, int>>();
-            for (int i = 0; i < nLines; i++)
+    public static LevelBuildResult GenerateLevel(int nLines, int nGates, string[] gatesToSample, int nExpansions, String[] allowedSubstitutions)
+    {
+        System.Random rng = new System.Random();
+        List<List<String>> circuit = new List<List<string>>(nLines);
+        int successfulExpansions = 0;
+
+        List<Tuple<int, int>> availableSlots = new List<Tuple<int, int>>();
+        for (int i = 0; i < nLines; i++)
+        {
+            circuit.Add(new List<String>(initialCols * 2));
+            for (int j = 0; j < initialCols; j++)
             {
-                circuit.Add(new List<String>(initialCols*2));
-                for (int j = 0; j < initialCols; j++)
-                {
-                    circuit[i].Add(null);
-                    availableSlots.Add(new Tuple<int, int>(i,j));
-                }
+                circuit[i].Add(null);
+                availableSlots.Add(new Tuple<int, int>(i, j));
             }
-            availableSlots.Sort((a,b)=>rng.Next(0,10).CompareTo(5));
-            int w = initialCols;
-            int h = nLines;
-            for (int i = 0; i < nGates; i++)
+        }
+
+        availableSlots.Sort((a, b) => rng.Next(0, 10).CompareTo(5));
+        int w = initialCols;
+        int h = nLines;
+
+        for (int i = 0; i < nGates; i++)
+        {
+            String gateSelected = gatesToSample[rng.Next(0, gatesToSample.Length)];
+            int heightOffset = 0;
+            if (doubleGates.Contains<String>(gateSelected))
             {
-                String gateSelected = gatesToSample[rng.Next(0, gatesToSample.Length)];
-                int heightOffset = 0;
-                if (doubleGates.Contains<String>(gateSelected)) {
-                    heightOffset = 1;
-                }
-                else if (tripleGates.Contains<String>(gateSelected)) {
-                    heightOffset = 2;
-                }
-                bool valid = false;
-                for (int j = availableSlots.Count() - 1; j >= 0; j--)
+                heightOffset = 1;
+            }
+            else if (tripleGates.Contains<String>(gateSelected))
+            {
+                heightOffset = 2;
+            }
+
+            bool valid = false;
+            for (int j = availableSlots.Count() - 1; j >= 0; j--)
+            {
+                var xy = availableSlots[j];
+                int y = xy.Item1;
+                int x = xy.Item2;
+                valid = true;
+
+                for (int k = 0; k <= heightOffset; k++)
                 {
-                    var xy = availableSlots[j];
-                    int y = xy.Item1;
-                    int x = xy.Item2;
-                    valid = true;
-                    for(int k = 0; k <= heightOffset; k++)
+                    if (y + k >= nLines || circuit[y + k][x] != null)
                     {
-                        if (y + k >= nLines || circuit[y + k][x] != null)
-                        {
-                            valid = false;
-                            break;
-                        }
-                    } 
-                    if (valid)
-                    {
-                        availableSlots.RemoveAt(j);
-                        for(int k = 0; k <= heightOffset; k++)
-                        {
-                            circuit[y + k][x] = gateSelected + "-" + k;
-                        }
+                        valid = false;
                         break;
                     }
                 }
-                if (!valid) {
-                    int y = rng.Next(0, h - heightOffset);
-                    int x = w;
-                    for (int j = 0; j < nLines; j++)
-                    {
-                        circuit[j].Add(null);
-                    }
+
+                if (valid)
+                {
+                    availableSlots.RemoveAt(j);
                     for (int k = 0; k <= heightOffset; k++)
                     {
                         circuit[y + k][x] = gateSelected + "-" + k;
                     }
-                    w++;
-
-                    for(int k = 0; k < nLines; k++) { 
-                        if(circuit[k][x] == null) {
-                            availableSlots.Add(new Tuple<int, int>(k, x));
-                        }
-                    }
-                    availableSlots.Sort((a,b)=>rng.Next(0,10).CompareTo(5));
-                }
-            }
-
-            //start expansions
-            h = circuit.Count;
-            w = circuit[0].Count;
-            for (int i = 0; i < nExpansions; i++)
-            {
-                List<Tuple<int, int>> availableGates = new List<Tuple<int, int>>(w * h * 2);
-                for (int y = 0; y < h; y++)
-                {
-                    for (int x = 0; x < w; x++)
-                    {
-                        String currGate = circuit[y][x];
-                        if(currGate != null) {
-                            int gateOffset = Int32.Parse(circuit[y][x].Split('-')[1]);
-                            if(gateOffset == 0) {
-                                availableGates.Add(new Tuple<int, int>(y, x));
-                            }
-                        }
-                    }
-                }
-    // Debug Level 33 has cause this error once: ArgumentException: Unable to sort because the
-    // IComparer.Compare() method returns inconsistent results. Either a value does not compare
-    // equal to itself, or one value repeatedly compared to another value yields different results.
-    // IComparer: 'System.Comparison`1[System.Tuple`2[System.Int32,System.Int32]]'.
-                availableGates.Sort((a, b) => rng.Next(0, 10).CompareTo(5));
-                bool success = false;
-                for (int j = availableGates.Count - 1; j >= 0; j--)
-                {
-                    var xy = availableGates[j];
-                    int y = xy.Item1;
-                    int x = xy.Item2;
-                    String gate = circuit[y][x].Split('-')[0];
-                    if (allowedSubstitutions.Contains<String>(gate))
-                    {
-                        success = true;
-                        circuit[y][x] = circuit[y][x].ToLower();
-                        switch (gate)
-                        {
-                            case "X":
-                                surroundWithH(x, y, circuit);
-                                break;
-                            case "Z":
-                                surroundWithH(x, y, circuit);
-
-                                break;
-                            case "CX":
-                                if (allowedSubstitutions.Contains<String>("CX2"))
-                                {
-                                    if (rng.NextDouble() > 0.5)
-                                    {
-                                        x = surroundWithH(x, y, circuit);
-                                    }
-                                }
-                                surroundWithH(x, y+1, circuit);
-                                break;
-                            case "CZ":
-                                surroundWithH(x, y + 1, circuit);
-                                break;
-                            case "SWAP":
-                                circuit[y][x] = "CX-0";
-                                circuit[y+1][x] = "CX-1";
-
-                                insertGateLeft(x, y, circuit, "CX");
-                                insertGateRight(x, y, circuit, "CX");
-                                //surroundWithH(x, y + 1, circuit);
-                                break;
-                            default:
-                                success = false;
-                                circuit[y][x] = circuit[y][x].ToUpper();
-                                break;
-                        }
-                        if (success) {
-                            break;
-                        }
-                    }
-                }
-                if (!success)
-                {
-                    Debug.LogError("No substitutions possible");
                     break;
                 }
             }
-            return circuit;
+
+            if (!valid)
+            {
+                int y = rng.Next(0, h - heightOffset);
+                int x = w;
+                for (int j = 0; j < nLines; j++)
+                {
+                    circuit[j].Add(null);
+                }
+                for (int k = 0; k <= heightOffset; k++)
+                {
+                    circuit[y + k][x] = gateSelected + "-" + k;
+                }
+                w++;
+
+                for (int k = 0; k < nLines; k++)
+                {
+                    if (circuit[k][x] == null)
+                    {
+                        availableSlots.Add(new Tuple<int, int>(k, x));
+                    }
+                }
+                availableSlots.Sort((a, b) => rng.Next(0, 10).CompareTo(5));
+            }
         }
+
+        h = circuit.Count;
+        w = circuit[0].Count;
+        for (int i = 0; i < nExpansions; i++)
+        {
+            List<Tuple<int, int>> availableGates = new List<Tuple<int, int>>(w * h * 2);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    String currGate = circuit[y][x];
+                    if (currGate != null)
+                    {
+                        int gateOffset = Int32.Parse(circuit[y][x].Split('-')[1]);
+                        if (gateOffset == 0)
+                        {
+                            availableGates.Add(new Tuple<int, int>(y, x));
+                        }
+                    }
+                }
+            }
+
+            availableGates.Sort((a, b) => rng.Next(0, 10).CompareTo(5));
+            bool success = false;
+
+            for (int j = availableGates.Count - 1; j >= 0; j--)
+            {
+                var xy = availableGates[j];
+                int y = xy.Item1;
+                int x = xy.Item2;
+                String gate = circuit[y][x].Split('-')[0];
+
+                if (allowedSubstitutions.Contains<String>(gate))
+                {
+                    success = true;
+                    circuit[y][x] = circuit[y][x].ToLower();
+
+                    switch (gate)
+                    {
+                        case "X":
+                            surroundWithH(x, y, circuit);
+                            break;
+                        case "Z":
+                            surroundWithH(x, y, circuit);
+                            break;
+                        case "CX":
+                            if (allowedSubstitutions.Contains<String>("CX2"))
+                            {
+                                if (rng.NextDouble() > 0.5)
+                                {
+                                    x = surroundWithH(x, y, circuit);
+                                }
+                            }
+                            surroundWithH(x, y + 1, circuit);
+                            break;
+                        case "CZ":
+                            surroundWithH(x, y + 1, circuit);
+                            break;
+                        case "SWAP":
+                            circuit[y][x] = "CX-0";
+                            circuit[y + 1][x] = "CX-1";
+                            insertGateLeft(x, y, circuit, "CX");
+                            insertGateRight(x, y, circuit, "CX");
+                            break;
+                        default:
+                            success = false;
+                            circuit[y][x] = circuit[y][x].ToUpper();
+                            break;
+                    }
+
+                    if (success)
+                    {
+                        successfulExpansions++;
+                        break;
+                    }
+                }
+            }
+
+            if (!success)
+            {
+                Debug.LogError("No substitutions possible");
+                break;
+            }
+        }
+
+        return new LevelBuildResult(circuit, successfulExpansions);
+    }
     }
 }

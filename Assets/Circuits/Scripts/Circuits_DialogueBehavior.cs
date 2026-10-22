@@ -25,26 +25,26 @@ namespace Circuits
             {
                 case 0:
                     Wrapper.Events.StartDialogueSequence?.Invoke("CT_Intro");
-                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
+                    SceneManager.LoadScene("CircuitsLevelScene");
                     break;
                 case 3:
-                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
+                    SceneManager.LoadScene("CircuitsLevelScene");
                     break;
                 case 5:
-                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
+                    SceneManager.LoadScene("CircuitsLevelScene");
                     break;
                 case 7:
-                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
+                    SceneManager.LoadScene("CircuitsLevelScene");
                     break;
                 case 14:
-                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
+                    SceneManager.LoadScene("CircuitsLevelScene");
                     break;
                 case 15:
-                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
+                    SceneManager.LoadScene("CircuitsLevelScene");
                     break;
                 //    return "DialogC-03B";
                 case 22:
-                    SceneManager.LoadScene("CircuitsLevelSceneTutorial");
+                    SceneManager.LoadScene("CircuitsLevelScene");
                     break;
                 //    return "DialogC-04";
                 case 25:
