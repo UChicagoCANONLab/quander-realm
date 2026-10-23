@@ -82,6 +82,7 @@ namespace Qupcakery
         protected void OnButtonPressed()
         {
             moving = true;
+            GameManagement.Instance.CheckingInProgress = true;
         }
 
         //public void SetEntangledCake(Cake cake)

@@ -85,6 +85,7 @@ namespace Qupcakery
                     if (CustomerIsOffScene())
                     {
                         OnBatchEnded();
+                        GameManagement.Instance.CheckingInProgress = false;
                     }
                     break;
                 case CustomerStatus.Waiting:

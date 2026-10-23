@@ -1,12 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Circuits
 {
     public class InfoPopup : MonoBehaviour
     {
         public GameObject[] gatePictures;
+        private Vector2[] imageSize = { 
+            new Vector2(975,750),
+            new Vector2(975,750), // one image
+            new Vector2(780,600),
+            new Vector2(525,405),
+            new Vector2(600,375),
+            new Vector2(495,375),
+            new Vector2(495,375),
+            new Vector2(390,300) // all 7 images
+        };
+        public GridLayoutGroup gl;
 
         public void SetInfo(int level) 
         {
@@ -31,6 +43,8 @@ namespace Circuits
             for (int j=i; j<gatePictures.Length; j++) {
                 gatePictures[j].SetActive(false);
             }
+
+            gl.cellSize = imageSize[i];
         }
 
         public void ResetInfo() 

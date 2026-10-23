@@ -21,8 +21,9 @@ namespace BlackBox
         [SerializeField] GameObject gameBoard;
         [SerializeField] GameObject gameUI;
         [SerializeField] GameObject levelSelect;
+        [SerializeField] GameObject levelSelectLitePanel;
         [SerializeField] LevelButton[] levelButtons;
-        [SerializeField] QButton gameBackButton;
+        // [SerializeField] QButton gameBackButton;
         [SerializeField] Animator backgroundAnimator;
 
         [Header("Grid Containers")]
@@ -69,7 +70,12 @@ namespace BlackBox
         private Level level;
         private bool debug = false;
         private float[] playTimes = {0f,0f};
-
+        
+#if LITE_VERSION
+        private int NUM_LEVELS = 18;
+#else
+        private int NUM_LEVELS = 24;
+#endif
 
         #region Unity Functions
 
@@ -111,7 +117,7 @@ namespace BlackBox
             BBEvents.ReturnLanternHome += ReturnLanternHome;
             BBEvents.CompleteBlackBox += PlayEndDialog;
             BBEvents.PlayLevel += SetAndPlayLevel;
-            gameBackButton.onClick.AddListener(() => BBEvents.CloseLevel?.Invoke());
+            // gameBackButton.onClick.AddListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect += ShowLevelSelect;
             BBEvents.GetLevel += GetLevelObject;
         }
@@ -136,7 +142,7 @@ namespace BlackBox
             BBEvents.ReturnLanternHome -= ReturnLanternHome;
             BBEvents.CompleteBlackBox -= PlayEndDialog;
             BBEvents.PlayLevel -= SetAndPlayLevel;
-            gameBackButton.onClick.RemoveListener(() => BBEvents.CloseLevel?.Invoke());
+            // gameBackButton.onClick.RemoveListener(() => BBEvents.CloseLevel?.Invoke());
             BBEvents.OpenLevelSelect -= ShowLevelSelect;
             BBEvents.GetLevel -= GetLevelObject;
         }
@@ -169,7 +175,10 @@ namespace BlackBox
 
         private void InitLevel()
         {
-            string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
+            // string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
+            string levelID = ParseLevelID(SM.saveData.maxLevelUnlocked);
+            if (SM.saveData.completed) levelID = ParseLevelID(NUM_LEVELS);
+            
             level = Resources.Load<Level>(Path.Combine(levelsPath, levelID)); // todo: try catch here?
 
             if (levelID == firstLevelID) {
@@ -182,7 +191,7 @@ namespace BlackBox
         private void StartLevel()
         {
             ShowLevelSelect(false);
-            Events.ToggleBackButton?.Invoke(false);
+            // Events.ToggleBackButton?.Invoke(false);
 
             BBEvents.UpdateHUDLevelNumber?.Invoke(level.number);
             BBEvents.ShowTutorial?.Invoke(SM.saveData, level);
@@ -196,6 +205,10 @@ namespace BlackBox
             if (level.number <= 6) {
                 backgroundAnimator.SetBool("FogActive", false);
             } else { backgroundAnimator.SetBool("FogActive", true); }
+
+            if (level.number == 2) {
+                BBEvents.ShowReminder.Invoke();
+            }
 
             totalNodes = level.nodePositions.Length;
             livesRemaining = totalLives;
@@ -232,7 +245,14 @@ namespace BlackBox
                 // Quit();
                 ShowLevelSelect(true);
                 return;
-            }   
+            }
+#if LITE_VERSION
+            if (level.nextLevelID == "7.1")
+            {
+                ShowLevelSelect(true);
+                return;
+            }
+#endif
 
             // reusing the SetNodes function. Toggles the initially set nodes off
             mainGridGO.GetComponent<MainGrid>().SetNodes(level.nodePositions); // todo: refactor
@@ -260,7 +280,7 @@ namespace BlackBox
         private void Quit()
         {
             SceneManager.LoadScene(0);
-            Events.ToggleBackButton?.Invoke(true);
+            // Events.ToggleBackButton?.Invoke(true);
             Events.MinigameClosed?.Invoke();
         }
 
@@ -272,10 +292,19 @@ namespace BlackBox
             if (levelWon)
             {
                 Wrapper.Events.PlaySound?.Invoke("BB_WolfieSuccess");
-                if (SM.saveData.starsPerLevel[level.number-1] < livesRemaining) {
-                    SM.saveData.totalStars += (livesRemaining - SM.saveData.starsPerLevel[level.number-1]);
-                    SM.saveData.starsPerLevel[level.number-1] = livesRemaining;
+
+                int origStars = SM.saveData.starsPerLevel[level.number - 1];
+
+                if (origStars < livesRemaining) {
+                    SM.saveData.totalStars += (livesRemaining - origStars);
+                    SM.saveData.starsPerLevel[level.number - 1] = livesRemaining;
                 }
+
+                // Earn coins for level completion
+                int coins = Math.Max(livesRemaining - origStars, 0) * 10 + Math.Min(livesRemaining, origStars);
+                Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
+                Wrapper.Events.DisplayCoinsCollected.Invoke(coins);
+
                 // PLAY END OF LEVEL DIALOGUE IF APPLICABLE
                 TrySetNewLevelSave();
 
@@ -295,9 +324,11 @@ namespace BlackBox
 
         void TrySetNewLevelSave()
         {
-            if (SM.saveData.currentLevelID == string.Empty || ParseLevelID(SM.saveData.currentLevelID) < ParseLevelID(level.nextLevelID))
+            // if (SM.saveData.currentLevelID == string.Empty || ParseLevelID(SM.saveData.currentLevelID) < ParseLevelID(level.nextLevelID))
+            if (SM.saveData.maxLevelUnlocked == level.number)
             {
-                SM.saveData.currentLevelID = level.nextLevelID;
+                SM.saveData.maxLevelUnlocked++;
+                // SM.saveData.currentLevelID = level.nextLevelID;
                 // Events.UpdateMinigameSaveData?.Invoke(Wrapper.Game.BlackBox, saveData);
             }
             // else Debug.Log("Player has completed a higher level; save data not updated.");
@@ -324,6 +355,7 @@ namespace BlackBox
             { 
                 yield return rewardPopupDelay;
                 Events.CollectAndDisplayReward?.Invoke(Game.BlackBox, level.number);
+                Events.CollectAndDisplayBadge?.Invoke(Game.BlackBox, level.number, SM.saveData.totalStars);
             }
         }
 
@@ -338,7 +370,7 @@ namespace BlackBox
                 BBSaveData data = new BBSaveData
                 {
                     gameID = SM.saveData.gameID,
-                    currentLevelID = SM.saveData.currentLevelID,
+                    // currentLevelID = SM.saveData.currentLevelID,
                     tutorialsSeen = SM.saveData.tutorialsSeen,
                     completed = false
                 };
@@ -370,23 +402,33 @@ namespace BlackBox
 
         void ShowLevelSelect(bool show)
         {
+            SM.LoadGame();
+
             levelSelect.SetActive(show);
             gameBoard.SetActive(!show);
             gameUI.SetActive(!show);
 
             if (show) InitLevelSelect();
+
+#if LITE_VERSION
+            levelSelectLitePanel.SetActive(show);
+#else
+            levelSelectLitePanel.SetActive(false);
+#endif            
         }
 
         void InitLevelSelect()
         {
-            Events.ToggleBackButton(true);
+            // Events.ToggleBackButton(true);
 
-            if (level.levelID != SM.saveData.currentLevelID)
+            // if (level.levelID != SM.saveData.currentLevelID)
+            if (level.number != SM.saveData.maxLevelUnlocked)
             {
                 // if (saveData.currentLevelID[0] == 'L') {
                 //     level = Resources.Load<Level>(Path.Combine(levelsPath, firstLevelID));
                 // } else {
-                    string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
+                    // string levelID = SM.saveData.currentLevelID.Equals(string.Empty) ? firstLevelID : SM.saveData.currentLevelID;
+                    string levelID = ParseLevelID(SM.saveData.maxLevelUnlocked);
                     level = Resources.Load<Level>(Path.Combine(levelsPath, levelID));
                 // }
             }
@@ -400,7 +442,7 @@ namespace BlackBox
                 BBSaveData data = new BBSaveData
                 {
                     gameID = SM.saveData.gameID,
-                    currentLevelID = SM.saveData.currentLevelID,
+                    // currentLevelID = SM.saveData.currentLevelID,
                     tutorialsSeen = SM.saveData.tutorialsSeen,
                     completed = false
                 };
@@ -411,11 +453,20 @@ namespace BlackBox
             }
             finally
             {
-                int levelNum = ParseLevelID(level.levelID) + (SM.saveData.completed ? 1 : 0);
-                if (levelNum > 0)
+                int maxLevel = SM.saveData.maxLevelUnlocked;
+                // int levelNum = ParseLevelID(level.levelID) + (SM.saveData.completed ? 1 : 0);
+                // if (levelNum > 0)
+                if (maxLevel > 0)
                 {
                     for (int i = 0; i < levelButtons.Length; i++) {
-                        levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+                        // levelButtons[i].SetButtonState(levelNum, GetLevelStars(i));
+                        levelButtons[i].SetButtonState(maxLevel, GetLevelStars(i));
+
+#if LITE_VERSION
+                        if (i >= NUM_LEVELS) {
+                            levelButtons[i].gameObject.SetActive(false);
+                        }
+#endif                        
                     }
                 }
             }
@@ -576,6 +627,9 @@ namespace BlackBox
         public static int ParseLevelID(string levelID)
         {
             if (levelID == "") return -1;
+#if LITE_VERSION
+            if (levelID == "7.1") return -1;
+#endif
 
             int[] temp = levelID.Split(".").Select(int.Parse).ToArray();
             int levelNum = ((temp[0]-4) * 6) + temp[1];
@@ -595,7 +649,7 @@ namespace BlackBox
         }
 
         public int GetLevelStars(int level) {
-            if (level >= SM.saveData.starsPerLevel.Length) return 0;
+            if (level >= NUM_LEVELS) return 0;
             return SM.saveData.starsPerLevel[level];
         }
     }

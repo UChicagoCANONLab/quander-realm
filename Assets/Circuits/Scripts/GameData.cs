@@ -109,6 +109,11 @@ namespace Circuits
                     saveData.maxLevel = saveData.currLevel + 1;
                 }
 
+                int coins = Math.Max(StarDisplay.SD.numStars - saveData.starsPerLevel[saveData.currLevel], 0) * 10
+                    + Math.Min(StarDisplay.SD.numStars, saveData.starsPerLevel[saveData.currLevel]);
+                Wrapper.Events.UpdateUserSaveTotalCoins?.Invoke(coins);
+                Wrapper.Events.DisplayCoinsCollected.Invoke(coins);
+
                 if (saveData.starsPerLevel[saveData.currLevel] < StarDisplay.SD.numStars) {
                     saveData.starsPerLevel[saveData.currLevel] = StarDisplay.SD.numStars;
                 }
@@ -126,6 +131,8 @@ namespace Circuits
             researchData.SaveData = String.Join("\n", log);
             Wrapper.Events.SaveMinigameResearchData?.Invoke(Wrapper.Game.Circuits, researchData);
             log.Clear();
+
+            Wrapper.Events.CollectAndDisplayBadge(Wrapper.Game.Circuits, saveData.currLevel, saveData.totalStars);
         }
 
 

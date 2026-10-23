@@ -116,6 +116,7 @@ namespace BlackBox
             if (tutorialSeq >= dialogueSeq.Length-1) {
                 // TutorialAnimator.SetBool("WolfieOn", false);
                 Invoke("endDialogue", 2f);
+                return;
             }
 
             TutorialAnimator.SetInteger("TutorialSeq", tutorialSeq);

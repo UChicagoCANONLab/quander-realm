@@ -10,7 +10,7 @@ namespace Circuits
         public const float gridResolution_w = .45f * camera_scale;
         public const float gridResolution_h = .37f * camera_scale;
     #if LITE_VERSION
-        public const int N_LEVELS = 16;
+        public const int N_LEVELS = 15;
     #else
         public const int N_LEVELS = 25;
     #endif

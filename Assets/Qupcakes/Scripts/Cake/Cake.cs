@@ -22,7 +22,7 @@ namespace Qupcakery
     // Cake types
     public enum CakeType : short
     {
-        Vanilla = 0, Chocolate = 1, Unkown
+        Vanilla = 0, Chocolate = 1, Unknown
     }
 
     public class Cake

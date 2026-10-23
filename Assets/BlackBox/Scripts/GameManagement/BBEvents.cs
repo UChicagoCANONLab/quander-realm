@@ -21,6 +21,7 @@ namespace BlackBox
         public static Action ShowInfo;
         public static Action InitiateTutorialLevel;
         public static Action EndTutorialLevel;
+        public static Action ShowReminder;
 
         /// Level Select
         public static Action<string> PlayLevel;
@@ -28,7 +29,7 @@ namespace BlackBox
         public static Action CloseLevel;
 
         /// Ray and Markers
-        public static Action<Vector3Int, Dir> FireRay;
+        public static Action<Vector3Int, Dir, bool> FireRay;
         public static Action<Marker, Dir, Vector3Int, bool> MarkUnits;
         public static Action<Dir, Vector3Int, Dir, Vector3Int, int> MarkDetourUnits;
         public static Action<string, Dir, Vector3Int> ToggleLinkedHighlight;
@@ -50,10 +51,12 @@ namespace BlackBox
         public static Func<Transform> GetFrontMount;
 
         /// Energy Bar and Lives
-        public static Action DecrementEnergy;
+        public static Action DecrementEnergyMeter;
+        public static Action LoseEnergy;
         public static Action IndicateEmptyMeter;
         public static Action InitEnergyBar;
         public static Func<int> GetNumEnergyUnits;
+        public static Func<int> GetEnergyRemaining;
         public static Action<int> UpdateHUDWolfieLives;
         public static Action LoseLife;
         public static Func<int> GetLivesRemaining;

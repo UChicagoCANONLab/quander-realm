@@ -15,6 +15,8 @@ namespace Qupcakery
         [SerializeField] public GameObject pointer;
         [SerializeField] public Text tutorialText;
         [SerializeField] private Animator pointerAnimator;
+        [SerializeField] private GameObject hintButton;
+        [SerializeField] private GameObject infoButton;
 
         private int levelInd;
         private int tutorialSeq = 0;
@@ -87,6 +89,9 @@ namespace Qupcakery
                     break;
                 case 8:
                     Tutorial8Next();
+                    break;
+                case 9:
+                    Tutorial9Next();
                     break;
                 case 13:
                     Tutorial13Next();
@@ -169,13 +174,16 @@ namespace Qupcakery
             "Our customers won't wait forever! The bar under each customer is their " +
             "patience.",
             "The top left bar shows how long my shop will be open - see how many cupcakes " + 
-            "you can serve!"
+            "you can serve!",
+            "If you get stuck, press the Hint button to receive a hint.",
+            "If you'd like a reminder for what the gates mean, press the Info button."
         };
 
         public void Tutorial2Next()
         {
             if (tutorialSeq >= dialogueSeq2.Length)
             {
+                infoButton.GetComponent<Animator>().SetTrigger("Normal");
                 EndTutorial();
                 return;
             }
@@ -194,6 +202,17 @@ namespace Qupcakery
 
                 case 1:
                     LastPuzzleUtils();
+                    break;
+
+                case 2:
+                    LastPuzzleUtils();
+                    hintButton.GetComponent<Animator>().SetTrigger("Hint");
+                    break;
+
+                case 3:
+                    LastPuzzleUtils();
+                    hintButton.GetComponent<Animator>().SetTrigger("Normal");
+                    infoButton.GetComponent<Animator>().SetTrigger("Hint");
                     break;
 
                 default:
@@ -367,6 +386,45 @@ namespace Qupcakery
 
             tutorialSeq++;
 
+        }
+        #endregion
+
+        #region Level 9 (Flipping Reminder)
+        private string[] dialogueSeq9 = new string[]
+        {
+            "Don't forget that you can click on the CNOT gate to flip it!",
+            "Of course, if you need to flip it back you can click on it again."
+        };
+
+        public void Tutorial9Next()
+        {
+            if (tutorialSeq >= dialogueSeq9.Length)
+            {
+                EndTutorial();
+                return;
+            }
+
+            tutorialText.text = dialogueSeq9[tutorialSeq];
+            pointerAnimator.SetInteger("TutorialSeq", tutorialSeq);
+
+            switch (tutorialSeq)
+            {
+                case 0:
+                    ShowTutorial();
+                    gm.AllowGateMovement = true;
+                    gm.InTutorial = false;
+                    LastPuzzleUtils();
+                    break;
+
+                case 1:
+                    LastPuzzleUtils();
+                    break;
+
+                default:
+                    break;
+            }
+
+            tutorialSeq++;
         }
         #endregion
 

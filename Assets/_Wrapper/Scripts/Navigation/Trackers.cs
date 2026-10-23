@@ -145,6 +145,9 @@ namespace Wrapper
         // Toggles all tracker visibility
         public void ToggleTrackers(bool isOn) {
             if (isOn) UpdateTrackers();
+            else {
+                if (trackerAnimator.GetBool("ShowPanel")) ToggleStarPanel();
+            }
             trackerAnimator.SetBool("IsOn", isOn);
             active = isOn;
         }

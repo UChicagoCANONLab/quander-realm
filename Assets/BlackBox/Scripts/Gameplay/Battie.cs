@@ -55,7 +55,10 @@ namespace BlackBox
 
         public void InitFlyingAnimation() 
         {
-            if (flyingCoors == null) { return; }
+            if (flyingCoors == null) { 
+                BBEvents.ShowHint.Invoke();
+                return; 
+            }
             ReturnBattieHelper(); // Return before start
             // Debug.Log($"Coordinates: {string.Join("; ", flyingCoors)}");
 
@@ -71,6 +74,9 @@ namespace BlackBox
             Invoke("ReturnBattieHelper", 0.5f);
 
             flyingCoors = null; // Clear array
+            if (BBEvents.GetLevel.Invoke().number != 1) {
+                BBEvents.ShowHint.Invoke();
+            }
         }
 
         public void ReturnBattieHelper() 

@@ -145,6 +145,7 @@ namespace Wrapper
                     break;
                 case Game.BlackBox:
                     // WORK ON THIS ONE
+                    BlackBox.BBEvents.OpenLevelSelect.Invoke(true);
                     break;
             }
             return;

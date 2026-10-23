@@ -48,7 +48,10 @@ namespace Qupcakery
                 RemainingTime = 0f;
 
                 // Raise timer end event
-                OnTimerEnded();
+                if (!GameManagement.Instance.CheckingInProgress)
+                {
+                    OnTimerEnded();
+                }
             }
 
             if (Math.Floor(ElapsedTime / AlertInterval) >= intervalAlertCnt)

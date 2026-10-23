@@ -10,7 +10,7 @@ namespace Circuits
     {
         public GameObject buttonPrefab;
         public GameObject content;
-        public GameBehavior gameBehavior;
+        public GameObject litePanel;
         private LevelButtonBehavior[] buttons;
         
         // Start is called before the first frame update
@@ -30,7 +30,10 @@ namespace Circuits
                 lb.init(i, GameData.getCompletedLevels()[i], GameData.getStarsPerLevel()[i], this);
                 buttons[i] = lb;
             }
+#if LITE_VERSION
 
+            litePanel.SetActive(true);
+#endif            
         }
 
         public void updateLevels()
@@ -46,8 +49,6 @@ namespace Circuits
             GameData.setCurrLevel(l);
             string nextScene = GameData.getNextScene();
             SceneManager.LoadScene(nextScene);
-
-
         }
 
     }

@@ -13,6 +13,8 @@ namespace QueueBits
     {
         public static QBSaveData saveData;
         public static Data researchData;
+
+        // rewardSystem NO LONGER USED -- kept uncommented for compilation reasons
         public static bool[] rewardSystem = { false, false, false, true, false, true, true, false, true, true, false, true, false, true, false, true };
         public static int LEVEL = 0;
 

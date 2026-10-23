@@ -6,6 +6,7 @@ using System.IO;
 using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Circuits 
 {
@@ -157,9 +158,13 @@ namespace Circuits
                 Debug.LogError(ex.Message);
             }
 
-            Image numberObject = GameObject.Find("Canvas/LevelNumber/Number").GetComponent<Image>();
+            /* Image numberObject = GameObject.Find("Canvas/LevelNumber/Number").GetComponent<Image>();
             if (GameData.getCurrLevel() < CTConstants.N_LEVELS) {
                 numberObject.sprite = numberSprites[GameData.getCurrLevel()];
+            } */
+            TextMeshProUGUI levelNumber = GameObject.Find("Canvas/LevelNumber/Text").GetComponent<TextMeshProUGUI>();
+            if (GameData.getCurrLevel() < CTConstants.N_LEVELS) {
+                levelNumber.text = $"{GameData.getCurrLevel()}";
             }
 
             if (GameData.getCurrLevel() >= CTConstants.N_LEVELS)
